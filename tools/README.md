@@ -6,13 +6,20 @@ This directory contains the modified source code of the tools used in our experi
 
 ## Prerequisites
 
-- Each tool has different environment and library requirements, and where its provided README is incomplete, we provide the necessary instructions below.
-- **It is necessary to set up a separate virtual environment** for each tool.
-- Tools Invalidator and FIXCHECK require Defects4J to be set-up and added to path (Defects4J also requires Java 11). All relevant instructions can be found here: https://github.com/rjust/defects4j
+- Each tool has different environment and library requirements. Where a provided README is incomplete, the necessary additional setup instructions are detailed below.
+- **It is necessary to set up a separate virtual environment** for each tool to avoid dependency conflicts.
+- The tools Invalidator and FIXCHECK require Defects4J to be installed and added to the system `PATH`. Defects4J also requires Java 11. Full setup instructions are available at the [Defects4J GitHub repository](https://github.com/rjust/defects4j).
 
 ## Results Files
 
-All tools save results to a csv file. To generate the figures in the report with these csvs, they need to be moved to the `results` directory under the relevant tool subdirectory. Tool subdirectories have their github repository names which may not match with the way they are referenced in the report. The mapping between tool name and directory name is provided below for each tool. Once csvs are moved to the appropriate directory, they must have the same name e.g. `8h_deduplicated.csv`.
+All tools save their results in CSV format. To generate the figures presented in the report using these CSV files, the following steps must be followed:
+
+- Move the generated CSV files to the `results` directory under the relevant tool subdirectory.
+- Note that the tool subdirectories are named according to their GitHub repository names, which may differ from how the tools are referenced in the report.
+- The mapping between tool names and directory names is provided below for clarity.
+- After moving the CSV files, ensure that they follow a consistent naming convention, for example: `8h_deduplicated.csv`.
+
+Following these instructions ensures compatibility with the provided figure generation scripts.
 
 ---
 

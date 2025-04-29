@@ -7,14 +7,14 @@ This document outlines the steps required to re-create all the figures used in t
 
 ---
 
-## 🧰 Prerequisites
+## Prerequisites
 
 Before running any scripts, make sure the following are installed:
 
 - Python >= 3.8
 - Required packages (install with `pip install -r figure-replication-requirements.txt`)
 
-## 🔄 Step-by-Step Instructions
+## Step-by-Step Instructions
 
 **Before completing any step, ensure your working directory is `figure_replication/scripts`**
 
@@ -134,4 +134,4 @@ This can be done by running for a given tool:
 python filter_results_by_time.py --from-hour 8 --to-hour 1 --approach LLM4PatchCorrectness
 ```
 
-Then you will need to keep in mind the non-compilable patches that may be present in Invalidator / FIXCHECK, so you may need to run `filter_patches.py` as described in Step 0 to ensure a fair comparison.
+After filtering patch predictions by time, it is important to ensure that all tools are compared on the same set of compilable patches. In particular, Invalidator and FIXCHECK predictions include only compilable patches, while other tools may predict on additional non-compilable ones. Therefore, after filtering results by time, you must re-apply the patch filtering step using `filter_patches.py` as described in Step 0 to maintain a consistent and fair comparison across tools.

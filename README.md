@@ -25,8 +25,14 @@
 
 # Study Replication
 
-To replicate our study, first you need to checkout all the relevant Defects4J projects. This is done automatically by a python script we provide: `checkout_d4j.py`. Note that this requires Defects4J to be set up. Defects4J requires Java 11, and the script provided has a constant **JAVA_11_PATH** that needs to be replaced with the path to a valid Java 11 installation. Detailed instructions to set up Defects4J can be found: https://github.com/rjust/defects4j
+1. **Checkout Defects4J Projects**  
+   Use the provided script [`checkout_d4j.py`](checkout_d4j.py) to automatically download all necessary buggy and fixed project versions.
 
-The next step is to obtain experimental results by running each tool. This can be done by following the detailed setup and usage instructions for each tool in `tools/README.md`
+   > **Note:** This requires Defects4J to be installed and configured. Defects4J depends on Java 11. You must update the `JAVA_11_PATH` constant in `checkout_d4j.py` to point to a valid Java 11 installation.  
+   > For setup instructions, refer to the [Defects4J GitHub repository](https://github.com/rjust/defects4j).
 
-Once you have all experimental results in the `results` directory, you can analyse the data, replicating the figures in our report by following instructions in `figure_replication/README.md`
+2. **Run Evaluation Tools**  
+   Follow the setup and usage instructions provided in [`tools/README.md`](tools/README.md) to run the evaluation tools and move outputs to the `results/` directory as described.
+
+3. **Replicate Figures**  
+   After obtaining all experimental outputs, replicate the figures and tables by following the instructions in [`figure_replication/README.md`](figure_replication/README.md).
