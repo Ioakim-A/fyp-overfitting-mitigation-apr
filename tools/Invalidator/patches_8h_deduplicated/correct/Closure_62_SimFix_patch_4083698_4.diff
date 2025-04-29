@@ -1,0 +1,33 @@
+--- /src/com/google/javascript/jscomp/LightweightMessageFormatter.java
++++ /src/com/google/javascript/jscomp/LightweightMessageFormatter.java
+@@ -88,6 +88,22 @@
+     b.append('\n');
+     if (sourceExcerpt != null) {
+       b.append(sourceExcerpt);
++// start of generated patch
++b.append('\n');
++int charno=error.getCharno();
++if(excerpt.equals(LINE)&&0<=charno&&charno<=sourceExcerpt.length()){
++for(int i=0;i<charno;i++){
++char c=sourceExcerpt.charAt(i);
++if(Character.isWhitespace(c)){
++b.append(c);
++}else {
++b.append(' ');
++}
++}
++b.append("^\n");
++}
++// end of generated patch
++/* start of original code
+       b.append('\n');
+       int charno = error.getCharno();
+ 
+@@ -106,6 +122,7 @@
+         }
+         b.append("^\n");
+       }
++ end of original code*/
+     }
+     return b.toString();
+   }

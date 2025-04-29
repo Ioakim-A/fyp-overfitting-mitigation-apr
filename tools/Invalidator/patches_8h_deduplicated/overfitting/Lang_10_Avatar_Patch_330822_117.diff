@@ -1,0 +1,25 @@
+--- /src/main/java/org/apache/commons/lang3/time/FastDateParser.java
++++ /src/main/java/org/apache/commons/lang3/time/FastDateParser.java
+@@ -684,7 +684,7 @@ public class FastDateParser implements DateParser, Serializable {
+         public void setCalendar(FastDateParser parser, Calendar cal, String value) {
+             KeyValue[] textKeyValues= parser.getDisplayNames(field);
+             int idx= Arrays.binarySearch(textKeyValues, new KeyValue(value, -1), IGNORE_CASE_COMPARATOR);
+-            if(idx<0) {
++            if(idx > 0) {
+                 StringBuilder sb= new StringBuilder(value);
+                 sb.append(" not in (");
+                 for(KeyValue textKeyValue : textKeyValues) {
+diff --git a/src/main/java/org/apache/commons/lang3/time/FastDatePrinter.java b/src/main/java/org/apache/commons/lang3/time/FastDatePrinter.java
+index cc1af9df..8cddf852 100644
+--- /src/main/java/org/apache/commons/lang3/time/FastDatePrinter.java
++++ /src/main/java/org/apache/commons/lang3/time/FastDatePrinter.java
+@@ -676,7 +676,8 @@ public class FastDatePrinter implements DatePrinter, Serializable {
+         public int estimateLength() {
+             int max = 0;
+             for (int i=mValues.length; --i >= 0; ) {
+-                int len = mValues[i].length();
++                if (mValues == null) return LONG;
++	 int len = mValues[i].length();
+                 if (len > max) {
+                     max = len;
+                 }
