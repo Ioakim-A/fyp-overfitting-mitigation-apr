@@ -1,0 +1,25 @@
+--- /src/com/google/javascript/jscomp/ClosureCodingConvention.java
++++ /src/com/google/javascript/jscomp/ClosureCodingConvention.java
+@@ -192,12 +192,22 @@
+       Node callee = node.getFirstChild();
+       if (callee != null && callee.getType() == Token.GETPROP) {
+         String qualifiedName = callee.getQualifiedName();
++// start of generated patch
++if(functionName.equals(qualifiedName)){
++Node target=callee.getNext();
++if(target!=null&&(target.getType()==Token.STRING||target.getType()==Token.REGEXP)){
++className=target.getString();
++}
++}
++// end of generated patch
++/* start of original code
+         if (functionName.equals(qualifiedName)) {
+           Node target = callee.getNext();
+           if (target != null) {
+             className = target.getString();
+           }
+         }
++ end of original code*/
+       }
+     }
+     return className;

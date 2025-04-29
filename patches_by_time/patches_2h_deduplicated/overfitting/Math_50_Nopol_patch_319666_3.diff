@@ -1,0 +1,33 @@
+--- /src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java
++++ /src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java
+@@ -236,15 +236,17 @@
+                                                      atol)) {
+-                switch (allowed) {
+-                case ANY_SIDE:
+-                    return x1;
+-                case LEFT_SIDE:
+-                    return inverted ? x1 : x0;
+-                case RIGHT_SIDE:
+-                    return inverted ? x0 : x1;
+-                case BELOW_SIDE:
+-                    return (f1 <= 0) ? x1 : x0;
+-                case ABOVE_SIDE:
+-                    return (f1 >= 0) ? x1 : x0;
+-                default:
+-                    throw new MathInternalError();
++                if ((ftol == atol) || (!(atol <= f0))) {
++                    switch (allowed) {
++                        case ANY_SIDE:
++                        return x1;
++                        case LEFT_SIDE:
++                        return inverted ? x1 : x0;
++                        case RIGHT_SIDE:
++                        return inverted ? x0 : x1;
++                        case BELOW_SIDE:
++                        return (f1 <= 0) ? x1 : x0;
++                        case ABOVE_SIDE:
++                        return (f1 >= 0) ? x1 : x0;
++                        default:
++                        throw new MathInternalError();
++                    }
+                 }

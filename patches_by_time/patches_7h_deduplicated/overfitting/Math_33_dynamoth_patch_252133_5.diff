@@ -1,0 +1,13 @@
+--- /src/main/java/org/apache/commons/math3/optimization/linear/SimplexTableau.java
++++ /src/main/java/org/apache/commons/math3/optimization/linear/SimplexTableau.java
+@@ -260,5 +260,7 @@
+         if (constraint.getValue() < 0) {
+-            return new LinearConstraint(constraint.getCoefficients().mapMultiply(-1),
+-                                        constraint.getRelationship().oppositeRelationship(),
+-                                        -1 * constraint.getValue());
++            if (this.getNumObjectiveFunctions() == (this.getOriginalNumDecisionVariables() - 1)) {
++                return new LinearConstraint(constraint.getCoefficients().mapMultiply(-1),
++                constraint.getRelationship().oppositeRelationship(),
++                -1 * constraint.getValue());
++            }
+         }

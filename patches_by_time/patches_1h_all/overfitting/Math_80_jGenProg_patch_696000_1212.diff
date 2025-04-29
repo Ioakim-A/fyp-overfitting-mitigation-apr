@@ -1,0 +1,301 @@
+--- /src/main/java/org/apache/commons/math/linear/EigenDecompositionImpl.java
++++ /src/main/java/org/apache/commons/math/linear/EigenDecompositionImpl.java
+@@ -1139,9 +1138,0 @@
+-                    work[i + k] = work[j - k];
+-                    work[j - k] = tmp;
+-                }
+-                j -= 4;
+-            }
+-            return true;
+-        }
+-        return false;
+-    }
+@@ -1155 +1145,0 @@
+-    private double[] eigenvaluesRange(final int index, final int n) {
+@@ -1158,8 +1147,0 @@
+-        final int lowerStart = 4 * main.length;
+-        final int upperStart = 5 * main.length;
+-        double lower = Double.POSITIVE_INFINITY;
+-        double upper = Double.NEGATIVE_INFINITY;
+-        for (int i = 0; i < n; ++i) {
+-            lower = Math.min(lower, work[lowerStart + index +i]);
+-            upper = Math.max(upper, work[upperStart + index +i]);
+-        }
+@@ -1168,6 +1149,0 @@
+-        final double tNorm = Math.max(Math.abs(lower), Math.abs(upper));
+-        final double relativeTolerance = Math.sqrt(MathUtils.EPSILON);
+-        final double absoluteTolerance = 4 * minPivot;
+-        final int maxIter =
+-            2 + (int) ((Math.log(tNorm + minPivot) - Math.log(minPivot)) / Math.log(2.0));
+-        final double margin = 2 * (tNorm * MathUtils.EPSILON * n + 2 * minPivot);
+@@ -1176,3 +1151,0 @@
+-        double left  = lower - margin;
+-        double right = upper + margin;
+-        for (int i = 0; i < maxIter; ++i) {
+@@ -1180,3 +1152,0 @@
+-            final double range = right - left;
+-            if ((range < absoluteTolerance) ||
+-                (range < relativeTolerance * Math.max(Math.abs(left), Math.abs(right)))) {
+@@ -1184,2 +1153,0 @@
+-                break;
+-            }
+@@ -1187,6 +1154,0 @@
+-            final double middle = 0.5 * (left + right);
+-            if (countEigenValues(middle, index, n) >= 1) {
+-                right = middle;
+-            } else {
+-                left = middle;
+-            }
+@@ -1194,2 +1155,0 @@
+-        }
+-        lower = Math.max(lower, left - 100 * MathUtils.EPSILON * Math.abs(left));
+@@ -1198,3 +1157,0 @@
+-        left  = lower - margin;
+-        right = upper + margin;
+-        for (int i = 0; i < maxIter; ++i) {
+@@ -1202,3 +1158,0 @@
+-            final double range = right - left;
+-            if ((range < absoluteTolerance) ||
+-                (range < relativeTolerance * Math.max(Math.abs(left), Math.abs(right)))) {
+@@ -1206,2 +1159,0 @@
+-                break;
+-            }
+@@ -1209,6 +1160,0 @@
+-            final double middle = 0.5 * (left + right);
+-            if (countEigenValues(middle, index, n) >= n) {
+-                right = middle;
+-            } else {
+-                left = middle;
+-            }
+@@ -1216,2 +1161,0 @@
+-        }
+-        upper = Math.min(upper, right + 100 * MathUtils.EPSILON * Math.abs(right));
+@@ -1219 +1162,0 @@
+-        return new double[] { lower, upper };
+@@ -1221 +1163,0 @@
+-    }
+@@ -1230,11 +1171,0 @@
+-    private int countEigenValues(final double t, final int index, final int n) {
+-        double ratio = main[index] - t;
+-        int count = (ratio > 0) ? 0 : 1;
+-        for (int i = 1; i < n; ++i) {
+-            ratio = main[index + i] - squaredSecondary[index + i - 1] / ratio - t;
+-            if (ratio <= 0) {
+-                ++count;
+-            }
+-        }
+-        return count;
+-    }
+@@ -1253,12 +1183,0 @@
+-    private void ldlTDecomposition(final double lambda, final int index, final int n) {
+-        double di = main[index] - lambda;
+-        work[0] = Math.abs(di);
+-        for (int i = 1; i < n; ++i) {
+-            final int    fourI = 4 * i;
+-            final double eiM1  = secondary[index + i - 1];
+-            final double ratio = eiM1 / di;
+-            work[fourI - 2] = ratio * ratio * Math.abs(di);
+-            di = (main[index + i] - lambda) - eiM1 * ratio;
+-            work[fourI] = Math.abs(di);
+-        }
+-    }
+@@ -1272 +1190,0 @@
+-    private void dqds(final int start, final int end) {
+@@ -1274,4 +1191,0 @@
+-        eMin = work[4 * start + pingPong + 4];
+-        double d = work[4 * start + pingPong] - tau;
+-        dMin = d;
+-        dMin1 = -work[4 * start + pingPong];
+@@ -1279,19 +1192,0 @@
+-        if (pingPong == 0) {
+-            for (int j4 = 4 * start + 3; j4 <= 4 * (end - 3); j4 += 4) {
+-                work[j4 - 2] = d + work[j4 - 1];
+-                final double tmp = work[j4 + 1] / work[j4 - 2];
+-                d = d * tmp - tau;
+-                dMin = Math.min(dMin, d);
+-                work[j4] = work[j4 - 1] * tmp;
+-                eMin = Math.min(work[j4], eMin);
+-            }
+-        } else {
+-            for (int j4 = 4 * start + 3; j4 <= 4 * (end - 3); j4 += 4) {
+-                work[j4 - 3] = d + work[j4];
+-                final double tmp = work[j4 + 2] / work[j4 - 3];
+-                d = d * tmp - tau;
+-                dMin = Math.min(dMin, d);
+-                work[j4 - 1] = work[j4] * tmp;
+-                eMin = Math.min(work[j4 - 1], eMin);
+-            }
+-        }
+@@ -1300,8 +1194,0 @@
+-        dN2 = d;
+-        dMin2 = dMin;
+-        int j4 = 4 * (end - 2) - pingPong - 1;
+-        int j4p2 = j4 + 2 * pingPong - 1;
+-        work[j4 - 2] = dN2 + work[j4p2];
+-        work[j4] = work[j4p2 + 2] * (work[j4p2] / work[j4 - 2]);
+-        dN1 = work[j4p2 + 2] * (dN2 / work[j4 - 2]) - tau;
+-        dMin = Math.min(dMin, dN1);
+@@ -1309,7 +1195,0 @@
+-        dMin1 = dMin;
+-        j4 = j4 + 4;
+-        j4p2 = j4 + 2 * pingPong - 1;
+-        work[j4 - 2] = dN1 + work[j4p2];
+-        work[j4] = work[j4p2 + 2] * (work[j4p2] / work[j4 - 2]);
+-        dN = work[j4p2 + 2] * (dN1 / work[j4 - 2]) - tau;
+-        dMin = Math.min(dMin, dN);
+@@ -1317,2 +1196,0 @@
+-        work[j4 + 2] = dN;
+-        work[4 * end - pingPong - 1] = eMin;
+@@ -1320 +1197,0 @@
+-    }
+@@ -1329 +1205,0 @@
+-    private void dqd(final int start, final int end) {
+@@ -1331,3 +1206,0 @@
+-        eMin = work[4 * start + pingPong + 4];
+-        double d = work[4 * start + pingPong];
+-        dMin = d;
+@@ -1335,8 +1208,135 @@
+-        if (pingPong == 0) {
+-            for (int j4 = 4 * start + 3; j4 < 4 * (end - 3); j4 += 4) {
+-                work[j4 - 2] = d + work[j4 - 1];
+-                if (work[j4 - 2] == 0.0) {
+-                    work[j4] = 0.0;
+-                    d = work[j4 + 1];
+-                    dMin = d;
+-                    eMin = 0.0;
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++					eMin = 0.0; 					work[j - k] = tmp;} 				j -= 4;} 			return true;} 		return false;} 	private double[] eigenvaluesRange(final int index, final int n) { 		final int lowerStart = 4 * main.length; 		final int upperStart = 5 * main.length; 		double lower = java.lang.Double.POSITIVE_INFINITY; 		double upper = java.lang.Double.NEGATIVE_INFINITY; 		for (int i = 0; i < n; ++i) { 			lower = java.lang.Math.min(lower, work[(lowerStart + index) + i]); 			upper = java.lang.Math.max(upper, work[(upperStart + index) + i]);} 		final double tNorm = java.lang.Math.max(java.lang.Math.abs(lower), java.lang.Math.abs(upper)); 		final double relativeTolerance = java.lang.Math.sqrt(org.apache.commons.math.util.MathUtils.EPSILON); 		final double absoluteTolerance = 4 * minPivot; 		final int maxIter = 2 + ((int) ((java.lang.Math.log(tNorm + minPivot) - java.lang.Math.log(minPivot)) / java.lang.Math.log(2.0))); 		final double margin = 2 * (((tNorm * org.apache.commons.math.util.MathUtils.EPSILON) * n) + (2 * minPivot)); 		double left = lower - margin; 		double right = upper + margin; 		for (int i = 0; i < maxIter; ++i) { 			final double range = right - left; 			if ((range < absoluteTolerance) || (range < (relativeTolerance * java.lang.Math.max(java.lang.Math.abs(left), java.lang.Math.abs(right))))) { 				break;} 			final double middle = 0.5 * (left + right); 			if (countEigenValues(middle, index, n) >= 1) { 				right = middle;} else { 				left = middle;}} 		lower = java.lang.Math.max(lower, left - ((100 * org.apache.commons.math.util.MathUtils.EPSILON) * java.lang.Math.abs(left))); 		left = lower - margin; 		right = upper + margin; 		for (int i = 0; i < maxIter; ++i) { 			final double range = right - left; 			if ((range < absoluteTolerance) || (range < (relativeTolerance * java.lang.Math.max(java.lang.Math.abs(left), java.lang.Math.abs(right))))) { 				break;} 			final double middle = 0.5 * (left + right); 			if (countEigenValues(middle, index, n) >= n) { 				right = middle;} else { 				left = middle;}} 		upper = java.lang.Math.min(upper, right + ((100 * org.apache.commons.math.util.MathUtils.EPSILON) * java.lang.Math.abs(right))); 		return new double[]{ lower, upper };} 	private int countEigenValues(final double t, final int index, final int n) { 		double ratio = main[index] - t; 		int count = (ratio > 0) ? 0 : 1; 		for (int i = 1; i < n; ++i) { 			ratio = (main[index + i] - (squaredSecondary[(index + i) - 1] / ratio)) - t; 			if (ratio <= 0) { 				++count;}} 		return count;} 	private void ldlTDecomposition(final double lambda, final int index, final int n) { 		double di = main[index] - lambda; 		work[0] = java.lang.Math.abs(di); 		for (int i = 1; i < n; ++i) { 			final int fourI = 4 * i; 			final double eiM1 = secondary[(index + i) - 1]; 			final double ratio = eiM1 / di; 			work[fourI - 2] = (ratio * ratio) * java.lang.Math.abs(di); 			di = (main[index + i] - lambda) - (eiM1 * ratio); 			work[fourI] = java.lang.Math.abs(di);}} 	private void dqds(final int start, final int end) { 		eMin = work[((4 * start) + pingPong) + 4]; 		double d = work[(4 * start) + pingPong] - tau; 		dMin = d; 		dMin1 = -work[(4 * start) + pingPong]; 		if (pingPong == 0) { 			for (int j4 = (4 * start) + 3; j4 <= (4 * (end - 3)); j4 += 4) { 				work[j4 - 2] = d + work[j4 - 1]; 				final double tmp = work[j4 + 1] / work[j4 - 2]; 				d = (d * tmp) - tau; 				dMin = java.lang.Math.min(dMin, d); 				work[j4] = work[j4 - 1] * tmp; 				eMin = java.lang.Math.min(work[j4], eMin);}} else { 			for (int j4 = (4 * start) + 3; j4 <= (4 * (end - 3)); j4 += 4) { 				work[j4 - 3] = d + work[j4]; 				final double tmp = work[j4 + 2] / work[j4 - 3]; 				d = (d * tmp) - tau; 				dMin = java.lang.Math.min(dMin, d); 				work[j4 - 1] = work[j4] * tmp; 				eMin = java.lang.Math.min(work[j4 - 1], eMin);}} 		dN2 = d; 		dMin2 = dMin; 		int j4 = ((4 * (end - 2)) - pingPong) - 1; 		int j4p2 = (j4 + (2 * pingPong)) - 1; 		work[j4 - 2] = dN2 + work[j4p2]; 		work[j4] = work[j4p2 + 2] * (work[j4p2] / work[j4 - 2]); 		dN1 = (work[j4p2 + 2] * (dN2 / work[j4 - 2])) - tau; 		dMin = java.lang.Math.min(dMin, dN1); 		dMin1 = dMin; 		j4 = j4 + 4; 		j4p2 = (j4 + (2 * pingPong)) - 1; 		work[j4 - 2] = dN1 + work[j4p2]; 		work[j4] = work[j4p2 + 2] * (work[j4p2] / work[j4 - 2]); 		dN = (work[j4p2 + 2] * (dN1 / work[j4 - 2])) - tau; 		dMin = java.lang.Math.min(dMin, dN); 		work[j4 + 2] = dN; 		work[((4 * end) - pingPong) - 1] = eMin;} 	private void dqd(final int start, final int end) { 		eMin = work[((4 * start) + pingPong) + 4]; 		double d = work[(4 * start) + pingPong]; 		dMin = d; 		if (pingPong == 0) { 			for (int j4 = (4 * start) + 3; j4 < (4 * (end - 3)); j4 += 4) { 				work[j4 - 2] = d + work[j4 - 1]; 				if (work[j4 - 2] == 0.0) { 					work[j4] = 0.0; 					d = work[j4 + 1]; 					dMin = d; 					eMin = 0.0;
+

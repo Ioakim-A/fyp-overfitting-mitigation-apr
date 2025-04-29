@@ -1,0 +1,28 @@
+--- /src/main/java/org/apache/commons/math3/optimization/linear/SimplexTableau.java
++++ /src/main/java/org/apache/commons/math3/optimization/linear/SimplexTableau.java
+@@ -329,6 +329,17 @@
+             return;
+         }
+ 
++// start of generated patch
++List<Integer> columnsToDrop=new ArrayList<Integer>();
++columnsToDrop.add(0);
++for(int i=getNumObjectiveFunctions();i<getArtificialVariableOffset();i++){
++ final double entry=tableau.getEntry(0,i);
++if(Precision.compareTo(entry,0.0,epsilon)>0){
++columnsToDrop.add(i);
++}
++}
++// end of generated patch
++/* start of original code
+         List<Integer> columnsToDrop = new ArrayList<Integer>();
+         columnsToDrop.add(0);
+ 
+@@ -339,6 +350,7 @@
+                 columnsToDrop.add(i);
+             }
+         }
++ end of original code*/
+ 
+         // non-basic artificial variables
+         for (int i = 0; i < getNumArtificialVariables(); i++) {

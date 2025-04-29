@@ -1,0 +1,54 @@
+--- /src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java
++++ /src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java
+@@ -170,26 +170,28 @@
+             // Update the bounds with the new approximation.
+-            if (f1 * fx < 0) {
+-                // The value of x1 has switched to the other bound, thus inverting
+-                // the interval.
+-                x0 = x1;
+-                f0 = f1;
+-                inverted = !inverted;
+-            } else {
+-                switch (method) {
+-                case ILLINOIS:
+-                    f0 *= 0.5;
+-                    break;
+-                case PEGASUS:
+-                    f0 *= f1 / (f1 + fx);
+-                    break;
+-                case REGULA_FALSI:
+-                    // Nothing.
+-                    if (x == x1) {
+-                        x0 = 0.5 * (x0 + x1 - FastMath.max(rtol * FastMath.abs(x1), atol));
+-                        f0 = computeObjectiveValue(x0);
++            if (-1 <= f0) {
++                if (f1 * fx < 0) {
++                    // The value of x1 has switched to the other bound, thus inverting
++                    // the interval.
++                    x0 = x1;
++                    f0 = f1;
++                    inverted = !inverted;
++                } else {
++                    switch (method) {
++                        case ILLINOIS:
++                        f0 *= 0.5;
++                        break;
++                        case PEGASUS:
++                        f0 *= f1 / (f1 + fx);
++                        break;
++                        case REGULA_FALSI:
++                        // Nothing.
++                        if (x == x1) {
++                            x0 = 0.5 * (x0 + x1 - FastMath.max(rtol * FastMath.abs(x1), atol));
++                            f0 = computeObjectiveValue(x0);
++                        }
++                        break;
++                        default:
++                        // Should never happen.
++                        throw new MathInternalError();
+                     }
+-                    break;
+-                default:
+-                    // Should never happen.
+-                    throw new MathInternalError();
+                 }

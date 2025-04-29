@@ -1,0 +1,28 @@
+--- /src/main/java/org/apache/commons/lang3/time/FastDateParser.java
++++ /src/main/java/org/apache/commons/lang3/time/FastDateParser.java
+@@ -305,10 +305,7 @@ public class FastDateParser implements DateParser, Serializable {
+         for(int i= 0; i<value.length(); ++i) {
+             char c= value.charAt(i);
+             if(Character.isWhitespace(c)) {
+-                if(!wasWhite) {
+-                    wasWhite= true;
+-                    regex.append("\\s*+");
+-                }
++                
+                 continue;
+             }
+             wasWhite= false;
+diff --git a/src/main/java/org/apache/commons/lang3/time/FastDatePrinter.java b/src/main/java/org/apache/commons/lang3/time/FastDatePrinter.java
+index cc1af9df..8cddf852 100644
+--- /src/main/java/org/apache/commons/lang3/time/FastDatePrinter.java
++++ /src/main/java/org/apache/commons/lang3/time/FastDatePrinter.java
+@@ -676,7 +676,8 @@ public class FastDatePrinter implements DatePrinter, Serializable {
+         public int estimateLength() {
+             int max = 0;
+             for (int i=mValues.length; --i >= 0; ) {
+-                int len = mValues[i].length();
++                if (mValues == null) return LONG;
++	 int len = mValues[i].length();
+                 if (len > max) {
+                     max = len;
+                 }

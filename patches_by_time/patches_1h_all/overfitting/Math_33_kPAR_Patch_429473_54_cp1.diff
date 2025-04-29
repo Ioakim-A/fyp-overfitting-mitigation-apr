@@ -1,0 +1,24 @@
+--- /src/main/java/org/apache/commons/math3/optimization/linear/SimplexSolver.java
++++ /src/main/java/org/apache/commons/math3/optimization/linear/SimplexSolver.java
+@@ -166,7 +166,7 @@ public class SimplexSolver extends AbstractLinearOptimizer {
+         throws MaxCountExceededException, UnboundedSolutionException, NoFeasibleSolutionException {
+ 
+         // make sure we're in Phase 1
+-        if (tableau.getNumArtificialVariables() == 0) {
++        if (tableau.getArtificialVariableOffset() == 0) {
+             return;
+         }
+ 
+diff --git a/src/main/java/org/apache/commons/math3/optimization/linear/SimplexTableau.java b/src/main/java/org/apache/commons/math3/optimization/linear/SimplexTableau.java
+index 9a6993a55..22efcdb27 100644
+--- /src/main/java/org/apache/commons/math3/optimization/linear/SimplexTableau.java
++++ /src/main/java/org/apache/commons/math3/optimization/linear/SimplexTableau.java
+@@ -348,7 +348,7 @@ class SimplexTableau implements Serializable {
+           }
+         }
+ 
+-        double[][] matrix = new double[getHeight() - 1][getWidth() - columnsToDrop.size()];
++        double[][] matrix = new double[getHeight() - 1][getWidth() - this.columnLabels.size()];
+         for (int i = 1; i < getHeight(); i++) {
+           int col = 0;
+           for (int j = 0; j < getWidth(); j++) {

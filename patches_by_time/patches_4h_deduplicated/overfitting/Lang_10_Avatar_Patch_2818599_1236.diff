@@ -1,0 +1,25 @@
+--- /src/main/java/org/apache/commons/lang3/time/FastDateParser.java
++++ /src/main/java/org/apache/commons/lang3/time/FastDateParser.java
+@@ -377,7 +377,7 @@ public class FastDateParser implements DateParser, Serializable {
+      */
+     KeyValue[] getDisplayNames(int field) {
+         Integer fieldInt = Integer.valueOf(field);
+-        KeyValue[] fieldKeyValues= nameValues.get(fieldInt);
++        KeyValue[] fieldKeyValues= nameValues.get(this.currentFormatField);
+         if(fieldKeyValues==null) {
+             DateFormatSymbols symbols= DateFormatSymbols.getInstance(locale);
+             switch(field) {
+diff --git a/src/main/java/org/apache/commons/lang3/time/FastDatePrinter.java b/src/main/java/org/apache/commons/lang3/time/FastDatePrinter.java
+index cc1af9df..8cddf852 100644
+--- /src/main/java/org/apache/commons/lang3/time/FastDatePrinter.java
++++ /src/main/java/org/apache/commons/lang3/time/FastDatePrinter.java
+@@ -676,7 +676,8 @@ public class FastDatePrinter implements DatePrinter, Serializable {
+         public int estimateLength() {
+             int max = 0;
+             for (int i=mValues.length; --i >= 0; ) {
+-                int len = mValues[i].length();
++                if (mValues == null) return LONG;
++	 int len = mValues[i].length();
+                 if (len > max) {
+                     max = len;
+                 }

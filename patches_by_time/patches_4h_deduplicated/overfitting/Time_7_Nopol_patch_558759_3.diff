@@ -1,0 +1,23 @@
+--- /src/main/java/org/joda/time/format/DateTimeParserBucket.java
++++ /src/main/java/org/joda/time/format/DateTimeParserBucket.java
+@@ -351,10 +351,12 @@
+         sort(savedFields, count);
+-        if (count > 0) {
+-            // alter base year for parsing if first field is month or day
+-            DurationField months = DurationFieldType.months().getField(iChrono);
+-            DurationField days = DurationFieldType.days().getField(iChrono);
+-            DurationField first = savedFields[0].iField.getDurationField();
+-            if (compareReverse(first, months) >= 0 && compareReverse(first, days) <= 0) {
+-                saveField(DateTimeFieldType.year(), iDefaultYear);
+-                return computeMillis(resetFields, text);
++        if (resetFields) {
++            if (count > 0) {
++                // alter base year for parsing if first field is month or day
++                DurationField months = DurationFieldType.months().getField(iChrono);
++                DurationField days = DurationFieldType.days().getField(iChrono);
++                DurationField first = savedFields[0].iField.getDurationField();
++                if (compareReverse(first, months) >= 0 && compareReverse(first, days) <= 0) {
++                    saveField(DateTimeFieldType.year(), iDefaultYear);
++                    return computeMillis(resetFields, text);
++                }
+             }

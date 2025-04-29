@@ -1,0 +1,24 @@
+--- /src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java
++++ /src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java
+@@ -416,11 +416,21 @@
+      */
+     private StringBuffer appendQuotedString(String pattern, ParsePosition pos,
+             StringBuffer appendTo, boolean escapingOn) {
++// start of generated patch
++int start=pos.getIndex();
++char[] c=pattern.toCharArray();
++if(escapingOn&&c[start]==QUOTE){
++next(pos);
++return appendTo==null?null:appendTo.append(QUOTE);
++}
++// end of generated patch
++/* start of original code
+         int start = pos.getIndex();
+         char[] c = pattern.toCharArray();
+         if (escapingOn && c[start] == QUOTE) {
+             return appendTo == null ? null : appendTo.append(QUOTE);
+         }
++ end of original code*/
+         int lastHold = start;
+         for (int i = pos.getIndex(); i < pattern.length(); i++) {
+             if (escapingOn && pattern.substring(i).startsWith(ESCAPED_QUOTE)) {
