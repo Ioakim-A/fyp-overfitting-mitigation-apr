@@ -1,0 +1,39 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0c39eacc-69ee-40ce-8d29-e2c762c17728_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/50450995-985d-4c21-b93b-c71408407525_fixed.java
+index 4353d3e..725d9ed 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0c39eacc-69ee-40ce-8d29-e2c762c17728_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/50450995-985d-4c21-b93b-c71408407525_fixed.java
+@@ -1,33 +1,33 @@
+     public LegendItemCollection getLegendItems() {
+         LegendItemCollection result = new LegendItemCollection();
+         if (this.plot == null) {
+             return result;
+         }
+         int index = this.plot.getIndexOf(this);
+         CategoryDataset dataset = this.plot.getDataset(index);
+-        if (dataset != null) {
++       if ((dataset == null) || (dataset.getRowCount() <= 0)) {
+             return result;
+         }
+         int seriesCount = dataset.getRowCount();
+         if (plot.getRowRenderingOrder().equals(SortOrder.ASCENDING)) {
+             for (int i = 0; i < seriesCount; i++) {
+                 if (isSeriesVisibleInLegend(i)) {
+                     LegendItem item = getLegendItem(index, i);
+                     if (item != null) {
+                         result.add(item);
+                     }
+                 }
+             }
+         }
+         else {
+             for (int i = seriesCount - 1; i >= 0; i--) {
+                 if (isSeriesVisibleInLegend(i)) {
+                     LegendItem item = getLegendItem(index, i);
+                     if (item != null) {
+                         result.add(item);
+                     }
+                 }
+             }
+         }
+         return result;
+     }

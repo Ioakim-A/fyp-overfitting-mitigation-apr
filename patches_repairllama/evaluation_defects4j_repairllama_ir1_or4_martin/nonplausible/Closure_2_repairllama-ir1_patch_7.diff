@@ -1,0 +1,35 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/03ddb78f-d375-411f-8dae-a462520a5834_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6ee46aff-3141-47de-aca7-adddec8cdb2e_fixed.java
+index 9a8827e..4322708 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/03ddb78f-d375-411f-8dae-a462520a5834_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6ee46aff-3141-47de-aca7-adddec8cdb2e_fixed.java
+@@ -1,27 +1,26 @@
+-  private void checkInterfaceConflictProperties(NodeTraversal t, Node n,
+-      String functionName, HashMap<String, ObjectType> properties,
++  private void checkInterfaceConflictProperties(
++      NodeTraversal t, Node n, String functionName,
++      HashMap<String, ObjectType> properties,
+       HashMap<String, ObjectType> currentProperties,
+       ObjectType interfaceType) {
+     ObjectType implicitProto = interfaceType.getImplicitPrototype();
+     Set<String> currentPropertyNames;
+-      // This can be the case if interfaceType is proxy to a non-existent
+-      // object (which is a bad type annotation, but shouldn't crash).
+       currentPropertyNames = implicitProto.getOwnPropertyNames();
+     for (String name : currentPropertyNames) {
+       ObjectType oType = properties.get(name);
+       if (oType != null) {
+         if (!interfaceType.getPropertyType(name).isEquivalentTo(
+             oType.getPropertyType(name))) {
+           compiler.report(
+               t.makeError(n, INCOMPATIBLE_EXTENDED_PROPERTY_TYPE,
+                   functionName, name, oType.toString(),
+                   interfaceType.toString()));
+         }
+       }
+       currentProperties.put(name, interfaceType);
+     }
+     for (ObjectType iType : interfaceType.getCtorExtendedInterfaces()) {
+       checkInterfaceConflictProperties(t, n, functionName, properties,
+           currentProperties, iType);
+     }
+   }

@@ -1,0 +1,34 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/decc8654-e006-4ac8-8aba-000f114e521f_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/84952931-1bb8-4c11-b251-9f4c835d6076_fixed.java
+index 351a97a..b27c4a8 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/decc8654-e006-4ac8-8aba-000f114e521f_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/84952931-1bb8-4c11-b251-9f4c835d6076_fixed.java
+@@ -1,18 +1,26 @@
+     /**
+      * Tests the list for equality with another object (typically also a list).
+      *
+      * @param obj  the other object (<code>null</code> permitted).
+      *
+      * @return A boolean.
+      */
+     public boolean equals(Object obj) {
+-
+         if (obj == this) {
+             return true;
+         }
+         if (!(obj instanceof ShapeList)) {
+             return false;
+         }
+-        return super.equals(obj);
+-
++        ShapeList other = (ShapeList) obj;
++        if (size() != other.size()) {
++            return false;
++        }
++        for (int i = 0; i < size(); i++) {
++            if (!get(i).equals(other.get(i))) {
++                return false;
++            }
++        }
++        return true;
++    }
+     }

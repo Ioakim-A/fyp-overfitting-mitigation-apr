@@ -1,0 +1,30 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/866d035f-18e5-437d-8de6-85d711613551_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/64ddb063-83bd-4bd0-ac7b-511e03c3f7e3_fixed.java
+index d9b400d..4649768 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/866d035f-18e5-437d-8de6-85d711613551_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/64ddb063-83bd-4bd0-ac7b-511e03c3f7e3_fixed.java
+@@ -1,21 +1,23 @@
+     /**
+      * <p>Create a number from a String. If a . is present, it creates a 
+      *    Double, otherwise a Long. </p>
+      *
+      * @param str the value
+      * @return the number represented by <code>str</code>, if <code>str</code>
+      * is not a number, null is returned.
+      */
+     public static Number createNumber(String str)
+     {
+         try
+         {
+-            return org.apache.commons.lang.math.NumberUtils.createNumber(str);
++            if (str.indexOf('.') != -1)
++                return new Double(str);
++            else
++                return new Long(str);
+         }
+         catch (NumberFormatException nfe)
+         {
+             System.err.println(nfe.getMessage());
+         }
+-
+         return null;
+     }

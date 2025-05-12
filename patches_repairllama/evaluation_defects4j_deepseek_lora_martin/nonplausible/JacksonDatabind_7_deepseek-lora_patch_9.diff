@@ -1,0 +1,26 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2432f057-873f-45a1-be2b-cba081ae5ff1_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5c440b70-eef4-4f31-bdfa-e8eb808fc5e2_fixed.java
+index 4f21a3a..76ea0c1 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2432f057-873f-45a1-be2b-cba081ae5ff1_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5c440b70-eef4-4f31-bdfa-e8eb808fc5e2_fixed.java
+@@ -1,14 +1,17 @@
+     /**
+      * Helper method used by standard deserializer.
+      * 
+      * @since 2.3
+      */
+     public TokenBuffer deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException
+     {
++// buggy code
++//            copyCurrentStructure(jp);
++//        /* 28-Oct-2014, tatu: As per #592, need to support a special case of starting from
++//         *    FIELD_NAME, which is taken to mean that we are missing START_OBJECT, but need
++//         *    to assume one did exist.
++//         */
+         copyCurrentStructure(jp);
+-        /* 28-Oct-2014, tatu: As per #592, need to support a special case of starting from
+-         *    FIELD_NAME, which is taken to mean that we are missing START_OBJECT, but need
+-         *    to assume one did exist.
+-         */
++
+         return this;
+     }

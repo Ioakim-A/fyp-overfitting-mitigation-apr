@@ -1,0 +1,20 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/efd1127a-c2c5-439b-a257-b85d6daddd81_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b8a3fa3e-0abd-487c-b84c-c3e15f21c47f_fixed.java
+index c6795f6..c2605b4 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/efd1127a-c2c5-439b-a257-b85d6daddd81_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b8a3fa3e-0abd-487c-b84c-c3e15f21c47f_fixed.java
+@@ -1,12 +1,14 @@
+     public static long skip(InputStream input, long numToSkip) throws IOException {
+         long available = numToSkip;
+         while (numToSkip > 0) {
+             long skipped = input.skip(numToSkip);
+             if (skipped == 0) {
+                 break;
+             }
+             numToSkip -= skipped;
+         }
+-            
++       if (numToSkip < 0) {
++            numToSkip = 0;
++        }
+         return available - numToSkip;
+     }

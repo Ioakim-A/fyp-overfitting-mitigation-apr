@@ -1,0 +1,44 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/30e7f934-07e7-496a-902f-3381d63a82f3_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/782ebe2b-fcfc-4620-8104-fb9b98c0f996_fixed.java
+index 19fd63e..1e99221 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/30e7f934-07e7-496a-902f-3381d63a82f3_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/782ebe2b-fcfc-4620-8104-fb9b98c0f996_fixed.java
+@@ -1,24 +1,27 @@
+   /**
+    * @return Whether the node is a block with a single statement that is
+    *     an expression.
+    */
+   private boolean isFoldableExpressBlock(Node n) {
+     if (n.getType() == Token.BLOCK) {
+       if (n.hasOneChild()) {
+         Node maybeExpr = n.getFirstChild();
+-          // IE has a bug where event handlers behave differently when
+-          // their return value is used vs. when their return value is in
+-          // an EXPR_RESULT. It's pretty freaking weird. See:
+-          // http://code.google.com/p/closure-compiler/issues/detail?id=291
+-          // We try to detect this case, and not fold EXPR_RESULTs
+-          // into other expressions.
+-
+-            // We only have to worry about methods with an implicit 'this'
+-            // param, or this doesn't happen.
+-
++// buggy code
++//          // IE has a bug where event handlers behave differently when
++//          // their return value is used vs. when their return value is in
++//          // an EXPR_RESULT. It's pretty freaking weird. See:
++//          // http://code.google.com/p/closure-compiler/issues/detail?id=291
++//          // We try to detect this case, and not fold EXPR_RESULTs
++//          // into other expressions.
++//            // We only have to worry about methods with an implicit 'this'
++//            // param, or this doesn't happen.
++//          return NodeUtil.isExpressionNode(maybeExpr);
++        if (maybeExpr == null) {
++          return false;
++        }
+         return NodeUtil.isExpressionNode(maybeExpr);
+-      }
+-    }
+ 
++      }
++    }
+     return false;
+   }

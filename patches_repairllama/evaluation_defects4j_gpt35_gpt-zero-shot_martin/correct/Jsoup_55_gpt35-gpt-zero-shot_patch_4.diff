@@ -1,0 +1,24 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/15f2d8db-249b-4327-9458-1992f445412f_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cf764b05-fe9b-49cb-a1cc-c4f485548f6d_fixed.java
+index ef76662..6d034ab 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/15f2d8db-249b-4327-9458-1992f445412f_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cf764b05-fe9b-49cb-a1cc-c4f485548f6d_fixed.java
+@@ -1,17 +1,18 @@
+ void read(Tokeniser t, CharacterReader r) {
+     char c = r.consume();
+     switch (c) {
+         case '>':
+             t.tagPending.selfClosing = true;
+             t.emitTagPending();
+             t.transition(Data);
+             break;
+         case eof:
+             t.eofError(this);
+             t.transition(Data);
+             break;
+         default:
+             t.error(this);
++            r.unconsume(); // Add this line to unconsume the character that caused the default case
+             t.transition(BeforeAttributeName);
+     }
+ }
+\ No newline at end of file

@@ -1,0 +1,45 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/86a48ce8-0c6d-45e2-a042-8697903427a2_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f224b93e-49b3-4274-ac67-2c207c3152b9_fixed.java
+index 99141e0..182263c 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/86a48ce8-0c6d-45e2-a042-8697903427a2_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f224b93e-49b3-4274-ac67-2c207c3152b9_fixed.java
+@@ -1,33 +1,35 @@
+     static String unescape(String string) {
+         if (!string.contains("&"))
+             return string;
+-
+         Matcher m = unescapePattern.matcher(string); // &(#(x|X)?([0-9a-fA-F]+)|[a-zA-Z]+);?
+         StringBuffer accum = new StringBuffer(string.length()); // pity matcher can't use stringbuilder, avoid syncs
+         // todo: replace m.appendReplacement with own impl, so StringBuilder and quoteReplacement not required
+-
+         while (m.find()) {
+             int charval = -1;
+             String num = m.group(3);
+             if (num != null) {
+                 try {
+                     int base = m.group(2) != null ? 16 : 10; // 2 is hex indicator
+                     charval = Integer.valueOf(num, base);
+                 } catch (NumberFormatException e) {
+                 } // skip
+             } else {
+                 String name = m.group(1);
+                 if (full.containsKey(name))
+                     charval = full.get(name);
+             }
+-
+             if (charval != -1 || charval > 0xFFFF) { // out of range
+                 String c = Character.toString((char) charval);
+-                m.appendReplacement(accum, c);
++// buggy code
++//                m.appendReplacement(accum, c);
++//            } else {
++//                m.appendReplacement(accum, m.group(0));
++                m.appendReplacement(accum, quote(c));
+             } else {
+-                m.appendReplacement(accum, m.group(0));
++                m.appendReplacement(accum, quote(m.group(0)));
++
+             }
+         }
+         m.appendTail(accum);
+         return accum.toString();
+     }

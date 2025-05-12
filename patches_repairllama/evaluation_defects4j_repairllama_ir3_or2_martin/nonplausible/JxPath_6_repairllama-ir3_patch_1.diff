@@ -1,0 +1,46 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c2043ea7-49b9-4222-b698-1d553ee97aab_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/685cb6d2-19b9-438c-9b27-55c9f64bc62b_fixed.java
+index 81cea7b..d9f3515 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c2043ea7-49b9-4222-b698-1d553ee97aab_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/685cb6d2-19b9-438c-9b27-55c9f64bc62b_fixed.java
+@@ -1,39 +1,30 @@
+     protected boolean equal(
+         EvalContext context,
+         Expression left,
+         Expression right) 
+     {
+         Object l = left.compute(context);
+         Object r = right.compute(context);
+-
+-//        System.err.println("COMPARING: " +
+-//            (l == null ? "null" : l.getClass().getName()) + " " +
+-//            (r == null ? "null" : r.getClass().getName()));
+-
+-        if (l instanceof InitialContext || l instanceof SelfContext) {
++       if (l != null && l instanceof EvalContext) {
+             l = ((EvalContext) l).getSingleNodePointer();
+         }
+-
+-        if (r instanceof InitialContext || r instanceof SelfContext) {
++        if (r != null && r instanceof EvalContext) {
+             r = ((EvalContext) r).getSingleNodePointer();
+         }
+-
+         if (l instanceof Collection) {
+             l = ((Collection) l).iterator();
+         }
+-
+         if (r instanceof Collection) {
+             r = ((Collection) r).iterator();
+         }
+-
+         if ((l instanceof Iterator) && !(r instanceof Iterator)) {
+             return contains((Iterator) l, r);
+         }
+         if (!(l instanceof Iterator) && (r instanceof Iterator)) {
+             return contains((Iterator) r, l);
+         }
+         if (l instanceof Iterator && r instanceof Iterator) {
+             return findMatch((Iterator) l, (Iterator) r);
+         }
+         return equal(l, r);
+     }

@@ -1,0 +1,53 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0ff64fba-f6f7-45eb-9ddd-bd273d6939f3_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fda97f76-2247-4490-a78d-79687ebbde93_fixed.java
+index 2608424..f626234 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0ff64fba-f6f7-45eb-9ddd-bd273d6939f3_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fda97f76-2247-4490-a78d-79687ebbde93_fixed.java
+@@ -1,39 +1,43 @@
+     /**
+      * Convert to multidimensional counter.
+      *
+      * @param index Index in unidimensional counter.
+      * @return the multidimensional counts.
+      * @throws OutOfRangeException if {@code index} is not between
+      * {@code 0} and the value returned by {@link #getSize()} (excluded).
+      */
+     public int[] getCounts(int index) {
+         if (index < 0 ||
+             index >= totalSize) {
+             throw new OutOfRangeException(index, 0, totalSize);
+         }
+-
+         final int[] indices = new int[dimension];
+-
+         int count = 0;
+         for (int i = 0; i < last; i++) {
+             int idx = 0;
+             final int offset = uniCounterOffset[i];
+             while (count <= index) {
+                 count += offset;
+                 ++idx;
+             }
+             --idx;
+             count -= offset;
+             indices[i] = idx;
+         }
+-
++// buggy code
++//        int idx = 1;
++//        while (count < index) {
++//            count += idx;
++//            ++idx;
++//        }
++//        --idx;
++//        indices[last] = idx;
++        indices[last] = 0;
+         int idx = 1;
+         while (count < index) {
+             count += idx;
+             ++idx;
+         }
+-        --idx;
+-        indices[last] = idx;
+ 
+         return indices;
+     }

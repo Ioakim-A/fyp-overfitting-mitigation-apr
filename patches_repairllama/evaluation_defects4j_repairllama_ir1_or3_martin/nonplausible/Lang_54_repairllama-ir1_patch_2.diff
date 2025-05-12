@@ -1,0 +1,40 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/06899901-ea07-43d8-bfc1-e977e4dd253e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/67cef8be-cefa-4c8d-af0e-1c46085eee07_fixed.java
+index 851391e..c055dfb 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/06899901-ea07-43d8-bfc1-e977e4dd253e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/67cef8be-cefa-4c8d-af0e-1c46085eee07_fixed.java
+@@ -1,34 +1,34 @@
+     public static Locale toLocale(String str) {
+         if (str == null) {
+-            return null;
++            throw new NullPointerException();
+         }
+         int len = str.length();
+         if (len != 2 && len != 5 && len < 7) {
+             throw new IllegalArgumentException("Invalid locale format: " + str);
+         }
+         char ch0 = str.charAt(0);
+         char ch1 = str.charAt(1);
+         if (ch0 < 'a' || ch0 > 'z' || ch1 < 'a' || ch1 > 'z') {
+             throw new IllegalArgumentException("Invalid locale format: " + str);
+         }
+         if (len == 2) {
+             return new Locale(str, "");
+         } else {
+             if (str.charAt(2) != '_') {
+                 throw new IllegalArgumentException("Invalid locale format: " + str);
+             }
+             char ch3 = str.charAt(3);
+             char ch4 = str.charAt(4);
+             if (ch3 < 'A' || ch3 > 'Z' || ch4 < 'A' || ch4 > 'Z') {
+                 throw new IllegalArgumentException("Invalid locale format: " + str);
+             }
+             if (len == 5) {
+                 return new Locale(str.substring(0, 2), str.substring(3, 5));
+             } else {
+                 if (str.charAt(5) != '_') {
+                     throw new IllegalArgumentException("Invalid locale format: " + str);
+                 }
+                 return new Locale(str.substring(0, 2), str.substring(3, 5), str.substring(6));
+             }
+         }
+     }

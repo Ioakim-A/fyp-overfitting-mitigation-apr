@@ -1,0 +1,31 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/47ca9d71-784e-4d55-be88-075859fb5760_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5b2a6415-38a5-4839-acbd-64b9c33fec3f_fixed.java
+index 3cb9232..ed09724 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/47ca9d71-784e-4d55-be88-075859fb5760_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5b2a6415-38a5-4839-acbd-64b9c33fec3f_fixed.java
+@@ -1,26 +1,25 @@
+     @Override
+     public PropertyName findNameForSerialization(Annotated a)
+     {
+         String name = null;
+-
+         JsonGetter jg = _findAnnotation(a, JsonGetter.class);
+         if (jg != null) {
+             name = jg.value();
+         } else {
+             JsonProperty pann = _findAnnotation(a, JsonProperty.class);
+             if (pann != null) {
+                 name = pann.value();
+                 /* 22-Apr-2014, tatu: Should figure out a better way to do this, but
+                  *   it's actually bit tricky to do it more efficiently (meta-annotations
+                  *   add more lookups; AnnotationMap costs etc)
+                  */
+             } else if (_hasAnnotation(a, JsonSerialize.class)
+                     || _hasAnnotation(a, JsonView.class)
+                     || _hasAnnotation(a, JsonRawValue.class)) {
+                 name = "";
+             } else {
+                 return null;
+             }
+         }
+         return PropertyName.construct(name);
+     }

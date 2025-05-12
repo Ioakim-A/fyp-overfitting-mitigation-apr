@@ -1,0 +1,50 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2147dd35-c9ca-44fd-9805-49f7355bef43_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ed143dcf-2fa1-469a-92c3-f239a05b11b4_fixed.java
+index b108107..242b4e9 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2147dd35-c9ca-44fd-9805-49f7355bef43_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ed143dcf-2fa1-469a-92c3-f239a05b11b4_fixed.java
+@@ -1,25 +1,40 @@
+   private void inferPropertyTypesToMatchConstraint(
+       JSType type, JSType constraint) {
+     if (type == null || constraint == null) {
+       return;
+     }
+-
+     ObjectType constraintObj =
+         ObjectType.cast(constraint.restrictByNotNullOrUndefined());
+-    if (constraintObj != null && constraintObj.isRecordType()) {
++// buggy code
++//     if (constraintObj != null && constraintObj.isRecordType()) {
++//       ObjectType objType = ObjectType.cast(type.restrictByNotNullOrUndefined());
++//       if (objType != null) {
++//         for (String prop : constraintObj.getOwnPropertyNames()) {
++//           JSType propType = constraintObj.getPropertyType(prop);
++//           if (!objType.isPropertyTypeDeclared(prop)) {
++//             JSType typeToInfer = propType;
++//             if (!objType.hasProperty(prop)) {
++//               typeToInfer =
++//                   getNativeType(VOID_TYPE).getLeastSupertype(propType);
++//             }
++//             objType.defineInferredProperty(prop, typeToInfer, null);
++//           }
++//         }
++//       }
++   if (constraintObj == null || !constraintObj.isRecordType()) {
++      return;
++    }
+     ObjectType objType = ObjectType.cast(type.restrictByNotNullOrUndefined());
+     if (objType != null) {
+       for (String prop : constraintObj.getOwnPropertyNames()) {
+         JSType propType = constraintObj.getPropertyType(prop);
+         if (!objType.isPropertyTypeDeclared(prop)) {
+           JSType typeToInfer = propType;
+           if (!objType.hasProperty(prop)) {
+-              typeToInfer =
+-                  getNativeType(VOID_TYPE).getLeastSupertype(propType);
++            typeToInfer = getNativeType(VOID_TYPE).getLeastSupertype(propType);
+           }
+           objType.defineInferredProperty(prop, typeToInfer, null);
+         }
+       }
+     }
+   }
+-  }

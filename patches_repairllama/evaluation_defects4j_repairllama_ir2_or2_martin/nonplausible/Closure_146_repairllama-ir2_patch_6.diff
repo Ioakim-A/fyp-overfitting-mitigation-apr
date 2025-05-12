@@ -1,0 +1,26 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/11face7f-880a-44f2-984e-037743bf9a52_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3ab030c7-028b-4123-a2d3-2001c2485ced_fixed.java
+index 746696f..d114330 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/11face7f-880a-44f2-984e-037743bf9a52_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3ab030c7-028b-4123-a2d3-2001c2485ced_fixed.java
+@@ -1,20 +1,14 @@
+   public TypePair getTypesUnderInequality(JSType that) {
+-    // unions types
+     if (that instanceof UnionType) {
+       TypePair p = that.getTypesUnderInequality(this);
+       return new TypePair(p.typeB, p.typeA);
+     }
+-
+-    // other types
+     switch (this.testForEquality(that)) {
+       case TRUE:
+-        return new TypePair(null, null);
+-
++       return TypePair.FALSE;
+       case FALSE:
+       case UNKNOWN:
+         return new TypePair(this, that);
+     }
+-
+-    // switch case is exhaustive
+     throw new IllegalStateException();
+   }

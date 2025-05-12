@@ -1,0 +1,42 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/589edce3-40b2-4c40-888b-8f67c1ab3e22_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6fa754dd-0baf-4dfc-aa8c-837c77326a28_fixed.java
+index 63641d0..d9487f0 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/589edce3-40b2-4c40-888b-8f67c1ab3e22_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6fa754dd-0baf-4dfc-aa8c-837c77326a28_fixed.java
+@@ -1,33 +1,31 @@
+   /**
+    * For functions with function(this: T, ...) and T as parameters, type
+    * inference will set the type of this on a function literal argument to the
+    * the actual type of T.
+    */
+   private boolean inferTemplatedTypesForCall(
+       Node n, FunctionType fnType) {
+     final ImmutableList<TemplateType> keys = fnType.getTemplateTypeMap()
+         .getTemplateKeys();
+     if (keys.isEmpty()) {
+       return false;
+     }
+-
+     // Try to infer the template types
+-    Map<TemplateType, JSType> inferred =
++// buggy code
++//    Map<TemplateType, JSType> inferred =
++//        inferTemplateTypesFromParameters(fnType, n);
++    final Map<TemplateType, JSType> inferred =
+         inferTemplateTypesFromParameters(fnType, n);
+ 
+-
+     // Replace all template types. If we couldn't find a replacement, we
+     // replace it with UNKNOWN.
+     TemplateTypeReplacer replacer = new TemplateTypeReplacer(
+         registry, inferred);
+     Node callTarget = n.getFirstChild();
+-
+     FunctionType replacementFnType = fnType.visit(replacer)
+         .toMaybeFunctionType();
+     Preconditions.checkNotNull(replacementFnType);
+-
+     callTarget.setJSType(replacementFnType);
+     n.setJSType(replacementFnType.getReturnType());
+-
+     return replacer.madeChanges;
+   }

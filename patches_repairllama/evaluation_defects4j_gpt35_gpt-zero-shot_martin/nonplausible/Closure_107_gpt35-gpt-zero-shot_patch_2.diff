@@ -1,0 +1,71 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/816093c0-7558-425a-89e0-cd99532cb2e2_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dbd1da69-d7ba-48e7-b9b2-81c3a034169f_fixed.java
+index 53b8591..001b128 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/816093c0-7558-425a-89e0-cd99532cb2e2_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dbd1da69-d7ba-48e7-b9b2-81c3a034169f_fixed.java
+@@ -1,60 +1,10 @@
+-  protected CompilerOptions createOptions() {
+-    CompilerOptions options = new CompilerOptions();
+-    if (flags.processJqueryPrimitives) {
+-      options.setCodingConvention(new JqueryCodingConvention());
+-    } else {
+-      options.setCodingConvention(new ClosureCodingConvention());
+-    }
+-
+-    options.setExtraAnnotationNames(flags.extraAnnotationName);
+-
+-    CompilationLevel level = flags.compilationLevel;
+-    level.setOptionsForCompilationLevel(options);
+-
+-    if (flags.debug) {
+-      level.setDebugOptionsForCompilationLevel(options);
+-    }
+-
+-    if (flags.useTypesForOptimization) {
+-      level.setTypeBasedOptimizationOptions(options);
+-    }
+-
+-    if (flags.generateExports) {
+-      options.setGenerateExports(flags.generateExports);
+-    }
+-
+-    WarningLevel wLevel = flags.warningLevel;
+-    wLevel.setOptionsForWarningLevel(options);
+-    for (FormattingOption formattingOption : flags.formatting) {
+-      formattingOption.applyToOptions(options);
+-    }
+-
+-    options.closurePass = flags.processClosurePrimitives;
+-
+-    options.jqueryPass = CompilationLevel.ADVANCED_OPTIMIZATIONS == level &&
+-        flags.processJqueryPrimitives;
+-
+-    options.angularPass = flags.angularPass;
+-
+-    if (!flags.translationsFile.isEmpty()) {
++    else if (CompilationLevel.ADVANCED_OPTIMIZATIONS == level) {
++      options.messageBundle = new EmptyMessageBundle();
++      if (flags.externExportsFile != null) {
+         try {
+-        options.messageBundle = new XtbMessageBundle(
+-            new FileInputStream(flags.translationsFile),
+-            flags.translationsProject);
++          options.setExternExports(new FileInputStream(flags.externExportsFile));
+         } catch (IOException e) {
+-        throw new RuntimeException("Reading XTB file", e);
++          throw new RuntimeException("Reading extern exports file", e);
+         }
+-    } else if (CompilationLevel.ADVANCED_OPTIMIZATIONS == level) {
+-      // In SIMPLE or WHITESPACE mode, if the user hasn't specified a
+-      // translations file, they might reasonably try to write their own
+-      // implementation of goog.getMsg that makes the substitution at
+-      // run-time.
+-      //
+-      // In ADVANCED mode, goog.getMsg is going to be renamed anyway,
+-      // so we might as well inline it. But shut off the i18n warnings,
+-      // because the user didn't really ask for i18n.
+-      options.messageBundle = new EmptyMessageBundle();
+       }
+-
+-    return options;
+     }
+\ No newline at end of file

@@ -1,0 +1,30 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/95061860-0d29-4cd4-9ebd-cb743a6cb48e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c8b46efc-c1b6-4607-ad0b-296616fdb22b_fixed.java
+index 9529ba6..b289dbd 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/95061860-0d29-4cd4-9ebd-cb743a6cb48e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c8b46efc-c1b6-4607-ad0b-296616fdb22b_fixed.java
+@@ -1,20 +1,19 @@
+     public int writeValue() {
+-        // Most likely, object:
+         if (_type == TYPE_OBJECT) {
++           int ix = _index;
++            ++_index;
++            return (ix < 0) ? STATUS_OK_AS_IS : STATUS_OK_AFTER_COMMA;
++        }
++        if (_type == TYPE_NAME) {
+             _gotName = false;
+             ++_index;
+             return STATUS_OK_AFTER_COLON;
+         }
+-
+-        // Ok, array?
+         if (_type == TYPE_ARRAY) {
+             int ix = _index;
+             ++_index;
+             return (ix < 0) ? STATUS_OK_AS_IS : STATUS_OK_AFTER_COMMA;
+         }
+-        
+-        // Nope, root context
+-        // No commas within root context, but need space
+         ++_index;
+         return (_index == 0) ? STATUS_OK_AS_IS : STATUS_OK_AFTER_SPACE;
+     }

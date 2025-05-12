@@ -1,0 +1,16 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/495525bc-5598-4f32-9bb7-775a9e1de8cb_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/22bdf9ae-9e67-47b5-9bdd-62d2b287606a_fixed.java
+index 22640dd..7fa9ec0 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/495525bc-5598-4f32-9bb7-775a9e1de8cb_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/22bdf9ae-9e67-47b5-9bdd-62d2b287606a_fixed.java
+@@ -1,3 +1,11 @@
+   private boolean hasExceptionHandler(Node cfgNode) {
++    if (cfgNode instanceof ExceptionHandlerNode) {
++      return true;
++    }
++    for (Node child : cfgNode.getChildren()) {
++      if (hasExceptionHandler(child)) {
++        return true;
++      }
++    }
+     return false;
+   }

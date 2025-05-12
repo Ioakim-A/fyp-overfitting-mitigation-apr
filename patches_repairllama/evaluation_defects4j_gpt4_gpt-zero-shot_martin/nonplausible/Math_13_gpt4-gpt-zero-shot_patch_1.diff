@@ -1,0 +1,17 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/564ae0ab-954e-4011-9d46-f72ff7627d4f_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/661129d9-39d4-41e7-b37e-30851c9d7360_fixed.java
+index 7559ebf..ade453e 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/564ae0ab-954e-4011-9d46-f72ff7627d4f_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/661129d9-39d4-41e7-b37e-30851c9d7360_fixed.java
+@@ -1,4 +1,10 @@
+ private RealMatrix squareRoot(RealMatrix m) {
+     final EigenDecomposition dec = new EigenDecomposition(m);
+-            return dec.getSquareRoot();
++    RealMatrix D = dec.getD();
++    RealMatrix V = dec.getV();
++    for (int i = 0; i < D.getRowDimension(); i++) {
++        D.setEntry(i, i, Math.sqrt(D.getEntry(i, i)));
++    }
++    RealMatrix res = V.multiply(D.multiply((new LUDecomposition(V)).getSolver().getInverse()));
++    return res;
+ }
+\ No newline at end of file

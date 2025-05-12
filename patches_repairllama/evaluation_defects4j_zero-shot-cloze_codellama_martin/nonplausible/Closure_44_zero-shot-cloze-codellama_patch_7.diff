@@ -1,0 +1,31 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f4622191-8a10-46ea-8d25-75c12beb9542_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0ed1f50f-e510-49ae-a219-1ca24b3bf4cc_fixed.java
+index a7f0d46..6fdab4a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f4622191-8a10-46ea-8d25-75c12beb9542_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0ed1f50f-e510-49ae-a219-1ca24b3bf4cc_fixed.java
+@@ -1,22 +1,16 @@
+   void add(String newcode) {
+     maybeEndStatement();
+-
+     if (newcode.length() == 0) {
+       return;
+     }
+-
+     char c = newcode.charAt(0);
+     if ((isWordChar(c) || c == '\\') &&
+         isWordChar(getLastChar())) {
+-      // need space to separate. This is not pretty printing.
+-      // For example: "return foo;"
+       append(" ");
+-      // Do not allow a forward slash to appear after a DIV.
+-      // For example,
+-      // REGEXP DIV REGEXP
+-      // is valid and should print like
+-      // / // / /
+    }
+-
++    if (c == '\\') {
++      append(newcode.substring(1));
++      return;
++    }
+     append(newcode);
+   }

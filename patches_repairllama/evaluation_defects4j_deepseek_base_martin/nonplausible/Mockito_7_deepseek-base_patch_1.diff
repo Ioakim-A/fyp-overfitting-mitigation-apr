@@ -1,0 +1,26 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ded3f07f-b685-4160-9693-66a95467d9fa_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bd2badd8-3a6d-4cd5-985b-3ba6717daea4_fixed.java
+index 91b7957..dec633c 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ded3f07f-b685-4160-9693-66a95467d9fa_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bd2badd8-3a6d-4cd5-985b-3ba6717daea4_fixed.java
+@@ -1,6 +1,21 @@
+         private void readTypeVariables() {
+             for (Type type : typeVariable.getBounds()) {
+                 registerTypeVariablesOn(type);
+             }
++        }
++
++        private void registerTypeVariablesOn(Type type) {
++            if (type instanceof ParameterizedType) {
++                registerTypeVariablesOn((ParameterizedType) type);
++            }
++        }
++
++        private void registerTypeVariablesOn(ParameterizedType parameterizedType) {
++            for (Type type : parameterizedType.getActualTypeArguments()) {
++                registerTypeVariablesOn(type);
++            }
++        }
++
++        private void registerTypeVariablesOn(TypeVariable<?> typeVariable) {
+             registerTypeVariablesOn(getActualTypeArgumentFor(typeVariable));
+         }

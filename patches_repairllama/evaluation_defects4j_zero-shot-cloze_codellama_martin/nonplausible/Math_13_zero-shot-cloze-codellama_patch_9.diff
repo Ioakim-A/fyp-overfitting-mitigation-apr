@@ -1,0 +1,26 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e49d0b69-34b3-4623-8897-a6e1663e4fcd_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/81764987-455d-44e4-88bb-0e1eb29137e9_fixed.java
+index 7559ebf..e8a0c85 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e49d0b69-34b3-4623-8897-a6e1663e4fcd_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/81764987-455d-44e4-88bb-0e1eb29137e9_fixed.java
+@@ -1,4 +1,19 @@
+     private RealMatrix squareRoot(RealMatrix m) {
+-            final EigenDecomposition dec = new EigenDecomposition(m);
+-            return dec.getSquareRoot();
++       if (m.getRowDimension() != m.getColumnDimension()) {
++            throw new IllegalArgumentException("Matrix must be square");
++        }
++        int n = m.getRowDimension();
++        RealMatrix result = new Array2DRowRealMatrix(n, n);
++        for (int i = 0; i < n; i++) {
++            result.setEntry(i, i, Math.sqrt(m.getEntry(i, i)));
++        }
++        for (int i = 0; i < n; i++) {
++            for (int j = i + 1; j < n; j++) {
++                result.setEntry(i, j, m.getEntry(i, j) / (2 * result.getEntry(i, i)));
++            }
++        }
++        for (int i = 0; i < n; i++) {
++            for (int j = i + 1; j < n; j++) {
++                for (int k = j + 1; k < n; k++) {
++                    result.setEntry(i, k, result.getEntry
+     }

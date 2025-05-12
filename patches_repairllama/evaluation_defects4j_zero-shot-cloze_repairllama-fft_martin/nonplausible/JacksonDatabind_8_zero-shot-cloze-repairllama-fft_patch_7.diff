@@ -1,0 +1,56 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5cf9a04f-164d-4fc5-b7eb-60f8efe6798d_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f971b661-2a17-491c-afb3-a3aef7780fc1_fixed.java
+index c9da1b7..b71b60e 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5cf9a04f-164d-4fc5-b7eb-60f8efe6798d_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f971b661-2a17-491c-afb3-a3aef7780fc1_fixed.java
+@@ -1,33 +1,33 @@
+     protected void verifyNonDup(AnnotatedWithParams newOne, int typeIndex, boolean explicit)
+     {
+         final int mask = (1 << typeIndex);
+         _hasNonDefaultCreator = true;
+         AnnotatedWithParams oldOne = _creators[typeIndex];
+-        // already had an explicitly marked one?
+         if (oldOne != null) {
+-
+-            if ((_explicitCreators & mask) != 0) { // already had explicitly annotated, leave as-is
+-                // but skip, if new one not annotated
+-                if (!explicit) {
+-                    return;
+-                }
+-                // both explicit: verify
+-                // otherwise only verify if neither explicitly annotated.
+-            }
+-
+-            // one more thing: ok to override in sub-class
+-            if (oldOne.getClass() == newOne.getClass()) {
+-                // [databind#667]: avoid one particular class of bogus problems
+-
++// buggy code
++//            if ((_explicitCreators & mask) != 0) { 
++//                if (!explicit) {
++//                    return;
++//                }
++//            }
++//            if (oldOne.getClass() == newOne.getClass()) {
++//                    throw new IllegalArgumentException("Conflicting "+TYPE_DESCS[typeIndex]
++//                            +" creators: already had explicitly marked "+oldOne+", encountered "+newOne);
++//            }
++            if (explicit) {
++                if ((_explicitCreators & mask) != 0) {
+                     throw new IllegalArgumentException("Conflicting "+TYPE_DESCS[typeIndex]
+                             +" creators: already had explicitly marked "+oldOne+", encountered "+newOne);
+-                // otherwise, which one to choose?
+-                    // new type more generic, use old
+-                // new type more specific, use it
++                }
++            } else {
++                if ((_explicitCreators & mask) == 0) {
++                    throw new IllegalArgumentException("Conflicting "+TYPE_DESCS[typeIndex]
++                            +" creators: already had "+oldOne+", encountered "+newOne);
++                }
+             }
+         }
+         if (explicit) {
+             _explicitCreators |= mask;
+         }
+         _creators[typeIndex] = _fixAccess(newOne);
+     }

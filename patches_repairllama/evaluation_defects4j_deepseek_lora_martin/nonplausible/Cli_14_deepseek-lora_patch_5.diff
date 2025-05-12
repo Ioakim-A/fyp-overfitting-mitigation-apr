@@ -1,0 +1,64 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ce756699-31ff-4150-b050-f27f0f22e426_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f6a25071-71eb-4f22-9ac4-40b4240a19d3_fixed.java
+index 71189c3..c183226 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ce756699-31ff-4150-b050-f27f0f22e426_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f6a25071-71eb-4f22-9ac4-40b4240a19d3_fixed.java
+@@ -1,46 +1,46 @@
+     public void validate(final WriteableCommandLine commandLine)
+         throws OptionException {
+         // number of options found
+         int present = 0;
+-
+         // reference to first unexpected option
+         Option unexpected = null;
+-
+         for (final Iterator i = options.iterator(); i.hasNext();) {
+             final Option option = (Option) i.next();
+-
+             // needs validation?
+             boolean validate = option.isRequired() || option instanceof Group;
+-            if (validate) {
+-                option.validate(commandLine);
+-            }
+-
+-            // if the child option is present then validate it
+-            if (commandLine.hasOption(option)) {
++// buggy code
++//            if (validate) {
++//                option.validate(commandLine);
++//            }
++//            // if the child option is present then validate it
++//            if (commandLine.hasOption(option)) {
++//                if (++present > maximum) {
++//                    unexpected = option;
++//                    break;
++//                }
++            if (validate && commandLine.hasOption(option)) {
+                 if (++present > maximum) {
+                     unexpected = option;
+-
+                     break;
+                 }
++                option.validate(commandLine);
++            } else if (validate) {
+ 
+                 option.validate(commandLine);
+             }
+         }
+-
+         // too many options
+         if (unexpected != null) {
+             throw new OptionException(this, ResourceConstants.UNEXPECTED_TOKEN,
+                                       unexpected.getPreferredName());
+         }
+-
+         // too few option
+         if (present < minimum) {
+             throw new OptionException(this, ResourceConstants.MISSING_OPTION);
+         }
+-
+         // validate each anonymous argument
+         for (final Iterator i = anonymous.iterator(); i.hasNext();) {
+             final Option option = (Option) i.next();
+             option.validate(commandLine);
+         }
+     }

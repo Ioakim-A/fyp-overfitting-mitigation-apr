@@ -1,0 +1,45 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/70d19d04-a483-4e64-a875-ec6adf1b8caf_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c2ad5853-e821-4c15-a21c-675eb21ae52b_fixed.java
+index 6656ad6..0056425 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/70d19d04-a483-4e64-a875-ec6adf1b8caf_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c2ad5853-e821-4c15-a21c-675eb21ae52b_fixed.java
+@@ -1,36 +1,24 @@
+    private void init() {
+         thisYear= Calendar.getInstance(timeZone, locale).get(Calendar.YEAR);
+-
+         nameValues= new ConcurrentHashMap<Integer, KeyValue[]>();
+-
+         StringBuilder regex= new StringBuilder();
+         List<Strategy> collector = new ArrayList<Strategy>();
+-
+         Matcher patternMatcher= formatPattern.matcher(pattern);
+         if(!patternMatcher.lookingAt()) {
+             throw new IllegalArgumentException("Invalid pattern");
+         }
+-
+         currentFormatField= patternMatcher.group();
+-        Strategy currentStrategy= getStrategy(currentFormatField);
++        currentStrategy= getStrategy(currentFormatField);
+         for(;;) {
+             patternMatcher.region(patternMatcher.end(), patternMatcher.regionEnd());
+             if(!patternMatcher.lookingAt()) {
+                 nextStrategy = null;
+                 break;
+             }
+-            String nextFormatField= patternMatcher.group();
++            nextFormatField= patternMatcher.group();
+             nextStrategy = getStrategy(nextFormatField);
+             if(currentStrategy.addRegex(this, regex)) {
+                 collector.add(currentStrategy);
+             }
+             currentFormatField= nextFormatField;
+-            currentStrategy= nextStrategy;
+-        }
+-        if(currentStrategy.addRegex(this, regex)) {
+-            collector.add(currentStrategy);
+-        }
+-        currentFormatField= null;
+-        strategies= collector.toArray(new Strategy[collector.size()]);
+-        parsePattern= Pattern.compile(regex.toString());
+-    }
++            currentStrategy= nextStrategy
+\ No newline at end of file

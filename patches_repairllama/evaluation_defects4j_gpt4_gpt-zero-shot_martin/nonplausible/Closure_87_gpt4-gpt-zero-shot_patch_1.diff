@@ -1,0 +1,27 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1838d68b-cf92-4282-96a5-73db93de8903_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e57c5e6c-5b62-43eb-a850-8a3c3e3bb193_fixed.java
+index 9de371f..576e6a0 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1838d68b-cf92-4282-96a5-73db93de8903_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e57c5e6c-5b62-43eb-a850-8a3c3e3bb193_fixed.java
+@@ -1,20 +1,10 @@
+ private boolean isFoldableExpressBlock(Node n) {
+     if (n.getType() == Token.BLOCK) {
+       if (n.hasOneChild()) {
+         Node maybeExpr = n.getFirstChild();
+-          // IE has a bug where event handlers behave differently when
+-          // their return value is used vs. when their return value is in
+-          // an EXPR_RESULT. It's pretty freaking weird. See:
+-          // http://code.google.com/p/closure-compiler/issues/detail?id=291
+-          // We try to detect this case, and not fold EXPR_RESULTs
+-          // into other expressions.
+-
+-            // We only have to worry about methods with an implicit 'this'
+-            // param, or this doesn't happen.
+-
++        if (maybeExpr != null)
+             return NodeUtil.isExpressionNode(maybeExpr);
+       }
+     }
+-
+     return false;
+ }
+\ No newline at end of file

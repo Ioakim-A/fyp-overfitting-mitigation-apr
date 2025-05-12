@@ -1,0 +1,26 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dc5ec082-e8a9-4984-801c-81224e1528f9_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8f2ccb5f-31dc-4c4b-b01e-cacc3df53954_fixed.java
+index 34f1f92..e1ac918 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dc5ec082-e8a9-4984-801c-81224e1528f9_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8f2ccb5f-31dc-4c4b-b01e-cacc3df53954_fixed.java
+@@ -1,16 +1,16 @@
+ private void normalise(Element element) {
+     List<Node> toMove = new ArrayList<Node>();
+     for (Node node: element.childNodes) {
+         if (node instanceof TextNode) {
+             TextNode tn = (TextNode) node;
+             if (!tn.isBlank())
+                 toMove.add(tn);
+         }
+     }
+-
+     for (Node node: toMove) {
+-            element.removeChild(node);
+-            body().appendChild(new TextNode(" ", ""));
+-            body().appendChild(node);
++        Node parent = element.parent();
++        parent.removeChild(element);
++        parent.appendChild(new TextNode(" ", ""));
++        parent.appendChild(element);
+     }
+ }
+\ No newline at end of file

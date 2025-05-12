@@ -1,0 +1,16 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b304d453-9d9e-4158-a2ab-d781afe5f273_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9f5a17b9-7812-45d1-9161-950b516ac37f_fixed.java
+index fa6828a..1d29f0d 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b304d453-9d9e-4158-a2ab-d781afe5f273_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9f5a17b9-7812-45d1-9161-950b516ac37f_fixed.java
+@@ -1,5 +1,9 @@
+     private void injectMockCandidate(Class<?> awaitingInjectionClazz, Set<Object> mocks, Object fieldInstance) {
+         for(Field field : orderedInstanceFieldsFrom(awaitingInjectionClazz)) {
+-            mockCandidateFilter.filterCandidate(mocks, field, fieldInstance).thenInject();
++            try {
++                mockCandidateFilter.filterCandidate(mocks, field, fieldInstance).thenInject().get();
++            } catch (InterruptedException | ExecutionException e) {
++                e.printStackTrace();
++            }
+         }
+     }
+\ No newline at end of file

@@ -1,0 +1,51 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8352e244-4a9d-4f04-9eff-3b3963afc8e3_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6cb30fe9-5487-431a-a6ba-d7aaace3775d_fixed.java
+index cdfd827..648400d 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8352e244-4a9d-4f04-9eff-3b3963afc8e3_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6cb30fe9-5487-431a-a6ba-d7aaace3775d_fixed.java
+@@ -1,38 +1,26 @@
+ private void removeUnreferencedFunctionArgs(Scope fnScope) {
+-    // Notice that removing unreferenced function args breaks
+-    // Function.prototype.length. In advanced mode, we don't really care
+-    // about this: we consider "length" the equivalent of reflecting on
+-    // the function's lexical source.
+-    //
+-    // Rather than create a new option for this, we assume that if the user
+-    // is removing globals, then it's OK to remove unused function args.
+-    //
+-    // See http://code.google.com/p/closure-compiler/issues/detail?id=253
+-
+     Node function = fnScope.getRootNode();
+-
+     Preconditions.checkState(function.isFunction());
+     if (NodeUtil.isGetOrSetKey(function.getParent())) {
+-      // The parameters object literal setters can not be removed.
+         return;
+     }
+-
+     Node argList = getFunctionArgList(function);
+-    boolean modifyCallers = modifyCallSites
+-        && callSiteOptimizer.canModifyCallers(function);
++    boolean modifyCallers = modifyCallSites && callSiteOptimizer.canModifyCallers(function);
+     if (!modifyCallers) {
+-      // Strip unreferenced args off the end of the function declaration.
+-      Node lastArg;
+-      while ((lastArg = argList.getLastChild()) != null) {
++        Node lastArg = argList.getLastChild();
++        while (lastArg != null) {
++            Node previousArg = lastArg.getPrevious();
++            lastArg.detach();
+             Var var = fnScope.getVar(lastArg.getString());
+             if (!referenced.contains(var)) {
+-          argList.removeChild(lastArg);
+                 compiler.reportCodeChange();
+             } else {
++                argList.addChildAfter(lastArg, previousArg);
+                 break;
+             }
++            lastArg = previousArg;
+         }
+     } else {
+         callSiteOptimizer.optimize(fnScope, referenced);
+     }
+ }
+\ No newline at end of file

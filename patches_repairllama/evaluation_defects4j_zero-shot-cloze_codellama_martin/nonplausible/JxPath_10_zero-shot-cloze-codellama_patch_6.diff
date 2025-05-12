@@ -1,0 +1,16 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e0c752e0-08fb-48fc-8173-68dd1564b4ac_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3e0e0bd5-c9ea-4e68-b44a-d510cba2963b_fixed.java
+index b86b44d..f356242 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e0c752e0-08fb-48fc-8173-68dd1564b4ac_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3e0e0bd5-c9ea-4e68-b44a-d510cba2963b_fixed.java
+@@ -1,4 +1,10 @@
+     public final Object computeValue(EvalContext context) {
+-        return compute(args[0].computeValue(context), args[1].computeValue(context))
++       Object[] args = context.getArgs();
++        for (int i = 0; i < args.length; i++) {
++            if (args[i] == null) {
++                return Boolean.FALSE;
++            }
++        }
++        return args.length == context.getArgs().length
+                 ? Boolean.TRUE : Boolean.FALSE;
+     }

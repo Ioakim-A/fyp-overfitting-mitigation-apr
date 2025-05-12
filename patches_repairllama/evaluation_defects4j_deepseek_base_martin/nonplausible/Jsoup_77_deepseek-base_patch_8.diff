@@ -1,0 +1,33 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/406dcf0e-9eee-45d2-8a8c-91a478c8453c_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5f31fe81-66d2-43d0-a0f0-6dfe3f696da1_fixed.java
+index 9a3a9db..bd92446 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/406dcf0e-9eee-45d2-8a8c-91a478c8453c_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5f31fe81-66d2-43d0-a0f0-6dfe3f696da1_fixed.java
+@@ -1,27 +1,25 @@
+     /**
+      * If the stack contains an element with this tag's name, pop up the stack to remove the first occurrence. If not
+      * found, skips.
+      *
+      * @param endTag tag to close
+      */
+     private void popStackToClose(Token.EndTag endTag) {
+-        String elName = endTag.name();
++        String elName = endTag.getNodeName();
+         Element firstFound = null;
+-
+         for (int pos = stack.size() -1; pos >= 0; pos--) {
+             Element next = stack.get(pos);
+             if (next.nodeName().equals(elName)) {
+                 firstFound = next;
+                 break;
+             }
+         }
+         if (firstFound == null)
+             return; // not found, skip
+-
+         for (int pos = stack.size() -1; pos >= 0; pos--) {
+             Element next = stack.get(pos);
+             stack.remove(pos);
+             if (next == firstFound)
+                 break;
+         }
+     }

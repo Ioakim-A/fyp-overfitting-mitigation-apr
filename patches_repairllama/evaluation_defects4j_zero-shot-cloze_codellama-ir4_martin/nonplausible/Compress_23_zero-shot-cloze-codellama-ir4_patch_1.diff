@@ -1,0 +1,20 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e9ac4b94-c617-4c0e-880d-329dae44e9b5_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/73cfd4ef-0f5a-46e7-b13a-185de7e3ffda_fixed.java
+index de06adb..073bf53 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e9ac4b94-c617-4c0e-880d-329dae44e9b5_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/73cfd4ef-0f5a-46e7-b13a-185de7e3ffda_fixed.java
+@@ -1,12 +1,14 @@
+         InputStream decode(final InputStream in, final Coder coder,
+                 byte[] password) throws IOException {
+             byte propsByte = coder.properties[0];
+             long dictSize = coder.properties[1];
+             for (int i = 1; i < 4; i++) {
+-                dictSize |= (coder.properties[i + 1] << (8 * i));
++// buggy code
++//                dictSize |= (coder.properties[i + 1] << (8 * i));
++               dictSize |= ((long) coder.properties[i + 1] << (8 * i));
+             }
+             if (dictSize > LZMAInputStream.DICT_SIZE_MAX) {
+                 throw new IOException("Dictionary larger than 4GiB maximum size");
+             }
+             return new LZMAInputStream(in, -1, propsByte, (int) dictSize);
+         }

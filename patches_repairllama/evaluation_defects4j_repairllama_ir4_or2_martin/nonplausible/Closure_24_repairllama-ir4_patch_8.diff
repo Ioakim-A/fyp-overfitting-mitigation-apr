@@ -1,0 +1,44 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9542cb8e-3234-4cb7-be74-1a6b70f86bec_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/29e30bf3-2f99-432c-bc18-fbfc95fce564_fixed.java
+index 602226b..0404d6b 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9542cb8e-3234-4cb7-be74-1a6b70f86bec_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/29e30bf3-2f99-432c-bc18-fbfc95fce564_fixed.java
+@@ -1,26 +1,31 @@
+     private void findAliases(NodeTraversal t) {
+       Scope scope = t.getScope();
+       for (Var v : scope.getVarIterable()) {
+         Node n = v.getNode();
+         int type = n.getType();
+         Node parent = n.getParent();
++// buggy code
++//         if (parent.isVar()) {
++//           if (n.hasChildren() && n.getFirstChild().isQualifiedName()) {
++//           String name = n.getString();
++//           Var aliasVar = scope.getVar(name);
++//           aliases.put(name, aliasVar);
++//           String qualifiedName =
++//               aliasVar.getInitialValue().getQualifiedName();
++//           transformation.addAlias(name, qualifiedName);
++//         } else {
++//           report(t, n, GOOG_SCOPE_NON_ALIAS_LOCAL, n.getString());
++//         }
++//         }
+        if (parent.isVar()) {
+           if (n.hasChildren() && n.getFirstChild().isQualifiedName()) {
+             String name = n.getString();
+             Var aliasVar = scope.getVar(name);
+             aliases.put(name, aliasVar);
+-
+             String qualifiedName =
+                 aliasVar.getInitialValue().getQualifiedName();
+             transformation.addAlias(name, qualifiedName);
+-          // Bleeding functions already get a BAD_PARAMETERS error, so just
+-          // do nothing.
+-          // Parameters of the scope function also get a BAD_PARAMETERS
+-          // error.
+-        } else {
+-          // TODO(robbyw): Support using locals for private variables.
+-          report(t, n, GOOG_SCOPE_NON_ALIAS_LOCAL, n.getString());
+           }
+         }
+       }
+     }

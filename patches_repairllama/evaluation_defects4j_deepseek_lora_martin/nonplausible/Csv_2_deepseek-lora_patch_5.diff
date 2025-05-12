@@ -1,0 +1,29 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3d26662a-3c20-40e6-80b1-87c5f2fae540_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2bbb6615-abbd-4e44-a2bc-20b033d687da_fixed.java
+index fd32990..eba4b6f 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3d26662a-3c20-40e6-80b1-87c5f2fae540_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2bbb6615-abbd-4e44-a2bc-20b033d687da_fixed.java
+@@ -1,20 +1,23 @@
+     /**
+      * Returns a value by name.
+      *
+      * @param name
+      *            the name of the column to be retrieved.
+      * @return the column value, or {@code null} if the column name is not found
+      * @throws IllegalStateException
+      *             if no header mapping was provided
+      * @throws IllegalArgumentException
+      *             if the record is inconsistent
+      * @see #isConsistent()
+      */
+     public String get(final String name) {
+         if (mapping == null) {
+             throw new IllegalStateException(
+                     "No header mapping was specified, the record values can't be accessed by name");
+         }
+         final Integer index = mapping.get(name);
+-            return index != null ? values[index.intValue()] : null;
++// buggy code
++//            return index != null ? values[index.intValue()] : null;
++        return index != null && index < values.length ? values[index] : null;
++
+     }

@@ -1,0 +1,60 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ac5cee02-155a-456d-87de-9cf81e8a807c_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f668d831-077b-493e-836a-01f8381c2f60_fixed.java
+index 135fc63..3cd66fc 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ac5cee02-155a-456d-87de-9cf81e8a807c_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f668d831-077b-493e-836a-01f8381c2f60_fixed.java
+@@ -1,48 +1,48 @@
+-    void resetInsertionMode() {
++    public void resetInsertionMode() {
+         boolean last = false;
+         for (int pos = stack.size() -1; pos >= 0; pos--) {
+             Element node = stack.get(pos);
+             if (pos == 0) {
+                 last = true;
+                 node = contextElement;
+             }
+             String name = node.nodeName();
+             if ("select".equals(name)) {
+                 transition(HtmlTreeBuilderState.InSelect);
+-                break; // frag
++                break; 
+             } else if (("td".equals(name) || "td".equals(name) && !last)) {
+                 transition(HtmlTreeBuilderState.InCell);
+                 break;
+             } else if ("tr".equals(name)) {
+                 transition(HtmlTreeBuilderState.InRow);
+                 break;
+             } else if ("tbody".equals(name) || "thead".equals(name) || "tfoot".equals(name)) {
+                 transition(HtmlTreeBuilderState.InTableBody);
+                 break;
+             } else if ("caption".equals(name)) {
+                 transition(HtmlTreeBuilderState.InCaption);
+                 break;
+             } else if ("colgroup".equals(name)) {
+                 transition(HtmlTreeBuilderState.InColumnGroup);
+-                break; // frag
++                break; 
+             } else if ("table".equals(name)) {
+                 transition(HtmlTreeBuilderState.InTable);
+                 break;
+             } else if ("head".equals(name)) {
+                 transition(HtmlTreeBuilderState.InBody);
+-                break; // frag
++                break; 
+             } else if ("body".equals(name)) {
+                 transition(HtmlTreeBuilderState.InBody);
+                 break;
+             } else if ("frameset".equals(name)) {
+                 transition(HtmlTreeBuilderState.InFrameset);
+-                break; // frag
++                break; 
+             } else if ("html".equals(name)) {
+                 transition(HtmlTreeBuilderState.BeforeHead);
+-                break; // frag
++                break; 
+             } else if (last) {
+                 transition(HtmlTreeBuilderState.InBody);
+-                break; // frag
++                break; 
+             }
+         }
+     }

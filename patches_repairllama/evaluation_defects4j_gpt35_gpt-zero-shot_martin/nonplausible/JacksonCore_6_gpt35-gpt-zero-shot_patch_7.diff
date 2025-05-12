@@ -1,0 +1,30 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cf8aae06-f455-49a6-85be-fd92b9a83c63_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/32149526-5b6d-452e-be5e-fba5ed94951e_fixed.java
+index c3c1a6f..5d192e8 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cf8aae06-f455-49a6-85be-fd92b9a83c63_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/32149526-5b6d-452e-be5e-fba5ed94951e_fixed.java
+@@ -1,22 +1,19 @@
+ private final static int _parseIndex(String str) {
+     final int len = str.length();
+-        // [core#133]: beware of super long indexes; assume we never
+-        // have arrays over 2 billion entries so ints are fine.
+     if (len == 0 || len > 10) {
+         return -1;
+     }
+-        // [core#176]: no leading zeroes allowed
+     for (int i = 0; i < len; ++i) {
+         char c = str.charAt(i);
+         if (c > '9' || c < '0') {
+             return -1;
+         }
+     }
+     if (len == 10) {
+-            long l = NumberInput.parseLong(str);
++        long l = Long.parseLong(str);
+         if (l > Integer.MAX_VALUE) {
+             return -1;
+         }
+     }
+-        return NumberInput.parseInt(str);
++    return Integer.parseInt(str);
+ }
+\ No newline at end of file

@@ -1,0 +1,44 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/14864527-216a-405a-a8c0-617c484e1171_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8329f787-bfe1-4676-a4a7-fc841feecca7_fixed.java
+index 6656ad6..f4eeeb4 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/14864527-216a-405a-a8c0-617c484e1171_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8329f787-bfe1-4676-a4a7-fc841feecca7_fixed.java
+@@ -1,36 +1,33 @@
+ private void init() {
+     thisYear= Calendar.getInstance(timeZone, locale).get(Calendar.YEAR);
+-
+     nameValues= new ConcurrentHashMap<Integer, KeyValue[]>();
+-
+     StringBuilder regex= new StringBuilder();
+     List<Strategy> collector = new ArrayList<Strategy>();
+-
+     Matcher patternMatcher= formatPattern.matcher(pattern);
+     if(!patternMatcher.lookingAt()) {
+         throw new IllegalArgumentException("Invalid pattern");
+     }
+-
+     currentFormatField= patternMatcher.group();
+     Strategy currentStrategy= getStrategy(currentFormatField);
+     for(;;) {
+         patternMatcher.region(patternMatcher.end(), patternMatcher.regionEnd());
+         if(!patternMatcher.lookingAt()) {
+             nextStrategy = null;
+             break;
+         }
+         String nextFormatField= patternMatcher.group();
+         nextStrategy = getStrategy(nextFormatField);
+         if(currentStrategy.addRegex(this, regex)) {
+             collector.add(currentStrategy);
+         }
+         currentFormatField= nextFormatField;
+         currentStrategy= nextStrategy;
+     }
+-        if(currentStrategy.addRegex(this, regex)) {
++    // check if currentStrategy is not null
++    if(currentStrategy != null && currentStrategy.addRegex(this, regex)) {
+         collector.add(currentStrategy);
+     }
+     currentFormatField= null;
+     strategies= collector.toArray(new Strategy[collector.size()]);
+     parsePattern= Pattern.compile(regex.toString());
+ }
+\ No newline at end of file

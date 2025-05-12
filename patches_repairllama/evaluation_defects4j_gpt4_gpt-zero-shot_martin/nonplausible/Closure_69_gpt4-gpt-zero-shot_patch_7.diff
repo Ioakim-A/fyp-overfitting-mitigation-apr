@@ -1,0 +1,58 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c9505688-b540-4435-8bb9-ce00c27c7c2e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8f48bfe3-d651-462f-84ff-ac8c634ee6fd_fixed.java
+index e001e07..f3205d8 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c9505688-b540-4435-8bb9-ce00c27c7c2e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8f48bfe3-d651-462f-84ff-ac8c634ee6fd_fixed.java
+@@ -1,47 +1,35 @@
+   private void visitCall(NodeTraversal t, Node n) {
+     Node child = n.getFirstChild();
+     JSType childType = getJSType(child).restrictByNotNullOrUndefined();
+-
+     if (!childType.canBeCalled()) {
+       report(t, n, NOT_CALLABLE, childType.toString());
+       ensureTyped(t, n);
+       return;
+     }
+-
+-    // A couple of types can be called as if they were functions.
+-    // If it is a function type, then validate parameters.
+     if (childType instanceof FunctionType) {
+       FunctionType functionType = (FunctionType) childType;
+-
+       boolean isExtern = false;
+       JSDocInfo functionJSDocInfo = functionType.getJSDocInfo();
+       if(functionJSDocInfo != null) {
+         String sourceName = functionJSDocInfo.getSourceName();
+         CompilerInput functionSource = compiler.getInput(sourceName);
+         isExtern = functionSource.isExtern();
+       }
+-
+-      // Non-native constructors should not be called directly
+-      // unless they specify a return type and are defined
+-      // in an extern.
+       if (functionType.isConstructor() &&
+           !functionType.isNativeObjectType() &&
+           (functionType.getReturnType().isUnknownType() ||
+            functionType.getReturnType().isVoidType() ||
+            !isExtern)) {
+         report(t, n, CONSTRUCTOR_NOT_CALLABLE, childType.toString());
+       }
+-
+-      // Functions with explcit 'this' types must be called in a GETPROP
+-      // or GETELEM.
+-
++// fixed code
++// 
++      if (n.getChildCount() - 1 != functionType.getParameterCount()) {
++        report(t, n, WRONG_ARGUMENT_COUNT, childType.toString());
++      }
+       visitParameterList(t, n, functionType);
+       ensureTyped(t, n, functionType.getReturnType());
+     } else {
+       ensureTyped(t, n);
+     }
+-
+-    // TODO: Add something to check for calls of RegExp objects, which is not
+-    // supported by IE.  Either say something about the return type or warn
+-    // about the non-portability of the call or both.
+   }
+\ No newline at end of file

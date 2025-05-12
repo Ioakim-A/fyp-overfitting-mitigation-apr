@@ -1,0 +1,35 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/892ae9c5-8112-4254-a399-a2851a4cc050_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/302c9f03-9049-4016-85ed-93240c3d85ab_fixed.java
+index 0b7c52e..f322f1d 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/892ae9c5-8112-4254-a399-a2851a4cc050_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/302c9f03-9049-4016-85ed-93240c3d85ab_fixed.java
+@@ -1,27 +1,28 @@
+     /**
+      * Processes a OBJECTLIT node.
+      */
+     private void handleObjectLit(NodeTraversal t, Node n) {
+       for (Node child = n.getFirstChild();
+           child != null;
+           child = child.getNext()) {
+         // Maybe STRING, GET, SET
+-
++        if (child.getType() == Node.STRING) {
++          continue;
++        }
+         // We should never see a mix of numbers and strings.
+         String name = child.getString();
+         T type = typeSystem.getType(getScope(), n, name);
+-
+         Property prop = getProperty(name);
+         if (!prop.scheduleRenaming(child,
+                                    processProperty(t, prop, type, null))) {
+           // TODO(user): It doesn't look like the user can do much in this
+           // case right now.
+           if (propertiesToErrorFor.containsKey(name)) {
+             compiler.report(JSError.make(
+                 t.getSourceName(), child, propertiesToErrorFor.get(name),
+                 Warnings.INVALIDATION, name,
+                 (type == null ? "null" : type.toString()), n.toString(), ""));
+           }
+         }
+       }
+     }

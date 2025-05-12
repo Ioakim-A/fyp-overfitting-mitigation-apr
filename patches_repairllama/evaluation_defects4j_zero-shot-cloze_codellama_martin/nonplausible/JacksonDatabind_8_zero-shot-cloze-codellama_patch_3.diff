@@ -1,0 +1,43 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e8f62eaa-7024-4b84-bf67-f67cbd1cfe1b_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/711c93d0-b5d1-4143-8007-cd2e0f0a5f16_fixed.java
+index c9da1b7..43cd234 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e8f62eaa-7024-4b84-bf67-f67cbd1cfe1b_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/711c93d0-b5d1-4143-8007-cd2e0f0a5f16_fixed.java
+@@ -1,33 +1,19 @@
+     protected void verifyNonDup(AnnotatedWithParams newOne, int typeIndex, boolean explicit)
+     {
+         final int mask = (1 << typeIndex);
+         _hasNonDefaultCreator = true;
+         AnnotatedWithParams oldOne = _creators[typeIndex];
+-        // already had an explicitly marked one?
+         if (oldOne != null) {
+-
+-            if ((_explicitCreators & mask) != 0) { // already had explicitly annotated, leave as-is
+-                // but skip, if new one not annotated
+-                if (!explicit) {
++           if (oldOne.getParameterCount() > newOne.getParameterCount()) {
++                _creators[typeIndex] = _fixAccess(oldOne);
++                return;
++            } else if (oldOne.getParameterCount() < newOne.getParameterCount()) {
++                _creators[typeIndex] = _fixAccess(newOne);
+                 return;
+-                }
+-                // both explicit: verify
+-                // otherwise only verify if neither explicitly annotated.
+-            }
+-
+-            // one more thing: ok to override in sub-class
+-            if (oldOne.getClass() == newOne.getClass()) {
+-                // [databind#667]: avoid one particular class of bogus problems
+-
+-                    throw new IllegalArgumentException("Conflicting "+TYPE_DESCS[typeIndex]
+-                            +" creators: already had explicitly marked "+oldOne+", encountered "+newOne);
+-                // otherwise, which one to choose?
+-                    // new type more generic, use old
+-                // new type more specific, use it
+             }
+         }
+         if (explicit) {
+             _explicitCreators |= mask;
+         }
+         _creators[typeIndex] = _fixAccess(newOne);
+     }

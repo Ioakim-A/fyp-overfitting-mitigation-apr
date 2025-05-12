@@ -1,0 +1,26 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b2374a12-09cb-4e10-93c4-8afdac5a057f_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1067d0c1-76b2-4a15-ab38-a9f4d43d7596_fixed.java
+index bd45b8e..f5c6dc9 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b2374a12-09cb-4e10-93c4-8afdac5a057f_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1067d0c1-76b2-4a15-ab38-a9f4d43d7596_fixed.java
+@@ -1,15 +1,19 @@
+ public UTF8StreamJsonParser(IOContext ctxt, int features, InputStream in,
+         ObjectCodec codec, BytesToNameCanonicalizer sym,
+         byte[] inputBuffer, int start, int end,
+         boolean bufferRecyclable)
+ {
+     super(ctxt, features);
+     _inputStream = in;
+     _objectCodec = codec;
+     _symbols = sym;
+     _inputBuffer = inputBuffer;
+     _inputPtr = start;
+     _inputEnd = end;
+-        // If we have offset, need to omit that from byte offset, so:
++// fixed code
++// 
++    if(start >= end || start < 0){
++        throw new IllegalArgumentException("Invalid range: Start index is greater than or equal to end index or less than 0");
++    }
+     _bufferRecyclable = bufferRecyclable;
+ }
+\ No newline at end of file

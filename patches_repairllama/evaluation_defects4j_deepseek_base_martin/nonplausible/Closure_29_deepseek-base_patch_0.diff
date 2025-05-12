@@ -1,0 +1,558 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a49d648f-db93-443f-a532-289a237d4db2_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9692d2ad-4173-4ad8-bc86-675e11c3ed91_fixed.java
+index be9c8a3..67b9369 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a49d648f-db93-443f-a532-289a237d4db2_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9692d2ad-4173-4ad8-bc86-675e11c3ed91_fixed.java
+@@ -1,94 +1,510 @@
+     /**
+      * Counts the number of direct (full) references to an object.
+      * Specifically we check for references of the following type:
+      * <pre>
+      *   x;
+      *   x.fn();
+      * </pre>
+      */
+     private boolean isInlinableObject(List<Reference> refs) {
+       boolean ret = false;
+       for (Reference ref : refs) {
+-        Node name = ref.getNode();
+-        Node parent = ref.getParent();
+-        Node gramps = ref.getGrandparent();
++        Node refNode = ref.getParent();
++        while (!NodeUtil.isStatementBlock(refNode)) {
++          refNode = refNode.getParent();
++        }
++        if (!NodeUtil.isObjectLiteral(refNode)) {
++          return false;
++        }
++      }
++      return true;
++    }
++
++    /**
++     * Counts the number of direct (full) references to an array.
++     * Specifically we check for references of the following type:
++     * <pre>
++     *   x;
++     *   x.fn();
++     * </pre>
++     */
++    private boolean isInlinableArray(List<Reference> refs) {
++      boolean ret = false;
++      for (Reference ref : refs) {
++        Node refNode = ref.getParent();
++        while (!NodeUtil.isStatementBlock(refNode)) {
++          refNode = refNode.getParent();
++        }
++        if (!NodeUtil.isArrayLiteral(refNode)) {
++          return false;
++        }
++      }
++      return true;
++    }
++
++    /**
++     * Counts the number of direct (full) references to a string.
++     * Specifically we check for references of the following type:
++     * <pre>
++     *   x;
++     *   x.fn();
++     * </pre>
++     */
++    private boolean isInlinableString(List<Reference> refs) {
++      boolean ret = false;
++      for (Reference ref : refs) {
++        Node refNode = ref.getParent();
++        while (!NodeUtil.isStatementBlock(refNode)) {
++          refNode = refNode.getParent();
++        }
++        if (!NodeUtil.isStringLiteral(refNode)) {
++          return false;
++        }
++      }
++      return true;
++    }
++
++    /**
++     * Counts the number of direct (full) references to a number.
++     * Specifically we check for references of the following type:
++     * <pre>
++     *   x;
++     *   x.fn();
++     * </pre>
++     */
++    private boolean isInlinableNumber(List<Reference> refs) {
++      boolean ret = false;
++      for (Reference ref : refs) {
++        Node refNode = ref.getParent();
++        while (!NodeUtil.isStatementBlock(refNode)) {
++          refNode = refNode.getParent();
++        }
++        if (!NodeUtil.isNumberLiteral(refNode)) {
++          return false;
++        }
++      }
++      return true;
++    }
++
++    /**
++     * Counts the number of direct (full) references to a boolean.
++     * Specifically we check for references of the following type:
++     * <pre>
++     *   x;
++     *   x.fn();
++     * </pre>
++     */
++    private boolean isInlinableBoolean(List<Reference> refs) {
++      boolean ret = false;
++      for (Reference ref : refs) {
++        Node refNode = ref.getParent();
++        while (!NodeUtil.isStatementBlock(refNode)) {
++          refNode = refNode.getParent();
++        }
++        if (!NodeUtil.isBooleanLiteral(refNode)) {
++          return false;
++        }
++      }
++      return true;
++    }
+ 
+-        // Ignore indirect references, like x.y (except x.y(), since
+-        // the function referenced by y might reference 'this').
+-        //
+-        if (parent.isGetProp()) {
+-          Preconditions.checkState(parent.getFirstChild() == name);
+-          // A call target maybe using the object as a 'this' value.
+-          if (gramps.isCall()
+-              && gramps.getFirstChild() == parent) {
++    /**
++     * Counts the number of direct (full) references to a regexp.
++     * Specifically we check for references of the following type:
++     * <pre>
++     *   x;
++     *   x.fn();
++     * </pre>
++     */
++    private boolean isInlinableRegExp(List<Reference> refs) {
++      boolean ret = false;
++      for (Reference ref : refs) {
++        Node refNode = ref.getParent();
++        while (!NodeUtil.isStatementBlock(refNode)) {
++          refNode = refNode.getParent();
++        }
++        if (!NodeUtil.isRegExpLiteral(refNode)) {
+           return false;
+         }
++      }
++      return true;
++    }
+ 
+-          // NOTE(nicksantos): This pass's object-splitting algorithm has
+-          // a blind spot. It assumes that if a property isn't defined on an
+-          // object, then the value is undefined. This is not true, because
+-          // Object.prototype can have arbitrary properties on it.
+-          //
+-          // We short-circuit this problem by bailing out if we see a reference
+-          // to a property that isn't defined on the object literal. This
+-          // isn't a perfect algorithm, but it should catch most cases.
+-          continue;
++    /**
++     * Counts the number of direct (full) references to a null.
++     * Specifically we check for references of the following type:
++     * <pre>
++     *   x;
++     *   x.fn();
++     * </pre>
++     */
++    private boolean isInlinableNull(List<Reference> refs) {
++      boolean ret = false;
++      for (Reference ref : refs) {
++        Node refNode = ref.getParent();
++        while (!NodeUtil.isStatementBlock(refNode)) {
++          refNode = refNode.getParent();
++        }
++        if (!NodeUtil.isNullLiteral(refNode)) {
++          return false;
++        }
++      }
++      return true;
+     }
+ 
+-        // Only rewrite VAR declarations or simple assignment statements
+-        if (!isVarOrAssignExprLhs(name)) {
++    /**
++     * Counts the number of direct (full) references to an undefined.
++     * Specifically we check for references of the following type:
++     * <pre>
++     *   x;
++     *   x.fn();
++     * </pre>
++     */
++    private boolean isInlinableUndefined(List<Reference> refs) {
++      boolean ret = false;
++      for (Reference ref : refs) {
++        Node refNode = ref.getParent();
++        while (!NodeUtil.isStatementBlock(refNode)) {
++          refNode = refNode.getParent();
++        }
++        if (!NodeUtil.isUndefinedLiteral(refNode)) {
+           return false;
+         }
++      }
++      return true;
++    }
+ 
+-        Node val = ref.getAssignedValue();
+-        if (val == null) {
+-          // A var with no assignment.
+-          continue;
++    /**
++     * Counts the number of direct (full) references to a symbol.
++     * Specifically we check for references of the following type:
++     * <pre>
++     *   x;
++     *   x.fn();
++     * </pre>
++     */
++    private boolean isInlinableSymbol(List<Reference> refs) {
++      boolean ret = false;
++      for (Reference ref : refs) {
++        Node refNode = ref.getParent();
++        while (!NodeUtil.isStatementBlock(refNode)) {
++          refNode = refNode.getParent();
++        }
++        if (!NodeUtil.isSymbolLiteral(refNode)) {
++          return false;
++        }
++      }
++      return true;
+     }
+ 
+-        // We're looking for object literal assignments only.
+-        if (!val.isObjectLit()) {
++    /**
++     * Counts the number of direct (full) references to a function.
++     * Specifically we check for references of the following type:
++     * <pre>
++     *   x;
++     *   x.fn();
++     * </pre>
++     */
++    private boolean isInlinableFunction(List<Reference> refs) {
++      boolean ret = false;
++      for (Reference ref : refs) {
++        Node refNode = ref.getParent();
++        while (!NodeUtil.isStatementBlock(refNode)) {
++          refNode = refNode.getParent();
++        }
++        if (!NodeUtil.isFunctionLiteral(refNode)) {
+           return false;
+         }
++      }
++      return true;
++    }
++
++    /**
++     * Counts the number of direct (full) references to an object literal.
++     * Specifically we check for references of the following type:
++     * <pre>
++     *   x;
++     *   x.fn();
++     * </pre>
++     */
++    private boolean isInlinableObjectLiteral(List<Reference> refs) {
++      boolean ret = false;
++      for (Reference ref : refs) {
++        Node refNode = ref.getParent();
++        while (!NodeUtil.isStatementBlock(refNode)) {
++          refNode = refNode.getParent();
++        }
++        if (!NodeUtil.isObjectLiteral(refNode)) {
++          return false;
++        }
++      }
++      return true;
++    }
+ 
+-        // Make sure that the value is not self-refential. IOW,
+-        // disallow things like x = {b: x.a}.
+-        //
+-        // TODO: Only exclude unorderable self-referential
+-        // assignments. i.e. x = {a: x.b, b: x.a} is not orderable,
+-        // but x = {a: 1, b: x.a} is.
+-        //
+-        // Also, ES5 getters/setters aren't handled by this pass.
+-        for (Node child = val.getFirstChild(); child != null;
+-             child = child.getNext()) {
+-          if (child.isGetterDef() ||
+-              child.isSetterDef()) {
+-            // ES5 get/set not supported.
++    /**
++     * Counts the number of direct (full) references to an array literal.
++     * Specifically we check for references of the following type:
++     * <pre>
++     *   x;
++     *   x.fn();
++     * </pre>
++     */
++    private boolean isInlinableArrayLiteral(List<Reference> refs) {
++      boolean ret = false;
++      for (Reference ref : refs) {
++        Node refNode = ref.getParent();
++        while (!NodeUtil.isStatementBlock(refNode)) {
++          refNode = refNode.getParent();
++        }
++        if (!NodeUtil.isArrayLiteral(refNode)) {
+           return false;
+         }
++      }
++      return true;
++    }
++
++    /**
++     * Counts the number of direct (full) references to a string literal.
++     * Specifically we check for references of the following type:
++     * <pre>
++     *   x;
++     *   x.fn();
++     * </pre>
++     */
++    private boolean isInlinableStringLiteral(List<Reference> refs) {
++      boolean ret = false;
++      for (Reference ref : refs) {
++        Node refNode = ref.getParent();
++        while (!NodeUtil.isStatementBlock(refNode)) {
++          refNode = refNode.getParent();
++        }
++        if (!NodeUtil.isStringLiteral(refNode)) {
++          return false;
++        }
++      }
++      return true;
++    }
++
++    /**
++     * Counts the number of direct (full) references to a number literal.
++     * Specifically we check for references of the following type:
++     * <pre>
++     *   x;
++     *   x.fn();
++     * </pre>
++     */
++    private boolean isInlinableNumberLiteral(List<Reference> refs) {
++      boolean ret = false;
++      for (Reference ref : refs) {
++        Node refNode = ref.getParent();
++        while (!NodeUtil.isStatementBlock(refNode)) {
++          refNode = refNode.getParent();
++        }
++        if (!NodeUtil.isNumberLiteral(refNode)) {
++          return false;
++        }
++      }
++      return true;
++    }
++
++    /**
++     * Counts the number of direct (full) references to a boolean literal.
++     * Specifically we check for references of the following type:
++     * <pre>
++     *   x;
++     *   x.fn();
++     * </pre>
++     */
++    private boolean isInlinableBooleanLiteral(List<Reference> refs) {
++      boolean ret = false;
++      for (Reference ref : refs) {
++        Node refNode = ref.getParent();
++        while (!NodeUtil.isStatementBlock(refNode)) {
++          refNode = refNode.getParent();
++        }
++        if (!NodeUtil.isBooleanLiteral(refNode)) {
++          return false;
++        }
++      }
++      return true;
++    }
++
++    /**
++     * Counts the number of direct (full) references to a regexp literal.
++     * Specifically we check for references of the following type:
++     * <pre>
++     *   x;
++     *   x.fn();
++     * </pre>
++     */
++    private boolean isInlinableRegExpLiteral(List<Reference> refs) {
++      boolean ret = false;
++      for (Reference ref : refs) {
++        Node refNode = ref.getParent();
++        while (!NodeUtil.isStatementBlock(refNode)) {
++          refNode = refNode.getParent();
++        }
++        if (!NodeUtil.isRegExpLiteral(refNode)) {
++          return false;
++        }
++      }
++      return true;
++    }
++
++    /**
++     * Counts the number of direct (full) references to a null literal.
++     * Specifically we check for references of the following type:
++     * <pre>
++     *   x;
++     *   x.fn();
++     * </pre>
++     */
++    private boolean isInlinableNullLiteral(List<Reference> refs) {
++      boolean ret = false;
++      for (Reference ref : refs) {
++        Node refNode = ref.getParent();
++        while (!NodeUtil.isStatementBlock(refNode)) {
++          refNode = refNode.getParent();
++        }
++        if (!NodeUtil.isNullLiteral(refNode)) {
++          return false;
++        }
++      }
++      return true;
++    }
++
++    /**
++     * Counts the number of direct (full) references to an undefined literal.
++     * Specifically we check for references of the following type:
++     * <pre>
++     *   x;
++     *   x.fn();
++     * </pre>
++     */
++    private boolean isInlinableUndefinedLiteral(List<Reference> refs) {
++      boolean ret = false;
++      for (Reference ref : refs) {
++        Node refNode = ref.getParent();
++        while (!NodeUtil.isStatementBlock(refNode)) {
++          refNode = refNode.getParent();
++        }
++        if (!NodeUtil.isUndefinedLiteral(refNode)) {
++          return false;
++        }
++      }
++      return true;
++    }
++
++    /**
++     * Counts the number of direct (full) references to a symbol literal.
++     * Specifically we check for references of the following type:
++     * <pre>
++     *   x;
++     *   x.fn();
++     * </pre>
++     */
++    private boolean isInlinableSymbolLiteral(List<Reference> refs) {
++      boolean ret = false;
++      for (Reference ref : refs) {
++        Node refNode = ref.getParent();
++        while (!NodeUtil.isStatementBlock(refNode)) {
++          refNode = refNode.getParent();
++        }
++        if (!NodeUtil.isSymbolLiteral(refNode)) {
++          return false;
++        }
++      }
++      return true;
++    }
++
++    /**
++     * Counts the number of direct (full) references to a function literal.
++     * Specifically we check for references of the following type:
++     * <pre>
++     *   x;
++     *   x.fn();
++     * </pre>
++     */
++    private boolean isInlinableFunctionLiteral(List<Reference> refs) {
++      boolean ret = false;
++      for (Reference ref : refs) {
++        Node refNode = ref.getParent();
++        while (!NodeUtil.isStatementBlock(refNode)) {
++          refNode = refNode.getParent();
++        }
++        if (!NodeUtil.isFunctionLiteral(refNode)) {
++          return false;
++        }
++      }
++      return true;
++    }
++
++    /**
++     * Counts the number of direct (full) references to an object literal.
++     * Specifically we check for references of the following type:
++     * <pre>
++     *   x;
++     *   x.fn();
++     * </pre>
++     */
++    private boolean isInlinableObjectLiteral(List<Reference> refs) {
++      boolean ret = false;
++      for (Reference ref : refs) {
++        Node refNode = ref.getParent();
++        while (!NodeUtil.isStatementBlock(refNode)) {
++          refNode = refNode.getParent();
++        }
++        if (!NodeUtil.isObjectLiteral(refNode)) {
++          return false;
++        }
++      }
++      return true;
++    }
++
++    /**
++     * Counts the number of direct (full) references to an array literal.
++     * Specifically we check for references of the following type:
++     * <pre>
++     *   x;
++     *   x.fn();
++     * </pre>
++     */
++    private boolean isInlinableArrayLiteral(List<Reference> refs) {
++      boolean ret = false;
++      for (Reference ref : refs) {
++        Node refNode = ref.getParent();
++        while (!NodeUtil.isStatementBlock(refNode)) {
++          refNode = refNode.getParent();
++        }
++        if (!NodeUtil.isArrayLiteral(refNode)) {
++          return false;
++        }
++      }
++      return true;
++    }
+ 
++    /**
++     * Counts the number of direct (full) references to a string literal.
++     * Specifically we check for references of the following type:
+     
+           Node childVal = child.getFirstChild();
+           // Check if childVal is the parent of any of the passed in
+           // references, as that is how self-referential assignments
+           // will happen.
+           for (Reference t : refs) {
+             Node refNode = t.getParent();
+             while (!NodeUtil.isStatementBlock(refNode)) {
+               if (refNode == childVal) {
+                 // There's a self-referential assignment
+                 return false;
+               }
+               refNode = refNode.getParent();
+             }
+           }
+         }
+-
+-
+         // We have found an acceptable object literal assignment. As
+         // long as there are no other assignments that mess things up,
+         // we can inline.
+         ret = true;
+       }
+       return ret;
+     }

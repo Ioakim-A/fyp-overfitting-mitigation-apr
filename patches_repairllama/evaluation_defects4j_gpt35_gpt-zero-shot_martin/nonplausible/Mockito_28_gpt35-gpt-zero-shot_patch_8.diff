@@ -1,0 +1,15 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/050bf5c2-6537-4710-9d12-7ce96378b2ed_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/56fa8c02-532e-4f1c-a45f-3fb39c83efad_fixed.java
+index fa6828a..f9a5d4b 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/050bf5c2-6537-4710-9d12-7ce96378b2ed_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/56fa8c02-532e-4f1c-a45f-3fb39c83efad_fixed.java
+@@ -1,5 +1,8 @@
+ private void injectMockCandidate(Class<?> awaitingInjectionClazz, Set<Object> mocks, Object fieldInstance) {
+     for (Field field : orderedInstanceFieldsFrom(awaitingInjectionClazz)) {
+-            mockCandidateFilter.filterCandidate(mocks, field, fieldInstance).thenInject();
++        List<Object> filteredCandidates = mockCandidateFilter.filterCandidate(mocks, field, fieldInstance);
++        for (Object candidate : filteredCandidates) {
++            thenInject(candidate, field, fieldInstance);
++        }
+     }
+ }
+\ No newline at end of file

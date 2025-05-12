@@ -1,0 +1,80 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b9208785-3d0a-4066-abe0-f102b424782b_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/72bc3b75-a888-4076-8d96-6c9cb451bbcb_fixed.java
+index 25b1dac..e107ed6 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b9208785-3d0a-4066-abe0-f102b424782b_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/72bc3b75-a888-4076-8d96-6c9cb451bbcb_fixed.java
+@@ -1,44 +1,65 @@
+   String toStringHelper(boolean forAnnotations) {
+     if (hasReferenceName()) {
+       return getReferenceName();
+     } else if (prettyPrint) {
+-      // Don't pretty print recursively.
+       prettyPrint = false;
+-
+-      // Use a tree set so that the properties are sorted.
+       Set<String> propertyNames = Sets.newTreeSet();
+       for (ObjectType current = this;
+            current != null && !current.isNativeObjectType() &&
+                propertyNames.size() <= MAX_PRETTY_PRINTED_PROPERTIES;
+            current = current.getImplicitPrototype()) {
+         propertyNames.addAll(current.getOwnPropertyNames());
+       }
+-
+       StringBuilder sb = new StringBuilder();
+       sb.append("{");
+-
+       int i = 0;
+       for (String property : propertyNames) {
+         if (i > 0) {
+           sb.append(", ");
+         }
+-
+         sb.append(property);
+         sb.append(": ");
+-        sb.append(getPropertyType(property).toString());
+-
++// buggy code
++//         sb.append(getPropertyType(property).toString());
++//         ++i;
++//         if (i == MAX_PRETTY_PRINTED_PROPERTIES) {
++//           sb.append(", ...");
++//           break;
++//         }
++//       }
++//       sb.append("}");
++//       prettyPrint = true;
++//       return sb.toString();
++//     } else {
++//       return "{...}";
++       ObjectType propertyType = getPropertyType(property);
++        if (propertyType != null) {
++          sb.append(propertyType.toString());
++        } else {
++          sb.append("?");
++        }
+         ++i;
+         if (i == MAX_PRETTY_PRINTED_PROPERTIES) {
+           sb.append(", ...");
+           break;
+         }
+       }
+-
+       sb.append("}");
+-
+       prettyPrint = true;
+       return sb.toString();
+     } else {
+       return "{...}";
+     }
++  }
++      }
++      sb.append("}");
++      prettyPrint = true;
++      return sb.toString();
++    } else {
++      return "{...}";
++    }
++  }
++    } else {
++      return "{...}";
++    }
+   }

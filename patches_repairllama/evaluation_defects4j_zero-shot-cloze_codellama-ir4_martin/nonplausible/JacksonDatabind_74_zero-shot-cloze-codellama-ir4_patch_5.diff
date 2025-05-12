@@ -1,0 +1,39 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ff32d64b-3b37-472e-9285-aa4a4f637d5a_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ff66ea75-3aa6-4464-bd8d-4d762edc2b5a_fixed.java
+index 01c7c46..f3e8bee 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ff32d64b-3b37-472e-9285-aa4a4f637d5a_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ff66ea75-3aa6-4464-bd8d-4d762edc2b5a_fixed.java
+@@ -1,27 +1,30 @@
+     protected Object _deserializeTypedUsingDefaultImpl(JsonParser p, DeserializationContext ctxt,
+             TokenBuffer tb) throws IOException
+     {
+-        // As per [JACKSON-614], may have default implementation to use
+         JsonDeserializer<Object> deser = _findDefaultImplDeserializer(ctxt);
+         if (deser != null) {
+             if (tb != null) {
+                 tb.writeEndObject();
+                 p = tb.asParser(p);
+-                // must move to point to the first token:
+                 p.nextToken();
+             }
+             return deser.deserialize(p, ctxt);
+         }
+-        // or, perhaps we just bumped into a "natural" value (boolean/int/double/String)?
+         Object result = TypeDeserializer.deserializeIfNatural(p, ctxt, _baseType);
+         if (result != null) {
+             return result;
+         }
+-        // or, something for which "as-property" won't work, changed into "wrapper-array" type:
+         if (p.getCurrentToken() == JsonToken.START_ARRAY) {
+             return super.deserializeTypedFromAny(p, ctxt);
++// buggy code
++//            return super.deserializeTypedFromArray(p, ctxt);
++        }
++        if (tb != null) {
++            tb.writeEndObject();
++            p = tb.asParser(p);
++            p.nextToken();
+         }
+         ctxt.reportWrongTokenException(p, JsonToken.FIELD_NAME,
+                 "missing property '"+_typePropertyName+"' that is to contain type id  (for class "+baseTypeName()+")");
+         return null;
+     }

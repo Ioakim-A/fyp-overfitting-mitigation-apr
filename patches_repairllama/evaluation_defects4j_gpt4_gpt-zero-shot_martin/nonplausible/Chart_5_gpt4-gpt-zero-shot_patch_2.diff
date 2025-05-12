@@ -1,0 +1,44 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f72dbc38-5d62-4f8e-9b28-e835dce198d7_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3bcd6547-d990-4d09-be1b-dd6f9d46cbad_fixed.java
+index 0cc5123..921f6ff 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f72dbc38-5d62-4f8e-9b28-e835dce198d7_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3bcd6547-d990-4d09-be1b-dd6f9d46cbad_fixed.java
+@@ -1,37 +1,31 @@
+ public XYDataItem addOrUpdate(Number x, Number y) {
+     if (x == null) {
+         throw new IllegalArgumentException("Null 'x' argument.");
+     }
+-
+-        // if we get to here, we know that duplicate X values are not permitted
+     XYDataItem overwritten = null;
+     int index = indexOf(x);
+     if (index >= 0 && !this.allowDuplicateXValues) {
++        // fill here
+         XYDataItem existing = (XYDataItem) this.data.get(index);
+         try {
+             overwritten = (XYDataItem) existing.clone();
+         }
+         catch (CloneNotSupportedException e) {
+             throw new SeriesException("Couldn't clone XYDataItem!");
+         }
+         existing.setY(y);
+     }
+     else {
+-            // if the series is sorted, the negative index is a result from
+-            // Collections.binarySearch() and tells us where to insert the
+-            // new item...otherwise it will be just -1 and we should just
+-            // append the value to the list...
+         if (this.autoSort) {
+             this.data.add(-index - 1, new XYDataItem(x, y));
+         }
+         else {
+             this.data.add(new XYDataItem(x, y));
+         }
+-            // check if this addition will exceed the maximum item count...
+         if (getItemCount() > this.maximumItemCount) {
+             this.data.remove(0);
+         }
+     }
+     fireSeriesChanged();
+     return overwritten;
+ }
+\ No newline at end of file

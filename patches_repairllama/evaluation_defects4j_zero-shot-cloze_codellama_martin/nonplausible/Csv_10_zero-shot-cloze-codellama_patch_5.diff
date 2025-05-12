@@ -1,0 +1,36 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/da2ed0b4-444a-44b1-9147-b89c69b6e4d5_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2b79970f-ff9f-44b2-8d29-78e9480f74a2_fixed.java
+index ceaab68..3d88a70 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/da2ed0b4-444a-44b1-9147-b89c69b6e4d5_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2b79970f-ff9f-44b2-8d29-78e9480f74a2_fixed.java
+@@ -1,10 +1,28 @@
+     public CSVPrinter(final Appendable out, final CSVFormat format) throws IOException {
+         Assertions.notNull(out, "out");
+         Assertions.notNull(format, "format");
+-
+         this.out = out;
+         this.format = format;
+         this.format.validate();
+-        // TODO: Is it a good idea to do this here instead of on the first call to a print method?
+-        // It seems a pain to have to track whether the header has already been printed or not.
++       if (out instanceof Writer) {
++            this.writer = (Writer) out;
++        } else {
++            this.writer = new Writer() {
++
++                @Override
++                public void close() throws IOException {
++                    out.close();
++                }
++
++                @Override
++                public void flush() throws IOException {
++                    out.flush();
++                }
++
++                @Override
++                public void write(final char[] cbuf, final int off, final int len) throws IOException {
++                    out.append(cbuf, off, len);
++                }
++            };
++        }
+     }

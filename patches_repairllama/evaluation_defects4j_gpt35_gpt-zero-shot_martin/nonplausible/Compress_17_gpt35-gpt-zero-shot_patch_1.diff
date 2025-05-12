@@ -1,0 +1,58 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a2f22e0f-db1e-4ec1-8d83-0ea6702584a1_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/65b30850-7449-4f44-81d7-b1f3cae24c67_fixed.java
+index d2fcb52..32db9b2 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a2f22e0f-db1e-4ec1-8d83-0ea6702584a1_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/65b30850-7449-4f44-81d7-b1f3cae24c67_fixed.java
+@@ -1,50 +1,7 @@
+-    public static long parseOctal(final byte[] buffer, final int offset, final int length) {
+-        long    result = 0;
+-        int     end = offset + length;
+-        int     start = offset;
+-
+-        if (length < 2){
+-            throw new IllegalArgumentException("Length "+length+" must be at least 2");
+-        }
+-
+-        if (buffer[start] == 0) {
+-            return 0L;
+-        }
+-
+-        // Skip leading spaces
+-        while (start < end){
+-            if (buffer[start] == ' '){
+-                start++;
+-            } else {
+-                break;
+-            }
+-        }
+-
+-        // Must have trailing NUL or space
+-        byte trailer;
+-        trailer = buffer[end-1];
+-        if (trailer == 0 || trailer == ' '){
+-            end--;
+-        } else {
+-            throw new IllegalArgumentException(
+-                    exceptionMessage(buffer, offset, length, end-1, trailer));
+-        }
+-        // May have additional NULs or spaces
+-        trailer = buffer[end - 1];
+ if (trailer == 0 || trailer == ' '){
+     end--;
+-        }
+-
+-        for ( ;start < end; start++) {
+-            final byte currentByte = buffer[start];
+-            // CheckStyle:MagicNumber OFF
+-            if (currentByte < '0' || currentByte > '7'){
++    if (end <= start){
+         throw new IllegalArgumentException(
+-                        exceptionMessage(buffer, offset, length, start, currentByte));
+-            }
+-            result = (result << 3) + (currentByte - '0'); // convert from ASCII
+-            // CheckStyle:MagicNumber ON
++                exceptionMessage(buffer, offset, length, end, trailer));
+     }
+-
+-        return result;
+ }
+\ No newline at end of file

@@ -1,0 +1,40 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/70d1d330-a457-4a47-b33f-e36601ef3d97_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d94a6e85-2bc1-4aa2-b42f-979db12f55cf_fixed.java
+index ab7017e..45cf351 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/70d1d330-a457-4a47-b33f-e36601ef3d97_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d94a6e85-2bc1-4aa2-b42f-979db12f55cf_fixed.java
+@@ -1,24 +1,33 @@
+     public static DateTimeZone forOffsetHoursMinutes(int hoursOffset, int minutesOffset) throws IllegalArgumentException {
+         if (hoursOffset == 0 && minutesOffset == 0) {
+             return DateTimeZone.UTC;
+         }
+         if (hoursOffset < -23 || hoursOffset > 23) {
+             throw new IllegalArgumentException("Hours out of range: " + hoursOffset);
+         }
+-        if (minutesOffset < 0 || minutesOffset > 59) {
++// buggy code
++//         if (minutesOffset < 0 || minutesOffset > 59) {
++//             throw new IllegalArgumentException("Minutes out of range: " + minutesOffset);
++//         }
++//         int offset = 0;
++//         try {
++//             int hoursInMinutes = hoursOffset * 60;
++//             if (hoursInMinutes < 0) {
++//                 minutesOffset = hoursInMinutes - minutesOffset;
++       if (minutesOffset < -59 || minutesOffset > 59) {
+             throw new IllegalArgumentException("Minutes out of range: " + minutesOffset);
+         }
+         int offset = 0;
+         try {
+             int hoursInMinutes = hoursOffset * 60;
+             if (hoursInMinutes < 0) {
+-                minutesOffset = hoursInMinutes - minutesOffset;
++                minutesOffset = minutesOffset + hoursInMinutes;
+             } else {
+                 minutesOffset = hoursInMinutes + minutesOffset;
+             }
+             offset = FieldUtils.safeMultiply(minutesOffset, DateTimeConstants.MILLIS_PER_MINUTE);
+         } catch (ArithmeticException ex) {
+             throw new IllegalArgumentException("Offset is too large");
+         }
+         return forOffsetMillis(offset);
+     }

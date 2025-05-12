@@ -1,0 +1,42 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/93cb1b41-93ed-4957-acee-f28a3a284b36_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a8ee0ed4-0bf4-4200-ba2f-63674ad20800_fixed.java
+index 7618212..831660a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/93cb1b41-93ed-4957-acee-f28a3a284b36_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a8ee0ed4-0bf4-4200-ba2f-63674ad20800_fixed.java
+@@ -1,34 +1,21 @@
+    public List<Connection.KeyVal> formData() {
+         ArrayList<Connection.KeyVal> data = new ArrayList<Connection.KeyVal>();
+-
+-        // iterate the form control elements and accumulate their values
+         for (Element el: elements) {
+-            if (!el.tag().isFormSubmittable()) continue; // contents are form listable, superset of submitable
++            if (!el.tag().isFormSubmittable()) continue;
+             String name = el.attr("name");
+             if (name.length() == 0) continue;
+             String type = el.attr("type");
+-
+             if ("select".equals(el.tagName())) {
+                 Elements options = el.select("option[selected]");
+                 boolean set = false;
+                 for (Element option: options) {
+                     data.add(HttpConnection.KeyVal.create(name, option.val()));
+                     set = true;
+                 }
+                 if (!set) {
+                     Element option = el.select("option").first();
+                     if (option != null)
+                         data.add(HttpConnection.KeyVal.create(name, option.val()));
+                 }
+             } else if ("checkbox".equalsIgnoreCase(type) || "radio".equalsIgnoreCase(type)) {
+-                // only add checkbox or radio if they have the checked attribute
+-                if (el.hasAttr("checked")) {
+-                    final String val = el.val();
+-                    data.add(HttpConnection.KeyVal.create(name, val));
+-                }
+-            } else {
+-                data.add(HttpConnection.KeyVal.create(name, el.val()));
+-            }
+-        }
+-        return data;
+-    }
++                if (el.
+\ No newline at end of file

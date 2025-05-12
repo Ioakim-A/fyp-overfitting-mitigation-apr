@@ -1,0 +1,47 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/30a0d6a5-ffd4-4686-8575-65dd91f9e354_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8c563363-b6e9-4520-b439-b160858ba21a_fixed.java
+index 3840a76..6fe99ee 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/30a0d6a5-ffd4-4686-8575-65dd91f9e354_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8c563363-b6e9-4520-b439-b160858ba21a_fixed.java
+@@ -1,29 +1,24 @@
+   JSType resolveInternal(ErrorReporter t, StaticScope<JSType> enclosing) {
+-    // TODO(user): Investigate whether it is really necessary to keep two
+-    // different mechanisms for resolving named types, and if so, which order
+-    // makes more sense. Now, resolution via registry is first in order to
+-    // avoid triggering the warnings built into the resolution via properties.
+     boolean resolved = resolveViaRegistry(t, enclosing);
++    // buggy code
++    //     if (detectImplicitPrototypeCycle()) {
++    //       handleTypeCycle(t);
++    //     }
++    //     if (resolved) {
++    //       super.resolveInternal(t, enclosing);
++    //       finishPropertyContinuations();
++    //       return registry.isLastGeneration() ?
++    //           getReferencedType() : this;
++    //     }
++    //     resolveViaProperties(t, enclosing);
++    //     if (detectImplicitPrototypeCycle()) {
+     if (detectImplicitPrototypeCycle()) {
+       handleTypeCycle(t);
+     }
+-
+-    if (resolved) {
+-      super.resolveInternal(t, enclosing);
+-      finishPropertyContinuations();
+-      return registry.isLastGeneration() ?
+-          getReferencedType() : this;
+-    }
+-
+-    resolveViaProperties(t, enclosing);
+-    if (detectImplicitPrototypeCycle()) {
+-      handleTypeCycle(t);
+-    }
+-
+     super.resolveInternal(t, enclosing);
+     if (isResolved()) {
+       finishPropertyContinuations();
+     }
+     return registry.isLastGeneration() ?
+         getReferencedType() : this;
+   }
+\ No newline at end of file

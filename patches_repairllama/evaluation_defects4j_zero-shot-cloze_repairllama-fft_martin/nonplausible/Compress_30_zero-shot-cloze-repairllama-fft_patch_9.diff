@@ -1,0 +1,36 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f6719935-b50f-4c34-874f-ab60f71ed9bb_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/afea82c1-9819-449a-b990-547919a85f56_fixed.java
+index 20d45d1..2667f40 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f6719935-b50f-4c34-874f-ab60f71ed9bb_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/afea82c1-9819-449a-b990-547919a85f56_fixed.java
+@@ -1,27 +1,30 @@
+     public int read(final byte[] dest, final int offs, final int len)
+         throws IOException {
+         if (offs < 0) {
+             throw new IndexOutOfBoundsException("offs(" + offs + ") < 0.");
+         }
+         if (len < 0) {
+             throw new IndexOutOfBoundsException("len(" + len + ") < 0.");
+         }
+         if (offs + len > dest.length) {
+             throw new IndexOutOfBoundsException("offs(" + offs + ") + len("
+                                                 + len + ") > dest.length(" + dest.length + ").");
+         }
+         if (this.in == null) {
+             throw new IOException("stream closed");
+         }
++// buggy code
++       if (!this.in.markSupported()) {
++            throw new IOException("Mark not supported");
++        }
+ 
+         final int hi = offs + len;
+         int destOffs = offs;
+         int b;
+         while (destOffs < hi && ((b = read0()) >= 0)) {
+             dest[destOffs++] = (byte) b;
+             count(1);
+         }
+-
+         int c = (destOffs == offs) ? -1 : (destOffs - offs);
+         return c;
+     }

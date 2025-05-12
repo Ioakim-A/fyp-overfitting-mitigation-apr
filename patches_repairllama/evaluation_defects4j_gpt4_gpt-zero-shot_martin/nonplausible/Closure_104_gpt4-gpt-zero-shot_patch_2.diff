@@ -1,0 +1,32 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2cf488e2-c505-4f3a-90c2-d42b57be0c26_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fd9b5d99-6547-4f31-b8de-1d65fdbcadf8_fixed.java
+index b36b2a9..ed2742d 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2cf488e2-c505-4f3a-90c2-d42b57be0c26_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fd9b5d99-6547-4f31-b8de-1d65fdbcadf8_fixed.java
+@@ -1,26 +1,25 @@
+   JSType meet(JSType that) {
+     UnionTypeBuilder builder = new UnionTypeBuilder(registry);
+     for (JSType alternate : alternates) {
+       if (alternate.isSubtype(that)) {
+         builder.addAlternate(alternate);
+       }
+     }
+-
+     if (that instanceof UnionType) {
+       for (JSType otherAlternate : ((UnionType) that).alternates) {
+         if (otherAlternate.isSubtype(this)) {
+           builder.addAlternate(otherAlternate);
+         }
+       }
+     } else if (that.isSubtype(this)) {
+       builder.addAlternate(that);
+     }
+     JSType result = builder.build();
+     if (result != null) {
+       return result;
+     } else if (this.isObject() && that.isObject()) {
+       return getNativeType(JSTypeNative.NO_OBJECT_TYPE);
+     } else {
+       return getNativeType(JSTypeNative.NO_TYPE);
+     }
+   }
+\ No newline at end of file

@@ -1,0 +1,33 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2dba74d4-1588-4b61-8224-4f60403199d5_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f1c8b738-cf66-4703-b4f5-fdaccc0891c0_fixed.java
+index 4aff4e4..9d688ad 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2dba74d4-1588-4b61-8224-4f60403199d5_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f1c8b738-cf66-4703-b4f5-fdaccc0891c0_fixed.java
+@@ -1,15 +1,26 @@
+     private boolean testValidProtocol(Element el, Attribute attr, Set<Protocol> protocols) {
+-        // try to resolve relative urls to abs, and optionally update the attribute so output html has abs.
+-        // rels without a baseuri get removed
+         String value = el.absUrl(attr.getKey());
++// buggy code
+        if (!preserveRelativeLinks)
+             attr.setValue(value);
++        for (Protocol protocol : protocols) {
++            String prot = protocol.toString() + ":";
++            if (value.startsWith(prot)) {
++                return true;
++            }
++        }
++        return false;
++    }
+ 
++    private boolean testValidProtocol(Element el, Attribute attr, Set<Protocol> protocols) {
++        String value = el.absUrl(attr.getKey());
++        if (!preserveRelativeLinks)
++            attr.setValue(value);
+         for (Protocol protocol : protocols) {
+             String prot = protocol.toString() + ":";
+             if (value.toLowerCase().startsWith(prot)) {
+                 return true;
+             }
+         }
+         return false;
+     }

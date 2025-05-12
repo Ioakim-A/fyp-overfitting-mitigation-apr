@@ -1,0 +1,19 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e77d7699-d26e-46eb-af38-d8054e548c32_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/76c2ba90-1822-4280-a743-2f9bc11c112d_fixed.java
+index 0502fea..c71097c 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e77d7699-d26e-46eb-af38-d8054e548c32_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/76c2ba90-1822-4280-a743-2f9bc11c112d_fixed.java
+@@ -1,9 +1,10 @@
+     public BaseSettings withDateFormat(DateFormat df) {
+         if (_dateFormat == df) {
+             return this;
+         }
+-        TimeZone tz = (df == null) ? _timeZone : df.getTimeZone();
+-        return new BaseSettings(_classIntrospector, _annotationIntrospector, _visibilityChecker, _propertyNamingStrategy, _typeFactory,
+-                _typeResolverBuilder, df, _handlerInstantiator, _locale,
+-                tz, _defaultBase64);
++       if (df == null) {
++            throw new NullPointerException();
++        }
++        _dateFormat = df;
++        return this;
+     }

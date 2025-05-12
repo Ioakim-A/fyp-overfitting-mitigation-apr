@@ -1,0 +1,17 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b73ab914-7957-4183-b76a-1b03b9b65a00_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e5a9597c-d52c-4e5d-b973-edd259862d80_fixed.java
+index 5eedc11..bac1bb4 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b73ab914-7957-4183-b76a-1b03b9b65a00_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e5a9597c-d52c-4e5d-b973-edd259862d80_fixed.java
+@@ -1,6 +1,9 @@
+     private static void handleRawtext(Token.StartTag startTag, HtmlTreeBuilder tb) {
+-        tb.insert(startTag);
++       if (startTag.normalName().equals("script")) {
++            tb.tokeniser.transition(TokeniserState.ScriptData);
++        } else if (startTag.normalName().equals("style")) {
++            tb.tokeniser.transition(TokeniserState.Style);
++        } else {
+             tb.tokeniser.transition(TokeniserState.Rawtext);
+-        tb.markInsertionMode();
+-        tb.transition(Text);
++        }
+     }

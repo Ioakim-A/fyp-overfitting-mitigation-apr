@@ -1,0 +1,48 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c643db37-7dea-4bc8-a236-48c7aa56d151_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/74a084a9-2e0e-4fa0-8a1a-1aa756b96a80_fixed.java
+index e6a5296..a5d68bf 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c643db37-7dea-4bc8-a236-48c7aa56d151_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/74a084a9-2e0e-4fa0-8a1a-1aa756b96a80_fixed.java
+@@ -1,42 +1,32 @@
+     public boolean hasClass(String className) {
+-        final String classAttr = attributes.get("class");
++       final String classAttr = getAttribute("class");
+         final int len = classAttr.length();
+         final int wantLen = className.length();
+-
+         if (len == 0 || len < wantLen) {
+             return false;
+         }
+-
+-        // if both lengths are equal, only need compare the className with the attribute
+         if (len == wantLen) {
+             return className.equalsIgnoreCase(classAttr);
+         }
+-
+-        // otherwise, scan for whitespace and compare regions (with no string or arraylist allocations)
+         boolean inClass = false;
+         int start = 0;
+         for (int i = 0; i < len; i++) {
+             if (Character.isWhitespace(classAttr.charAt(i))) {
+                 if (inClass) {
+-                    // white space ends a class name, compare it with the requested one, ignore case
+                     if (i - start == wantLen && classAttr.regionMatches(true, start, className, 0, wantLen)) {
+                         return true;
+                     }
+                     inClass = false;
+                 }
+             } else {
+                 if (!inClass) {
+-                    // we're in a class name : keep the start of the substring
+                     inClass = true;
+                     start = i;
+                 }
+             }
+         }
+-
+-        // check the last entry
+         if (inClass && len - start == wantLen) {
+             return classAttr.regionMatches(true, start, className, 0, wantLen);
+         }
+-
+         return false;
+     }

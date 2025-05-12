@@ -1,0 +1,21 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e9d526e3-f785-4cf0-a26f-c922a52e62b5_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e9218e99-79f4-4682-b2ae-960dd9fe1142_fixed.java
+index 0ed3381..74bae34 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e9d526e3-f785-4cf0-a26f-c922a52e62b5_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e9218e99-79f4-4682-b2ae-960dd9fe1142_fixed.java
+@@ -1,8 +1,13 @@
+ protected Object _deserializeFromEmptyString() throws IOException {
+-            // As per [databind#398], URI requires special handling
+     if (_kind == STD_URI) {
+         return URI.create("");
+     }
+-            // As per [databind#1123], Locale too
++    if (_kind == STD_URL) {
++        try {
++            return new URL("");
++        } catch (MalformedURLException e) {
++            throw new IOException("Unable to create URL from empty string", e);
++        }
++    }
+     return super._deserializeFromEmptyString();
+ }
+\ No newline at end of file

@@ -1,0 +1,42 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d6fc025a-3db1-4ffe-b967-22671a595ae8_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ede1389b-55fa-4f8c-a135-cfeecd44e036_fixed.java
+index ef76662..6d918b9 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d6fc025a-3db1-4ffe-b967-22671a595ae8_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ede1389b-55fa-4f8c-a135-cfeecd44e036_fixed.java
+@@ -1,17 +1,37 @@
++        void read(Tokeniser t, CharacterReader r) {
++            char c = r.consume();
++            switch (c) {
++                case '>':
++                    t.tagPending.selfClosing = true;
++                    t.emitTagPending();
++                    t.transition(Data);
++                    break;
++                case eof:
++                    t.eofError(this);
++                    t.transition(Data);
++                    break;
++                default:
++                    t.error(this);
++                    t.transition(Data);
++                    break;
++            }
++        }
++
++        @Override
+         void read(Tokeniser t, CharacterReader r) {
+             char c = r.consume();
+             switch (c) {
+                 case '>':
+                     t.tagPending.selfClosing = true;
+                     t.emitTagPending();
+                     t.transition(Data);
+                     break;
+                 case eof:
+                     t.eofError(this);
+                     t.transition(Data);
+                     break;
+                 default:
+                     t.error(this);
+                     t.transition(BeforeAttributeName);
+             }
+         }

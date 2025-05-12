@@ -1,0 +1,31 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/696ec83f-2e05-4ca5-a832-a798de848667_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9078175b-b814-4783-8d24-b5da48738c59_fixed.java
+index 831b514..ac55126 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/696ec83f-2e05-4ca5-a832-a798de848667_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9078175b-b814-4783-8d24-b5da48738c59_fixed.java
+@@ -1,23 +1,23 @@
+     public boolean equals(Object other) {
+         boolean ret;
+-        
+         if (this == other) { 
+             ret = true;
+         } else if (other == null) {
+             ret = false;
+         } else  {
+             try {
+                 Complex rhs = (Complex)other;
+                 if (rhs.isNaN()) {
+                     ret = this.isNaN();
+                 } else {
++// buggy code
++//                    ret = (Double.doubleToRawLongBits(real) == Double.doubleToRawLongBits(rhs.getReal())) && (Double.doubleToRawLongBits(imaginary) == Double.doubleToRawLongBits(rhs.getImaginary()));
+                    ret = (Double.doubleToRawLongBits(real) == Double.doubleToRawLongBits(rhs.getReal())) && (Double.doubleToRawLongBits(imaginary) == Double.doubleToRawLongBits(rhs.getImaginary()));
++
+                 }
+             } catch (ClassCastException ex) {
+-                // ignore exception
+                 ret = false;
+             }
+         }
+-      
+         return ret;
+     }

@@ -1,0 +1,19 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b3cf3dac-a133-4d9b-80dc-df4ba4ab651c_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7c994946-8b6d-464e-91ba-e05d94dce638_fixed.java
+index d2feff5..5b640d2 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b3cf3dac-a133-4d9b-80dc-df4ba4ab651c_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7c994946-8b6d-464e-91ba-e05d94dce638_fixed.java
+@@ -1,8 +1,11 @@
+ public Document clean(Document dirtyDocument) {
+     Validate.notNull(dirtyDocument);
+-
+     Document clean = Document.createShell(dirtyDocument.baseUri());
++    // fixed code
++    try {
+         copySafeNodes(dirtyDocument.body(), clean.body());
+-
++    } catch (NullPointerException e) {
++        System.out.println("Error: The body of the dirtyDocument is null.");
++    }
+     return clean;
+ }
+\ No newline at end of file

@@ -1,0 +1,30 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/72863bcb-e8a3-40a6-8c88-5e17b631144e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c9420e6c-d880-41dd-83ad-d3eaa4c9ea7c_fixed.java
+index 939f49b..4f601a7 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/72863bcb-e8a3-40a6-8c88-5e17b631144e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c9420e6c-d880-41dd-83ad-d3eaa4c9ea7c_fixed.java
+@@ -1,21 +1,20 @@
+     private boolean isPrototypePropertyAssign(Node assign) {
+       Node n = assign.getFirstChild();
++      
+       if (n != null && NodeUtil.isVarOrSimpleAssignLhs(n, assign)
+           && n.getType() == Token.GETPROP
+-          ) {
+-        // We want to exclude the assignment itself from the usage list
+-        boolean isChainedProperty =
+-            n.getFirstChild().getType() == Token.GETPROP;
++          && n.getLastChild() != null) {
++        boolean isChainedProperty = n.getFirstChild().getType() == Token.GETPROP;
+         
+         if (isChainedProperty) {
+           Node child = n.getFirstChild().getFirstChild().getNext();
+           
+           if (child.getType() == Token.STRING &&
+               child.getString().equals("prototype")) {
+             return true;
+           }
+         }
+       }
+       
+       return false;
+     }
+\ No newline at end of file

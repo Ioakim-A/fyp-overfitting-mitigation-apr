@@ -1,0 +1,40 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/62268823-b8bd-4b95-be17-e40e982d0991_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b4c8969e-e672-4da8-9c39-2c9c8497862e_fixed.java
+index 8733f51..9cf2dfa 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/62268823-b8bd-4b95-be17-e40e982d0991_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b4c8969e-e672-4da8-9c39-2c9c8497862e_fixed.java
+@@ -1,22 +1,22 @@
+     protected RealPointValuePair getSolution() {
+         double[] coefficients = new double[getOriginalNumDecisionVariables()];
+         Integer basicRow =
+             getBasicRow(getNumObjectiveFunctions() + getOriginalNumDecisionVariables());
+         double mostNegative = basicRow == null ? 0 : getEntry(basicRow, getRhsOffset());
+-        for (int i = 0; i < coefficients.length; i++) {
+-            basicRow = getBasicRow(getNumObjectiveFunctions() + i);
+-                // if multiple variables can take a given value 
+-                // then we choose the first and set the rest equal to 0
+-                coefficients[i] =
+-                    (basicRow == null ? 0 : getEntry(basicRow, getRhsOffset())) -
+-                    (restrictToNonNegative ? 0 : mostNegative);
+-            if (basicRow != null) {
+-                for (int j = getNumObjectiveFunctions(); j < getNumObjectiveFunctions() + i; j++) {
+-                    if (tableau.getEntry(basicRow, j) == 1) {
+-                         coefficients[i] = 0;
+-                    }
+-                }
++// buggy code
++//        for (int i = 0; i < coefficients.length; i++) {
++//            basicRow = getBasicRow(getNumObjectiveFunctions() + i);
++//                coefficients[i] =
++//                    (basicRow == null ? 0 : getEntry(basicRow, getRhsOffset())) -
++//                    (restrictToNonNegative ? 0 : mostNegative);
++//            if (basicRow != null) {
++//                for (int j = getNumObjectiveFunctions(); j < getNumObjectiveFunctions() + i; j++) {
++//                    if (tableau.getEntry(basicRow, j) == 1) {
++//                         coefficients[i] = 0;
++//                    }
++//                }
++//
+             }
+         }
+         return new RealPointValuePair(coefficients, f.getValue(coefficients));
+     }

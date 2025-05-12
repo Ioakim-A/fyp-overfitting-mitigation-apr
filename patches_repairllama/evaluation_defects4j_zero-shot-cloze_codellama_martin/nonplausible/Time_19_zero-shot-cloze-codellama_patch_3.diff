@@ -1,0 +1,44 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/76929b87-505b-40e2-a104-f08e015a097e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/eb50f020-b41a-4a5e-973e-46c37f73c355_fixed.java
+index 201a38f..8cbccc3 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/76929b87-505b-40e2-a104-f08e015a097e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/eb50f020-b41a-4a5e-973e-46c37f73c355_fixed.java
+@@ -1,32 +1,30 @@
+     public int getOffsetFromLocal(long instantLocal) {
+-        // get the offset at instantLocal (first estimate)
+         final int offsetLocal = getOffset(instantLocal);
+-        // adjust instantLocal using the estimate and recalc the offset
+         final long instantAdjusted = instantLocal - offsetLocal;
+         final int offsetAdjusted = getOffset(instantAdjusted);
+-        // if the offsets differ, we must be near a DST boundary
+         if (offsetLocal != offsetAdjusted) {
+-            // we need to ensure that time is always after the DST gap
+-            // this happens naturally for positive offsets, but not for negative
+             if ((offsetLocal - offsetAdjusted) < 0) {
+-                // if we just return offsetAdjusted then the time is pushed
+-                // back before the transition, whereas it should be
+-                // on or after the transition
+                 long nextLocal = nextTransition(instantAdjusted);
+                 long nextAdjusted = nextTransition(instantLocal - offsetAdjusted);
+                 if (nextLocal != nextAdjusted) {
+                     return offsetLocal;
+                 }
+             }
+-        } else if (offsetLocal > 0) {
++           else {
++                long prevLocal = previousTransition(instantAdjusted);
++                long prevAdjusted = previousTransition(instantLocal - offsetAdjusted);
++                if (prevLocal != prevAdjusted) {
++                    return offsetLocal;
++                }
++            }
+             long prev = previousTransition(instantAdjusted);
+             if (prev < instantAdjusted) {
+                 int offsetPrev = getOffset(prev);
+                 int diff = offsetPrev - offsetLocal;
+                 if (instantAdjusted - prev <= diff) {
+                     return offsetPrev;
+                 }
+             }
+         }
+         return offsetAdjusted;
+     }

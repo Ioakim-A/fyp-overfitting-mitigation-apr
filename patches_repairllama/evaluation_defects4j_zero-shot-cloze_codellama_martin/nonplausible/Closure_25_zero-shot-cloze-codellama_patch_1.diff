@@ -1,0 +1,62 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2aba73e2-07d5-4e56-83e1-7e2435f33f4d_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/50c3bd86-a8b1-40d8-8aad-28567415eeaa_fixed.java
+index b98f0a7..ed40509 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2aba73e2-07d5-4e56-83e1-7e2435f33f4d_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/50c3bd86-a8b1-40d8-8aad-28567415eeaa_fixed.java
+@@ -1,29 +1,32 @@
+   private FlowScope traverseNew(Node n, FlowScope scope) {
+-
+-    Node constructor = n.getFirstChild();
+-    scope = traverse(constructor, scope);
+-    JSType constructorType = constructor.getJSType();
+-    JSType type = null;
+-    if (constructorType != null) {
+-      constructorType = constructorType.restrictByNotNullOrUndefined();
+-      if (constructorType.isUnknownType()) {
+-        type = getNativeType(UNKNOWN_TYPE);
+-      } else {
+-        FunctionType ct = constructorType.toMaybeFunctionType();
+-        if (ct == null && constructorType instanceof FunctionType) {
+-          // If constructorType is a NoObjectType, then toMaybeFunctionType will
+-          // return null. But NoObjectType implements the FunctionType
+-          // interface, precisely because it can validly construct objects.
+-          ct = (FunctionType) constructorType;
+-        }
+-        if (ct != null && ct.isConstructor()) {
+-          type = ct.getInstanceType();
+-        }
+-      }
+-    }
+-    n.setJSType(type);
+-    for (Node arg = constructor.getNext(); arg != null; arg = arg.getNext()) {
+-      scope = traverse(arg, scope);
++   Node parent = n.getParent();
++    if (parent == null) {
++      return scope;
+     }
++    switch (parent.getType()) {
++      case Token.ASSIGN:
++      case Token.ASSIGN_BITOR:
++      case Token.ASSIGN_BITXOR:
++      case Token.ASSIGN_BITAND:
++      case Token.ASSIGN_LSH:
++      case Token.ASSIGN_RSH:
++      case Token.ASSIGN_URSH:
++      case Token.ASSIGN_ADD:
++      case Token.ASSIGN_SUB:
++      case Token.ASSIGN_MUL:
++      case Token.ASSIGN_DIV:
++      case Token.ASSIGN_MOD:
++      case Token.ASSIGN_EXP:
++      case Token.HOOK:
++      case Token.COMMA:
++      case Token.OR:
++      case Token.AND:
++      case Token.BITOR:
++      case Token.BITXOR:
++      case Token.BITAND:
++      case Token.EQ:
++      case Token.NE:
++      case Token.SHEQ:
++      case Token
+     return scope;
+   }

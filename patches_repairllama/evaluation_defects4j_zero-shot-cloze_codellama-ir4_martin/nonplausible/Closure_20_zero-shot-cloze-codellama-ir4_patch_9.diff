@@ -1,0 +1,33 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/904d4d6a-d54c-4082-b19a-03de11c1f9e8_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2c10be2f-d0d8-4f2b-bbf4-eb91a15ad5f6_fixed.java
+index d4e6d48..7315dba 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/904d4d6a-d54c-4082-b19a-03de11c1f9e8_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2c10be2f-d0d8-4f2b-bbf4-eb91a15ad5f6_fixed.java
+@@ -1,23 +1,21 @@
+   private Node tryFoldSimpleFunctionCall(Node n) {
+     Preconditions.checkState(n.isCall());
+     Node callTarget = n.getFirstChild();
+     if (callTarget != null && callTarget.isName() &&
+           callTarget.getString().equals("String")) {
+-      // Fold String(a) to '' + (a) on immutable literals,
+-      // which allows further optimizations
+-      //
+-      // We can't do this in the general case, because String(a) has
+-      // slightly different semantics than '' + (a). See
+-      // http://code.google.com/p/closure-compiler/issues/detail?id=759
+       Node value = callTarget.getNext();
+-      if (value != null) {
++// buggy code
++//      if (value != null) {
++//        Node addition = IR.add(
++//            IR.string("").srcref(callTarget),
++//            value.detachFromParent());
+         Node addition = IR.add(
+             IR.string("").srcref(callTarget),
+             value.detachFromParent());
+         n.getParent().replaceChild(n, addition);
+         reportCodeChange();
+         return addition;
+       }
+     }
+     return n;
+   }

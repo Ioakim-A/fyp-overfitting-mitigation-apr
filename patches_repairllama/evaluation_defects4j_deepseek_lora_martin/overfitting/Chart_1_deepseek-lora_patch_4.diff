@@ -1,0 +1,50 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/57b21b2a-bdfc-4508-a78d-02a3ebafe6e3_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5d743d3c-91dc-48ef-91a3-6429fd223453_fixed.java
+index 114ff20..31caf05 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/57b21b2a-bdfc-4508-a78d-02a3ebafe6e3_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5d743d3c-91dc-48ef-91a3-6429fd223453_fixed.java
+@@ -1,41 +1,44 @@
+     /**
+      * Returns a (possibly empty) collection of legend items for the series
+      * that this renderer is responsible for drawing.
+      *
+      * @return The legend item collection (never <code>null</code>).
+      *
+      * @see #getLegendItem(int, int)
+      */
+     public LegendItemCollection getLegendItems() {
+         LegendItemCollection result = new LegendItemCollection();
+         if (this.plot == null) {
+             return result;
+         }
+         int index = this.plot.getIndexOf(this);
+         CategoryDataset dataset = this.plot.getDataset(index);
+-        if (dataset != null) {
++// buggy code
++//        if (dataset != null) {
++        if (dataset == null || dataset.getColumnCount() == 0) {
++
+             return result;
+         }
+         int seriesCount = dataset.getRowCount();
+         if (plot.getRowRenderingOrder().equals(SortOrder.ASCENDING)) {
+             for (int i = 0; i < seriesCount; i++) {
+                 if (isSeriesVisibleInLegend(i)) {
+                     LegendItem item = getLegendItem(index, i);
+                     if (item != null) {
+                         result.add(item);
+                     }
+                 }
+             }
+         }
+         else {
+             for (int i = seriesCount - 1; i >= 0; i--) {
+                 if (isSeriesVisibleInLegend(i)) {
+                     LegendItem item = getLegendItem(index, i);
+                     if (item != null) {
+                         result.add(item);
+                     }
+                 }
+             }
+         }
+         return result;
+     }

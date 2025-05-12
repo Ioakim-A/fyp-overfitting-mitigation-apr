@@ -1,0 +1,55 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dbe26d66-afac-4466-af86-d90016871d9d_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/158016bb-752e-40b1-ae7e-16c1d86749e0_fixed.java
+index b2d53db..cac9bc9 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dbe26d66-afac-4466-af86-d90016871d9d_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/158016bb-752e-40b1-ae7e-16c1d86749e0_fixed.java
+@@ -1,34 +1,48 @@
+         void read(Tokeniser t, CharacterReader r) {
+             if (r.matchesLetter()) {
+                 String name = r.consumeLetterSequence();
+                 t.tagPending.appendTagName(name.toLowerCase());
+                 t.dataBuffer.append(name);
+-                r.advance();
++// buggy code
++//                r.advance();
++               if (r.matchesLetter()) {
++                    name = r.consumeLetterSequence();
++                    t.tagPending.appendTagName(name.toLowerCase());
++                    t.dataBuffer.append(name);
++// buggy code
++//                    r.advance();
++                }
++                if (r.matchesLetter()) {
++                    name = r.consumeLetterSequence();
++                    t.tagPending.appendTagName(name.toLowerCase());
++                    t.dataBuffer.append(name);
++// buggy code
++//                    r.advance();
++                }
+                 return;
+             }
+-
+             if (t.isAppropriateEndTagToken() && !r.isEmpty()) {
+                 char c = r.consume();
+                 switch (c) {
+                     case '\t':
+                     case '\n':
+                     case '\f':
+                     case ' ':
+                         t.transition(BeforeAttributeName);
+                         break;
+                     case '/':
+                         t.transition(SelfClosingStartTag);
+                         break;
+                     case '>':
+                         t.emitTagPending();
+                         t.transition(Data);
+                         break;
+                     default:
+                         t.dataBuffer.append(c);
+                         anythingElse(t, r);
+                         break;
+                 }
+             } else {
+                 anythingElse(t, r);
+             }
+         }

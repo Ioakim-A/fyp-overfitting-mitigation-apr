@@ -1,0 +1,43 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/46371742-a718-4337-97e0-231f36a7b584_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/86b1c7a6-8583-4dfe-b14d-0a3f2d930870_fixed.java
+index cc53428..ff617ea 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/46371742-a718-4337-97e0-231f36a7b584_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/86b1c7a6-8583-4dfe-b14d-0a3f2d930870_fixed.java
+@@ -1,32 +1,33 @@
+     public double evaluate(final double[] values, final double[] weights,
+                            final double mean, final int begin, final int length) {
+-
+         double var = Double.NaN;
+-
+         if (test(values, weights, begin, length)) {
+             if (length == 1) {
+                 var = 0.0;
+             } else if (length > 1) {
+                 double accum = 0.0;
+                 double dev = 0.0;
+                 double accum2 = 0.0;
+                 for (int i = begin; i < begin + length; i++) {
+                     dev = values[i] - mean;
+                     accum += weights[i] * (dev * dev);
+                     accum2 += weights[i] * dev;
+                 }
+-
+                 double sumWts = 0;
+-                for (int i = 0; i < weights.length; i++) {
++// buggy code
++//                for (int i = 0; i < weights.length; i++) {
++//                    sumWts += weights[i];
++//                }
++                for (int i = 0; i < begin + length; i++) {
++
+                     sumWts += weights[i];
+                 }
+-
+                 if (isBiasCorrected) {
+                     var = (accum - (accum2 * accum2 / sumWts)) / (sumWts - 1.0);
+                 } else {
+                     var = (accum - (accum2 * accum2 / sumWts)) / sumWts;
+                 }
+             }
+         }
+         return var;
+     }

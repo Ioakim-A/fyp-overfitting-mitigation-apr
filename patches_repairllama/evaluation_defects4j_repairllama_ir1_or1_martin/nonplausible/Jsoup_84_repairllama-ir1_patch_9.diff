@@ -1,0 +1,43 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fd79e714-bb2a-41e4-a61a-915dad00f386_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6da2ce1a-ebed-4a6e-8ad5-2947f89e297e_fixed.java
+index 98dde53..eb1f18d 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fd79e714-bb2a-41e4-a61a-915dad00f386_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6da2ce1a-ebed-4a6e-8ad5-2947f89e297e_fixed.java
+@@ -1,34 +1,19 @@
+        public void head(org.jsoup.nodes.Node source, int depth) {
+-            namespacesStack.push(new HashMap<>(namespacesStack.peek())); // inherit from above on the stack
+             if (source instanceof org.jsoup.nodes.Element) {
++                namespacesStack.push(new HashMap<>(namespacesStack.peek())); 
+                 org.jsoup.nodes.Element sourceEl = (org.jsoup.nodes.Element) source;
+-
+                 String prefix = updateNamespaces(sourceEl);
+                 String namespace = namespacesStack.peek().get(prefix);
+                 String tagName = sourceEl.tagName();
+-
+                 Element el =
+                     doc.createElementNS(namespace, tagName);
+                 copyAttributes(sourceEl, el);
+-                if (dest == null) { // sets up the root
++                if (dest == null) { 
+                     doc.appendChild(el);
+                 } else {
+                     dest.appendChild(el);
+                 }
+-                dest = el; // descend
++                dest = el; 
+             } else if (source instanceof org.jsoup.nodes.TextNode) {
+                 org.jsoup.nodes.TextNode sourceText = (org.jsoup.nodes.TextNode) source;
+                 Text text = doc.createTextNode(sourceText.getWholeText());
+\ No newline at end of file
+-                dest.appendChild(text);
+-            } else if (source instanceof org.jsoup.nodes.Comment) {
+-                org.jsoup.nodes.Comment sourceComment = (org.jsoup.nodes.Comment) source;
+-                Comment comment = doc.createComment(sourceComment.getData());
+-                dest.appendChild(comment);
+-            } else if (source instanceof org.jsoup.nodes.DataNode) {
+-                org.jsoup.nodes.DataNode sourceData = (org.jsoup.nodes.DataNode) source;
+-                Text node = doc.createTextNode(sourceData.getWholeData());
+-                dest.appendChild(node);
+-            } else {
+-                // unhandled
+-            }
+-        }

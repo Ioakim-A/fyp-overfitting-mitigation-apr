@@ -1,0 +1,37 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/aebc2811-e797-45d3-b6a8-f7cb5dfc253d_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/77f7c5ba-7897-4657-9af7-c5ba591a0851_fixed.java
+index 5aa01c2..2971da2 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/aebc2811-e797-45d3-b6a8-f7cb5dfc253d_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/77f7c5ba-7897-4657-9af7-c5ba591a0851_fixed.java
+@@ -1,29 +1,30 @@
+ public long readBits(final int count) throws IOException {
+     if (count < 0 || count > MAXIMUM_CACHE_SIZE) {
+         throw new IllegalArgumentException("count must not be negative or greater than " + MAXIMUM_CACHE_SIZE);
+     }
++
+     while (bitsCachedSize < count) {
+         final long nextByte = in.read();
+         if (nextByte < 0) {
+             return nextByte;
+         }
+         if (byteOrder == ByteOrder.LITTLE_ENDIAN) {
+             bitsCached |= (nextByte << bitsCachedSize);
+         } else {
+             bitsCached <<= 8;
+             bitsCached |= nextByte;
+         }
+         bitsCachedSize += 8;
+     }
+-            // bitsCachedSize >= 57 and left-shifting it 8 bits would cause an overflow
+ 
+     final long bitsOut;
+     if (byteOrder == ByteOrder.LITTLE_ENDIAN) {
+         bitsOut = (bitsCached & MASKS[count]);
+         bitsCached >>>= count;
+     } else {
+         bitsOut = (bitsCached >> (bitsCachedSize - count)) & MASKS[count];
+     }
+     bitsCachedSize -= count;
++
+     return bitsOut;
+ }
+\ No newline at end of file

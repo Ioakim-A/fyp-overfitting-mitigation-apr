@@ -1,0 +1,65 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0c34993b-9808-4c8a-98e8-bebd9a0d9363_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/279d3872-b2f3-47fa-8f07-4ca2b80df9e2_fixed.java
+index d475968..a5dc3c0 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0c34993b-9808-4c8a-98e8-bebd9a0d9363_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/279d3872-b2f3-47fa-8f07-4ca2b80df9e2_fixed.java
+@@ -1,36 +1,52 @@
+ public List<Connection.KeyVal> formData() {
+     ArrayList<Connection.KeyVal> data = new ArrayList<>();
+-
+-        // iterate the form control elements and accumulate their values
+     for (Element el: elements) {
+-            if (!el.tag().isFormSubmittable()) continue; // contents are form listable, superset of submitable
+-            if (el.hasAttr("disabled")) continue; // skip disabled form inputs
++        if (!el.tag().isFormSubmittable()) continue; 
++        if (el.hasAttr("disabled")) continue; 
+         String name = el.attr("name");
+         if (name.length() == 0) continue;
+         String type = el.attr("type");
+       
++        switch (type) {
++            case "text":
++            case "email":
++            case "search":
++            case "url":
++            case "tel":
++            case "datetime":
++            case "date":
++            case "time":
++            case "datetime-local":
++            case "month":
++            case "week":
++            case "number":
++            case "password":
++            case "color":
++            case "button":
++            case "submit":
++            case "image":
++                data.add(HttpConnection.KeyVal.create(name, el.val()));
++                break;
++        }
+ 
+         if ("select".equals(el.normalName())) {
+             Elements options = el.select("option[selected]");
+             boolean set = false;
+             for (Element option: options) {
+                 data.add(HttpConnection.KeyVal.create(name, option.val()));
+                 set = true;
+             }
+             if (!set) {
+                 Element option = el.select("option").first();
+                 if (option != null)
+                     data.add(HttpConnection.KeyVal.create(name, option.val()));
+             }
+         } else if ("checkbox".equalsIgnoreCase(type) || "radio".equalsIgnoreCase(type)) {
+-                // only add checkbox or radio if they have the checked attribute
+             if (el.hasAttr("checked")) {
+                 final String val = el.val().length() >  0 ? el.val() : "on";
+                 data.add(HttpConnection.KeyVal.create(name, val));
+             }
+-            } else {
+-                data.add(HttpConnection.KeyVal.create(name, el.val()));
+         }
+     }
+     return data;
+ }
+\ No newline at end of file

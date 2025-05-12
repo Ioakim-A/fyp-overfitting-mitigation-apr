@@ -1,0 +1,46 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1cb5a4ba-4764-436e-a0e1-c68400be20b9_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cbce2032-c9e2-4b6d-9a78-8fa005f60477_fixed.java
+index 6ea5795..a4c1642 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1cb5a4ba-4764-436e-a0e1-c68400be20b9_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cbce2032-c9e2-4b6d-9a78-8fa005f60477_fixed.java
+@@ -1,37 +1,37 @@
+     /**
+      * Appends the usage clause for an Option to a StringBuffer.  
+      *
+      * @param buff the StringBuffer to append to
+      * @param option the Option to append
+      * @param required whether the Option is required or not
+      */
+     private static void appendOption(final StringBuffer buff, 
+                                      final Option option, 
+                                      final boolean required)
+     {
+         if (!required)
+         {
+             buff.append("[");
+         }
+-
+         if (option.getOpt() != null)
+         {
+             buff.append("-").append(option.getOpt());
+         }
+         else
+         {
+             buff.append("--").append(option.getLongOpt());
+         }
+-
+         // if the Option has a value
+-        if (option.hasArg() && (option.getArgName() != null))
++// buggy code
++//        if (option.hasArg() && (option.getArgName() != null))
++        if ((option.hasArg() || option.isRequired()) && (option.getArgName() != null))
++
+         {
+             buff.append(" <").append(option.getArgName()).append(">");
+         }
+-
+         // if the Option is not a required option
+         if (!required)
+         {
+             buff.append("]");
+         }
+     }

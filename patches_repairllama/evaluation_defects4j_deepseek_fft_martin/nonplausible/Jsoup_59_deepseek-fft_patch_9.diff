@@ -1,0 +1,40 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ce2a682b-accc-4b4f-a6c8-7b0551cb9476_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4a5d080c-0ff6-46d5-a004-279fe58cc284_fixed.java
+index 7de6748..5785a54 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ce2a682b-accc-4b4f-a6c8-7b0551cb9476_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4a5d080c-0ff6-46d5-a004-279fe58cc284_fixed.java
+@@ -1,23 +1,34 @@
+         final void newAttribute() {
+             if (attributes == null)
+                 attributes = new Attributes();
+-
+             if (pendingAttributeName != null) {
+                 // the tokeniser has skipped whitespace control chars, but trimming could collapse to empty for other control codes, so verify here
+                 pendingAttributeName = pendingAttributeName.trim();
++// buggy code
++//                    Attribute attribute;
++//                    if (hasPendingAttributeValue)
++//                        attribute = new Attribute(pendingAttributeName,
++//                            pendingAttributeValue.length() > 0 ? pendingAttributeValue.toString() : pendingAttributeValueS);
++//                    else if (hasEmptyAttributeValue)
++//                        attribute = new Attribute(pendingAttributeName, "");
++//                    else
++//                        attribute = new BooleanAttribute(pendingAttributeName);
++//                    attributes.put(attribute);
++                if (!pendingAttributeName.equals("")) {
+                     Attribute attribute;
+                     if (hasPendingAttributeValue)
+                         attribute = new Attribute(pendingAttributeName,
+                             pendingAttributeValue.length() > 0 ? pendingAttributeValue.toString() : pendingAttributeValueS);
+                     else if (hasEmptyAttributeValue)
+                         attribute = new Attribute(pendingAttributeName, "");
+                     else
+                         attribute = new BooleanAttribute(pendingAttributeName);
+                     attributes.put(attribute);
++
+             }
+             pendingAttributeName = null;
+             hasEmptyAttributeValue = false;
+             hasPendingAttributeValue = false;
+             reset(pendingAttributeValue);
+             pendingAttributeValueS = null;
+         }

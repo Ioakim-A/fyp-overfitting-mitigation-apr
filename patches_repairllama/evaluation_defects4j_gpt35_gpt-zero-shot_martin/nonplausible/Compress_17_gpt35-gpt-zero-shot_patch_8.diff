@@ -1,0 +1,56 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c6707f0e-225f-4220-b410-9ca9ea694773_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/69f8ad86-6cbe-406c-9eb1-9c3cd4fc9ba4_fixed.java
+index d2fcb52..ecbd6db 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c6707f0e-225f-4220-b410-9ca9ea694773_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/69f8ad86-6cbe-406c-9eb1-9c3cd4fc9ba4_fixed.java
+@@ -1,50 +1,3 @@
+-    public static long parseOctal(final byte[] buffer, final int offset, final int length) {
+-        long    result = 0;
+-        int     end = offset + length;
+-        int     start = offset;
+-
+-        if (length < 2){
+-            throw new IllegalArgumentException("Length "+length+" must be at least 2");
+-        }
+-
+-        if (buffer[start] == 0) {
+-            return 0L;
+-        }
+-
+-        // Skip leading spaces
+-        while (start < end){
+-            if (buffer[start] == ' '){
+-                start++;
+-            } else {
+-                break;
+-            }
+-        }
+-
+-        // Must have trailing NUL or space
+-        byte trailer;
+-        trailer = buffer[end-1];
+-        if (trailer == 0 || trailer == ' '){
+-            end--;
+-        } else {
+-            throw new IllegalArgumentException(
+-                    exceptionMessage(buffer, offset, length, end-1, trailer));
+-        }
+-        // May have additional NULs or spaces
+-        trailer = buffer[end - 1];
+         if (trailer == 0 || trailer == ' '){
+             end--;
+         }
+\ No newline at end of file
+-
+-        for ( ;start < end; start++) {
+-            final byte currentByte = buffer[start];
+-            // CheckStyle:MagicNumber OFF
+-            if (currentByte < '0' || currentByte > '7'){
+-                throw new IllegalArgumentException(
+-                        exceptionMessage(buffer, offset, length, start, currentByte));
+-            }
+-            result = (result << 3) + (currentByte - '0'); // convert from ASCII
+-            // CheckStyle:MagicNumber ON
+-        }
+-
+-        return result;
+-    }

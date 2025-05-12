@@ -1,0 +1,78 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/815c1df1-2213-40ff-9f0b-36dcef5d42fa_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c4647d0b-b4d0-4caf-88b4-65440e0e6eaa_fixed.java
+index d7b8fbd..9c1b374 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/815c1df1-2213-40ff-9f0b-36dcef5d42fa_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c4647d0b-b4d0-4caf-88b4-65440e0e6eaa_fixed.java
+@@ -1,59 +1,62 @@
+     protected String[] flatten(Options options, String[] arguments, boolean stopAtNonOption)
+     {
+         List tokens = new ArrayList();
+-
+         boolean eatTheRest = false;
+-
+         for (int i = 0; i < arguments.length; i++)
+         {
+             String arg = arguments[i];
+-
+             if ("--".equals(arg))
+             {
+                 eatTheRest = true;
+                 tokens.add("--");
+             }
+             else if ("-".equals(arg))
+             {
+                 tokens.add("-");
+             }
+             else if (arg.startsWith("-"))
+             {
+                 String opt = Util.stripLeadingHyphens(arg);
+-
+                 if (options.hasOption(opt))
+                 {
+                     tokens.add(arg);
+                 }
+                 else
+                 {
+-                    if (options.hasOption(arg.substring(0, 2)))
++// buggy code
++//                    if (options.hasOption(arg.substring(0, 2)))
++//                    {
++//                        tokens.add(arg.substring(0, 2)); 
++//                        tokens.add(arg.substring(2)); 
++//                    }
++//                    else
++//                    {
++//                        eatTheRest = stopAtNonOption;
++//                        tokens.add(arg);
++//                    }
++
+                     {
+-                        // the format is --foo=value or -foo=value
+-                        // the format is a special properties option (-Dproperty=value)
+-                        tokens.add(arg.substring(0, 2)); // -D
+-                        tokens.add(arg.substring(2)); // property=value
++                        tokens.add(arg.substring(0, 2)); 
++                        tokens.add(arg.substring(2)); 
+                     }
+                     else
+                     {
+                         eatTheRest = stopAtNonOption;
+                         tokens.add(arg);
+                     }
+                 }
+             }
+             else
+             {
+                 tokens.add(arg);
+             }
+-
+             if (eatTheRest)
+             {
+                 for (i++; i < arguments.length; i++)
+                 {
+                     tokens.add(arguments[i]);
+                 }
+             }
+         }
+-
+         return (String[]) tokens.toArray(new String[tokens.size()]);
+     }

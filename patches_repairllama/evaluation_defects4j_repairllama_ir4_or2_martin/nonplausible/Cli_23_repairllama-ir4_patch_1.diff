@@ -1,0 +1,57 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fadc6570-7133-4424-b67c-91bab10fd8cc_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cf3ec548-bfa0-4a8f-8cc4-fccdaa51a43a_fixed.java
+index 6a2c422..9f33785 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fadc6570-7133-4424-b67c-91bab10fd8cc_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cf3ec548-bfa0-4a8f-8cc4-fccdaa51a43a_fixed.java
+@@ -1,37 +1,41 @@
+     protected StringBuffer renderWrappedText(StringBuffer sb, int width, 
+                                              int nextLineTabStop, String text)
+     {
+         int pos = findWrapPos(text, width, 0);
+-
+         if (pos == -1)
+         {
+             sb.append(rtrim(text));
+-
+             return sb;
+         }
+         sb.append(rtrim(text.substring(0, pos))).append(defaultNewLine);
+-
+-        // all following lines must be padded with nextLineTabStop space 
+-        // characters
+         final String padding = createPadding(nextLineTabStop);
+-
+         while (true)
+         {
+-            int lastPos = pos;
++// buggy code
++//             int lastPos = pos;
++//             text = padding + text.substring(pos).trim();
++//             pos = findWrapPos(text, width, 0);
++//             if (pos == -1)
++//             {
++//                 sb.append(text);
++//                 return sb;
++//             } else
++//             if (pos == lastPos)
++//             {
++//                 throw new RuntimeException("Text too long for line - throwing exception to avoid infinite loop [CLI-162]: " + text);
++           final int lastPos = pos;
+             text = padding + text.substring(pos).trim();
+             pos = findWrapPos(text, width, 0);
+-
+             if (pos == -1)
+             {
+                 sb.append(text);
+-
+                 return sb;
+             } else
+             if (pos == lastPos)
+             {
+-                throw new RuntimeException("Text too long for line - throwing exception to avoid infinite loop [CLI-162]: " + text);
++                sb.append(text);
++                return sb;
+             }
+-
+             sb.append(rtrim(text.substring(0, pos))).append(defaultNewLine);
+         }
+     }

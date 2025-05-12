@@ -1,0 +1,21 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ec07a36b-a211-4af6-86ed-358381d7cb07_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8a6cc737-0baa-4599-b900-968ed05515ee_fixed.java
+index ec08c93..4ef8e92 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ec07a36b-a211-4af6-86ed-358381d7cb07_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8a6cc737-0baa-4599-b900-968ed05515ee_fixed.java
+@@ -1,12 +1,15 @@
+ public static Class<?>[] toClass(Object[] array) {
+     if (array == null) {
+         return null;
+     } else if (array.length == 0) {
+         return ArrayUtils.EMPTY_CLASS_ARRAY;
+     }
+     Class<?>[] classes = new Class[array.length];
+     for (int i = 0; i < array.length; i++) {
++        if (array[i] != null) {
+             classes[i] = array[i].getClass();
+         } 
++        // classes[i] will be null if array[i] is null.
++    }
+     return classes;
+ }
+\ No newline at end of file

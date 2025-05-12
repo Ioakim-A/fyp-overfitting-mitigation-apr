@@ -1,0 +1,24 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5d49d095-f466-435b-9aad-0a2dcf9789a2_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3c1362a1-ee0c-4d9c-9fff-4392977d2071_fixed.java
+index 654abbf..978cd85 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5d49d095-f466-435b-9aad-0a2dcf9789a2_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3c1362a1-ee0c-4d9c-9fff-4392977d2071_fixed.java
+@@ -1,19 +1,4 @@
+     public Object answer(InvocationOnMock invocation) {
+-        if (methodsGuru.isToString(invocation.getMethod())) {
+-            Object mock = invocation.getMock();
+-            MockName name = mockUtil.getMockName(mock);
+-            if (name.isDefault()) {
+-                return "Mock for " + mockUtil.getMockSettings(mock).getTypeToMock().getSimpleName() + ", hashCode: " + mock.hashCode();
+-            } else {
+-                return name.toString();
+-            }
+-        } else if (methodsGuru.isCompareToMethod(invocation.getMethod())) {
+-            //see issue 184.
+-            //mocks by default should return 0 if references are the same, otherwise some other value because they are not the same. Hence we return 1 (anything but 0 is good).
+-            //Only for compareTo() method by the Comparable interface
+-            return 1;
+-        }
+-        
+         Class<?> returnType = invocation.getMethod().getReturnType();
+         return returnValueFor(returnType);
+     }

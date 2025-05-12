@@ -1,0 +1,69 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8200e27e-e5ff-4ec2-92b7-6220aee3cfef_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ba375126-b8de-42d8-8e24-5690af918c53_fixed.java
+index de9ca4c..6744a79 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8200e27e-e5ff-4ec2-92b7-6220aee3cfef_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ba375126-b8de-42d8-8e24-5690af918c53_fixed.java
+@@ -1,63 +1,51 @@
+ void replace() {
+   if (firstNode == null) {
+-        // Don't touch the base case ('goog').
+     replacementNode = candidateDefinition;
+     return;
+   }
+-
+-      // Handle the case where there is a duplicate definition for an explicitly
+-      // provided symbol.
+   if (candidateDefinition != null && explicitNode != null) {
+     explicitNode.detachFromParent();
+     compiler.reportCodeChange();
+-
+-        // Does this need a VAR keyword?
+     replacementNode = candidateDefinition;
+     if (NodeUtil.isExpressionNode(candidateDefinition)) {
+       candidateDefinition.putBooleanProp(Node.IS_NAMESPACE, true);
+       Node assignNode = candidateDefinition.getFirstChild();
+       Node nameNode = assignNode.getFirstChild();
+       if (nameNode.getType() == Token.NAME) {
+-            // Need to convert this assign to a var declaration.
+         Node valueNode = nameNode.getNext();
+         assignNode.removeChild(nameNode);
+         assignNode.removeChild(valueNode);
+         nameNode.addChildToFront(valueNode);
+         Node varNode = new Node(Token.VAR, nameNode);
+         varNode.copyInformationFrom(candidateDefinition);
+         candidateDefinition.getParent().replaceChild(
+             candidateDefinition, varNode);
+         nameNode.setJSDocInfo(assignNode.getJSDocInfo());
+         compiler.reportCodeChange();
+         replacementNode = varNode;
+       }
+     }
+   } else {
+-        // Handle the case where there's not a duplicate definition.
+     replacementNode = createDeclarationNode();
+     if (firstModule == minimumModule) {
+       firstNode.getParent().addChildBefore(replacementNode, firstNode);
+     } else {
+-          // In this case, the name was implicitly provided by two independent
+-          // modules. We need to move this code up to a common module.
+       int indexOfDot = namespace.indexOf('.');
+       if (indexOfDot == -1) {
+-            // Any old place is fine.
+         compiler.getNodeForCodeInsertion(minimumModule)
+             .addChildToBack(replacementNode);
+       } else {
+-            // Add it after the parent namespace.
+         ProvidedName parentName =
+             providedNames.get(namespace.substring(0, indexOfDot));
+         Preconditions.checkNotNull(parentName);
+         Preconditions.checkNotNull(parentName.replacementNode);
+         parentName.replacementNode.getParent().addChildAfter(
+             replacementNode, parentName.replacementNode);
+       }
+     }
+     if (explicitNode != null) {
+       explicitNode.detachFromParent();
+     }
+     compiler.reportCodeChange();
+   }
+ }
+\ No newline at end of file

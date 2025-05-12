@@ -1,0 +1,31 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9427fe04-9038-41d4-a67b-aca5dbeb0c66_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6bcc711b-bbf7-4f2b-8c9a-ba157279dc8e_fixed.java
+index 8733f51..2643737 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9427fe04-9038-41d4-a67b-aca5dbeb0c66_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6bcc711b-bbf7-4f2b-8c9a-ba157279dc8e_fixed.java
+@@ -1,22 +1,18 @@
+     protected RealPointValuePair getSolution() {
+         double[] coefficients = new double[getOriginalNumDecisionVariables()];
+-        Integer basicRow =
+-            getBasicRow(getNumObjectiveFunctions() + getOriginalNumDecisionVariables());
++        Integer basicRow = getBasicRow(getNumObjectiveFunctions() + getOriginalNumDecisionVariables());
+         double mostNegative = basicRow == null ? 0 : getEntry(basicRow, getRhsOffset());
+         for (int i = 0; i < coefficients.length; i++) {
+             basicRow = getBasicRow(getNumObjectiveFunctions() + i);
+-                // if multiple variables can take a given value 
+-                // then we choose the first and set the rest equal to 0
+-                coefficients[i] =
+-                    (basicRow == null ? 0 : getEntry(basicRow, getRhsOffset())) -
++            coefficients[i] = (basicRow == null ? 0 : getEntry(basicRow, getRhsOffset())) -
+                               (restrictToNonNegative ? 0 : mostNegative);
+             if (basicRow != null) {
+-                for (int j = getNumObjectiveFunctions(); j < getNumObjectiveFunctions() + i; j++) {
++                for (int j = getNumObjectiveFunctions(); j < getNumObjectiveFunctions() + coefficients.length; j++) {
+                     if (tableau.getEntry(basicRow, j) == 1) {
+                         coefficients[i] = 0;
+                     }
+                 }
+             }
+         }
+         return new RealPointValuePair(coefficients, f.getValue(coefficients));
+     }
+\ No newline at end of file

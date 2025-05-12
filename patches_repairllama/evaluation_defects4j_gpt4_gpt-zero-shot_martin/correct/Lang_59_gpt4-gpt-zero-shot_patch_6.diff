@@ -1,0 +1,26 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0f54ba86-1275-44f0-8852-7cc7acb59a26_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/976b2a93-ca12-4fce-8a03-a5d179085ade_fixed.java
+index 27bf7ea..12a3d55 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0f54ba86-1275-44f0-8852-7cc7acb59a26_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/976b2a93-ca12-4fce-8a03-a5d179085ade_fixed.java
+@@ -1,18 +1,19 @@
+     public StrBuilder appendFixedWidthPadRight(Object obj, int width, char padChar) {
+         if (width > 0) {
+             ensureCapacity(size + width);
+             String str = (obj == null ? getNullText() : obj.toString());
+             int strLen = str.length();
+             if (strLen >= width) {
+-                str.getChars(0, strLen, buffer, size);
++// fixed code
++                 str.getChars(0, width, buffer, size);
+             } else {
+                 int padLen = width - strLen;
+                 str.getChars(0, strLen, buffer, size);
+                 for (int i = 0; i < padLen; i++) {
+                     buffer[size + strLen + i] = padChar;
+                 }
+             }
+             size += width;
+         }
+         return this;
+     }
+\ No newline at end of file

@@ -1,0 +1,39 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3e0cf4d9-bcb3-4d0b-bd8c-5a93f3aa8bcc_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/014f795e-9c1a-45c5-8105-5b9265fe87c0_fixed.java
+index b450ee6..ef70897 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3e0cf4d9-bcb3-4d0b-bd8c-5a93f3aa8bcc_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/014f795e-9c1a-45c5-8105-5b9265fe87c0_fixed.java
+@@ -1,32 +1,15 @@
+-    public JsonSerializer<?> createContextual(SerializerProvider serializers,
+-            BeanProperty property) throws JsonMappingException
+-    {
+-        if (property != null) {
+-            JsonFormat.Value format = serializers.getAnnotationIntrospector().findFormat((Annotated)property.getMember());
+-            if (format != null) {
+-
+-            	// Simple case first: serialize as numeric timestamp?
+-                JsonFormat.Shape shape = format.getShape();
+-                if (shape.isNumeric()) {
+-                    return withFormat(Boolean.TRUE, null);
+-                }
+-
+-                if (format.getShape() == JsonFormat.Shape.STRING) {
++if (shape.isString()) {
+     TimeZone tz = format.getTimeZone();
+     final String pattern = format.hasPattern()
+                     ? format.getPattern()
+                     : StdDateFormat.DATE_FORMAT_STR_ISO8601;
+     final Locale loc = format.hasLocale()
+                     ? format.getLocale()
+                     : serializers.getLocale();
+     SimpleDateFormat df = new SimpleDateFormat(pattern, loc);
+     if (tz == null) {
+         tz = serializers.getTimeZone();
+     }
+     df.setTimeZone(tz);
+     return withFormat(Boolean.FALSE, df);
+ }
+\ No newline at end of file
+-            }
+-        }
+-        return this;
+-    }

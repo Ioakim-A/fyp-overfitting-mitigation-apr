@@ -1,0 +1,16 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7efcd463-b665-45d2-97a0-bdc20b0337bf_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3be7c61b-3f0c-42d0-87bf-a1397fb9373f_fixed.java
+index 91b7957..f6662ef 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7efcd463-b665-45d2-97a0-bdc20b0337bf_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3be7c61b-3f0c-42d0-87bf-a1397fb9373f_fixed.java
+@@ -1,6 +1,10 @@
+-        private void readTypeVariables() {
++        private void readTypeVariables(TypeVariable<?> typeVariable) {
+             for (Type type : typeVariable.getBounds()) {
++                if (type instanceof TypeVariable) {
++                    readTypeVariables((TypeVariable<?>) type);
++                } else {
+                     registerTypeVariablesOn(type);
+                 }
++            }
+             registerTypeVariablesOn(getActualTypeArgumentFor(typeVariable));
+         }

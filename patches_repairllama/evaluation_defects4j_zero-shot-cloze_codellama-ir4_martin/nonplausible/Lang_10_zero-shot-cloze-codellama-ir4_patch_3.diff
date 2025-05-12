@@ -1,0 +1,77 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/44da5bb5-561f-4e7c-84d4-6b8cdecbc922_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d50af7ea-a7d3-4b8f-b677-f65e01881698_fixed.java
+index be3dcc8..153b894 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/44da5bb5-561f-4e7c-84d4-6b8cdecbc922_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d50af7ea-a7d3-4b8f-b677-f65e01881698_fixed.java
+@@ -1,41 +1,72 @@
+     private static StringBuilder escapeRegex(StringBuilder regex, String value, boolean unquote) {
++// buggy code
++//        boolean wasWhite= false;
++//        for(int i= 0; i<value.length(); ++i) {
++//            char c= value.charAt(i);
++//            if(Character.isWhitespace(c)) {
++//                if(!wasWhite) {
++//                    wasWhite= true;
++//                    regex.append("\\s*+");
++//                }
++//                continue;
++//            }
++//            wasWhite= false;
++//            switch(c) {
++//            case '?':
++//            case '[':
++//            case ']':
++//            case '(':
++//            case ')':
++//            case '{':
++//            case '}':
++//            case '\\':
++//            case '|':
++//            case '*':
++//            case '+':
++//            case '^':
++//            case '$':
++//            case '.':
++//                regex.append('\\');
++//            }
++//            regex.append(c);
++//        }
+         boolean wasWhite= false;
+         for(int i= 0; i<value.length(); ++i) {
+             char c= value.charAt(i);
+             if(Character.isWhitespace(c)) {
+                 if(!wasWhite) {
+                     wasWhite= true;
+                     regex.append("\\s*+");
+                 }
+                 continue;
+             }
+             wasWhite= false;
+             switch(c) {
+             case '\'':
+                 if(unquote) {
+                     if(++i==value.length()) {
+                         return regex;
+                     }
+                     c= value.charAt(i);
+                 }
+                 break;
+             case '?':
+             case '[':
+             case ']':
+             case '(':
+             case ')':
+             case '{':
+             case '}':
+             case '\\':
+             case '|':
+             case '*':
+             case '+':
+             case '^':
+             case '$':
+             case '.':
+                 regex.append('\\');
+             }
+             regex.append(c);
+         }
+         return regex;
+     }

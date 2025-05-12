@@ -1,0 +1,34 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fa1d566c-c37e-4ee8-b5f9-a92b42d0d060_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/220ac5d3-cb97-4884-b095-629d7b1fd089_fixed.java
+index 3a0e269..2193191 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fa1d566c-c37e-4ee8-b5f9-a92b42d0d060_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/220ac5d3-cb97-4884-b095-629d7b1fd089_fixed.java
+@@ -1,22 +1,23 @@
+     protected void checkRequiredOptions()
+         throws MissingOptionException
+     {
+-        // if there are required options that have not been
+-        // processsed
+         if (getRequiredOptions().size() > 0)
+         {
+             Iterator iter = getRequiredOptions().iterator();
+             StringBuffer buff = new StringBuffer("Missing required option");
+             buff.append(getRequiredOptions().size() == 1 ? "" : "s");
+             buff.append(": ");
+             
+-
+-            // loop through the required options
+             while (iter.hasNext())
+             {
+                 buff.append(iter.next());
++                if(iter.hasNext()){
++                    buff.append(", "); // append comma if there are more options
+                 }
+-
++            }
++// fixed code
++            if (buff.length() > 0) {
+                 throw new MissingOptionException(buff.toString());
+             }
+         }
++    }
+\ No newline at end of file

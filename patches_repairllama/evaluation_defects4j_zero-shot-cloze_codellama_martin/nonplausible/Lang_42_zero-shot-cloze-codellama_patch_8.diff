@@ -1,0 +1,44 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/baab6b04-8b36-4d02-8cbd-b3ad21a66959_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c7b0ca00-ccf4-449c-8a85-4cb6569b189f_fixed.java
+index 3ec8614..06b5fd2 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/baab6b04-8b36-4d02-8cbd-b3ad21a66959_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c7b0ca00-ccf4-449c-8a85-4cb6569b189f_fixed.java
+@@ -1,20 +1,37 @@
+     public void escape(Writer writer, String str) throws IOException {
+         int len = str.length();
+         for (int i = 0; i < len; i++) {
+            char c = str.charAt(i);
+-            String entityName = this.entityName(c);
++            String entityName = null;
++            switch (c) {
++                case '<':
++                    entityName = "lt";
++                    break;
++                case '>':
++                    entityName = "gt";
++                    break;
++                case '&':
++                    entityName = "amp";
++                    break;
++                case '"':
++                    entityName = "quot";
++                    break;
++                case '\'':
++                    entityName = "apos";
++                    break;
++            }
+             if (entityName == null) {
+-                if (c > 0x7F) {
++                if (c > 0x7f) {
+                     writer.write("&#");
+                     writer.write(Integer.toString(c, 10));
+                     writer.write(';');
+                 } else {
+                     writer.write(c);
+                 }
+             } else {
+                 writer.write('&');
+                 writer.write(entityName);
+                 writer.write(';');
+             }
+         }
+     }

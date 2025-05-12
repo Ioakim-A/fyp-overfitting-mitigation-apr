@@ -1,0 +1,27 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/84b84cd1-c42f-4307-b29f-0c11460db5c1_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d51f336e-a9dc-4084-abb5-1cf440a7d520_fixed.java
+index 638669b..7360f86 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/84b84cd1-c42f-4307-b29f-0c11460db5c1_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d51f336e-a9dc-4084-abb5-1cf440a7d520_fixed.java
+@@ -1,11 +1,11 @@
+-    public ZipArchiveInputStream(InputStream inputStream,
+-                                 String encoding,
+-                                 boolean useUnicodeExtraFields,
+-                                 boolean allowStoredEntriesWithDataDescriptor) {
+-        zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
+-        this.useUnicodeExtraFields = useUnicodeExtraFields;
+-        in = new PushbackInputStream(inputStream, buf.capacity());
+-        this.allowStoredEntriesWithDataDescriptor =
+-            allowStoredEntriesWithDataDescriptor;
+-        // haven't read anything so far
++        ZipArchiveEntry e;
++        try {
++            e = (ZipArchiveEntry) getNextEntry();
++        } catch (IOException ex) {
++            throw new IllegalArgumentException("Error reading zip entry", ex);
++        }
++        if (e != null) {
++            currentEntry = e;
++        } else {
++            throw new IllegalArgumentException("No more entries available");
+         }
+\ No newline at end of file

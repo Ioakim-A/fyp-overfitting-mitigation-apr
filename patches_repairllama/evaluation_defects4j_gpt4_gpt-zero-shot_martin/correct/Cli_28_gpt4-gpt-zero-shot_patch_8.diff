@@ -1,0 +1,52 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7b30db31-8ea9-4d24-a2e6-62188e0dd731_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8f749f15-bf17-4c80-9740-a185e72893bd_fixed.java
+index 18c915f..7e45d5a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7b30db31-8ea9-4d24-a2e6-62188e0dd731_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8f749f15-bf17-4c80-9740-a185e72893bd_fixed.java
+@@ -1,45 +1,36 @@
+ protected void processProperties(Properties properties)
+ {
+     if (properties == null)
+     {
+         return;
+     }
+-
+     for (Enumeration e = properties.propertyNames(); e.hasMoreElements();)
+     {
+         String option = e.nextElement().toString();
+-
+         if (!cmd.hasOption(option))
+         {
+             Option opt = getOptions().getOption(option);
+-
+-                // get the value from the properties instance
+             String value = properties.getProperty(option);
+-
+             if (opt.hasArg())
+             {
+                 if (opt.getValues() == null || opt.getValues().length == 0)
+                 {
+                     try
+                     {
+                         opt.addValueForProcessing(value);
+                     }
+                     catch (RuntimeException exp)
+                     {
+-                            // if we cannot add the value don't worry about it
+                     }
+                 }
+             }
+             else if (!("yes".equalsIgnoreCase(value)
+                     || "true".equalsIgnoreCase(value)
+                     || "1".equalsIgnoreCase(value)))
+             {
+-                    // if the value is not yes, true or 1 then don't add the
+-                    // option to the CommandLine
+-                    break;
++                continue;
+             }
+-
+             cmd.addOption(opt);
+         }
+     }
+ }
+\ No newline at end of file

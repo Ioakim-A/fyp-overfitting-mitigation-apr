@@ -1,0 +1,28 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ef69a5c5-8378-47da-b1c0-1f628d8073ea_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9510ed2a-cdc9-4858-96ff-bcd9037c471c_fixed.java
+index a4d475d..64033d5 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ef69a5c5-8378-47da-b1c0-1f628d8073ea_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9510ed2a-cdc9-4858-96ff-bcd9037c471c_fixed.java
+@@ -1,19 +1,16 @@
+   private void visitGetProp(NodeTraversal t, Node n, Node parent) {
+-    // obj.prop or obj.method()
+-    // Lots of types can appear on the left, a call to a void function can
+-    // never be on the left. getPropertyType will decide what is acceptable
+-    // and what isn't.
+     Node property = n.getLastChild();
+     Node objNode = n.getFirstChild();
+     JSType childType = getJSType(objNode);
+-
+     if (childType.isDict()) {
+       report(t, property, TypeValidator.ILLEGAL_PROPERTY_ACCESS, "'.'", "dict");
+-    } else if (n.getJSType() != null && parent.isAssign()) {
+-      return;
++// buggy code
++//     } else if (n.getJSType() != null && parent.isAssign()) {
++//       return;
++   } else if (n.getJSType() != null && parent != null && parent.isAssign()) {
+     } else if (validator.expectNotNullOrUndefined(t, n, childType,
+         "No properties on this expression", getNativeType(OBJECT_TYPE))) {
+       checkPropertyAccess(childType, property.getString(), t, n);
+     }
+     ensureTyped(t, n);
+   }

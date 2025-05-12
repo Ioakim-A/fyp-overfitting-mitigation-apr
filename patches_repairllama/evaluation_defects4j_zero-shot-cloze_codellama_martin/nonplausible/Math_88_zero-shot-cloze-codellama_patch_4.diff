@@ -1,0 +1,31 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e2d5d527-d864-42fe-a39b-712831b5111b_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9ac5db42-a81d-480c-879c-3c463207351c_fixed.java
+index 8733f51..174f5be 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e2d5d527-d864-42fe-a39b-712831b5111b_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9ac5db42-a81d-480c-879c-3c463207351c_fixed.java
+@@ -1,22 +1,13 @@
+     protected RealPointValuePair getSolution() {
+         double[] coefficients = new double[getOriginalNumDecisionVariables()];
+         Integer basicRow =
+             getBasicRow(getNumObjectiveFunctions() + getOriginalNumDecisionVariables());
+         double mostNegative = basicRow == null ? 0 : getEntry(basicRow, getRhsOffset());
+-        for (int i = 0; i < coefficients.length; i++) {
+-            basicRow = getBasicRow(getNumObjectiveFunctions() + i);
+-                // if multiple variables can take a given value 
+-                // then we choose the first and set the rest equal to 0
+-                coefficients[i] =
+-                    (basicRow == null ? 0 : getEntry(basicRow, getRhsOffset())) -
+-                    (restrictToNonNegative ? 0 : mostNegative);
+-            if (basicRow != null) {
+-                for (int j = getNumObjectiveFunctions(); j < getNumObjectiveFunctions() + i; j++) {
+-                    if (tableau.getEntry(basicRow, j) == 1) {
+-                         coefficients[i] = 0;
+-                    }
+-                }
++       for (int i = getNumObjectiveFunctions(); i < getOriginalNumDecisionVariables(); i++) {
++            coefficients[i - getNumObjectiveFunctions()] = getEntry(basicRow, i);
++            if (coefficients[i - getNumObjectiveFunctions()] < mostNegative) {
++                mostNegative = coefficients[i - getNumObjectiveFunctions()];
+             }
+         }
+         return new RealPointValuePair(coefficients, f.getValue(coefficients));
+     }

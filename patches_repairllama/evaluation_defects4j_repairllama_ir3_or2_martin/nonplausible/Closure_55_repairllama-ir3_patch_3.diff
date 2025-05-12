@@ -1,0 +1,32 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dcbb66f3-f209-45aa-bff1-ca4f9925d56e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f7756d98-9a4e-4824-8799-748fe6825096_fixed.java
+index 43937f5..411f8c7 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dcbb66f3-f209-45aa-bff1-ca4f9925d56e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f7756d98-9a4e-4824-8799-748fe6825096_fixed.java
+@@ -1,3 +1,26 @@
+   private static boolean isReduceableFunctionExpression(Node n) {
+-    return NodeUtil.isFunctionExpression(n);
++   if (n == null) {
++      return false;
++    }
++    switch (n.getType()) {
++      case Token.ASSIGN:
++      case Token.ASSIGN_BITOR:
++      case Token.ASSIGN_BITXOR:
++      case Token.ASSIGN_BITAND:
++      case Token.ASSIGN_LSH:
++      case Token.ASSIGN_RSH:
++      case Token.ASSIGN_URSH:
++      case Token.ASSIGN_ADD:
++      case Token.ASSIGN_SUB:
++      case Token.ASSIGN_MUL:
++      case Token.ASSIGN_DIV:
++      case Token.ASSIGN_MOD:
++      case Token.HOOK:
++      case Token.COMMA:
++      case Token.OR:
++      case Token.AND:
++        return true;
++      default:
++        return false;
++    }
+   }

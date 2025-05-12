@@ -1,0 +1,13 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/23a56088-08ef-4401-b191-afe52dd81c85_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3086a572-9809-4b29-944d-57359f636715_fixed.java
+index fa6828a..e0a0dcb 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/23a56088-08ef-4401-b191-afe52dd81c85_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3086a572-9809-4b29-944d-57359f636715_fixed.java
+@@ -1,5 +1,7 @@
+     private void injectMockCandidate(Class<?> awaitingInjectionClazz, Set<Object> mocks, Object fieldInstance) {
+         for(Field field : orderedInstanceFieldsFrom(awaitingInjectionClazz)) {
+-            mockCandidateFilter.filterCandidate(mocks, field, fieldInstance).thenInject();
++           if(mockCandidateFilter.filterCandidate(mocks, field, fieldInstance).shouldInject()) {
++                field.set(fieldInstance, mocks.iterator().next());
++            }
+         }
+     }

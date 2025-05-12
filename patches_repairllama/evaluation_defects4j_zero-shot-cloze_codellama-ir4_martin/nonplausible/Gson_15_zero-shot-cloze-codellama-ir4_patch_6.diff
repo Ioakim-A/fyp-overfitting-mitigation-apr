@@ -1,0 +1,20 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/325fb1f6-f136-4f18-9bca-5262a98e5c8a_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b998e2e6-e29e-44a4-b6e9-79e7d3dfdb21_fixed.java
+index 67458dd..4a16a74 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/325fb1f6-f136-4f18-9bca-5262a98e5c8a_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b998e2e6-e29e-44a4-b6e9-79e7d3dfdb21_fixed.java
+@@ -1,9 +1,14 @@
+   public JsonWriter value(double value) throws IOException {
+     writeDeferredName();
+-    if (Double.isNaN(value) || Double.isInfinite(value)) {
++// buggy code
++//    if (Double.isNaN(value) || Double.isInfinite(value)) {
++//      out.append("null");
++//      return this;
++//    }
++    if (!Double.isFinite(value)) {
+       throw new IllegalArgumentException("Numeric values must be finite, but was " + value);
+     }
+     beforeValue();
+     out.append(Double.toString(value));
+     return this;
+   }

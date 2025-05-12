@@ -1,0 +1,28 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/29376524-80e8-4a3c-9e3a-cc7a19ba65b3_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/79a9e35f-103f-41d6-afe1-55b662cc96e1_fixed.java
+index c7bb775..6d56128 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/29376524-80e8-4a3c-9e3a-cc7a19ba65b3_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/79a9e35f-103f-41d6-afe1-55b662cc96e1_fixed.java
+@@ -1,13 +1,15 @@
+         public ObjectNode deserialize(JsonParser p, DeserializationContext ctxt) throws IOException
+         {
+-            if (p.getCurrentToken() == JsonToken.START_OBJECT) {
+-                p.nextToken();
+-                return deserializeObject(p, ctxt, ctxt.getNodeFactory());
+-            }
+-            // 23-Sep-2015, tatu: Ugh. We may also be given END_OBJECT (similar to FIELD_NAME),
+-            //    if caller has advanced to the first token of Object, but for empty Object
+-            if (p.getCurrentToken() == JsonToken.FIELD_NAME) {
+-                return deserializeObject(p, ctxt, ctxt.getNodeFactory());
++// buggy code
++//            if (p.getCurrentToken() == JsonToken.START_OBJECT) {
++//                p.nextToken();
++//                return deserializeObject(p, ctxt, ctxt.getNodeFactory());
++//            }
++//            if (p.getCurrentToken() == JsonToken.FIELD_NAME) {
++//                return deserializeObject(p, ctxt, ctxt.getNodeFactory());
++//            }
++//            if (p.getCurrentToken() == JsonToken.VALUE_STRING) {
++//                return deserializeObject(p, ctxt, ctxt.getNodeFactory());
+             }
+             throw ctxt.mappingException(ObjectNode.class);
+          }

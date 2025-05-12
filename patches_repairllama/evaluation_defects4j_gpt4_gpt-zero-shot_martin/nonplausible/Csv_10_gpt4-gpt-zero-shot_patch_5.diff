@@ -1,0 +1,32 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d1c1b2eb-af27-4487-b9ca-28e82b7c26a5_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/23f9c9e9-1a73-4a00-abe5-545b9862295d_fixed.java
+index ceaab68..634651a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d1c1b2eb-af27-4487-b9ca-28e82b7c26a5_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/23f9c9e9-1a73-4a00-abe5-545b9862295d_fixed.java
+@@ -1,10 +1,21 @@
++public class CSVPrinter {
++
++    private Appendable out;
++    private CSVFormat format;
++
+     public CSVPrinter(final Appendable out, final CSVFormat format) throws IOException {
++        setOut(out);
++        setFormat(format);
++        this.format.validate();
++    }
++
++    public void setOut(Appendable out) {
+         Assertions.notNull(out, "out");
+-        Assertions.notNull(format, "format");
+-
+         this.out = out;
++    }
++
++    public void setFormat(CSVFormat format) {
++        Assertions.notNull(format, "format");
+         this.format = format;
+-        this.format.validate();
+-        // TODO: Is it a good idea to do this here instead of on the first call to a print method?
+-        // It seems a pain to have to track whether the header has already been printed or not.
++    }
+ }
+\ No newline at end of file

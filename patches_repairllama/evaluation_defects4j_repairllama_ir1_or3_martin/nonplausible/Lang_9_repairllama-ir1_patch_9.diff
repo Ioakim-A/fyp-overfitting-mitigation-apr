@@ -1,0 +1,43 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e8d601c0-95be-47c4-b81c-333fd258fc2b_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8c770828-8f4a-4a2e-81ea-337bda27a179_fixed.java
+index 6656ad6..24a5937 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e8d601c0-95be-47c4-b81c-333fd258fc2b_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8c770828-8f4a-4a2e-81ea-337bda27a179_fixed.java
+@@ -1,36 +1,32 @@
+     private void init() {
+         thisYear= Calendar.getInstance(timeZone, locale).get(Calendar.YEAR);
+-
+         nameValues= new ConcurrentHashMap<Integer, KeyValue[]>();
+-
+-        StringBuilder regex= new StringBuilder();
++        StringBuffer regex= new StringBuffer();
+         List<Strategy> collector = new ArrayList<Strategy>();
+-
+         Matcher patternMatcher= formatPattern.matcher(pattern);
+         if(!patternMatcher.lookingAt()) {
+-            throw new IllegalArgumentException("Invalid pattern");
++            throw new IllegalArgumentException("Invalid pattern: " + pattern);
+         }
+-
+         currentFormatField= patternMatcher.group();
+         Strategy currentStrategy= getStrategy(currentFormatField);
+         for(;;) {
+             patternMatcher.region(patternMatcher.end(), patternMatcher.regionEnd());
+             if(!patternMatcher.lookingAt()) {
+                 nextStrategy = null;
+                 break;
+             }
+             String nextFormatField= patternMatcher.group();
+             nextStrategy = getStrategy(nextFormatField);
+             if(currentStrategy.addRegex(this, regex)) {
+                 collector.add(currentStrategy);
+             }
+             currentFormatField= nextFormatField;
+             currentStrategy= nextStrategy;
+         }
+         if(currentStrategy.addRegex(this, regex)) {
+             collector.add(currentStrategy);
+         }
+         currentFormatField= null;
+         strategies= collector.toArray(new Strategy[collector.size()]);
+         parsePattern= Pattern.compile(regex.toString());
+     }

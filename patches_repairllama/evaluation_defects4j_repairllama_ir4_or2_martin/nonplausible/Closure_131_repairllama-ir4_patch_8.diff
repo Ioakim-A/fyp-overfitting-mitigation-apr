@@ -1,0 +1,32 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cde9bdfb-8e24-4343-8c50-d83424e3a364_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f6bb6678-e206-41a6-9f1c-f4ebdaeba634_fixed.java
+index 19fe1b4..01cb974 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cde9bdfb-8e24-4343-8c50-d83424e3a364_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f6bb6678-e206-41a6-9f1c-f4ebdaeba634_fixed.java
+@@ -1,17 +1,23 @@
+     public static boolean isJSIdentifier(String s) {
+       int length = s.length();
+-
+       if (length == 0 ||
+-          !Character.isJavaIdentifierStart(s.charAt(0))) {
++// buggy code
++//           !Character.isJavaIdentifierStart(s.charAt(0))) {
++//         return false;
++//       }
++//       for (int i = 1; i < length; i++) {
++//         if (
++         !Character.isJavaIdentifierStart(s.charAt(0)) && s.charAt(0) != '$') {
+         return false;
+       }
+-
+       for (int i = 1; i < length; i++) {
++        if (s.charAt(i) == '$') {
++          continue;
++        }
+         if (
+             !Character.isJavaIdentifierPart(s.charAt(i))) {
+           return false;
+         }
+       }
+-
+       return true;
+     }

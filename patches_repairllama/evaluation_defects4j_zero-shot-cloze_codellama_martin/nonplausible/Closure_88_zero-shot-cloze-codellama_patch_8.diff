@@ -1,0 +1,33 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f34483c3-a82d-4654-9881-140e4ef5f724_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e0165463-2315-45ee-a3fe-099a29f03202_fixed.java
+index ca2992e..1bca139 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f34483c3-a82d-4654-9881-140e4ef5f724_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e0165463-2315-45ee-a3fe-099a29f03202_fixed.java
+@@ -1,25 +1,22 @@
+   private VariableLiveness isVariableReadBeforeKill(
+       Node n, String variable) {
+     if (NodeUtil.isName(n) && variable.equals(n.getString())) {
+       if (NodeUtil.isLhs(n, n.getParent())) {
+-        // The expression to which the assignment is made is evaluated before
+-        // the RHS is evaluated (normal left to right evaluation) but the KILL
+-        // occurs after the RHS is evaluated.
++       return VariableLiveness.MAYBE_LIVE;
++      } else if (NodeUtil.isAssignmentOp(n)) {
+         return VariableLiveness.KILL;
+       } else {
+         return VariableLiveness.READ;
+       }
+     }
+-
+-    // Expressions are evaluated left-right, depth first.
+     for (Node child = n.getFirstChild();
+         child != null; child = child.getNext()) {
+-      if (!ControlFlowGraph.isEnteringNewCfgNode(child)) { // Not a FUNCTION
++      if (!ControlFlowGraph.isEnteringNewCfgNode(child)) { 
+         VariableLiveness state = isVariableReadBeforeKill(child, variable);
+         if (state != VariableLiveness.MAYBE_LIVE) {
+           return state;
+         }
+       }
+     }
+     return VariableLiveness.MAYBE_LIVE;
+   }

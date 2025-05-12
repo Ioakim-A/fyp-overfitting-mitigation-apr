@@ -1,0 +1,45 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/572030ba-20f9-4718-96f4-3ea76fac404d_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/14c9cb60-6b93-4d20-8b51-2ef71af3ff16_fixed.java
+index 3534eda..d45acb6 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/572030ba-20f9-4718-96f4-3ea76fac404d_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/14c9cb60-6b93-4d20-8b51-2ef71af3ff16_fixed.java
+@@ -1,37 +1,13 @@
+     public static long parseOctal(final byte[] buffer, final int offset, final int length) {
+         long    result = 0;
+-        boolean stillPadding = true;
+-        int     end = offset + length;
+        int     start = offset;
+-
+-        for (int i = start; i < end; i++){
+-            final byte currentByte = buffer[i];
+-            if (currentByte == 0) {
+-                break;
+-            }
+-
+-        // Skip leading spaces
+-            if (currentByte == (byte) ' ' || currentByte == '0') {
+-                if (stillPadding) {
+-                   continue;
+-            }
+-                if (currentByte == (byte) ' ') {
+-                break;
+-                }
+-            }
+-
+-        // Must have trailing NUL or space
+-        // May have additional NUL or space
+-
+-            stillPadding = false;
+-            // CheckStyle:MagicNumber OFF
++        for (int i = 0; i < length; i++) {
++            byte currentByte = buffer[offset + i];
+             if (currentByte < '0' || currentByte > '7'){
+                 throw new IllegalArgumentException(
+                         exceptionMessage(buffer, offset, length, start, currentByte));
+             }
+-            result = (result << 3) + (currentByte - '0'); // convert from ASCII
+-            // CheckStyle:MagicNumber ON
++            result = (result << 3) + (currentByte - '0'); 
+         }
+-
+         return result;
+     }

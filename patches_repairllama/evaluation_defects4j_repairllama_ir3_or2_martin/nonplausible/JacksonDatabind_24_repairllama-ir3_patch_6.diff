@@ -1,0 +1,18 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/280e99bf-183f-47b9-846b-5e42bc50b380_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/99abc3a6-a5cd-4030-92fe-c4b717bea097_fixed.java
+index 0502fea..a8333d9 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/280e99bf-183f-47b9-846b-5e42bc50b380_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/99abc3a6-a5cd-4030-92fe-c4b717bea097_fixed.java
+@@ -1,9 +1,9 @@
+     public BaseSettings withDateFormat(DateFormat df) {
+         if (_dateFormat == df) {
+             return this;
+         }
+-        TimeZone tz = (df == null) ? _timeZone : df.getTimeZone();
+-        return new BaseSettings(_classIntrospector, _annotationIntrospector, _visibilityChecker, _propertyNamingStrategy, _typeFactory,
+-                _typeResolverBuilder, df, _handlerInstantiator, _locale,
+-                tz, _defaultBase64);
++       if (df == null) {
++            throw new IllegalArgumentException("DateFormat cannot be null");
++        }
++        return new BaseSettings(_dateFormat = df);
+     }

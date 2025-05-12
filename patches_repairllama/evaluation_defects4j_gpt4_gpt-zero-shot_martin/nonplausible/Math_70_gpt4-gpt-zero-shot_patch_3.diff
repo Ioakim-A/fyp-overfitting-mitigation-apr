@@ -1,0 +1,34 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/80cc38d6-e282-4a21-9411-d51fb8ecf2de_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a9813c82-2d32-4523-a577-181d9327f522_fixed.java
+index 5e71e41..0034571 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/80cc38d6-e282-4a21-9411-d51fb8ecf2de_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a9813c82-2d32-4523-a577-181d9327f522_fixed.java
+@@ -1,4 +1,27 @@
+     public double solve(final UnivariateRealFunction f, double min, double max, double initial)
+         throws MaxIterationsExceededException, FunctionEvaluationException {
+-        return solve(min, max);
++        final double EPSILON = 1e-10;
++        double mid = initial;
++        
++        if (f.value(min) * f.value(max) >= 0) {
++            throw new IllegalArgumentException("Invalid interval range");
++        }
++        
++        while ((max - min) >= EPSILON) {
++            mid = (min + max) / 2;
++            
++            // Check if middle point is root
++            if (f.value(mid) == 0.0) {
++                return mid;
++            }
++            
++            // Decide the side to repeat the steps
++            else if (f.value(mid) * f.value(min) < 0) {
++                max = mid;
++            } else {
++                min = mid;
++            }
++        }
++        
++        return mid;
+     }
+\ No newline at end of file

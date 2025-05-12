@@ -1,0 +1,18 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a54f0145-7049-4577-ba40-4276ead3db9e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/863a2e93-bb71-4c58-af04-9c2463e5ea23_fixed.java
+index 43937f5..8519488 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a54f0145-7049-4577-ba40-4276ead3db9e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/863a2e93-bb71-4c58-af04-9c2463e5ea23_fixed.java
+@@ -1,3 +1,12 @@
+   private static boolean isReduceableFunctionExpression(Node n) {
+-    return NodeUtil.isFunctionExpression(n);
++   if (n.getType() != Token.GETPROP) {
++      return false;
++    }
++    Node parent = n.getParent();
++    if (parent == null) {
++      return false;
++    }
++    if (parent.getType() != Token.CALL) {
++      return false;
++    }
+   }

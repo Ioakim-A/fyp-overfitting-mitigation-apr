@@ -1,0 +1,52 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/27e742f5-f90a-48cb-b8c7-b50e88b2e9ae_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/82fe5e59-ef74-452b-bc1e-8867081a65d1_fixed.java
+index 6656ad6..cdeaa99 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/27e742f5-f90a-48cb-b8c7-b50e88b2e9ae_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/82fe5e59-ef74-452b-bc1e-8867081a65d1_fixed.java
+@@ -1,36 +1,40 @@
+-    private void init() {
++        // Initialize the variables
+         thisYear = Calendar.getInstance(timeZone, locale).get(Calendar.YEAR);
+-
+         nameValues = new ConcurrentHashMap<Integer, KeyValue[]>();
+-
+         StringBuilder regex = new StringBuilder();
+         List<Strategy> collector = new ArrayList<Strategy>();
+-
+         Matcher patternMatcher = formatPattern.matcher(pattern);
++        
+         if (!patternMatcher.lookingAt()) {
+             throw new IllegalArgumentException("Invalid pattern");
+         }
+         
+         currentFormatField = patternMatcher.group();
+         Strategy currentStrategy = getStrategy(currentFormatField);
++        
+         for (;;) {
+             patternMatcher.region(patternMatcher.end(), patternMatcher.regionEnd());
++            
+             if (!patternMatcher.lookingAt()) {
+-                nextStrategy = null;
+                 break;
+             }
++            
+             String nextFormatField = patternMatcher.group();
+             nextStrategy = getStrategy(nextFormatField);
++            
+             if (currentStrategy.addRegex(this, regex)) {
+                 collector.add(currentStrategy);
+             }
++            
+             currentFormatField = nextFormatField;
+             currentStrategy = nextStrategy;
+         }
++        
++        // Add the missing code
+         if (currentStrategy.addRegex(this, regex)) {
+             collector.add(currentStrategy);
+         }
++        
+         currentFormatField = null;
+         strategies = collector.toArray(new Strategy[collector.size()]);
+         parsePattern = Pattern.compile(regex.toString());
+\ No newline at end of file
+-    }

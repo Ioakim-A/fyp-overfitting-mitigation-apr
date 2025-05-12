@@ -1,0 +1,40 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/240862c1-976c-4eed-9b8b-f43d30691dce_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c4319dbd-4610-487f-ae37-0070ef5342d8_fixed.java
+index 8a93c9d..ad96c98 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/240862c1-976c-4eed-9b8b-f43d30691dce_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c4319dbd-4610-487f-ae37-0070ef5342d8_fixed.java
+@@ -1,21 +1,34 @@
+     /**
+      * Creates a new plot.
+      *
+      * @param dataset  the dataset (<code>null</code> permitted).
+      */
+     public MultiplePiePlot(CategoryDataset dataset) {
+         super();
+-        this.dataset = dataset;
++        PiePlot piePlot = new PiePlot(dataset);
++        this.pieChart = new JFreeChart(piePlot);
++        this.pieChart.removeLegend();
++        this.dataExtractOrder = TableOrder.BY_COLUMN;
++        this.pieChart.setBackgroundPaint(null);
++        TextTitle seriesTitle = new TextTitle("Series Title",
++                new Font("SansSerif", Font.BOLD, 12));
++        seriesTitle.setPosition(RectangleEdge.BOTTOM);
++        this.pieChart.setTitle(seriesTitle);
++        this.aggregatedItemsKey = "Other";
++        this.aggregatedItemsPaint = Color.lightGray;
++        this.sectionPaints = new HashMap();
++    }
++
+         PiePlot piePlot = new PiePlot(null);
+         this.pieChart = new JFreeChart(piePlot);
+         this.pieChart.removeLegend();
+         this.dataExtractOrder = TableOrder.BY_COLUMN;
+         this.pieChart.setBackgroundPaint(null);
+         TextTitle seriesTitle = new TextTitle("Series Title",
+                 new Font("SansSerif", Font.BOLD, 12));
+         seriesTitle.setPosition(RectangleEdge.BOTTOM);
+         this.pieChart.setTitle(seriesTitle);
+         this.aggregatedItemsKey = "Other";
+         this.aggregatedItemsPaint = Color.lightGray;
+         this.sectionPaints = new HashMap();
+     }

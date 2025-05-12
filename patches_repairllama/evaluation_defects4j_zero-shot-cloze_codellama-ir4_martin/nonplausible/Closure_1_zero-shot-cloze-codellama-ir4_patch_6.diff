@@ -1,0 +1,47 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bf6ffed3-5ff1-4e35-ab47-11ce3866469a_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3a42f117-f79e-48b1-b5de-e9047afe5d24_fixed.java
+index cdfd827..05216cd 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bf6ffed3-5ff1-4e35-ab47-11ce3866469a_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3a42f117-f79e-48b1-b5de-e9047afe5d24_fixed.java
+@@ -1,38 +1,28 @@
+   private void removeUnreferencedFunctionArgs(Scope fnScope) {
+-    // Notice that removing unreferenced function args breaks
+-    // Function.prototype.length. In advanced mode, we don't really care
+-    // about this: we consider "length" the equivalent of reflecting on
+-    // the function's lexical source.
+-    //
+-    // Rather than create a new option for this, we assume that if the user
+-    // is removing globals, then it's OK to remove unused function args.
+-    //
+-    // See http://code.google.com/p/closure-compiler/issues/detail?id=253
+-
++// buggy code
++   if (NodeUtil.isFunctionDeclaration(fnScope.getRootNode())) {
++      return;
++    }
+     Node function = fnScope.getRootNode();
+-
+     Preconditions.checkState(function.isFunction());
+     if (NodeUtil.isGetOrSetKey(function.getParent())) {
+-      // The parameters object literal setters can not be removed.
+       return;
+     }
+-
+     Node argList = getFunctionArgList(function);
+     boolean modifyCallers = modifyCallSites
+         && callSiteOptimizer.canModifyCallers(function);
+     if (!modifyCallers) {
+-      // Strip unreferenced args off the end of the function declaration.
+       Node lastArg;
+       while ((lastArg = argList.getLastChild()) != null) {
+         Var var = fnScope.getVar(lastArg.getString());
+         if (!referenced.contains(var)) {
+           argList.removeChild(lastArg);
+           compiler.reportCodeChange();
+         } else {
+           break;
+         }
+       }
+     } else {
+       callSiteOptimizer.optimize(fnScope, referenced);
+     }
+   }

@@ -1,0 +1,61 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6ab27d68-bbbc-419e-941f-f2b53e6ed604_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/23e2b854-497e-4cb2-b2a6-1652d95e5ee5_fixed.java
+index 670114d..4e23e24 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6ab27d68-bbbc-419e-941f-f2b53e6ed604_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/23e2b854-497e-4cb2-b2a6-1652d95e5ee5_fixed.java
+@@ -1,48 +1,48 @@
+     @Override
+     public void visit(NodeTraversal t, Node n, Node parent) {
+-
+       // Record global variable and function declarations
+       if (t.inGlobalScope()) {
+         if (NodeUtil.isVarDeclaration(n)) {
+           NameInformation ns = createNameInformation(t, n, parent);
+           Preconditions.checkNotNull(ns);
+           recordSet(ns.name, n);
+         } else if (NodeUtil.isFunctionDeclaration(n)) {
+           Node nameNode = n.getFirstChild();
+           NameInformation ns = createNameInformation(t, nameNode, n);
+           if (ns != null) {
+             JsName nameInfo = getName(nameNode.getString(), true);
+             recordSet(nameInfo.name, nameNode);
+           }
+         } else if (NodeUtil.isObjectLitKey(n, parent)) {
+           NameInformation ns = createNameInformation(t, n, parent);
+           if (ns != null) {
+             recordSet(ns.name, n);
+           }
+         }
+       }
+-
+       // Record assignments and call sites
+       if (n.isAssign()) {
+         Node nameNode = n.getFirstChild();
+-
+         NameInformation ns = createNameInformation(t, nameNode, n);
+         if (ns != null) {
+           if (ns.isPrototype) {
+             recordPrototypeSet(ns.prototypeClass, ns.prototypeProperty, n);
+           } else {
+             recordSet(ns.name, nameNode);
+           }
+         }
+       } else if (n.isCall()) {
+         Node nameNode = n.getFirstChild();
+         NameInformation ns = createNameInformation(t, nameNode, n);
+         if (ns != null && ns.onlyAffectsClassDef) {
+-          JsName name = getName(ns.name, false);
+-          if (name != null) {
+-          refNodes.add(new ClassDefiningFunctionNode(
+-              name, n, parent, parent.getParent()));
+-          }
++// buggy code
++//          JsName name = getName(ns.name, false);
++//          if (name != null) {
++//          refNodes.add(new ClassDefiningFunctionNode(
++//              name, n, parent, parent.getParent()));
++//          }
++          recordSet(ns.name, nameNode);
++
+         }
+       }
+     }

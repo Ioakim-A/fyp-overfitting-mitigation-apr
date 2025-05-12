@@ -1,0 +1,32 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/01d4c72e-2165-44d9-bf1d-19cc2dbc7c1e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b2b0cf07-3408-400b-9ac7-7f266c95a924_fixed.java
+index 1326b4e..597d8ba 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/01d4c72e-2165-44d9-bf1d-19cc2dbc7c1e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b2b0cf07-3408-400b-9ac7-7f266c95a924_fixed.java
+@@ -1,26 +1,22 @@
+     public static String getNamespaceURI(Node node) {
+         if (node instanceof Document) {
+             node = ((Document) node).getDocumentElement();
+         }
+-
+         Element element = (Element) node;
+-
+         String uri = element.getNamespaceURI();
+         if (uri == null) {
+             String prefix = getPrefix(node);
+             String qname = prefix == null ? "xmlns" : "xmlns:" + prefix;
+-    
+             Node aNode = node;
+             while (aNode != null) {
+                 if (aNode.getNodeType() == Node.ELEMENT_NODE) {
+                     Attr attr = ((Element) aNode).getAttributeNode(qname);
+                     if (attr != null) {
+-                        return attr.getValue();
++                       return attr.getNodeValue();
+                     }
+                 }
+                 aNode = aNode.getParentNode();
+             }
+-            return null;
+         }
+         return uri;
+     }

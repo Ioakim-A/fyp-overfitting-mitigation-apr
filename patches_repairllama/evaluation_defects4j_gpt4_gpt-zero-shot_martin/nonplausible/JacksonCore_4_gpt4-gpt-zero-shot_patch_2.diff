@@ -1,0 +1,24 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a4bef3ac-27e8-41be-b18d-93a2b84c8c8b_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8ec3a78e-39aa-4d52-af98-94bbf2ebcc4b_fixed.java
+index 0468231..ff0222f 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a4bef3ac-27e8-41be-b18d-93a2b84c8c8b_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8ec3a78e-39aa-4d52-af98-94bbf2ebcc4b_fixed.java
+@@ -1,9 +1,15 @@
+     public char[] expandCurrentSegment()
+     {
+         final char[] curr = _currentSegment;
+-        // Let's grow by 50% by default
+         final int len = curr.length;
+-        // but above intended maximum, slow to increase by 25%
+-        int newLen = (len == MAX_SEGMENT_LEN) ? (MAX_SEGMENT_LEN+1) : Math.min(MAX_SEGMENT_LEN, len + (len >> 1));
++        int newLen;
++        if (len == MAX_SEGMENT_LEN) {
++            throw new IllegalStateException("Maximum segment length reached");
++        } else {
++            newLen = len + (len >> 1);
++            if (newLen > MAX_SEGMENT_LEN) {
++                newLen = MAX_SEGMENT_LEN;
++            }
++        }
+         return (_currentSegment = Arrays.copyOf(curr, newLen));
+     }
+\ No newline at end of file

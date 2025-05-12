@@ -1,0 +1,25 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/474d5522-0439-40de-bcd2-f3a6e16fc0ec_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/907f7862-995a-4d53-b8f0-6e4d5583f718_fixed.java
+index 433b887..33cf139 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/474d5522-0439-40de-bcd2-f3a6e16fc0ec_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/907f7862-995a-4d53-b8f0-6e4d5583f718_fixed.java
+@@ -1,16 +1,16 @@
+     private boolean flipIfWarranted(final int n, final int step) {
+         if (1.5 * work[pingPong] < work[4 * (n - 1) + pingPong]) {
+-            // flip array
+-            int j = 4 * n - 1;
+-            for (int i = 0; i < j; i += 4) {
++            int j = 4 * (n - 1) + pingPong; // Fix: Assign the correct value to j
++            int end = j - pingPong; // Fix: Calculate the ending index for the loop
++            for (int i = pingPong; i < end; i += 4) {
+                 for (int k = 0; k < 4; k += step) {
+                     final double tmp = work[i + k];
+                     work[i + k] = work[j - k];
+                     work[j - k] = tmp;
+                 }
+                 j -= 4;
+             }
+             return true;
+         }
+         return false;
+     }
+\ No newline at end of file

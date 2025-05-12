@@ -1,0 +1,44 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cd6ca36b-0e8c-4e12-b2d8-5cc059189887_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/90cb9b95-a544-48e2-9bc2-35b41496121c_fixed.java
+index cdfd827..63864ca 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cd6ca36b-0e8c-4e12-b2d8-5cc059189887_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/90cb9b95-a544-48e2-9bc2-35b41496121c_fixed.java
+@@ -1,38 +1,24 @@
+  private void removeUnreferencedFunctionArgs(Scope fnScope) {
+-    // Notice that removing unreferenced function args breaks
+-    // Function.prototype.length. In advanced mode, we don't really care
+-    // about this: we consider "length" the equivalent of reflecting on
+-    // the function's lexical source.
+-    //
+-    // Rather than create a new option for this, we assume that if the user
+-    // is removing globals, then it's OK to remove unused function args.
+-    //
+-    // See http://code.google.com/p/closure-compiler/issues/detail?id=253
+-
+     Node function = fnScope.getRootNode();
+-
+     Preconditions.checkState(function.isFunction());
+     if (NodeUtil.isGetOrSetKey(function.getParent())) {
+-      // The parameters object literal setters can not be removed.
+       return;
+     }
+-
+     Node argList = getFunctionArgList(function);
+     boolean modifyCallers = modifyCallSites
+-        && callSiteOptimizer.canModifyCallers(function);
++        && callSiteOptimizer.canModifyCallers(fnScope);
+     if (!modifyCallers) {
+-      // Strip unreferenced args off the end of the function declaration.
+       Node lastArg;
+       while ((lastArg = argList.getLastChild()) != null) {
+         Var var = fnScope.getVar(lastArg.getString());
+         if (!referenced.contains(var)) {
+           argList.removeChild(lastArg);
+           compiler.reportCodeChange();
+         } else {
+           break;
+         }
+       }
+     } else {
+       callSiteOptimizer.optimize(fnScope, referenced);
+     }
+   }

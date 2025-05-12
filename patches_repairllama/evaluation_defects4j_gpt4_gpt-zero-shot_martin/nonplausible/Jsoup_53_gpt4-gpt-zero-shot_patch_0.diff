@@ -1,0 +1,38 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c06bf665-b72d-4e5f-b1f4-73356a27ae6c_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ecc06924-32e8-4f41-bfcc-c8373450a3f9_fixed.java
+index e0802db..9fe30cd 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c06bf665-b72d-4e5f-b1f4-73356a27ae6c_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ecc06924-32e8-4f41-bfcc-c8373450a3f9_fixed.java
+@@ -1,25 +1,29 @@
+     public String chompBalanced(char open, char close) {
+         int start = -1;
+         int end = -1;
+         int depth = 0;
+         char last = 0;
+-
+         do {
+             if (isEmpty()) break;
+             Character c = consume();
+             if (last == 0 || last != ESC) {
+                 if (c.equals(open)) {
+                     depth++;
+                     if (start == -1)
+                         start = pos;
+                 } 
+                 else if (c.equals(close))
+                     depth--;
+             }
+-
++            else { // handle the else case
++                if(c.equals(ESC)) {
++                    last = 0;
++                    continue;
++                } 
++            }
+             if (depth > 0 && last != 0)
+-                end = pos; // don't include the outer match pair in the return
++                end = pos; 
+             last = c;
+         } while (depth > 0);
+         return (end >= 0) ? queue.substring(start, end) : "";
+     }
+\ No newline at end of file

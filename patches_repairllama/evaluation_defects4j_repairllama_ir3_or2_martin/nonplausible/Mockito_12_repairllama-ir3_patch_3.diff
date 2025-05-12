@@ -1,0 +1,19 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5a71df72-9da6-4cef-a0e3-938016e9bf7b_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5f7f5ac2-8172-42ac-b3c5-3f63afcb09ca_fixed.java
+index 23bdbff..630d9ce 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5a71df72-9da6-4cef-a0e3-938016e9bf7b_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5f7f5ac2-8172-42ac-b3c5-3f63afcb09ca_fixed.java
+@@ -1,10 +1,12 @@
+     public Class getGenericType(Field field) {        
+         Type generic = field.getGenericType();
+         if (generic != null && generic instanceof ParameterizedType) {
+             Type actual = ((ParameterizedType) generic).getActualTypeArguments()[0];
++           if (actual instanceof Class) {
+                 return (Class) actual;
+-                //in case of nested generics we don't go deep
++            } else {
++                return Object.class;
++            }
+         }
+-        
+         return Object.class;
+     }

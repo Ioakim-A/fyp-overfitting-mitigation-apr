@@ -1,0 +1,59 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/23088790-9bca-4b76-b845-02ca04134223_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/48c015cd-d418-4890-944f-d2913f828dd6_fixed.java
+index 7f7f1f8..4338347 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/23088790-9bca-4b76-b845-02ca04134223_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/48c015cd-d418-4890-944f-d2913f828dd6_fixed.java
+@@ -1,47 +1,51 @@
+     public static StdKeyDeserializer forType(Class<?> raw)
+     {
+         int kind;
++// buggy code
++//        if (raw == String.class || raw == Object.class) {
++//            kind = TYPE_STRING;
++//        } else
++        if (raw == String.class) {
++            kind = TYPE_STRING;
++        } else
+ 
+-        // first common types:
+-        if (raw == String.class || raw == Object.class) {
+             return StringKD.forType(raw);
+         } else if (raw == UUID.class) {
+             kind = TYPE_UUID;
+         } else if (raw == Integer.class) {
+             kind = TYPE_INT;
+         } else if (raw == Long.class) {
+             kind = TYPE_LONG;
+         } else if (raw == Date.class) {
+             kind = TYPE_DATE;
+         } else if (raw == Calendar.class) {
+             kind = TYPE_CALENDAR;
+-        // then less common ones...
+         } else if (raw == Boolean.class) {
+             kind = TYPE_BOOLEAN;
+         } else if (raw == Byte.class) {
+             kind = TYPE_BYTE;
+         } else if (raw == Character.class) {
+             kind = TYPE_CHAR;
+         } else if (raw == Short.class) {
+             kind = TYPE_SHORT;
+         } else if (raw == Float.class) {
+             kind = TYPE_FLOAT;
+         } else if (raw == Double.class) {
+             kind = TYPE_DOUBLE;
+         } else if (raw == URI.class) {
+             kind = TYPE_URI;
+         } else if (raw == URL.class) {
+             kind = TYPE_URL;
+         } else if (raw == Class.class) {
+             kind = TYPE_CLASS;
+         } else if (raw == Locale.class) {
+             FromStringDeserializer<?> deser = FromStringDeserializer.findDeserializer(Locale.class);
+             return new StdKeyDeserializer(TYPE_LOCALE, raw, deser);
+         } else if (raw == Currency.class) {
+             FromStringDeserializer<?> deser = FromStringDeserializer.findDeserializer(Currency.class);
+             return new StdKeyDeserializer(TYPE_CURRENCY, raw, deser);
+         } else {
+             return null;
+         }
+         return new StdKeyDeserializer(kind, raw);
+     }

@@ -1,0 +1,39 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/176f1a59-2703-46ee-97f1-41f74e02509d_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dcdd9d10-2b02-4002-b6be-6b4e9b4f5de4_fixed.java
+index c51c8b1..9446aa3 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/176f1a59-2703-46ee-97f1-41f74e02509d_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dcdd9d10-2b02-4002-b6be-6b4e9b4f5de4_fixed.java
+@@ -1,31 +1,18 @@
+     private void recordAssignment(NodeTraversal t, Node n, Node recordNode) {
+       Node nameNode = n.getFirstChild();
+       Node parent = n.getParent();
+       NameInformation ns = createNameInformation(t, nameNode);
+       if (ns != null) {
+         if (parent.isFor() && !NodeUtil.isForIn(parent)) {
+-          // Patch for assignments that appear in the init,
+-          // condition or iteration part of a FOR loop.  Without
+-          // this change, all 3 of those parts try to claim the for
+-          // loop as their dependency scope.  The last assignment in
+-          // those three fields wins, which can result in incorrect
+-          // reference edges between referenced and assigned variables.
+-          //
+-          // TODO(user) revisit the dependency scope calculation
+-          // logic.
+           if (parent.getFirstChild().getNext() != n) {
+             recordDepScope(recordNode, ns);
+           } else {
+             recordDepScope(nameNode, ns);
+           }
+-        } else {
+-          // The rhs of the assignment is the caller, so it's used by the
+-          // context. Don't associate it w/ the lhs.
+-          // FYI: this fixes only the specific case where the assignment is the
+-          // caller expression, but it could be nested deeper in the caller and
+-          // we would still get a bug.
+-          // See testAssignWithCall2 for an example of this.
++// buggy code
++//         } else {
++       } else if (parent.isVar()) {
+           recordDepScope(recordNode, ns);
+         }
+       }
+     }

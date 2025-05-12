@@ -1,0 +1,59 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2262be40-9f8f-4f5d-9c39-3e8b41e921b3_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/09d13588-a4bd-42de-a8a3-2f7e51e2b4ef_fixed.java
+index a09b289..337408c 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2262be40-9f8f-4f5d-9c39-3e8b41e921b3_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/09d13588-a4bd-42de-a8a3-2f7e51e2b4ef_fixed.java
+@@ -1,48 +1,50 @@
+     public long computeMillis(boolean resetFields, String text) {
+         SavedField[] savedFields = iSavedFields;
+         int count = iSavedFieldsCount;
+         if (iSavedFieldsShared) {
+             iSavedFields = savedFields = (SavedField[])iSavedFields.clone();
+             iSavedFieldsShared = false;
+         }
+         sort(savedFields, count);
+         if (count > 0) {
+-            // alter base year for parsing if first field is month or day
+             DurationField months = DurationFieldType.months().getField(iChrono);
+             DurationField days = DurationFieldType.days().getField(iChrono);
+             DurationField first = savedFields[0].iField.getDurationField();
+             if (compareReverse(first, months) >= 0 && compareReverse(first, days) <= 0) {
+                 saveField(DateTimeFieldType.year(), iDefaultYear);
+                 return computeMillis(resetFields, text);
+             }
+         }
+-
+         long millis = iMillis;
+         try {
+             for (int i = 0; i < count; i++) {
+                 millis = savedFields[i].set(millis, resetFields);
++// buggy code
++//                if (iZone == null) {
++//                    millis -= iOffset;
++//                } else {
++//                    millis -= iZone.getOffset(millis);
++//                }
+             }
+         } catch (IllegalFieldValueException e) {
+             if (text != null) {
+                 e.prependMessage("Cannot parse \"" + text + '"');
+             }
+             throw e;
+         }
+-        
+         if (iZone == null) {
+             millis -= iOffset;
+         } else {
+             int offset = iZone.getOffsetFromLocal(millis);
+             millis -= offset;
+             if (offset != iZone.getOffset(millis)) {
+                 String message =
+                     "Illegal instant due to time zone offset transition (" + iZone + ')';
+                 if (text != null) {
+                     message = "Cannot parse \"" + text + "\": " + message;
+                 }
+                 throw new IllegalArgumentException(message);
+             }
+         }
+-        
+         return millis;
+     }

@@ -1,0 +1,59 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/240e2402-07bc-45cb-8f9e-c5acd516f9a9_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f4460ea7-ca37-4f88-a7d9-866bebe35421_fixed.java
+index d2dd743..8297722 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/240e2402-07bc-45cb-8f9e-c5acd516f9a9_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f4460ea7-ca37-4f88-a7d9-866bebe35421_fixed.java
+@@ -1,51 +1,45 @@
+   static boolean functionCallHasSideEffects(
+       Node callNode, @Nullable AbstractCompiler compiler) {
+     if (callNode.getType() != Token.CALL) {
+       throw new IllegalStateException(
+           "Expected CALL node, got " + Token.name(callNode.getType()));
+     }
+-
+     if (callNode.isNoSideEffectsCall()) {
+       return false;
+     }
+-
+     Node nameNode = callNode.getFirstChild();
+-
+-    // Built-in functions with no side effects.
+     if (nameNode.getType() == Token.NAME) {
+       String name = nameNode.getString();
+       if (BUILTIN_FUNCTIONS_WITHOUT_SIDEEFFECTS.contains(name)) {
+         return false;
+       }
+     } else if (nameNode.getType() == Token.GETPROP) {
+       if (callNode.hasOneChild()
+           && OBJECT_METHODS_WITHOUT_SIDEEFFECTS.contains(
+                 nameNode.getLastChild().getString())) {
+         return false;
+       }
+-
+       if (callNode.isOnlyModifiesThisCall()
+           && evaluatesToLocalValue(nameNode.getFirstChild())) {
+         return false;
+       }
+-
+-      // Functions in the "Math" namespace have no side effects.
+-
++     if (callNode.isOnlyModifiesArgumentsCall()) {
++        return false;
++      }
+       if (compiler != null && !compiler.hasRegExpGlobalReferences()) {
+         if (nameNode.getFirstChild().getType() == Token.REGEXP
+             && REGEXP_METHODS.contains(nameNode.getLastChild().getString())) {
+           return false;
+         } else if (nameNode.getFirstChild().getType() == Token.STRING
+             && STRING_REGEXP_METHODS.contains(
+                 nameNode.getLastChild().getString())) {
+           Node param = nameNode.getNext();
+           if (param != null &&
+               (param.getType() == Token.STRING
+                   || param.getType() == Token.REGEXP))
+           return false;
+         }
+       }
+     }
+-
+     return true;
+   }

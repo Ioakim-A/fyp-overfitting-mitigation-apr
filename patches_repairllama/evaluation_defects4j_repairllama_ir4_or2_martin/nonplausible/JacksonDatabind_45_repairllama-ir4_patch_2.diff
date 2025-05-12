@@ -1,0 +1,40 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dbdb59ed-972d-4961-b560-95ad984b9e85_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/066d34f7-6f62-46be-a7af-e8235ead409c_fixed.java
+index b450ee6..9e73ed9 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dbdb59ed-972d-4961-b560-95ad984b9e85_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/066d34f7-6f62-46be-a7af-e8235ead409c_fixed.java
+@@ -1,32 +1,31 @@
+     public JsonSerializer<?> createContextual(SerializerProvider serializers,
+             BeanProperty property) throws JsonMappingException
+     {
+         if (property != null) {
+             JsonFormat.Value format = serializers.getAnnotationIntrospector().findFormat((Annotated)property.getMember());
+             if (format != null) {
+-
+-            	// Simple case first: serialize as numeric timestamp?
+                 JsonFormat.Shape shape = format.getShape();
+                 if (shape.isNumeric()) {
+                     return withFormat(Boolean.TRUE, null);
+                 }
+-
+-                if (format.getShape() == JsonFormat.Shape.STRING) {
++// buggy code
++//                 if (format.getShape() == JsonFormat.Shape.STRING) {
++               if (format.getShape() == JsonFormat.Shape.STRING && format.hasPattern()) {
+                     TimeZone tz = format.getTimeZone();
+                     final String pattern = format.hasPattern()
+                                     ? format.getPattern()
+                                     : StdDateFormat.DATE_FORMAT_STR_ISO8601;
+                     final Locale loc = format.hasLocale()
+                                     ? format.getLocale()
+                                     : serializers.getLocale();
+                     SimpleDateFormat df = new SimpleDateFormat(pattern, loc);
+                     if (tz == null) {
+                         tz = serializers.getTimeZone();
+                     }
+                     df.setTimeZone(tz);
+                     return withFormat(Boolean.FALSE, df);
+                 }
+             }
+         }
+         return this;
+     }

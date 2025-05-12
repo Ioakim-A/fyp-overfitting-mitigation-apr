@@ -1,0 +1,50 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/00eb9a61-bbf2-49cb-9ed0-937187776e6a_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3e045059-f805-492a-a5fb-b851b3b6bdb8_fixed.java
+index 4353d3e..e681489 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/00eb9a61-bbf2-49cb-9ed0-937187776e6a_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3e045059-f805-492a-a5fb-b851b3b6bdb8_fixed.java
+@@ -1,33 +1,44 @@
+     public LegendItemCollection getLegendItems() {
+         LegendItemCollection result = new LegendItemCollection();
+         if (this.plot == null) {
+             return result;
+         }
+         int index = this.plot.getIndexOf(this);
+         CategoryDataset dataset = this.plot.getDataset(index);
+-        if (dataset != null) {
++// buggy code
++//        if (dataset != null) {
++//            for (int i = 0; i < dataset.getRowCount(); i++) {
++//                if (isSeriesVisibleInLegend(i)) {
++//                    LegendItem item = getLegendItem(index, i);
++//                    if (item != null) {
++//                        result.add(item);
++//                    }
++//                }
++//            }
++//        }
++//        else {
+             return result;
+         }
+         int seriesCount = dataset.getRowCount();
+         if (plot.getRowRenderingOrder().equals(SortOrder.ASCENDING)) {
+             for (int i = 0; i < seriesCount; i++) {
+                 if (isSeriesVisibleInLegend(i)) {
+                     LegendItem item = getLegendItem(index, i);
+                     if (item != null) {
+                         result.add(item);
+                     }
+                 }
+             }
+         }
+         else {
+             for (int i = seriesCount - 1; i >= 0; i--) {
+                 if (isSeriesVisibleInLegend(i)) {
+                     LegendItem item = getLegendItem(index, i);
+                     if (item != null) {
+                         result.add(item);
+                     }
+                 }
+             }
+         }
+         return result;
+     }

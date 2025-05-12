@@ -1,0 +1,43 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/17aafd6e-9c09-4184-a2ea-d20518e25b1e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ca3ff36a-24b7-4b19-8276-b67c60a798cc_fixed.java
+index 20d45d1..40c74d1 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/17aafd6e-9c09-4184-a2ea-d20518e25b1e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ca3ff36a-24b7-4b19-8276-b67c60a798cc_fixed.java
+@@ -1,27 +1,13 @@
+-    public int read(final byte[] dest, final int offs, final int len)
+-        throws IOException {
+-        if (offs < 0) {
+-            throw new IndexOutOfBoundsException("offs(" + offs + ") < 0.");
+-        }
+-        if (len < 0) {
+-            throw new IndexOutOfBoundsException("len(" + len + ") < 0.");
+-        }
+-        if (offs + len > dest.length) {
+-            throw new IndexOutOfBoundsException("offs(" + offs + ") + len("
+-                                                + len + ") > dest.length(" + dest.length + ").");
+-        }
+-        if (this.in == null) {
+-            throw new IOException("stream closed");
+-        }
+-
+-        final int hi = offs + len;
++int remaining = len;
+ int destOffs = offs;
+-        int b;
+-        while (destOffs < hi && ((b = read0()) >= 0)) {
+-            dest[destOffs++] = (byte) b;
+-            count(1);
++while (remaining > 0) {
++    int bytesRead = read0(dest, destOffs, remaining);
++    if (bytesRead == -1) {
++        break;
+     }
+-
+-        int c = (destOffs == offs) ? -1 : (destOffs - offs);
+-        return c;
++    destOffs += bytesRead;
++    remaining -= bytesRead;
++    count(bytesRead);
+ }
++int bytesRead = destOffs - offs;
++return (bytesRead == 0 && remaining == len) ? -1 : bytesRead;
+\ No newline at end of file

@@ -1,0 +1,47 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6d0654da-923d-402d-ab5d-7816f9e0fb7e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f08f9425-a1c3-4703-bbe6-f333b53722b5_fixed.java
+index 602226b..be41bd9 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6d0654da-923d-402d-ab5d-7816f9e0fb7e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f08f9425-a1c3-4703-bbe6-f333b53722b5_fixed.java
+@@ -1,26 +1,33 @@
+     private void findAliases(NodeTraversal t) {
+       Scope scope = t.getScope();
+       for (Var v : scope.getVarIterable()) {
+         Node n = v.getNode();
+         int type = n.getType();
+         Node parent = n.getParent();
+-        if (parent.isVar()) {
+-          if (n.hasChildren() && n.getFirstChild().isQualifiedName()) {
++// buggy code
++//        if (parent.isVar()) {
++//          if (n.hasChildren() && n.getFirstChild().isQualifiedName()) {
++//          String name = n.getString();
++//          Var aliasVar = scope.getVar(name);
++//          aliases.put(name, aliasVar);
++//          String qualifiedName =
++//              aliasVar.getInitialValue().getQualifiedName();
++//          transformation.addAlias(name, qualifiedName);
++//        } else {
++//          report(t, n, GOOG_SCOPE_NON_ALIAS_LOCAL, n.getString());
++//        }
++//        }
++       if (parent.isVar() && n.hasChildren() &&
++            n.getFirstChild().isQualifiedName()) {
+           String name = n.getString();
+           Var aliasVar = scope.getVar(name);
+           aliases.put(name, aliasVar);
+-
+           String qualifiedName =
+               aliasVar.getInitialValue().getQualifiedName();
+           transformation.addAlias(name, qualifiedName);
+-          // Bleeding functions already get a BAD_PARAMETERS error, so just
+-          // do nothing.
+-          // Parameters of the scope function also get a BAD_PARAMETERS
+-          // error.
+         } else {
+-          // TODO(robbyw): Support using locals for private variables.
+           report(t, n, GOOG_SCOPE_NON_ALIAS_LOCAL, n.getString());
+         }
+-        }
++
+       }
+     }

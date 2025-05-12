@@ -1,0 +1,65 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7a7d3bb3-a7a5-4276-94a3-6ecf7d66ea13_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a50a84b3-3c0f-40e1-9bb2-0a84ce8f35eb_fixed.java
+index e4d90e7..ea4134e 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7a7d3bb3-a7a5-4276-94a3-6ecf7d66ea13_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a50a84b3-3c0f-40e1-9bb2-0a84ce8f35eb_fixed.java
+@@ -1,45 +1,51 @@
+   @Override
+   String toStringHelper(boolean forAnnotations) {
+     if (hasReferenceName()) {
+       return getReferenceName();
+     } else if (prettyPrint) {
+       // Don't pretty print recursively.
+       prettyPrint = false;
+-
+       // Use a tree set so that the properties are sorted.
+       Set<String> propertyNames = Sets.newTreeSet();
+       for (ObjectType current = this;
+            current != null && !current.isNativeObjectType() &&
+                propertyNames.size() <= MAX_PRETTY_PRINTED_PROPERTIES;
+            current = current.getImplicitPrototype()) {
+         propertyNames.addAll(current.getOwnPropertyNames());
+       }
+-
+       StringBuilder sb = new StringBuilder();
+       sb.append("{");
+-
+       int i = 0;
+       for (String property : propertyNames) {
+         if (i > 0) {
+           sb.append(", ");
+         }
+-
+         sb.append(property);
+         sb.append(": ");
++// buggy code
++//        sb.append(getPropertyType(property).toString());
++//        ++i;
++//        if (i == MAX_PRETTY_PRINTED_PROPERTIES) {
++//          sb.append(", ...");
++//          break;
++//        }
++//      }
++//      sb.append("}");
++//      prettyPrint = true;
++//      return sb.toString();
++//    } else {
++//      return "{...}";
+       sb.append(getPropertyType(property).toString());
+-
+       ++i;
+       if (i == MAX_PRETTY_PRINTED_PROPERTIES) {
+         sb.append(", ...");
+         break;
+       }
+     }
+-
+     sb.append("}");
+-
+     prettyPrint = true;
+     return sb.toString();
+-    } else {
+-      return "{...}";
++  }
++
+     }
+   }

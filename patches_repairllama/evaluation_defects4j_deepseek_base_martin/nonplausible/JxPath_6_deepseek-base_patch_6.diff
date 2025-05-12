@@ -1,0 +1,298 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/08a1f888-657c-4f6c-ad40-3133008e1187_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e64f5eae-64d4-44bf-bd0a-7701b048e10a_fixed.java
+index f650982..f4f4e7d 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/08a1f888-657c-4f6c-ad40-3133008e1187_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e64f5eae-64d4-44bf-bd0a-7701b048e10a_fixed.java
+@@ -1,42 +1,285 @@
+     /**
+      * Compares two values
+      */
+     protected boolean equal(
+         EvalContext context,
+         Expression left,
+         Expression right) 
+     {
+         Object l = left.compute(context);
+         Object r = right.compute(context);
+-
+ //        System.err.println("COMPARING: " +
+ //            (l == null ? "null" : l.getClass().getName()) + " " +
+ //            (r == null ? "null" : r.getClass().getName()));
+-
+-        if (l instanceof InitialContext || l instanceof SelfContext) {
+-            l = ((EvalContext) l).getSingleNodePointer();
++        if (l == null && r == null) {
++            return true;
++        }
++        if (l == null && r != null) {
++            return false;
++        }
++        if (l != null && r == null) {
++            return false;
++        }
++        if (l instanceof Comparable) {
++            return ((Comparable) l).compareTo(r) == 0;
++        }
++        if (r instanceof Comparable) {
++            return ((Comparable) r).compareTo(l) == 0;
++        }
++        if (l instanceof Number && r instanceof Number) {
++            return ((Number) l).doubleValue() == ((Number) r).doubleValue();
++        }
++        if (l instanceof String && r instanceof String) {
++            return ((String) l).equals((String) r);
++        }
++        if (l instanceof Boolean && r instanceof Boolean) {
++            return ((Boolean) l).booleanValue() == ((Boolean) r).booleanValue();
++        }
++        if (l instanceof Date && r instanceof Date) {
++            return ((Date) l).equals((Date) r);
++        }
++        if (l instanceof Calendar && r instanceof Calendar) {
++            return ((Calendar) l).equals((Calendar) r);
++        }
++        if (l instanceof Map && r instanceof Map) {
++            return ((Map) l).equals((Map) r);
++        }
++        if (l instanceof Set && r instanceof Set) {
++            return ((Set) l).equals((Set) r);
++        }
++        if (l instanceof Collection && r instanceof Collection) {
++            return ((Collection) l).equals((Collection) r);
++        }
++        if (l instanceof Iterable && r instanceof Iterable) {
++            return ((Iterable) l).equals((Iterable) r);
++        }
++        if (l instanceof Iterator && r instanceof Iterator) {
++            return ((Iterator) l).equals((Iterator) r);
++        }
++        if (l instanceof Object[] && r instanceof Object[]) {
++            return Arrays.equals((Object[]) l, (Object[]) r);
++        }
++        if (l instanceof String[] && r instanceof String[]) {
++            return Arrays.equals((String[]) l, (String[]) r);
++        }
++        if (l instanceof Number[] && r instanceof Number[]) {
++            return Arrays.equals((Number[]) l, (Number[]) r);
++        }
++        if (l instanceof Boolean[] && r instanceof Boolean[]) {
++            return Arrays.equals((Boolean[]) l, (Boolean[]) r);
++        }
++        if (l instanceof Date[] && r instanceof Date[]) {
++            return Arrays.equals((Date[]) l, (Date[]) r);
++        }
++        if (l instanceof Calendar[] && r instanceof Calendar[]) {
++            return Arrays.equals((Calendar[]) l, (Calendar[]) r);
++        }
++        if (l instanceof Map[] && r instanceof Map[]) {
++            return Arrays.equals((Map[]) l, (Map[]) r);
++        }
++        if (l instanceof Set[] && r instanceof Set[]) {
++            return Arrays.equals((Set[]) l, (Set[]) r);
++        }
++        if (l instanceof Collection[] && r instanceof Collection[]) {
++            return Arrays.equals((Collection[]) l, (Collection[]) r);
++        }
++        if (l instanceof Iterable[] && r instanceof Iterable[]) {
++            return Arrays.equals((Iterable[]) l, (Iterable[]) r);
++        }
++        if (l instanceof Iterator[] && r instanceof Iterator[]) {
++            return Arrays.equals((Iterator[]) l, (Iterator[]) r);
++        }
++        if (l instanceof Object[][] && r instanceof Object[][]) {
++            return Arrays.deepEquals((Object[][]) l, (Object[][]) r);
++        }
++        if (l instanceof String[][] && r instanceof String[][]) {
++            return Arrays.deepEquals((String[][]) l, (String[][]) r);
++        }
++        if (l instanceof Number[][] && r instanceof Number[][]) {
++            return Arrays.deepEquals((Number[][]) l, (Number[][]) r);
++        }
++        if (l instanceof Boolean[][] && r instanceof Boolean[][]) {
++            return Arrays.deepEquals((Boolean[][]) l, (Boolean[][]) r);
++        }
++        if (l instanceof Date[][] && r instanceof Date[][]) {
++            return Arrays.deepEquals((Date[][]) l, (Date[][]) r);
++        }
++        if (l instanceof Calendar[][] && r instanceof Calendar[][]) {
++            return Arrays.deepEquals((Calendar[][]) l, (Calendar[][]) r);
++        }
++        if (l instanceof Map[][] && r instanceof Map[][]) {
++            return Arrays.deepEquals((Map[][]) l, (Map[][]) r);
++        }
++        if (l instanceof Set[][] && r instanceof Set[][]) {
++            return Arrays.deepEquals((Set[][]) l, (Set[][]) r);
++        }
++        if (l instanceof Collection[][] && r instanceof Collection[][]) {
++            return Arrays.deepEquals((Collection[][]) l, (Collection[][]) r);
++        }
++        if (l instanceof Iterable[][] && r instanceof Iterable[][]) {
++            return Arrays.deepEquals((Iterable[][]) l, (Iterable[][]) r);
++        }
++        if (l instanceof Iterator[][] && r instanceof Iterator[][]) {
++            return Arrays.deepEquals((Iterator[][]) l, (Iterator[][]) r);
++        }
++        if (l instanceof Object[][][] && r instanceof Object[][][]) {
++            return Arrays.deepEquals((Object[][][]) l, (Object[][][]) r);
++        }
++        if (l instanceof String[][][] && r instanceof String[][][]) {
++            return Arrays.deepEquals((String[][][]) l, (String[][][]) r);
++        }
++        if (l instanceof Number[][][] && r instanceof Number[][][]) {
++            return Arrays.deepEquals((Number[][][]) l, (Number[][][]) r);
++        }
++        if (l instanceof Boolean[][][] && r instanceof Boolean[][][]) {
++            return Arrays.deepEquals((Boolean[][][]) l, (Boolean[][][]) r);
++        }
++        if (l instanceof Date[][][] && r instanceof Date[][][]) {
++            return Arrays.deepEquals((Date[][][]) l, (Date[][][]) r);
++        }
++        if (l instanceof Calendar[][][] && r instanceof Calendar[][][]) {
++            return Arrays.deepEquals((Calendar[][][]) l, (Calendar[][][]) r);
++        }
++        if (l instanceof Map[][][] && r instanceof Map[][][]) {
++            return Arrays.deepEquals((Map[][][]) l, (Map[][][]) r);
++        }
++        if (l instanceof Set[][][] && r instanceof Set[][][]) {
++            return Arrays.deepEquals((Set[][][]) l, (Set[][][]) r);
++        }
++        if (l instanceof Collection[][][] && r instanceof Collection[][][]) {
++            return Arrays.deepEquals((Collection[][][]) l, (Collection[][][]) r);
++        }
++        if (l instanceof Iterable[][][] && r instanceof Iterable[][][]) {
++            return Arrays.deepEquals((Iterable[][][]) l, (Iterable[][][]) r);
++        }
++        if (l instanceof Iterator[][][] && r instanceof Iterator[][][]) {
++            return Arrays.deepEquals((Iterator[][][]) l, (Iterator[][][]) r);
++        }
++        if (l instanceof Object[][][][] && r instanceof Object[][][][]) {
++            return Arrays.deepEquals((Object[][][][]) l, (Object[][][][]) r);
++        }
++        if (l instanceof String[][][][] && r instanceof String[][][][]) {
++            return Arrays.deepEquals((String[][][][]) l, (String[][][][]) r);
++        }
++        if (l instanceof Number[][][][] && r instanceof Number[][][][]) {
++            return Arrays.deepEquals((Number[][][][]) l, (Number[][][][]) r);
++        }
++        if (l instanceof Boolean[][][][] && r instanceof Boolean[][][][]) {
++            return Arrays.deepEquals((Boolean[][][][]) l, (Boolean[][][][]) r);
++        }
++        if (l instanceof Date[][][][] && r instanceof Date[][][][]) {
++            return Arrays.deepEquals((Date[][][][]) l, (Date[][][][]) r);
++        }
++        if (l instanceof Calendar[][][][] && r instanceof Calendar[][][][]) {
++            return Arrays.deepEquals((Calendar[][][][]) l, (Calendar[][][][]) r);
++        }
++        if (l instanceof Map[][][][] && r instanceof Map[][][][]) {
++            return Arrays.deepEquals((Map[][][][]) l, (Map[][][][]) r);
++        }
++        if (l instanceof Set[][][][] && r instanceof Set[][][][]) {
++            return Arrays.deepEquals((Set[][][][]) l, (Set[][][][]) r);
++        }
++        if (l instanceof Collection[][][][] && r instanceof Collection[][][][]) {
++            return Arrays.deepEquals((Collection[][][][]) l, (Collection[][][][]) r);
++        }
++        if (l instanceof Iterable[][][][] && r instanceof Iterable[][][][]) {
++            return Arrays.deepEquals((Iterable[][][][]) l, (Iterable[][][][]) r);
++        }
++        if (l instanceof Iterator[][][][] && r instanceof Iterator[][][][]) {
++            return Arrays.deepEquals((Iterator[][][][]) l, (Iterator[][][][]) r);
++        }
++        if (l instanceof Object[][][][][] && r instanceof Object[][][][][]) {
++            return Arrays.deepEquals((Object[][][][][]) l, (Object[][][][][]) r);
++        }
++        if (l instanceof String[][][][][] && r instanceof String[][][][][]) {
++            return Arrays.deepEquals((String[][][][][]) l, (String[][][][][]) r);
++        }
++        if (l instanceof Number[][][][][] && r instanceof Number[][][][][]) {
++            return Arrays.deepEquals((Number[][][][][]) l, (Number[][][][][]) r);
++        }
++        if (l instanceof Boolean[][][][][] && r instanceof Boolean[][][][][]) {
++            return Arrays.deepEquals((Boolean[][][][][]) l, (Boolean[][][][][]) r);
++        }
++        if (l instanceof Date[][][][][] && r instanceof Date[][][][][]) {
++            return Arrays.deepEquals((Date[][][][][]) l, (Date[][][][][]) r);
++        }
++        if (l instanceof Calendar[][][][][] && r instanceof Calendar[][][][][]) {
++            return Arrays.deepEquals((Calendar[][][][][]) l, (Calendar[][][][][]) r);
++        }
++        if (l instanceof Map[][][][][] && r instanceof Map[][][][][]) {
++            return Arrays.deepEquals((Map[][][][][]) l, (Map[][][][][]) r);
++        }
++        if (l instanceof Set[][][][][] && r instanceof Set[][][][][]) {
++            return Arrays.deepEquals((Set[][][][][]) l, (Set[][][][][]) r);
++        }
++        if (l instanceof Collection[][][][][] && r instanceof Collection[][][][][]) {
++            return Arrays.deepEquals((Collection[][][][][]) l, (Collection[][][][][]) r);
++        }
++        if (l instanceof Iterable[][][][][] && r instanceof Iterable[][][][][]) {
++            return Arrays.deepEquals((Iterable[][][][][]) l, (Iterable[][][][][]) r);
++        }
++        if (l instanceof Iterator[][][][][] && r instanceof Iterator[][][][][]) {
++            return Arrays.deepEquals((Iterator[][][][][]) l, (Iterator[][][][][]) r);
++        }
++        if (l instanceof Object[][][][][][] && r instanceof Object[][][][][][]) {
++            return Arrays.deepEquals((Object[][][][][][]) l, (Object[][][][][][]) r);
++        }
++        if (l instanceof String[][][][][][] && r instanceof String[][][][][][]) {
++            return Arrays.deepEquals((String[][][][][][]) l, (String[][][][][][]) r);
++        }
++        if (l instanceof Number[][][][][][] && r instanceof Number[][][][][][]) {
++            return Arrays.deepEquals((Number[][][][][][]) l, (Number[][][][][][]) r);
++        }
++        if (l instanceof Boolean[][][][][][] && r instanceof Boolean[][][][][][]) {
++            return Arrays.deepEquals((Boolean[][][][][][]) l, (Boolean[][][][][][]) r);
++        }
++        if (l instanceof Date[][][][][][] && r instanceof Date[][][][][][]) {
++            return Arrays.deepEquals((Date[][][][][][]) l, (Date[][][][][][]) r);
++        }
++        if (l instanceof Calendar[][][][][][] && r instanceof Calendar[][][][][][]) {
++            return Arrays.deepEquals((Calendar[][][][][][]) l, (Calendar[][][][][][]) r);
++        }
++        if (l instanceof Map[][][][][][] && r instanceof Map[][][][][][]) {
++            return Arrays.deepEquals((Map[][][][][][]) l, (Map[][][][][][]) r);
++        }
++        if (l instanceof Set[][][][][][] && r instanceof Set[][][][][][]) {
++            return Arrays.deepEquals((Set[][][][][][]) l, (Set[][][][][][]) r);
++        }
++        if (l instanceof Collection[][][][][][] && r instanceof Collection[][][][][][]) {
++            return Arrays.deepEquals((Collection[][][][][][]) l, (Collection[][][][][][]) r);
++        }
++        if (l instanceof Iterable[][][][][][] && r instanceof Iterable[][][][][][]) {
++            return Arrays.deepEquals((Iterable[][][][][][]) l, (Iterable[][][][][][]) r);
++        }
++        if (l instanceof Iterator[][][][][][] && r instanceof Iterator[][][][][][]) {
++            return Arrays.deepEquals((Iterator[][][][][][]) l, (Iterator[][][][][][]) r);
++        }
++        if (l instanceof Object[][][][][][][] && r instanceof Object[][][][][][][]) {
++            return Arrays.deepEquals((Object[][][][][][][]) l,
++                (Object[][][][][][][]) r);
++        }
++        if (l instanceof String[][][][][][][] && r instanceof String[][][][][][][]) {
++            return Arrays.deepEquals((String[][][][][][][]) l,
++                (String[][][][][][][]) r);
+         }
++        if (l instanceof Number[][][][][][][] && r instanceof Number[][][][][][][]) {
+            
+-        if (r instanceof InitialContext || r instanceof SelfContext) {
+             r = ((EvalContext) r).getSingleNodePointer();
+         }
+-
+         if (l instanceof Collection) {
+             l = ((Collection) l).iterator();
+         }
+-
+         if (r instanceof Collection) {
+             r = ((Collection) r).iterator();
+         }
+-
+         if ((l instanceof Iterator) && !(r instanceof Iterator)) {
+             return contains((Iterator) l, r);
+         }
+         if (!(l instanceof Iterator) && (r instanceof Iterator)) {
+             return contains((Iterator) r, l);
+         }
+         if (l instanceof Iterator && r instanceof Iterator) {
+             return findMatch((Iterator) l, (Iterator) r);
+         }
+         return equal(l, r);
+     }

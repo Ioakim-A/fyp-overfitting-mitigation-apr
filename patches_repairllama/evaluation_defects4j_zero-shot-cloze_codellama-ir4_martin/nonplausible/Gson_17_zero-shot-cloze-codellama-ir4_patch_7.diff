@@ -1,0 +1,33 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3af92a54-e0fd-417a-895b-f354a6d20179_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/308c0cbd-eb78-445a-a20e-bf9d9faf4273_fixed.java
+index 44d6cc6..5c41544 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3af92a54-e0fd-417a-895b-f354a6d20179_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/308c0cbd-eb78-445a-a20e-bf9d9faf4273_fixed.java
+@@ -1,16 +1,27 @@
++  public Date read(JsonReader in) throws IOException {
++// buggy code
++//    if (in.peek() != JsonToken.STRING) {
++//      throw new JsonParseException("The date should be a string value");
++//    }
++//    String date = in.nextString();
++//    try {
++//      return deserializeToDate(date);
++//    } catch (ParseException e) {
++//      throw new JsonParseException(e);
++//    }
++
+   public Date read(JsonReader in) throws IOException {
+     if (in.peek() != JsonToken.STRING) {
+       throw new JsonParseException("The date should be a string value");
+     }
+     Date date = deserializeToDate(in.nextString());
+     if (dateType == Date.class) {
+       return date;
+     } else if (dateType == Timestamp.class) {
+       return new Timestamp(date.getTime());
+     } else if (dateType == java.sql.Date.class) {
+       return new java.sql.Date(date.getTime());
+     } else {
+-      // This must never happen: dateType is guarded in the primary constructor
+       throw new AssertionError();
+     }
+   }

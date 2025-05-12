@@ -1,0 +1,21 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/11597a27-9b8a-4852-b427-d76592a15c68_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9f6093f2-30fa-4197-a8af-5267e9e3bdf2_fixed.java
+index 271076e..c3b7063 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/11597a27-9b8a-4852-b427-d76592a15c68_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9f6093f2-30fa-4197-a8af-5267e9e3bdf2_fixed.java
+@@ -1,7 +1,16 @@
+     public StringBuffer format(Calendar calendar, StringBuffer buf) {
+         if (mTimeZoneForced) {
++// buggy code
++           calendar = (Calendar) calendar.clone();
++            calendar.setTimeZone(mTimeZone);
++        }
++        return applyRules(calendar, buf);
++    }
++
++    public StringBuffer format(Date date, StringBuffer buf) {
++        if (mTimeZoneForced) {
+             calendar = (Calendar) calendar.clone();
+             calendar.setTimeZone(mTimeZone);
+         }
+         return applyRules(calendar, buf);
+     }

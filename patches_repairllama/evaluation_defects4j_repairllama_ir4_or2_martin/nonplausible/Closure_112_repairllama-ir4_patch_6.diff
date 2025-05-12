@@ -1,0 +1,37 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bead1a3c-38cf-49f6-997e-1da2260bb13e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4f3e2887-c3b3-4132-9f19-4e951af096f1_fixed.java
+index 618a37c..ded95c7 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bead1a3c-38cf-49f6-997e-1da2260bb13e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4f3e2887-c3b3-4132-9f19-4e951af096f1_fixed.java
+@@ -1,28 +1,22 @@
+   private boolean inferTemplatedTypesForCall(
+       Node n, FunctionType fnType) {
+     final ImmutableList<TemplateType> keys = fnType.getTemplateTypeMap()
+         .getTemplateKeys();
+     if (keys.isEmpty()) {
+       return false;
+     }
+-
+-    // Try to infer the template types
++// buggy code
++//     Map<TemplateType, JSType> inferred =
++//         inferTemplateTypesFromParameters(fnType, n);
+    Map<TemplateType, JSType> inferred =
+-        inferTemplateTypesFromParameters(fnType, n);
+-
+-
+-    // Replace all template types. If we couldn't find a replacement, we
+-    // replace it with UNKNOWN.
++        inferTemplateTypesFromParameters(n, fnType);
+     TemplateTypeReplacer replacer = new TemplateTypeReplacer(
+         registry, inferred);
+     Node callTarget = n.getFirstChild();
+-
+     FunctionType replacementFnType = fnType.visit(replacer)
+         .toMaybeFunctionType();
+     Preconditions.checkNotNull(replacementFnType);
+-
+     callTarget.setJSType(replacementFnType);
+     n.setJSType(replacementFnType.getReturnType());
+-
+     return replacer.madeChanges;
+   }

@@ -1,0 +1,56 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/85294ef8-edc4-468b-a684-37e5d8e5cd36_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9796c286-eac3-42bc-82b1-4110be9008da_fixed.java
+index c4e5233..a4503c5 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/85294ef8-edc4-468b-a684-37e5d8e5cd36_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9796c286-eac3-42bc-82b1-4110be9008da_fixed.java
+@@ -1,43 +1,30 @@
+ public double solve(final UnivariateRealFunction f,
+             final double min, final double max, final double initial)
+     throws MaxIterationsExceededException, FunctionEvaluationException {
+-
+     clearResult();
+     verifySequence(min, initial, max);
+-
+-        // return the initial guess if it is good enough
+     double yInitial = f.value(initial);
+     if (Math.abs(yInitial) <= functionValueAccuracy) {
+         setResult(initial, 0);
+         return result;
+     }
+-
+-        // return the first endpoint if it is good enough
+     double yMin = f.value(min);
+     if (Math.abs(yMin) <= functionValueAccuracy) {
+-            setResult(yMin, 0);
++        setResult(min, 0);
+         return result;
+     }
+-
+-        // reduce interval if min and initial bracket the root
+     if (yInitial * yMin < 0) {
+-            return solve(f, min, yMin, initial, yInitial, min, yMin);
++        return solve(f, min, yMin, initial, yInitial);
+     }
+-
+-        // return the second endpoint if it is good enough
+     double yMax = f.value(max);
+     if (Math.abs(yMax) <= functionValueAccuracy) {
+-            setResult(yMax, 0);
++        setResult(max, 0);
+         return result;
+     }
+-
+-        // reduce interval if initial and max bracket the root
+     if (yInitial * yMax < 0) {
+-            return solve(f, initial, yInitial, max, yMax, initial, yInitial);
++        return solve(f, initial, yInitial, max, yMax);
+     }
+-
+-
+-        // full Brent algorithm starting with provided initial guess
+-        return solve(f, min, yMin, max, yMax, initial, yInitial);
+-
++    // If the function values at the boundaries and the midpoint have the same sign, 
++    // an exception is thrown as it is not possible to bracket a root.
++    throw new IllegalArgumentException("Function values at the endpoints and the midpoint do not bracket a root.");
+ }
+\ No newline at end of file

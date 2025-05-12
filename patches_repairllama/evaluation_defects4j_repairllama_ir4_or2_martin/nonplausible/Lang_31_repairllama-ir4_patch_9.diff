@@ -1,0 +1,30 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1f3b238c-ff76-4b92-a990-e1207d5b1079_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c83e3873-fa4e-45bd-89b6-41b4590c3946_fixed.java
+index 13c1ea9..31012e2 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1f3b238c-ff76-4b92-a990-e1207d5b1079_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c83e3873-fa4e-45bd-89b6-41b4590c3946_fixed.java
+@@ -1,18 +1,22 @@
+ 	public static boolean containsAny(CharSequence cs, char[] searchChars) {
+ 		if (isEmpty(cs) || ArrayUtils.isEmpty(searchChars)) {
+ 			return false;
+ 		}
+ 		int csLength = cs.length();
+ 		int searchLength = searchChars.length;
+-		for (int i = 0; i < csLength; i++) {
++// buggy code
++// 		for (int i = 0; i < csLength; i++) {
++// 			char ch = cs.charAt(i);
++// 			for (int j = 0; j < searchLength; j++) {
++// 				if (searchChars[j] == ch) {
++// 						return true;
++		outer: for (int i = 0; i < csLength; i++) {
+ 			char ch = cs.charAt(i);
+ 			for (int j = 0; j < searchLength; j++) {
+ 				if (searchChars[j] == ch) {
+-						// ch is a supplementary character
+-						// ch is in the Basic Multilingual Plane
+ 					return true;
+ 				}
+ 			}
+ 		}
+ 		return false;
+ 	}

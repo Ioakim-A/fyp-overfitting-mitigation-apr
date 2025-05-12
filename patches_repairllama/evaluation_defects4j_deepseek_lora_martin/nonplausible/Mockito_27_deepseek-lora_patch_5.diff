@@ -1,0 +1,16 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b305e1c4-4f2f-443c-8e96-3731d7bc5535_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/47c34c47-2ddb-4ab2-bb97-7925ea2ed4d2_fixed.java
+index 5c5286c..2fb61ee 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b305e1c4-4f2f-443c-8e96-3731d7bc5535_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/47c34c47-2ddb-4ab2-bb97-7925ea2ed4d2_fixed.java
+@@ -1,6 +1,10 @@
+     public <T> void resetMock(T mock) {
+         MockHandlerInterface<T> oldMockHandler = getMockHandler(mock);
+-        MockHandler<T> newMockHandler = new MockHandler<T>(oldMockHandler);
++// buggy code
++//        MockHandler<T> newMockHandler = new MockHandler<T>(oldMockHandler);
++//        MethodInterceptorFilter newFilter = new MethodInterceptorFilter(newMockHandler, (MockSettingsImpl) org.mockito.Mockito.withSettings().defaultAnswer(org.mockito.Mockito.RETURNS_DEFAULTS));
++        MockHandler<T> newMockHandler = new MockHandler<T>(null);
+         MethodInterceptorFilter newFilter = new MethodInterceptorFilter(newMockHandler, (MockSettingsImpl) org.mockito.Mockito.withSettings().defaultAnswer(org.mockito.Mockito.RETURNS_DEFAULTS));
++
+         ((Factory) mock).setCallback(0, newFilter);
+     }

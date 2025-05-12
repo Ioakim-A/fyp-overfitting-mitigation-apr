@@ -1,0 +1,50 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/82c2cbba-1de4-4043-82b5-6d83659d4cef_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cd9729a1-3339-4f22-ac90-79f9e1414fc8_fixed.java
+index 93113dd..9175226 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/82c2cbba-1de4-4043-82b5-6d83659d4cef_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cd9729a1-3339-4f22-ac90-79f9e1414fc8_fixed.java
+@@ -1,40 +1,41 @@
+     /**
+      * Initialize derived fields from defining fields.
+      * This is called from constructor and from readObject (de-serialization)
+      */
+     private void init() {
+         thisYear= Calendar.getInstance(timeZone, locale).get(Calendar.YEAR);
+-
+         nameValues= new ConcurrentHashMap<Integer, KeyValue[]>();
+-
+         StringBuilder regex= new StringBuilder();
+         List<Strategy> collector = new ArrayList<Strategy>();
+-
+         Matcher patternMatcher= formatPattern.matcher(pattern);
+         if(!patternMatcher.lookingAt()) {
+             throw new IllegalArgumentException("Invalid pattern");
+         }
+-
+         currentFormatField= patternMatcher.group();
+         Strategy currentStrategy= getStrategy(currentFormatField);
+         for(;;) {
+             patternMatcher.region(patternMatcher.end(), patternMatcher.regionEnd());
+             if(!patternMatcher.lookingAt()) {
+                 nextStrategy = null;
+                 break;
+             }
+             String nextFormatField= patternMatcher.group();
+             nextStrategy = getStrategy(nextFormatField);
+             if(currentStrategy.addRegex(this, regex)) {
+                 collector.add(currentStrategy);
+             }
+             currentFormatField= nextFormatField;
+             currentStrategy= nextStrategy;
+         }
++// buggy code
++        if(nextStrategy != null) {
++            nextStrategy.addRegex(this, regex);
++        }
++
+         if(currentStrategy.addRegex(this, regex)) {
+             collector.add(currentStrategy);
+         }
+         currentFormatField= null;
+         strategies= collector.toArray(new Strategy[collector.size()]);
+         parsePattern= Pattern.compile(regex.toString());
+     }

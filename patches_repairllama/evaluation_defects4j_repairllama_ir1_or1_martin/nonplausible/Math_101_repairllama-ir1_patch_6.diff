@@ -1,0 +1,77 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f21b8b29-d5c8-4343-a220-d2709a0a8a3c_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/89c96c4d-443c-4b81-b5ce-96e722ef8e93_fixed.java
+index 9637fa4..121723e 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f21b8b29-d5c8-4343-a220-d2709a0a8a3c_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/89c96c4d-443c-4b81-b5ce-96e722ef8e93_fixed.java
+@@ -1,70 +1,29 @@
+    public Complex parse(String source, ParsePosition pos) {
+         int initialIndex = pos.getIndex();
+-
+-        // parse whitespace
+         parseAndIgnoreWhitespace(source, pos);
+-
+-        // parse real
+         Number re = parseNumber(source, getRealFormat(), pos);
+         if (re == null) {
+-            // invalid real number
+-            // set index back to initial, error index should already be set
+-            // character examined.
+             pos.setIndex(initialIndex);
+             return null;
+         }
+-
+-        // parse sign
+         int startIndex = pos.getIndex();
+         char c = parseNextCharacter(source, pos);
+-        int sign = 0;
++        int sign = 1;
+         switch (c) {
+         case 0 :
+-            // no sign
+-            // return real only complex number
+             return new Complex(re.doubleValue(), 0.0);
+         case '-' :
+             sign = -1;
+             break;
+         case '+' :
+             sign = 1;
+             break;
+         default :
+-            // invalid sign
+-            // set index back to initial, error index should be the last
+-            // character examined.
+             pos.setIndex(initialIndex);
+             pos.setErrorIndex(startIndex);
+             return null;
+         }
+-
+-        // parse whitespace
+         parseAndIgnoreWhitespace(source, pos);
+-
+-        // parse imaginary
+         Number im = parseNumber(source, getRealFormat(), pos);
+         if (im == null) {
+-            // invalid imaginary number
+-            // set index back to initial, error index should already be set
+-            // character examined.
+             pos.setIndex(initialIndex);
+\ No newline at end of file
+-            return null;
+-        }
+-
+-        // parse imaginary character
+-        int n = getImaginaryCharacter().length();
+-        startIndex = pos.getIndex();
+-        int endIndex = startIndex + n;
+-        if (
+-            source.substring(startIndex, endIndex).compareTo(
+-            getImaginaryCharacter()) != 0) {
+-            // set index back to initial, error index should be the start index
+-            // character examined.
+-            pos.setIndex(initialIndex);
+-            pos.setErrorIndex(startIndex);
+-            return null;
+-        }
+-        pos.setIndex(endIndex);
+-
+-        return new Complex(re.doubleValue(), im.doubleValue() * sign);
+-    }

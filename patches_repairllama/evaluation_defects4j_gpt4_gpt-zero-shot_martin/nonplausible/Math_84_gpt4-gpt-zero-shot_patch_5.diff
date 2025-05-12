@@ -1,0 +1,50 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a7932baa-cebf-4a59-987c-fbd286748941_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ec071864-f5a8-4b9b-8a57-65d961e3cfc7_fixed.java
+index 50cbfb2..11618fe 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a7932baa-cebf-4a59-987c-fbd286748941_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ec071864-f5a8-4b9b-8a57-65d961e3cfc7_fixed.java
+@@ -1,39 +1,25 @@
+     protected void iterateSimplex(final Comparator<RealPointValuePair> comparator)
+         throws FunctionEvaluationException, OptimizationException, IllegalArgumentException {
+-
+-        while (true) {
+-
++        boolean keepGoing = true;
++        while (keepGoing) {
+             incrementIterationsCounter();
+-
+-            // save the original vertex
+             final RealPointValuePair[] original = simplex;
+             final RealPointValuePair best = original[0];
+-
+-            // perform a reflection step
+             final RealPointValuePair reflected = evaluateNewSimplex(original, 1.0, comparator);
+             if (comparator.compare(reflected, best) < 0) {
+-
+-                // compute the expanded simplex
+                 final RealPointValuePair[] reflectedSimplex = simplex;
+                 final RealPointValuePair expanded = evaluateNewSimplex(original, khi, comparator);
+                 if (comparator.compare(reflected, expanded) <= 0) {
+-                    // accept the reflected simplex
+                     simplex = reflectedSimplex;
+                 }
+-
+                 return;
+-
+             }
+-
+-            // compute the contracted simplex
+             final RealPointValuePair contracted = evaluateNewSimplex(original, gamma, comparator);
+             if (comparator.compare(contracted, best) < 0) {
+-                // accept the contracted simplex
+-
+-            // check convergence
+                 return;
+             }
+-
++            if (comparator.compare(reflected, best) >= 0 && comparator.compare(contracted, best) >= 0) {
++                keepGoing = false;
++            }
+         }
+-
+     }
+\ No newline at end of file

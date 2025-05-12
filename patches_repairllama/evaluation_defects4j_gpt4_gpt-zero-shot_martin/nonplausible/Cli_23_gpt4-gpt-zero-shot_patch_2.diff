@@ -1,0 +1,51 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2873a712-6b4d-46a2-9234-133ca2b309d2_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5e4bcdbe-9635-4ab3-ac40-554b88c4aa9f_fixed.java
+index 6a2c422..5d93ae5 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2873a712-6b4d-46a2-9234-133ca2b309d2_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5e4bcdbe-9635-4ab3-ac40-554b88c4aa9f_fixed.java
+@@ -1,37 +1,31 @@
+ protected StringBuffer renderWrappedText(StringBuffer sb, int width, 
+                                          int nextLineTabStop, String text)
+ {
+     int pos = findWrapPos(text, width, 0);
+-
+     if (pos == -1)
+     {
+         sb.append(rtrim(text));
+-
+         return sb;
+     }
+     sb.append(rtrim(text.substring(0, pos))).append(defaultNewLine);
+-
+-        // all following lines must be padded with nextLineTabStop space 
+-        // characters
+     final String padding = createPadding(nextLineTabStop);
+-
+     while (true)
+     {
++        // corrected code
+         int lastPos = pos;
+-            text = padding + text.substring(pos).trim();
+-            pos = findWrapPos(text, width, 0);
++        text = text.substring(pos).trim();
++        pos = findWrapPos(padding + text, width, 0);
+ 
+         if (pos == -1)
+         {
+-                sb.append(text);
+-
++            sb.append(padding).append(text);
+             return sb;
+-            } else
+-            if (pos == lastPos)
++        } 
++        else if (pos == 0) // No more characters can fit in the line width.
+         {
+             throw new RuntimeException("Text too long for line - throwing exception to avoid infinite loop [CLI-162]: " + text);
+         }
+-
+-            sb.append(rtrim(text.substring(0, pos))).append(defaultNewLine);
++        sb.append(padding).append(rtrim(text.substring(0, pos))).append(defaultNewLine);
++        pos += padding.length(); // adjust the position to account for padding
+     }
+ }
+\ No newline at end of file

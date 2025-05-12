@@ -1,0 +1,60 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/95aeafd0-1cbf-4117-9b77-df99c58b15bc_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/da52ac70-df24-4599-9344-fe32d22b051c_fixed.java
+index b98f0a7..2ee90bc 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/95aeafd0-1cbf-4117-9b77-df99c58b15bc_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/da52ac70-df24-4599-9344-fe32d22b051c_fixed.java
+@@ -1,29 +1,47 @@
+   private FlowScope traverseNew(Node n, FlowScope scope) {
+-
+-    Node constructor = n.getFirstChild();
+-    scope = traverse(constructor, scope);
+-    JSType constructorType = constructor.getJSType();
++// buggy code
++//     Node constructor = n.getFirstChild();
++//     scope = traverse(constructor, scope);
++//     JSType constructorType = constructor.getJSType();
++//     JSType type = null;
++//     if (constructorType != null) {
++//       constructorType = constructorType.restrictByNotNullOrUndefined();
++//       if (constructorType.isUnknownType()) {
++//         type = getNativeType(UNKNOWN_TYPE);
++//       } else {
++//         FunctionType ct = constructorType.toMaybeFunctionType();
++//         if (ct == null && constructorType instanceof FunctionType) {
++//           ct = (FunctionType) constructorType;
++//         }
++//         if (ct != null && ct.isConstructor()) {
++//           type = ct.getInstanceType();
++//         }
++//       }
++//     }
++//     n.setJSType(type);
++//     for (Node arg = constructor.getNext(); arg != null; arg = arg.getNext()) {
++//       scope = traverse(arg, scope);
++//     }
++   scope = traverse(n.getFirstChild(), scope);
++    JSType constructorType = n.getFirstChild().getJSType();
+     JSType type = null;
+     if (constructorType != null) {
+       constructorType = constructorType.restrictByNotNullOrUndefined();
+       if (constructorType.isUnknownType()) {
+         type = getNativeType(UNKNOWN_TYPE);
+       } else {
+         FunctionType ct = constructorType.toMaybeFunctionType();
+         if (ct == null && constructorType instanceof FunctionType) {
+-          // If constructorType is a NoObjectType, then toMaybeFunctionType will
+-          // return null. But NoObjectType implements the FunctionType
+-          // interface, precisely because it can validly construct objects.
+           ct = (FunctionType) constructorType;
+         }
+         if (ct != null && ct.isConstructor()) {
+           type = ct.getInstanceType();
+         }
+       }
+     }
+     n.setJSType(type);
+-    for (Node arg = constructor.getNext(); arg != null; arg = arg.getNext()) {
++    for (Node arg = n.getFirstChild().getNext(); arg != null; arg = arg.getNext()) {
+       scope = traverse(arg, scope);
+     }
+     return scope;
+   }

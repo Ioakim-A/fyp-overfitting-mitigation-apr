@@ -1,0 +1,61 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/950b4ba1-bc0d-458e-8703-8f44229784b2_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ff7ee7a0-39d5-4357-878e-cc886bdc92e9_fixed.java
+index be3dcc8..10b8c48 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/950b4ba1-bc0d-458e-8703-8f44229784b2_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ff7ee7a0-39d5-4357-878e-cc886bdc92e9_fixed.java
+@@ -1,41 +1,56 @@
+     private static StringBuilder escapeRegex(StringBuilder regex, String value, boolean unquote) {
++// buggy code
++//        boolean wasWhite= false;
++//        for(int i= 0; i<value.length(); ++i) {
++//            char c= value.charAt(i);
++//            if(Character.isWhitespace(c)) {
++//                if(!wasWhite) {
++//                    wasWhite= true;
++//                    regex.append("\\s*+");
++//                }
++//                continue;
++//            }
++//            wasWhite= false;
++//            regex.append(c);
++//        }
++//        return regex;
+         boolean wasWhite= false;
+         for(int i= 0; i<value.length(); ++i) {
+             char c= value.charAt(i);
+             if(Character.isWhitespace(c)) {
+                 if(!wasWhite) {
+                     wasWhite= true;
+                     regex.append("\\s*+");
+                 }
+                 continue;
+             }
+             wasWhite= false;
+             switch(c) {
+             case '\'':
+                 if(unquote) {
+                     if(++i==value.length()) {
+                         return regex;
+                     }
+                     c= value.charAt(i);
+                 }
+                 break;
+             case '?':
+             case '[':
+             case ']':
+             case '(':
+             case ')':
+             case '{':
+             case '}':
+             case '\\':
+             case '|':
+             case '*':
+             case '+':
+             case '^':
+             case '$':
+             case '.':
+                 regex.append('\\');
+             }
+             regex.append(c);
+         }
+         return regex;
+     }

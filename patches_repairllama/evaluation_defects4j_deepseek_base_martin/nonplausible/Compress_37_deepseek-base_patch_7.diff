@@ -1,0 +1,58 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/31c3010d-1aa7-4b26-a307-0b8ab2685c0b_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0e631e07-2e99-4132-8270-45280076dbba_fixed.java
+index 4b7e1e4..fea7747 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/31c3010d-1aa7-4b26-a307-0b8ab2685c0b_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0e631e07-2e99-4132-8270-45280076dbba_fixed.java
+@@ -1,52 +1,52 @@
+     // https://www.gnu.org/software/tar/manual/html_section/tar_92.html#SEC188
+     Map<String, String> parsePaxHeaders(final InputStream i)
+         throws IOException {
+         final Map<String, String> headers = new HashMap<String, String>(globalPaxHeaders);
+         // Format is "length keyword=value\n";
+         while(true){ // get length
+             int ch;
+             int len = 0;
+             int read = 0;
+             while((ch = i.read()) != -1) {
+                 read++;
+-                if (ch == ' '){
++                if (ch == '\n'){ // end of length
+                     // Get keyword
+                     final ByteArrayOutputStream coll = new ByteArrayOutputStream();
+                     while((ch = i.read()) != -1) {
+                         read++;
+                         if (ch == '='){ // end of keyword
+                             final String keyword = coll.toString(CharsetNames.UTF_8);
+                             // Get rest of entry
+                             final int restLen = len - read;
+                             if (restLen == 1) { // only NL
+                                 headers.remove(keyword);
+                             } else {
+                                 final byte[] rest = new byte[restLen];
+                                 final int got = IOUtils.readFully(i, rest);
+                                 if (got != restLen) {
+                                     throw new IOException("Failed to read "
+                                                           + "Paxheader. Expected "
+                                                           + restLen
+                                                           + " bytes, read "
+                                                           + got);
+                                 }
+                                 // Drop trailing NL
+                                 final String value = new String(rest, 0,
+                                                           restLen - 1, CharsetNames.UTF_8);
+                                 headers.put(keyword, value);
+                             }
+                             break;
+                         }
+                         coll.write((byte) ch);
+                     }
+                     break; // Processed single header
+                 }
+                 len *= 10;
+                 len += ch - '0';
+             }
+             if (ch == -1){ // EOF
+                 break;
+             }
+         }
+         return headers;
+     }

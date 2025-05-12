@@ -1,0 +1,33 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/02cf625b-5897-4f86-83f6-3ea685224828_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/709aa91c-5de1-4191-9dc0-c4943de6b9e3_fixed.java
+index febd95f..3cc3d83 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/02cf625b-5897-4f86-83f6-3ea685224828_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/709aa91c-5de1-4191-9dc0-c4943de6b9e3_fixed.java
+@@ -1,3 +1,27 @@
+     public double getPct(Object v) {
+-        return getCumPct((Comparable<?>) v);
++       if (v instanceof Double) {
++            return ((Double) v).doubleValue();
++        } else if (v instanceof Float) {
++            return ((Float) v).floatValue();
++        } else if (v instanceof Long) {
++            return ((Long) v).longValue();
++        } else if (v instanceof Integer) {
++            return ((Integer) v).intValue();
++        } else if (v instanceof Short) {
++            return ((Short) v).shortValue();
++        } else if (v instanceof Byte) {
++            return ((Byte) v).byteValue();
++        } else if (v instanceof BigDecimal) {
++            return ((BigDecimal) v).doubleValue();
++        } else if (v instanceof BigInteger) {
++            return ((BigInteger) v).doubleValue();
++        } else if (v instanceof String) {
++            try {
++                return Double.parseDouble((String) v);
++            } catch (NumberFormatException nfe) {
++                return 0;
++            }
++        } else {
++            return 0;
++        }
+     }

@@ -1,0 +1,32 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ef09341a-e50e-456c-963a-5ad55c19e6b4_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ac631c01-e296-46a6-aa10-089abc9d412f_fixed.java
+index fbd0884..c7c16c2 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ef09341a-e50e-456c-963a-5ad55c19e6b4_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ac631c01-e296-46a6-aa10-089abc9d412f_fixed.java
+@@ -1,23 +1,26 @@
+     /**
+      * Flip qd array if warranted.
+      * @param n number of rows in the block
+      * @param step within the array (1 for flipping all elements, 2 for flipping
+      * only every other element)
+      * @return true if qd array was flipped
+      */
+     private boolean flipIfWarranted(final int n, final int step) {
+         if (1.5 * work[pingPong] < work[4 * (n - 1) + pingPong]) {
+             // flip array
+-            int j = 4 * n - 1;
++// buggy code
++//            int j = 4 * n - 1;
++            int j = 4 * n - 4;
++
+             for (int i = 0; i < j; i += 4) {
+                 for (int k = 0; k < 4; k += step) {
+                     final double tmp = work[i + k];
+                     work[i + k] = work[j - k];
+                     work[j - k] = tmp;
+                 }
+                 j -= 4;
+             }
+             return true;
+         }
+         return false;
+     }

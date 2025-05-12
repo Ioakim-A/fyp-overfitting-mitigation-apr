@@ -1,0 +1,48 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d33327d4-ba3a-4055-98e8-267ccb45c209_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3851838c-8212-4168-a2ad-6d157e6ae0d5_fixed.java
+index 50cbfb2..f6cfdff 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d33327d4-ba3a-4055-98e8-267ccb45c209_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3851838c-8212-4168-a2ad-6d157e6ae0d5_fixed.java
+@@ -1,39 +1,24 @@
+     protected void iterateSimplex(final Comparator<RealPointValuePair> comparator)
+         throws FunctionEvaluationException, OptimizationException, IllegalArgumentException {
+-
+         while (true) {
+-
+             incrementIterationsCounter();
+-
+-            // save the original vertex
+             final RealPointValuePair[] original = simplex;
+             final RealPointValuePair best = original[0];
+-
+-            // perform a reflection step
+             final RealPointValuePair reflected = evaluateNewSimplex(original, 1.0, comparator);
+             if (comparator.compare(reflected, best) < 0) {
+-
+-                // compute the expanded simplex
+                 final RealPointValuePair[] reflectedSimplex = simplex;
+                 final RealPointValuePair expanded = evaluateNewSimplex(original, khi, comparator);
+                 if (comparator.compare(reflected, expanded) <= 0) {
+-                    // accept the reflected simplex
+                     simplex = reflectedSimplex;
+                 }
+-
+                 return;
+-
+             }
+-
+-            // compute the contracted simplex
+             final RealPointValuePair contracted = evaluateNewSimplex(original, gamma, comparator);
+             if (comparator.compare(contracted, best) < 0) {
+-                // accept the contracted simplex
+-
+-            // check convergence
+                 return;
++            } else {
++                // If neither reflection nor expansion improves the current best point, perform contraction.
++                simplex = evaluateNewSimplex(original, rho, comparator);
+             }
+-
+         }
+-
+     }
+\ No newline at end of file

@@ -1,0 +1,42 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/70d35266-6968-4d58-98e5-445e1e7c32ee_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0c9fcfac-900a-4131-87b9-efeb35e3b50c_fixed.java
+index 671037f..ed7843b 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/70d35266-6968-4d58-98e5-445e1e7c32ee_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0c9fcfac-900a-4131-87b9-efeb35e3b50c_fixed.java
+@@ -1,36 +1,32 @@
+     private Map<String, Integer> initializeHeader() throws IOException {
+         Map<String, Integer> hdrMap = null;
+         final String[] formatHeader = this.format.getHeader();
+-        if (formatHeader != null) {
++        if ((formatHeader != null) && (formatHeader.length > 0)) {
+             hdrMap = new LinkedHashMap<String, Integer>();
+-
+             String[] headerRecord = null;
+             if (formatHeader.length == 0) {
+-                // read the header from the first line of the file
+                 final CSVRecord nextRecord = this.nextRecord();
+                 if (nextRecord != null) {
+                     headerRecord = nextRecord.values();
+                 }
+             } else {
+                 if (this.format.getSkipHeaderRecord()) {
+                     this.nextRecord();
+                 }
+                 headerRecord = formatHeader;
+             }
+-
+-            // build the name to index mappings
+             if (headerRecord != null) {
+                 for (int i = 0; i < headerRecord.length; i++) {
+                     final String header = headerRecord[i];
+                     final boolean containsHeader = hdrMap.containsKey(header);
+                     final boolean emptyHeader = header.trim().isEmpty();
+                     if (containsHeader && (!emptyHeader || (emptyHeader && !this.format.getIgnoreEmptyHeaders()))) {
+                         throw new IllegalArgumentException("The header contains a duplicate name: \"" + header +
+                                 "\" in " + Arrays.toString(headerRecord));
+                     }
+                     hdrMap.put(header, Integer.valueOf(i));
+                 }
+             }
+         }
+         return hdrMap;
+     }

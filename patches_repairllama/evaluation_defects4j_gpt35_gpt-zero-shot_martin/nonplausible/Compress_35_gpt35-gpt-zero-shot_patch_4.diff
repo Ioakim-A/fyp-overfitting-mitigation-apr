@@ -1,0 +1,29 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dee466d7-506c-40fe-a8d3-f7a88958da78_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/28ece371-ba36-4b90-993f-196b663c490b_fixed.java
+index 1ac6781..01f28d1 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dee466d7-506c-40fe-a8d3-f7a88958da78_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/28ece371-ba36-4b90-993f-196b663c490b_fixed.java
+@@ -1,21 +1,22 @@
+ public static boolean verifyCheckSum(byte[] header) {
++    int CHKSUM_OFFSET = 0; // assuming the checksum starts from the first byte 
++    int CHKSUMLEN = 8; // assuming the checksum length is 8
+     long storedSum = 0;
+     long unsignedSum = 0;
+     long signedSum = 0;
+-
+     int digits = 0;
+     for (int i = 0; i < header.length; i++) {
+         byte b = header[i];
+         if (CHKSUM_OFFSET  <= i && i < CHKSUM_OFFSET + CHKSUMLEN) {
+             if ('0' <= b && b <= '7' && digits++ < 6) {
+                 storedSum = storedSum * 8 + b - '0';
+             } else if (digits > 0) {
+                 digits = 6;
+             }
+             b = ' ';
+         }
+         unsignedSum += 0xff & b;
+         signedSum += b;
+     }
+     return storedSum == unsignedSum || storedSum == signedSum;
+ }
+\ No newline at end of file

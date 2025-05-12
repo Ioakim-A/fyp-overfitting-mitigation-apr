@@ -1,0 +1,58 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fc9aec8d-7ef9-4929-9b66-d5ce03f3e6b4_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/64259225-e86c-4127-8b9f-a448ff6f53aa_fixed.java
+index 7b4f703..151be9c 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fc9aec8d-7ef9-4929-9b66-d5ce03f3e6b4_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/64259225-e86c-4127-8b9f-a448ff6f53aa_fixed.java
+@@ -1,29 +1,42 @@
+     private static String cacheString(final char[] charBuf, final String[] stringCache, final int start, final int count) {
+-        // limit (no cache):
+         if (count > maxStringCacheLen)
+             return new String(charBuf, start, count);
+-
+-        // calculate hash:
++// buggy code
++//        int hash = 0;
++//        for (int i = start; i < start + count; i++) {
++//            hash = 31 * hash + charBuf[i];
++//        }
++//        final int index = hash & stringCache.length - 1;
++//        String cached = stringCache[index];
++//        if (cached == null) { 
++//            cached = new String(charBuf, start, count);
++//            stringCache[index] = cached;
++//        } else { 
++//            if (rangeEquals(charBuf, start, count, cached)) { 
++//                return cached;
++//            } else { 
++//                cached = new String(charBuf, start, count);
++//                stringCache[index] = cached; 
++//            }
++//        }
++//        return cached;
+         int hash = 0;
+         int offset = start;
+         for (int i = 0; i < count; i++) {
+             hash = 31 * hash + charBuf[offset++];
+         }
+-
+-        // get from cache
+         final int index = hash & stringCache.length - 1;
+         String cached = stringCache[index];
+-
+-        if (cached == null) { // miss, add
++        if (cached == null) { 
+             cached = new String(charBuf, start, count);
+             stringCache[index] = cached;
+-        } else { // hashcode hit, check equality
+-            if (rangeEquals(charBuf, start, count, cached)) { // hit
++        } else { 
++            if (rangeEquals(charBuf, start, count, cached)) { 
+                 return cached;
+-            } else { // hashcode conflict
++            } else { 
+                 cached = new String(charBuf, start, count);
+-                stringCache[index] = cached; // update the cache, as recently used strings are more likely to show up again
++                stringCache[index] = cached; 
+             }
+         }
+         return cached;
+     }

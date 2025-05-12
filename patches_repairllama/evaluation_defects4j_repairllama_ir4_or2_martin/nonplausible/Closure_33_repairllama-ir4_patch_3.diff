@@ -1,0 +1,35 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d135b7a2-0ab7-42c2-91eb-d8386753b10d_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fd62a6a6-ac35-477b-bf0c-90f343c6fb16_fixed.java
+index 370507c..e729af1 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d135b7a2-0ab7-42c2-91eb-d8386753b10d_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fd62a6a6-ac35-477b-bf0c-90f343c6fb16_fixed.java
+@@ -1,26 +1,20 @@
+   public void matchConstraint(ObjectType constraintObj) {
+-    // We only want to match contraints on anonymous types.
+-
+-    // Handle the case where the constraint object is a record type.
++// buggy code
+ // 
+-    // param constraintObj {{prop: (number|undefined)}}
+-    // function f(constraintObj) {}
+-    // f({});
+-    //
+-    // We want to modify the object literal to match the constraint, by
+-    // taking any each property on the record and trying to match
+-    // properties on this object.
++   if (!constraintObj.isRecordType()) {
++      return;
++    }
+     if (constraintObj.isRecordType()) {
+       for (String prop : constraintObj.getOwnPropertyNames()) {
+         JSType propType = constraintObj.getPropertyType(prop);
+         if (!isPropertyTypeDeclared(prop)) {
+           JSType typeToInfer = propType;
+           if (!hasProperty(prop)) {
+             typeToInfer = getNativeType(JSTypeNative.VOID_TYPE)
+                 .getLeastSupertype(propType);
+           }
+           defineInferredProperty(prop, typeToInfer, null);
+         }
+       }
+     }
+   }

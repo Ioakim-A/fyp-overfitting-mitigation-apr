@@ -1,0 +1,39 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/43c43895-7e6a-4d02-a636-dfbd6d8148bb_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/23617563-bec9-4b74-84d7-dd18d28cc40d_fixed.java
+index 32ebe90..c4ebc4d 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/43c43895-7e6a-4d02-a636-dfbd6d8148bb_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/23617563-bec9-4b74-84d7-dd18d28cc40d_fixed.java
+@@ -1,29 +1,30 @@
+ protected void burstToken(String token, boolean stopAtNonOption)
+ {
+     for (int i = 1; i < token.length(); i++)
+     {
+         String ch = String.valueOf(token.charAt(i));
+-
+         if (options.hasOption(ch))
+         {
+             tokens.add("-" + ch);
+             currentOption = options.getOption(ch);
+-
+             if (currentOption.hasArg() && (token.length() != (i + 1)))
+             {
+                 tokens.add(token.substring(i + 1));
+-
+                 break;
+             }
+         }
+         else if (stopAtNonOption)
+         {
+             process(token.substring(i));
++            break;
+         }
+         else
+         {
+             tokens.add(token);
+             break;
+         }
++
++        // If none of the conditions are met, add the current character to the tokens
++        tokens.add("-" + ch);
+     }
+ }
+\ No newline at end of file

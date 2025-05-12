@@ -1,0 +1,21 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/71736734-4cfd-472e-b931-7355e2d3a23f_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b432d80e-3d9d-47eb-a5cf-df4b9a7cf2ab_fixed.java
+index 0ed3381..a775af2 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/71736734-4cfd-472e-b931-7355e2d3a23f_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b432d80e-3d9d-47eb-a5cf-df4b9a7cf2ab_fixed.java
+@@ -1,8 +1,13 @@
+         protected Object _deserializeFromEmptyString() throws IOException {
+-            // As per [databind#398], URI requires special handling
+             if (_kind == STD_URI) {
+                 return URI.create("");
+             }
+-            // As per [databind#1123], Locale too
++            // Assuming _kind could be STD_FILE or STD_URL
++            else if (_kind == STD_FILE) {
++                return new File("");
++            }
++            else if (_kind == STD_URL) {
++                return new URL("");
++            }
+             return super._deserializeFromEmptyString();
+         }
+\ No newline at end of file

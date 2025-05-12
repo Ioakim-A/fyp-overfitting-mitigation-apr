@@ -1,0 +1,17 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0423d5da-24a6-4f27-9e17-6278ccad3f32_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/39da49e5-d146-4335-b4c2-bc524756b58c_fixed.java
+index bc40fbe..775dd9a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0423d5da-24a6-4f27-9e17-6278ccad3f32_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/39da49e5-d146-4335-b4c2-bc524756b58c_fixed.java
+@@ -1,5 +1,10 @@
+ protected Object functionFloor(EvalContext context) {
+     assertArgCount(1);
+     double v = InfoSetUtil.doubleValue(getArg1().computeValue(context));
+-        return new Double(Math.floor(v));
++    if (Double.isFinite(v)) {
++        v = Math.floor(v);
++    } else {
++        v = Double.NaN;
++    }
++    return new Double(v);
+ }
+\ No newline at end of file

@@ -1,0 +1,38 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/23ebc5f6-1c1c-41b0-b236-1223b290a402_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d17b1af6-7ea8-436a-aa9c-706f560a80f3_fixed.java
+index f689f5f..1686757 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/23ebc5f6-1c1c-41b0-b236-1223b290a402_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d17b1af6-7ea8-436a-aa9c-706f560a80f3_fixed.java
+@@ -1,30 +1,27 @@
+     private static void appendOption(final StringBuffer buff, 
+                                      final Option option, 
+                                      final boolean required)
+     {
+         if (!required)
+         {
+             buff.append("[");
+         }
+-
+         if (option.getOpt() != null)
+         {
+             buff.append("-").append(option.getOpt());
+         }
+         else
+         {
+             buff.append("--").append(option.getLongOpt());
+         }
+-
+-        // if the Option has a value
+-        if (option.hasArg() && (option.getArgName() != null))
++// buggy code
++//         if (option.hasArg() && (option.getArgName() != null))
++       if (option.hasArg() && (option.getArgName() != null) && !option.isRequired())
+         {
+             buff.append(" <").append(option.getArgName()).append(">");
+         }
+-
+-        // if the Option is not a required option
+         if (!required)
+         {
+             buff.append("]");
+         }
+     }

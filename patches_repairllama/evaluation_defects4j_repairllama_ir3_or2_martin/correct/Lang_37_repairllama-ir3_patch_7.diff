@@ -1,0 +1,27 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/02d3ef46-06ab-4bda-b541-59401188cedb_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d33c8adc-f91b-437b-8993-55397b68b767_fixed.java
+index e2c848f..13734b2 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/02d3ef46-06ab-4bda-b541-59401188cedb_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d33c8adc-f91b-437b-8993-55397b68b767_fixed.java
+@@ -1,13 +1,21 @@
+     public static <T> T[] addAll(T[] array1, T... array2) {
+         if (array1 == null) {
+             return clone(array2);
+         } else if (array2 == null) {
+             return clone(array1);
+         }
+         final Class<?> type1 = array1.getClass().getComponentType();
+         T[] joinedArray = (T[]) Array.newInstance(type1, array1.length + array2.length);
+         System.arraycopy(array1, 0, joinedArray, 0, array1.length);
++       try {
+             System.arraycopy(array2, 0, joinedArray, array1.length, array2.length);
+-            // Check if problem is incompatible types
++        } catch (ArrayStoreException ase) {
++            final Class<?> type2 = array2.getClass().getComponentType();
++            if (!type1.isAssignableFrom(type2)) {
++                throw new IllegalArgumentException("Cannot store " + type2.getName() + " in an array of " +
++                        type1.getName());
++            }
++            throw ase;
++        }
+         return joinedArray;
+     }

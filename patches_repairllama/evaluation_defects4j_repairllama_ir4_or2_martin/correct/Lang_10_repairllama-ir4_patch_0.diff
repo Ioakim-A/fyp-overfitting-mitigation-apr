@@ -1,0 +1,58 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1508572e-75f2-492c-a71c-80143cc3c146_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3abc30c8-e888-4717-8302-6908e72dc48c_fixed.java
+index be3dcc8..dbe0c05 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1508572e-75f2-492c-a71c-80143cc3c146_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3abc30c8-e888-4717-8302-6908e72dc48c_fixed.java
+@@ -1,41 +1,44 @@
+     private static StringBuilder escapeRegex(StringBuilder regex, String value, boolean unquote) {
+-        boolean wasWhite= false;
++// buggy code
++//         boolean wasWhite= false;
++//         for(int i= 0; i<value.length(); ++i) {
++//             char c= value.charAt(i);
++//             if(Character.isWhitespace(c)) {
++//                 if(!wasWhite) {
++//                     wasWhite= true;
++//                     regex.append("\\s*+");
++//                 }
++//                 continue;
++//             }
++//             wasWhite= false;
+        for(int i= 0; i<value.length(); ++i) {
+             char c= value.charAt(i);
+-            if(Character.isWhitespace(c)) {
+-                if(!wasWhite) {
+-                    wasWhite= true;
+-                    regex.append("\\s*+");
+-                }
+-                continue;
+-            }
+-            wasWhite= false;
+             switch(c) {
+             case '\'':
+                 if(unquote) {
+                     if(++i==value.length()) {
+                         return regex;
+                     }
+                     c= value.charAt(i);
+                 }
+                 break;
+             case '?':
+             case '[':
+             case ']':
+             case '(':
+             case ')':
+             case '{':
+             case '}':
+             case '\\':
+             case '|':
+             case '*':
+             case '+':
+             case '^':
+             case '$':
+             case '.':
+                 regex.append('\\');
+             }
+             regex.append(c);
+         }
+         return regex;
+     }

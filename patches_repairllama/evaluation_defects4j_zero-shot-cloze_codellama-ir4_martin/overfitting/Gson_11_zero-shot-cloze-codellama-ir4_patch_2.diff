@@ -1,0 +1,20 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b6a49a2f-65d2-44e5-b98e-0445425c6050_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dfcbabbe-923f-4893-9a00-1778124b82b4_fixed.java
+index 3aef662..a180087 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b6a49a2f-65d2-44e5-b98e-0445425c6050_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dfcbabbe-923f-4893-9a00-1778124b82b4_fixed.java
+@@ -1,12 +1,15 @@
+     public Number read(JsonReader in) throws IOException {
+       JsonToken jsonToken = in.peek();
+       switch (jsonToken) {
+       case NULL:
+         in.nextNull();
+         return null;
+       case NUMBER:
++// buggy code
++       return Double.valueOf(in.nextDouble());
++      case STRING:
+         return new LazilyParsedNumber(in.nextString());
+       default:
+         throw new JsonSyntaxException("Expecting number, got: " + jsonToken);
+       }
+     }

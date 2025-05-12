@@ -1,0 +1,44 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8fc7b0bf-ed1d-47f1-8dff-ce88283cc7d3_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bd02056b-f6ac-4744-a848-84898b2c44e5_fixed.java
+index 4353d3e..4040730 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8fc7b0bf-ed1d-47f1-8dff-ce88283cc7d3_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bd02056b-f6ac-4744-a848-84898b2c44e5_fixed.java
+@@ -1,33 +1,27 @@
+    public LegendItemCollection getLegendItems() {
+         LegendItemCollection result = new LegendItemCollection();
+         if (this.plot == null) {
+             return result;
+         }
+         int index = this.plot.getIndexOf(this);
++        if (index == -1) {
++            return result;
++        }
+         CategoryDataset dataset = this.plot.getDataset(index);
+-        if (dataset != null) {
++        if (dataset == null) {
+             return result;
+         }
+         int seriesCount = dataset.getRowCount();
+         if (plot.getRowRenderingOrder().equals(SortOrder.ASCENDING)) {
+             for (int i = 0; i < seriesCount; i++) {
+                 if (isSeriesVisibleInLegend(i)) {
+                     LegendItem item = getLegendItem(index, i);
+                     if (item != null) {
+                         result.add(item);
+                     }
+                 }
+             }
+         }
+         else {
+             for (int i = seriesCount - 1; i >= 0; i--) {
+-                if (isSeriesVisibleInLegend(i)) {
+-                    LegendItem item = getLegendItem(index, i);
+-                    if (item != null) {
+-                        result.add(item);
+-                    }
+-                }
+-            }
+-        }
+-        return result;
+-    }
++                if
+\ No newline at end of file

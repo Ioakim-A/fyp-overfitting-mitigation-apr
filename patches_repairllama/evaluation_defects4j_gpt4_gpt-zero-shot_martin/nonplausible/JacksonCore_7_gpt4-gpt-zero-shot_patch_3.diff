@@ -1,0 +1,30 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c6883c8f-20e6-461c-b01f-2c71d6d66316_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5692eac1-b30d-4145-b188-0270c6e675f0_fixed.java
+index 9529ba6..8c890c7 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c6883c8f-20e6-461c-b01f-2c71d6d66316_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5692eac1-b30d-4145-b188-0270c6e675f0_fixed.java
+@@ -1,20 +1,18 @@
+ public int writeValue() {
+-        // Most likely, object:
+     if (_type == TYPE_OBJECT) {
++        // the missing line of code might be checking if a name has been received for the object.
++        if (!_gotName) {
++            throw new IllegalStateException("Name is required for TYPE_OBJECT");
++        }
+         _gotName = false;
+         ++_index;
+         return STATUS_OK_AFTER_COLON;
+     }
+-
+-        // Ok, array?
+     if (_type == TYPE_ARRAY) {
+         int ix = _index;
+         ++_index;
+         return (ix < 0) ? STATUS_OK_AS_IS : STATUS_OK_AFTER_COMMA;
+     }
+-        
+-        // Nope, root context
+-        // No commas within root context, but need space
+     ++_index;
+     return (_index == 0) ? STATUS_OK_AS_IS : STATUS_OK_AFTER_SPACE;
+ }
+\ No newline at end of file

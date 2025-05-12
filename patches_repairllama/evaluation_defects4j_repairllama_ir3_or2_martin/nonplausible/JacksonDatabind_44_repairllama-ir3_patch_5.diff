@@ -1,0 +1,25 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6e221ce8-cbe4-45a9-a2b8-76f4aafe46a0_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a1966c7a-7b5b-442d-bbc7-0177e95f5d12_fixed.java
+index 4e76e23..2bd170e 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6e221ce8-cbe4-45a9-a2b8-76f4aafe46a0_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a1966c7a-7b5b-442d-bbc7-0177e95f5d12_fixed.java
+@@ -1,19 +1,7 @@
+     protected JavaType _narrow(Class<?> subclass)
+     {
+         if (_class == subclass) {
+             return this;
+         }
+-        // Should we check that there is a sub-class relationship?
+-        // 15-Jan-2016, tatu: Almost yes, but there are some complications with
+-        //    placeholder values (`Void`, `NoClass`), so can not quite do yet.
+-        // TODO: fix in 2.8
+-            /*
+-            throw new IllegalArgumentException("Class "+subclass.getName()+" not sub-type of "
+-                    +_class.getName());
+-                    */
+-            return new SimpleType(subclass, _bindings, this, _superInterfaces,
+-                    _valueHandler, _typeHandler, _asStatic);
+-        // Otherwise, stitch together the hierarchy. First, super-class
+-        // if not found, try a super-interface
+-        // should not get here but...
++       return new SimpleType(subclass, this);
+     }

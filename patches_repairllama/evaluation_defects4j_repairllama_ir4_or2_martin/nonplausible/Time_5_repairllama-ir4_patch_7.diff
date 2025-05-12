@@ -1,0 +1,39 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fe82bfc0-5463-4a2d-8cdb-7a8d99291c49_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e21befe9-050c-4879-84cd-65cb6ce47889_fixed.java
+index c50b3cc..ac2f5d8 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fe82bfc0-5463-4a2d-8cdb-7a8d99291c49_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e21befe9-050c-4879-84cd-65cb6ce47889_fixed.java
+@@ -1,23 +1,31 @@
+     public Period normalizedStandard(PeriodType type) {
+         type = DateTimeUtils.getPeriodType(type);
+-        long millis = getMillis();  // no overflow can happen, even with Integer.MAX_VALUEs
++        long millis = getMillis();  
+         millis += (((long) getSeconds()) * ((long) DateTimeConstants.MILLIS_PER_SECOND));
+         millis += (((long) getMinutes()) * ((long) DateTimeConstants.MILLIS_PER_MINUTE));
+         millis += (((long) getHours()) * ((long) DateTimeConstants.MILLIS_PER_HOUR));
+         millis += (((long) getDays()) * ((long) DateTimeConstants.MILLIS_PER_DAY));
+         millis += (((long) getWeeks()) * ((long) DateTimeConstants.MILLIS_PER_WEEK));
+         Period result = new Period(millis, type, ISOChronology.getInstanceUTC());
+         int years = getYears();
+         int months = getMonths();
+         if (years != 0 || months != 0) {
+-            years = FieldUtils.safeAdd(years, months / 12);
+-            months = months % 12;
++// buggy code
++//             years = FieldUtils.safeAdd(years, months / 12);
++//             months = months % 12;
++//             if (years != 0) {
++//                 result = result.withYears(years);
++//             }
++//             if (months != 0) {
++//                 result = result.withMonths(months);
+            if (years != 0) {
+                 result = result.withYears(years);
+             }
+             if (months != 0) {
+                 result = result.withMonths(months);
+             }
++            if (years == 0 && months == 0) {
++            }
+         }
+         return result;
+     }

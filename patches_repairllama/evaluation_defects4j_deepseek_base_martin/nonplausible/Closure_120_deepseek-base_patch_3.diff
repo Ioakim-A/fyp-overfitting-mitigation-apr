@@ -1,0 +1,29 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8e9dc065-3be1-400c-83f2-96470bbd377f_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b26d4a8e-c6c5-47d3-9fa4-c24dc2e63268_fixed.java
+index 07b0792..bbc6a3e 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8e9dc065-3be1-400c-83f2-96470bbd377f_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b26d4a8e-c6c5-47d3-9fa4-c24dc2e63268_fixed.java
+@@ -1,22 +1,22 @@
+     /**
+      * @return Whether the variable is only assigned a value once for its
+      *     lifetime.
+      */
+     boolean isAssignedOnceInLifetime() {
+       Reference ref = getOneAndOnlyAssignment();
+       if (ref == null) {
+         return false;
+       }
+-
+       // Make sure this assignment is not in a loop.
+       for (BasicBlock block = ref.getBasicBlock();
+            block != null; block = block.getParent()) {
+         if (block.isFunction) {
++          return true;
++        } else if (block.isExit) {
+           break;
+         } else if (block.isLoop) {
+           return false;
+         }
+       }
+-
+       return true;
+     }

@@ -1,0 +1,25 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/63aee0ca-2ce3-4f97-a051-0e08fd821f01_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9a21b913-5792-42a4-b3ef-002b61f0b346_fixed.java
+index 3563e3c..ac0bd9c 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/63aee0ca-2ce3-4f97-a051-0e08fd821f01_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9a21b913-5792-42a4-b3ef-002b61f0b346_fixed.java
+@@ -1,17 +1,18 @@
+   public static <T1> TypeAdapterFactory newTypeHierarchyFactory(
+       final Class<T1> clazz, final TypeAdapter<T1> typeAdapter) {
+     return new TypeAdapterFactory() {
+       @SuppressWarnings("unchecked")
+       public <T2> TypeAdapter<T2> create(Gson gson, TypeToken<T2> typeToken) {
+         final Class<? super T2> requestedType = typeToken.getRawType();
+         if (!clazz.isAssignableFrom(requestedType)) {
+           return null;
+         }
+-        return (TypeAdapter<T2>) typeAdapter;
+-
++// buggy code
++//        return (TypeAdapter<T2>) typeAdapter;
++       return (TypeAdapter) typeAdapter;
+       }
+       @Override public String toString() {
+         return "Factory[typeHierarchy=" + clazz.getName() + ",adapter=" + typeAdapter + "]";
+       }
+     };
+   }

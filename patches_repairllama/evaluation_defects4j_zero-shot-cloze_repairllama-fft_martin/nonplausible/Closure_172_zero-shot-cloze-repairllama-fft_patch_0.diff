@@ -1,0 +1,58 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2878c568-ebea-43fc-8697-102d6230bd9d_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b11c1750-a2c3-4a0d-8e26-791a29598ac5_fixed.java
+index 6fe46e7..45a9c8a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2878c568-ebea-43fc-8697-102d6230bd9d_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b11c1750-a2c3-4a0d-8e26-791a29598ac5_fixed.java
+@@ -1,49 +1,42 @@
+     private boolean isQualifiedNameInferred(
+         String qName, Node n, JSDocInfo info,
+         Node rhsValue, JSType valueType) {
+       if (valueType == null) {
+         return true;
+       }
+-
+-      // Prototypes of constructors and interfaces are always declared.
+       if (qName != null && qName.endsWith(".prototype")) {
+-          return false;
+-      }
++// buggy code
++//          return false;
++       return true;
+ 
++      }
+       boolean inferred = true;
+       if (info != null) {
+         inferred = !(info.hasType()
+             || info.hasEnumParameterType()
+             || (isConstantSymbol(info, n) && valueType != null
+                 && !valueType.isUnknownType())
+             || FunctionTypeBuilder.isFunctionTypeDeclaration(info));
+       }
+-
+       if (inferred && rhsValue != null && rhsValue.isFunction()) {
+         if (info != null) {
+           return false;
+         } else if (!scope.isDeclared(qName, false) &&
+             n.isUnscopedQualifiedName()) {
+-
+-          // Check if this is in a conditional block.
+-          // Functions assigned in conditional blocks are inferred.
+           for (Node current = n.getParent();
+                !(current.isScript() || current.isFunction());
+                current = current.getParent()) {
+             if (NodeUtil.isControlStructure(current)) {
+               return true;
+             }
+           }
+-
+-          // Check if this is assigned in an inner scope.
+-          // Functions assigned in inner scopes are inferred.
+           AstFunctionContents contents =
+               getFunctionAnalysisResults(scope.getRootNode());
+           if (contents == null ||
+               !contents.getEscapedQualifiedNames().contains(qName)) {
+             return false;
+           }
+         }
+       }
+       return inferred;
+     }

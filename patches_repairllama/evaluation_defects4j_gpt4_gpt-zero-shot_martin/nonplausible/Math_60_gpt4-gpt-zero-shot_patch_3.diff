@@ -1,0 +1,23 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/89a3d5f3-ce76-4df5-a7e3-d28be6bb21ce_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/674dee44-2aa4-4ed1-b34f-fb6a88fa5f12_fixed.java
+index c9b29e3..37f9a4c 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/89a3d5f3-ce76-4df5-a7e3-d28be6bb21ce_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/674dee44-2aa4-4ed1-b34f-fb6a88fa5f12_fixed.java
+@@ -1,15 +1,15 @@
+ public double cumulativeProbability(double x) throws MathException {
+     final double dev = x - mean;
+     try {
+         return 0.5 * (1.0 + Erf.erf((dev) /
+                     (standardDeviation * FastMath.sqrt(2.0))));
+-        } catch (MaxIterationsExceededException ex) {
+-            if (x < (mean - 20 * standardDeviation)) { // JDK 1.5 blows at 38
++    } catch (MathException ex) {
++        if (x < (mean - 20 * standardDeviation)) { 
+             return 0;
+         } else if (x > (mean + 20 * standardDeviation)) {
+             return 1;
+         } else {
+             throw ex;
+         }
+     }
+ }
+\ No newline at end of file

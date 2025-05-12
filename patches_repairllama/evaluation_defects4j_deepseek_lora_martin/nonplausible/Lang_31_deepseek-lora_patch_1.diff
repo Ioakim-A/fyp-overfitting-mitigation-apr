@@ -1,0 +1,56 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/20b26e48-da2c-4c96-b4d2-c45af43c8004_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/81a6b9a0-1ba2-4311-ad0f-da8dde82e9e8_fixed.java
+index eea9e73..87094b7 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/20b26e48-da2c-4c96-b4d2-c45af43c8004_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/81a6b9a0-1ba2-4311-ad0f-da8dde82e9e8_fixed.java
+@@ -1,41 +1,50 @@
+     /**
+      * <p>Checks if the CharSequence contains any character in the given
+      * set of characters.</p>
+      *
+      * <p>A <code>null</code> CharSequence will return <code>false</code>.
+      * A <code>null</code> or zero length search array will return <code>false</code>.</p>
+      *
+      * <pre>
+      * StringUtils.containsAny(null, *)                = false
+      * StringUtils.containsAny("", *)                  = false
+      * StringUtils.containsAny(*, null)                = false
+      * StringUtils.containsAny(*, [])                  = false
+      * StringUtils.containsAny("zzabyycdxx",['z','a']) = true
+      * StringUtils.containsAny("zzabyycdxx",['b','y']) = true
+      * StringUtils.containsAny("aba", ['z'])           = false
+      * </pre>
+      *
+      * @param cs  the CharSequence to check, may be null
+      * @param searchChars  the chars to search for, may be null
+      * @return the <code>true</code> if any of the chars are found,
+      * <code>false</code> if no match or null input
+      * @since 2.4
+      */
+ 	public static boolean containsAny(CharSequence cs, char[] searchChars) {
+ 		if (isEmpty(cs) || ArrayUtils.isEmpty(searchChars)) {
+ 			return false;
+ 		}
+ 		int csLength = cs.length();
+ 		int searchLength = searchChars.length;
++// buggy code
++//		for (int i = 0; i < csLength; i++) {
++//			char ch = cs.charAt(i);
++//			for (int j = 0; j < searchLength; j++) {
++//				if (searchChars[j] == ch) {
++//						// ch is a supplementary character
++//						// ch is in the Basic Multilingual Plane
++//						return true;
++		for (int j = 0; j < searchLength; j++) {
+ 			for (int i = 0; i < csLength; i++) {
+ 				char ch = cs.charAt(i);
+-			for (int j = 0; j < searchLength; j++) {
+ 				if (searchChars[j] == ch) {
+ 						// ch is a supplementary character
+ 						// ch is in the Basic Multilingual Plane
+ 						return true;
++
+ 				}
+ 			}
+ 		}
+ 		return false;
+ 	}

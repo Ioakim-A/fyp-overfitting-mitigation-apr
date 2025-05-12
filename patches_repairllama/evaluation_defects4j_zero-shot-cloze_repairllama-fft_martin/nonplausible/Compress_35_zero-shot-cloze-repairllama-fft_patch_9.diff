@@ -1,0 +1,54 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/eb0c48a2-54b1-4e6a-bd85-69e975092f1c_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d0f7112a-f183-4839-957c-b834382a5c6d_fixed.java
+index 1ac6781..280e007 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/eb0c48a2-54b1-4e6a-bd85-69e975092f1c_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d0f7112a-f183-4839-957c-b834382a5c6d_fixed.java
+@@ -1,21 +1,48 @@
+     public static boolean verifyCheckSum(byte[] header) {
++// buggy code
++//        long storedSum = 0;
++//        long unsignedSum = 0;
++//        long signedSum = 0;
++//        int digits = 0;
++//        for (int i = 0; i < header.length; i++) {
++//            byte b = header[i];
++//            if (CHKSUM_OFFSET  <= i && i < CHKSUM_OFFSET + CHKSUMLEN) {
++//                if ('0' <= b && b <= '7' && digits++ < 6) {
++//                    storedSum = storedSum * 8 + b - '0';
++//                } else if (digits > 0) {
++//                    digits = 6;
++//                }
++//            } else {
++//                b = ' ';
++//            }
++//            unsignedSum += 0xff & b;
++//            signedSum += b;
++//        }
++//        return storedSum == unsignedSum || storedSum == signedSum;
++
+         long storedSum = 0;
+         long unsignedSum = 0;
+         long signedSum = 0;
+-
+         int digits = 0;
+         for (int i = 0; i < header.length; i++) {
+             byte b = header[i];
+             if (CHKSUM_OFFSET  <= i && i < CHKSUM_OFFSET + CHKSUMLEN) {
+                 if ('0' <= b && b <= '7' && digits++ < 6) {
+                     storedSum = storedSum * 8 + b - '0';
+                 } else if (digits > 0) {
+                     digits = 6;
+                 }
++            } else {
++                b = ' ';
++            }
++            unsignedSum += 0xff & b;
++            signedSum += b;
++        }
++        if (stored
+                 b = ' ';
+             }
+             unsignedSum += 0xff & b;
+             signedSum += b;
+         }
+         return storedSum == unsignedSum || storedSum == signedSum;
+     }

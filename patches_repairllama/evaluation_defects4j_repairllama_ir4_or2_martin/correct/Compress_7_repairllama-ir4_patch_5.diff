@@ -1,0 +1,24 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ac812a10-cdf6-4f10-a16b-d21f6f34a080_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ba5a2182-ff7f-4e2b-8ce3-61496a0a4047_fixed.java
+index 3de87a9..74a11cc 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ac812a10-cdf6-4f10-a16b-d21f6f34a080_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ba5a2182-ff7f-4e2b-8ce3-61496a0a4047_fixed.java
+@@ -1,13 +1,16 @@
+     public static String parseName(byte[] buffer, final int offset, final int length) {
+         StringBuffer result = new StringBuffer(length);
+         int          end = offset + length;
+-
+         for (int i = offset; i < end; ++i) {
++// buggy code
++//             if (buffer[i] == 0) {
++//                 break;
++//             }
++//             result.append((char) buffer[i]);
+            if (buffer[i] == 0) {
+                 break;
+             }
+-            result.append((char) buffer[i]);
++            result.append((char) (buffer[i] & 0xFF));
+         }
+-
+         return result.toString();
+     }

@@ -1,0 +1,56 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f881b984-8f61-4388-8910-e5dc8ccd4834_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b8d8bdf9-1649-441c-a711-91b190e87812_fixed.java
+index d2fcb52..48a611e 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f881b984-8f61-4388-8910-e5dc8ccd4834_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b8d8bdf9-1649-441c-a711-91b190e87812_fixed.java
+@@ -1,50 +1,3 @@
+-    public static long parseOctal(final byte[] buffer, final int offset, final int length) {
+-        long    result = 0;
+-        int     end = offset + length;
+-        int     start = offset;
+-
+-        if (length < 2){
+-            throw new IllegalArgumentException("Length "+length+" must be at least 2");
+-        }
+-
+-        if (buffer[start] == 0) {
+-            return 0L;
+-        }
+-
+-        // Skip leading spaces
+-        while (start < end){
+-            if (buffer[start] == ' '){
+-                start++;
+-            } else {
+-                break;
+-            }
+-        }
+-
+-        // Must have trailing NUL or space
+-        byte trailer;
+-        trailer = buffer[end-1];
+-        if (trailer == 0 || trailer == ' '){
+-            end--;
+-        } else {
+-            throw new IllegalArgumentException(
+-                    exceptionMessage(buffer, offset, length, end-1, trailer));
+-        }
+-        // May have additional NULs or spaces
+-        trailer = buffer[end - 1];
+ if (trailer == 0 || trailer == ' ') {
+     end--;
+ }
+\ No newline at end of file
+-
+-        for ( ;start < end; start++) {
+-            final byte currentByte = buffer[start];
+-            // CheckStyle:MagicNumber OFF
+-            if (currentByte < '0' || currentByte > '7'){
+-                throw new IllegalArgumentException(
+-                        exceptionMessage(buffer, offset, length, start, currentByte));
+-            }
+-            result = (result << 3) + (currentByte - '0'); // convert from ASCII
+-            // CheckStyle:MagicNumber ON
+-        }
+-
+-        return result;
+-    }

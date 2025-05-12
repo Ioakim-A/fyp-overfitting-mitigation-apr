@@ -1,0 +1,32 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a95316ab-e421-464b-bdb3-acf54b3f884d_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/edd61611-f873-48fa-ad83-66e284f578f4_fixed.java
+index 2648a38..6a58123 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a95316ab-e421-464b-bdb3-acf54b3f884d_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/edd61611-f873-48fa-ad83-66e284f578f4_fixed.java
+@@ -1,25 +1,25 @@
+ public TimeSeries createCopy(int start, int end)
+             throws CloneNotSupportedException {
+     if (start < 0) {
+         throw new IllegalArgumentException("Requires start >= 0.");
+     }
+     if (end < start) {
+         throw new IllegalArgumentException("Requires start <= end.");
+     }
+     TimeSeries copy = (TimeSeries) super.clone();
+-        copy.data = new java.util.ArrayList();
++    copy.data = (ArrayList<TimeSeriesDataItem>) this.data.clone();
+     if (this.data.size() > 0) {
+         for (int index = start; index <= end; index++) {
+             TimeSeriesDataItem item
+                     = (TimeSeriesDataItem) this.data.get(index);
+             TimeSeriesDataItem clone = (TimeSeriesDataItem) item.clone();
+             try {
+                 copy.add(clone);
+             }
+             catch (SeriesException e) {
+                 e.printStackTrace();
+             }
+         }
+     }
+     return copy;
+ }
+\ No newline at end of file

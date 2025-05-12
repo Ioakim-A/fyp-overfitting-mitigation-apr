@@ -1,0 +1,31 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2c9137b4-5822-4496-821a-f6806764bef7_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7d198717-8c01-43dd-adbc-d63349a6d9d3_fixed.java
+index 98d89dc..7d1f7da 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2c9137b4-5822-4496-821a-f6806764bef7_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7d198717-8c01-43dd-adbc-d63349a6d9d3_fixed.java
+@@ -1,23 +1,24 @@
+     private boolean compute(Object left, Object right) {
+         left = reduce(left);
+         right = reduce(right);
+-
+         if (left instanceof InitialContext) {
+             ((InitialContext) left).reset();
+         }
+         if (right instanceof InitialContext) {
+             ((InitialContext) right).reset();
+         }
+         if (left instanceof Iterator && right instanceof Iterator) {
+             return findMatch((Iterator) left, (Iterator) right);
+         }
+         if (left instanceof Iterator) {
+             return containsMatch((Iterator) left, right);
+         }
+         if (right instanceof Iterator) {
+             return containsMatch((Iterator) right, left);
+         }
+         double ld = InfoSetUtil.doubleValue(left);
+-        double rd = InfoSetUtil.doubleValue(right);
++// buggy code
++//         double rd = InfoSetUtil.doubleValue(right);
++       double rd = InfoSetUtil.doubleValue(right, ld);
+         return evaluateCompare(ld == rd ? 0 : ld < rd ? -1 : 1);
+     }

@@ -1,0 +1,35 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f776013e-d3d3-46a1-9fda-a8f01ce3ef60_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f62c7696-193f-4dd8-bf84-0dafdbe3164a_fixed.java
+index 8cbef3b..9e4bf8a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f776013e-d3d3-46a1-9fda-a8f01ce3ef60_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f62c7696-193f-4dd8-bf84-0dafdbe3164a_fixed.java
+@@ -1,30 +1,25 @@
+     public final void translate(CharSequence input, Writer out) throws IOException {
+         if (out == null) {
+             throw new IllegalArgumentException("The Writer must not be null");
+         }
+-        if (input == null) {
+-            return;
+-        }
+         int pos = 0;
+         int len = Character.codePointCount(input, 0, input.length());
+         while (pos < len) {
+             int consumed = translate(input, pos, out);
+             if (consumed == 0) {
+                 char[] c = Character.toChars(Character.codePointAt(input, pos));
+                 out.write(c);
+             }
+             else {
+-//          // contract with translators is that they have to understand codepoints 
+-//          // and they just took care of a surrogate pair
+             for (int pt = 0; pt < consumed; pt++) {
+                     if (pos < len - 2) {
+                 pos += Character.charCount(Character.codePointAt(input, pos));
+                     } else {
+                         pos++;
+                     }
+                 }
+                 pos--;
+             }
+             pos++;
+         }
+     }

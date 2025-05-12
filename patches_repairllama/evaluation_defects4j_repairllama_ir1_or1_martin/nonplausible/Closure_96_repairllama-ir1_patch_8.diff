@@ -1,0 +1,40 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f19dc6fe-9087-4f5c-92d3-a79c7114b10a_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f28063f0-cba6-41af-b1c1-79483e85f2f9_fixed.java
+index 63b85d1..ae5328e 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f19dc6fe-9087-4f5c-92d3-a79c7114b10a_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f28063f0-cba6-41af-b1c1-79483e85f2f9_fixed.java
+@@ -1,32 +1,22 @@
+  private void visitParameterList(NodeTraversal t, Node call,
+       FunctionType functionType) {
+     Iterator<Node> arguments = call.children().iterator();
+-    arguments.next(); // skip the function name
+-
++    arguments.next(); 
+     Iterator<Node> parameters = functionType.getParameters().iterator();
+     int ordinal = 0;
+     Node parameter = null;
+     Node argument = null;
+     while (arguments.hasNext() &&
+            parameters.hasNext()) {
+-      // If there are no parameters left in the list, then the while loop
+-      // above implies that this must be a var_args function.
+       parameter = parameters.next();
+       argument = arguments.next();
+       ordinal++;
+-
+       validator.expectArgumentMatchesParameter(t, argument,
+           getJSType(argument), getJSType(parameter), call, ordinal);
+     }
+-
+     int numArgs = call.getChildCount() - 1;
+     int minArgs = functionType.getMinArguments();
+     int maxArgs = functionType.getMaxArguments();
+     if (minArgs > numArgs || maxArgs < numArgs) {
+       report(t, call, WRONG_ARGUMENT_COUNT,
+-              validator.getReadableJSTypeName(call.getFirstChild(), false),
+-              String.valueOf(numArgs), String.valueOf(minArgs),
+-              maxArgs != Integer.MAX_VALUE ?
+-              " and no more than " + maxArgs + " argument(s)" : "");
+-    }
+-  }
++          validator.getReadableJSTypeName(call
+\ No newline at end of file

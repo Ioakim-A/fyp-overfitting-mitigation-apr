@@ -1,0 +1,37 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f8702ab0-07e8-4239-bbd7-ecb5473cff7f_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9ac99e92-f0b3-4f45-8f35-7a8b1e2439cb_fixed.java
+index 1c875ad..059cab3 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f8702ab0-07e8-4239-bbd7-ecb5473cff7f_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9ac99e92-f0b3-4f45-8f35-7a8b1e2439cb_fixed.java
+@@ -1,31 +1,13 @@
+-    public void captureArgumentsFrom(Invocation invocation) {
++    public void captureFrom(Invocation invocation) {
+         if (invocation.getMethod().isVarArgs()) {
+             int indexOfVararg = invocation.getRawArguments().length - 1;
+             throw new UnsupportedOperationException();
+-
+         } else {
+             for (int position = 0; position < matchers.size(); position++) {
+                 Matcher m = matchers.get(position);
+                 if (m instanceof CapturesArguments) {
+                     ((CapturesArguments) m).captureFrom(invocation.getArgumentAt(position, Object.class));
+                 }
+             }
+         }
+-
+-//        for (int position = 0; position < matchers.size(); position++) {
+-//            Matcher m = matchers.get(position);
+-//            if (m instanceof CapturesArguments && invocation.getRawArguments().length > position) {
+-//                //TODO SF - this whole lot can be moved captureFrom implementation
+-//                if(isVariableArgument(invocation, position) && isVarargMatcher(m)) {
+-//                    Object array = invocation.getRawArguments()[position];
+-//                    for (int i = 0; i < Array.getLength(array); i++) {
+-//                        ((CapturesArguments) m).captureFrom(Array.get(array, i));
+-//                    }
+-//                    //since we've captured all varargs already, it does not make sense to process other matchers.
+-//                    return;
+-//                } else {
+-//                    ((CapturesArguments) m).captureFrom(invocation.getRawArguments()[position]);
+-//                }
+-//            }
+-//        }
+     }

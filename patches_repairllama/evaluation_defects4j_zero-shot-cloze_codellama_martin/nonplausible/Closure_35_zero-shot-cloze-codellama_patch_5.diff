@@ -1,0 +1,58 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a38f9ee3-e4be-4b57-8ca1-f4602db2e574_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d54e4e4d-5913-4c48-884c-1c6456d5e27e_fixed.java
+index b108107..fa504d5 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a38f9ee3-e4be-4b57-8ca1-f4602db2e574_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d54e4e4d-5913-4c48-884c-1c6456d5e27e_fixed.java
+@@ -1,25 +1,41 @@
+   private void inferPropertyTypesToMatchConstraint(
+       JSType type, JSType constraint) {
+     if (type == null || constraint == null) {
+       return;
+     }
+-
+     ObjectType constraintObj =
+         ObjectType.cast(constraint.restrictByNotNullOrUndefined());
+-    if (constraintObj != null && constraintObj.isRecordType()) {
+-      ObjectType objType = ObjectType.cast(type.restrictByNotNullOrUndefined());
+-      if (objType != null) {
+-        for (String prop : constraintObj.getOwnPropertyNames()) {
+-          JSType propType = constraintObj.getPropertyType(prop);
+-          if (!objType.isPropertyTypeDeclared(prop)) {
+-            JSType typeToInfer = propType;
+-            if (!objType.hasProperty(prop)) {
+-              typeToInfer =
+-                  getNativeType(VOID_TYPE).getLeastSupertype(propType);
++   if (constraintObj == null) {
++      return;
+     }
+-            objType.defineInferredProperty(prop, typeToInfer, null);
++    for (String pname : constraintObj.getOwnPropertyNames()) {
++      Property p = constraintObj.getOwnProperty(pname);
++      if (p == null) {
++        continue;
+       }
++      JSType ptype = p.getType();
++      if (ptype == null) {
++        continue;
+       }
++      ptype = ptype.restrictByNotNullOrUndefined();
++      if (ptype == null) {
++        continue;
+       }
++      Property prop = type.getOwnProperty(pname);
++      if (prop == null) {
++        continue;
++      }
++      JSType propType = prop.getType();
++      if (propType == null) {
++        continue;
++      }
++      propType = propType.restrictByNotNullOrUndefined();
++      if (propType == null) {
++        continue;
++      }
++      if (propType.isSubtype(ptype)) {
++        continue;
++      }
++      if (ptype.isSub
+     }
+   }

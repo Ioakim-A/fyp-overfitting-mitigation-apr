@@ -1,0 +1,29 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bbf02298-d4d3-465e-8e5c-d67b4017ef38_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/efd6f7ba-ff15-4234-8b6b-c42711ff44d8_fixed.java
+index 81a6e8b..5da5e54 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bbf02298-d4d3-465e-8e5c-d67b4017ef38_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/efd6f7ba-ff15-4234-8b6b-c42711ff44d8_fixed.java
+@@ -1,19 +1,21 @@
+     /**
+      * Tells if the token looks like a short option.
+      * 
+      * @param token
+      */
+     private boolean isShortOption(String token)
+     {
+         // short options (-S, -SV, -S=V, -SV1=V2, -S1S2)
+         if (!token.startsWith("-") || token.length() == 1)
+         {
+             return false;
+         }
+-
+         // remove leading "-" and "=value"
+         int pos = token.indexOf("=");
+         String optName = pos == -1 ? token.substring(1) : token.substring(1, pos);
+-        return options.hasShortOption(optName);
+-        // check for several concatenated short options
++// buggy code
++//        return options.hasShortOption(optName);
++//        // check for several concatenated short options
++        return options.hasShortOption(optName) || (optName.length() > 1 && options.hasShortOption(optName.substring(0, 1)));
++
+     }

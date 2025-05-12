@@ -1,0 +1,60 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/97aac407-60e6-4041-9e9c-64c59e84c31e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/06422a23-7dee-40f1-bb8b-1cd297dfa024_fixed.java
+index 822447c..3683d69 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/97aac407-60e6-4041-9e9c-64c59e84c31e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/06422a23-7dee-40f1-bb8b-1cd297dfa024_fixed.java
+@@ -1,37 +1,54 @@
+     /**
+      * <p>
+      * Escapes the characters in the <code>String</code> passed and writes the result to the <code>Writer</code>
+      * passed.
+      * </p>
+      * 
+      * @param writer
+      *            The <code>Writer</code> to write the results of the escaping to. Assumed to be a non-null value.
+      * @param str
+      *            The <code>String</code> to escape. Assumed to be a non-null value.
+      * @throws IOException
+      *             when <code>Writer</code> passed throws the exception from calls to the {@link Writer#write(int)}
+      *             methods.
+      * 
+      * @see #escape(String)
+      * @see Writer
+      */
+     public void escape(Writer writer, String str) throws IOException {
+         int len = str.length();
+         for (int i = 0; i < len; i++) {
+-            char c = str.charAt(i);
++// buggy code
++//            char c = str.charAt(i);
++//            String entityName = this.entityName(c);
++//            if (entityName == null) {
++//                if (c > 0x7F) {
++//                    writer.write('&#');
++//                    writer.write(Integer.toString(c, 10));
++//                    writer.write(';');
++//                } else {
++//                    writer.write(c);
++//                }
++//            } else {
++//                writer.write('&');
++//                writer.write(entityName);
++//                writer.write(';');
++//            }
++            int c = str.charAt(i);
+             String entityName = this.entityName(c);
+             if (entityName == null) {
+                 if (c > 0x7F) {
++
+                     writer.write("&#");
+                     writer.write(Integer.toString(c, 10));
+                     writer.write(';');
+                 } else {
+                     writer.write(c);
+                 }
+             } else {
+                 writer.write('&');
+                 writer.write(entityName);
+                 writer.write(';');
+             }
+         }
+     }

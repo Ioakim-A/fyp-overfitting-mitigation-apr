@@ -1,0 +1,38 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0393346a-d635-4ba3-a693-0adc9a7fb992_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ad57a4fc-66eb-4af7-b05d-5451f329a712_fixed.java
+index 1bd0d7e..958edfb 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0393346a-d635-4ba3-a693-0adc9a7fb992_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ad57a4fc-66eb-4af7-b05d-5451f329a712_fixed.java
+@@ -1,31 +1,28 @@
+     /**
+      * Get the ns uri of the specified node.
+      * @param node Node to check
+      * @return String ns uri
+      */
+     public static String getNamespaceURI(Node node) {
+         if (node instanceof Document) {
+             node = ((Document) node).getDocumentElement();
+         }
+-
+         Element element = (Element) node;
+-
+         String uri = element.getNamespaceURI();
+         if (uri == null) {
+             String prefix = getPrefix(node);
+             String qname = prefix == null ? "xmlns" : "xmlns:" + prefix;
+-    
+             Node aNode = node;
+             while (aNode != null) {
+                 if (aNode.getNodeType() == Node.ELEMENT_NODE) {
+                     Attr attr = ((Element) aNode).getAttributeNode(qname);
+                     if (attr != null) {
+-                        return attr.getValue();
++                        return attr.getNodeValue();
+                     }
+                 }
+                 aNode = aNode.getParentNode();
+             }
+-            return null;
+         }
+         return uri;
+     }
++    }

@@ -1,0 +1,87 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/87191c7b-3232-41d0-9616-22b4780c6462_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/17f17e66-6bd9-4966-b1eb-6670fea7902d_fixed.java
+index 1ad070d..7be62e4 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/87191c7b-3232-41d0-9616-22b4780c6462_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/17f17e66-6bd9-4966-b1eb-6670fea7902d_fixed.java
+@@ -1,38 +1,81 @@
+     /**
+      * Handle an escape sequence.
+      * The current character must be the escape character.
+      * On return, the next character is available by calling {@link ExtendedBufferedReader#getLastChar()}
+      * on the input stream.
+      * 
+      * @return the unescaped character (as an int) or {@link END_OF_STREAM} if char following the escape is invalid. 
+      * @throws IOException if there is a problem reading the stream or the end of stream is detected: 
+      * the escape character is not allowed at end of strem
+      */
+     int readEscape() throws IOException {
+         // the escape char has just been read (normally a backslash)
+         final int c = in.read();
+         switch (c) {
+         case 'r':
+             return CR;
+         case 'n':
+             return LF;
+         case 't':
+             return TAB;
+         case 'b':
+             return BACKSPACE;
+         case 'f':
+             return FF;
+         case CR:
+         case LF:
+         case FF: // TODO is this correct?
+         case TAB: // TODO is this correct? Do tabs need to be escaped?
+         case BACKSPACE: // TODO is this correct?
+             return c;
+         case END_OF_STREAM:
+             throw new IOException("EOF whilst processing escape sequence");
+         default:
+             // Now check for meta-characters
++            switch (c) {
++            case '0':
++            case '1':
++            case '2':
++            case '3':
++            case '4':
++            case '5':
++            case '6':
++            case '7':
++            case '8':
++            case '9':
++            case 'a':
++            case 'b':
++            case 'c':
++            case 'd':
++            case 'e':
++            case 'f':
++            case 'g':
++            case 'h':
++            case 'i':
++            case 'j':
++            case 'k':
++            case 'l':
++            case 'm':
++            case 'n':
++            case 'o':
++            case 'p':
++            case 'q':
++            case 'r':
++            case 's':
++            case 't':
++            case 'u':
++            case 'v':
++            case 'w':
++            case 'x':
++            case 'y':
++            case 'z':
++            case '{':
++            case '|':
++            case '}':
++            case '~':
+                 return c;
+-            // indicate unexpected char - available from in.getLastChar()
++            default:
++                return END_OF_STREAM;
++            }
+         }
+     }

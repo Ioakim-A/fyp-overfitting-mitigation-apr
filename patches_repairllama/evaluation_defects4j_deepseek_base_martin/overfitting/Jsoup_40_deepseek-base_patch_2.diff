@@ -1,0 +1,23 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/919aa6c1-e170-42ab-ae13-4ac7ee52f55b_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c635dc1d-2d18-49fd-b953-72a51c039613_fixed.java
+index 79fa300..4b7df71 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/919aa6c1-e170-42ab-ae13-4ac7ee52f55b_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c635dc1d-2d18-49fd-b953-72a51c039613_fixed.java
+@@ -1,15 +1,16 @@
+     /**
+      * Create a new doctype element.
+      * @param name the doctype's name
+      * @param publicId the doctype's public ID
+      * @param systemId the doctype's system ID
+      * @param baseUri the doctype's base URI
+      */
+     public DocumentType(String name, String publicId, String systemId, String baseUri) {
+         super(baseUri);
+-
+-        Validate.notEmpty(name);
++        if (name == null) {
++            throw new IllegalArgumentException("name cannot be null");
++        }
+         attr("name", name);
+         attr("publicId", publicId);
+         attr("systemId", systemId);
+     }

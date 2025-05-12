@@ -1,0 +1,62 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ef19a869-1e78-494b-8d55-ea490f750096_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/69cc5175-176e-46cd-a4a8-5f6220eb51cc_fixed.java
+index 60af839..0462c18 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ef19a869-1e78-494b-8d55-ea490f750096_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/69cc5175-176e-46cd-a4a8-5f6220eb51cc_fixed.java
+@@ -1,52 +1,25 @@
+    public static boolean toBoolean(String str) {
+-        // Previously used equalsIgnoreCase, which was fast for interned 'true'.
+-        // Non interned 'true' matched 15 times slower.
+-        // 
+-        // Optimisation provides same performance as before for interned 'true'.
+-        // Similar performance for null, 'false', and other strings not length 2/3/4.
+-        // 'true'/'TRUE' match 4 times slower, 'tRUE'/'True' 7 times slower.
++        if (str == null) {
++            return false;
++        }
+         if (str == "true") {
+             return true;
+         }
+-        if (str == null) {
+-            return false;
+-        }
+         switch (str.length()) {
+             case 2: {
+                 char ch0 = str.charAt(0);
+                 char ch1 = str.charAt(1);
+                 return 
+                     (ch0 == 'o' || ch0 == 'O') &&
+                     (ch1 == 'n' || ch1 == 'N');
+             }
+             case 3: {
+                 char ch = str.charAt(0);
+                 if (ch == 'y') {
+                     return 
+                         (str.charAt(1) == 'e' || str.charAt(1) == 'E') &&
+                         (str.charAt(2) == 's' || str.charAt(2) == 'S');
+                 }
+                 if (ch == 'Y') {
+                     return 
+-                        (str.charAt(1) == 'E' || str.charAt(1) == 'e') &&
+-                        (str.charAt(2) == 'S' || str.charAt(2) == 's');
+-                }
+-            }
+-            case 4: {
+-                char ch = str.charAt(0);
+-                if (ch == 't') {
+-                    return 
+-                        (str.charAt(1) == 'r' || str.charAt(1) == 'R') &&
+-                        (str.charAt(2) == 'u' || str.charAt(2) == 'U') &&
+-                        (str.charAt(3) == 'e' || str.charAt(3) == 'E');
+-                }
+-                if (ch == 'T') {
+-                    return 
+-                        (str.charAt(1) == 'R' || str.charAt(1) == 'r') &&
+-                        (str.charAt(2) == 'U' || str.charAt(2) == 'u') &&
+-                        (str.charAt(3) == 'E' || str.charAt(3) == 'e');
+-                }
+-            }
+-        }
+-        return false;
+-    }
++                        (str.charAt(1) == 'E' || str.char
+\ No newline at end of file

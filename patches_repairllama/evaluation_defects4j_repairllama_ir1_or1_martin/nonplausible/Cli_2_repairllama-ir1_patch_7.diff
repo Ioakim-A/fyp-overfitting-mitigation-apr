@@ -1,0 +1,37 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3bf998e9-d37a-4152-b8bb-00a5eabf5879_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/57b89e18-9c57-427d-a5a0-a97fcd907507_fixed.java
+index 9e578ec..2fd9ac7 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3bf998e9-d37a-4152-b8bb-00a5eabf5879_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/57b89e18-9c57-427d-a5a0-a97fcd907507_fixed.java
+@@ -1,31 +1,27 @@
+ protected void burstToken(String token, boolean stopAtNonOption)
+ {
+     int tokenLength = token.length();
+-
+     for (int i = 1; i < tokenLength; i++)
+     {
+         String ch = String.valueOf(token.charAt(i));
+         boolean hasOption = options.hasOption(ch);
+-
+         if (hasOption)
+         {
+             tokens.add("-" + ch);
+             currentOption = options.getOption(ch);
+-
+-                if (currentOption.hasArg() && (token.length() != (i + 1)))
++            if (currentOption.hasArg() && (token.length() > (i + 1)))
+             {
+                 tokens.add(token.substring(i + 1));
+-
+                 break;
+             }
+         }
+         else if (stopAtNonOption)
+         {
+             process(token.substring(i));
+         }
+         else
+         {
+             tokens.add("-" + ch);
+         }
+     }
+ }

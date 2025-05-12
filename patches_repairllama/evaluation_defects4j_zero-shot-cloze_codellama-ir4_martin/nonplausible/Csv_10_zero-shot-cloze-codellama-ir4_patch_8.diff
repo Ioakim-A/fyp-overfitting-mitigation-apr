@@ -1,0 +1,37 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/623842dd-b702-4987-9c3e-c34f35127cc7_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/735fd962-f3ef-4c4d-b342-3992d443a663_fixed.java
+index ceaab68..f266ae9 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/623842dd-b702-4987-9c3e-c34f35127cc7_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/735fd962-f3ef-4c4d-b342-3992d443a663_fixed.java
+@@ -1,10 +1,29 @@
+     public CSVPrinter(final Appendable out, final CSVFormat format) throws IOException {
+         Assertions.notNull(out, "out");
+         Assertions.notNull(format, "format");
+-
+         this.out = out;
+         this.format = format;
+         this.format.validate();
+-        // TODO: Is it a good idea to do this here instead of on the first call to a print method?
+-        // It seems a pain to have to track whether the header has already been printed or not.
++// buggy code
++       if (out instanceof Writer) {
++            this.writer = (Writer) out;
++        } else {
++            this.writer = new OutputStreamWriter(new OutputStream() {
++
++                @Override
++                public void write(int b) throws IOException {
++                    out.append((char) b);
++                }
++
++                @Override
++                public void write(byte[] b, int off, int len) throws IOException {
++                    out.append(new String(b, off, len));
++                }
++
++                @Override
++                public void write(byte[] b) throws IOException {
++                    out.append(new String(b));
++                }
++            });
++        }
+     }

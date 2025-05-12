@@ -1,0 +1,17 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2302f4e9-061d-43be-a7b2-6314dfbfdc21_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8bb04e0c-ed3e-4465-a6c7-5986675fdaf5_fixed.java
+index fa15a1c..f59e4a9 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2302f4e9-061d-43be-a7b2-6314dfbfdc21_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8bb04e0c-ed3e-4465-a6c7-5986675fdaf5_fixed.java
+@@ -1,5 +1,8 @@
+     public void writeEmbeddedObject(Object object) throws IOException {
+-        // 01-Sep-2016, tatu: As per [core#318], handle small number of cases
+-        throw new JsonGenerationException("No native support for writing embedded objects",
+-                this);
++        try {
++            String json = new ObjectMapper().writeValueAsString(object);
++            System.out.println(json);
++        } catch (JsonProcessingException e) {
++            throw new IOException("Error writing embedded objects", e);
++        }
+     }
+\ No newline at end of file

@@ -1,0 +1,57 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/34ee7dcd-fba3-4d57-87a4-6281ee9ecfc8_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a0f32b2b-045b-4160-9393-4bffbeeff9ba_fixed.java
+index cfdcd9c..e87e498 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/34ee7dcd-fba3-4d57-87a4-6281ee9ecfc8_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a0f32b2b-045b-4160-9393-4bffbeeff9ba_fixed.java
+@@ -1,51 +1,4 @@
+-  private Node tryFoldArrayAccess(Node n, Node left, Node right) {
+-    Node parent = n.getParent();
+-    // If GETPROP/GETELEM is used as assignment target the array literal is
+-    // acting as a temporary we can't fold it here:
+-    //    "[][0] += 1"
+-    if (isAssignmentTarget(n)) {
+-      return n;
+-    }
+-
+-    if (!right.isNumber()) {
+-      // Sometimes people like to use complex expressions to index into
+-      // arrays, or strings to index into array methods.
+-      return n;
+-    }
+-
+-    double index = right.getDouble();
+-    int intIndex = (int) index;
+-    if (intIndex != index) {
+-      error(INVALID_GETELEM_INDEX_ERROR, right);
+-      return n;
+-    }
+-
+-    if (intIndex < 0) {
+-      error(INDEX_OUT_OF_BOUNDS_ERROR, right);
+-      return n;
+-    }
+-
+-    Node current = left.getFirstChild();
+-    Node elem = null;
+     for (int i = 0; current != null && i < intIndex; i++) {
+         elem = current;
+-
+         current = current.getNext();
+     }
+\ No newline at end of file
+-
+-    if (elem == null) {
+-      error(INDEX_OUT_OF_BOUNDS_ERROR, right);
+-      return n;
+-    }
+-
+-    if (elem.isEmpty()) {
+-      elem = NodeUtil.newUndefinedNode(elem);
+-    } else {
+-      left.removeChild(elem);
+-    }
+-
+-    // Replace the entire GETELEM with the value
+-    n.getParent().replaceChild(n, elem);
+-    reportCodeChange();
+-    return elem;
+-  }

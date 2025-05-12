@@ -1,0 +1,70 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/52118f25-517d-4313-b954-d5366e126d6a_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bc473c29-1a48-42b3-9cf8-ccb00f0a02d7_fixed.java
+index 8dfbd84..bd21c33 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/52118f25-517d-4313-b954-d5366e126d6a_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bc473c29-1a48-42b3-9cf8-ccb00f0a02d7_fixed.java
+@@ -1,43 +1,59 @@
+     private String _handleOddName2(int startPtr, int hash, int[] codes) throws IOException
+     {
+         _textBuffer.resetWithShared(_inputBuffer, startPtr, (_inputPtr - startPtr));
+         char[] outBuf = _textBuffer.getCurrentSegment();
+         int outPtr = _textBuffer.getCurrentSegmentSize();
+         final int maxCode = codes.length;
+-
+         while (true) {
+             if (_inputPtr >= _inputEnd) {
+-                if (!_loadMore()) { // acceptable for now (will error out later)
++                if (!_loadMore()) { 
++                    break;
++                }
++            }
++            char c = _inputBuffer[_inputPtr++];
++            int i = (int) c;
++            if (i <= maxCode) {
++                if (codes[i] != 0) {
++                    break;
++                }
++            } else if (!Character.isJavaIdentifierPart(c)) {
++                break;
++            }
++            hash = (hash * CharsToNameCanonicalizer.HASH_MULT) + i    private String _handleOddName2(int startPtr, int hash, int[] codes) throws IOException
++    {
++        _textBuffer.resetWithShared(_inputBuffer, startPtr, (_inputPtr - startPtr));
++        char[] outBuf = _textBuffer.getCurrentSegment();
++        int outPtr = _textBuffer.getCurrentSegmentSize();
++        final int maxCode = codes.length;
++        while (true) {
++            if (_inputPtr >= _inputEnd) {
++                if (!_loadMore()) { 
+                     break;
+                 }
+             }
+             char c = _inputBuffer[_inputPtr];
+             int i = (int) c;
+             if (i <= maxCode) {
+                 if (codes[i] != 0) {
+                     break;
+                 }
+             } else if (!Character.isJavaIdentifierPart(c)) {
+                 break;
+             }
+             ++_inputPtr;
+             hash = (hash * CharsToNameCanonicalizer.HASH_MULT) + i;
+-            // Ok, let's add char to output:
+             outBuf[outPtr++] = c;
+-
+-            // Need more room?
+             if (outPtr >= outBuf.length) {
+                 outBuf = _textBuffer.finishCurrentSegment();
+                 outPtr = 0;
+             }
+         }
+         _textBuffer.setCurrentLength(outPtr);
+         {
+             TextBuffer tb = _textBuffer;
+             char[] buf = tb.getTextBuffer();
+             int start = tb.getTextOffset();
+             int len = tb.size();
+-
+             return _symbols.findSymbol(buf, start, len, hash);
+         }
+     }

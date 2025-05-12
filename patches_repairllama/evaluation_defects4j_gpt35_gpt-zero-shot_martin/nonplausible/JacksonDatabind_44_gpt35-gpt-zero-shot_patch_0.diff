@@ -1,0 +1,26 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/683d024e-8082-4422-98ef-1c1aae2b844d_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2aa3b7e7-0012-4016-970d-d4df1ae0cfa7_fixed.java
+index 4e76e23..c95792c 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/683d024e-8082-4422-98ef-1c1aae2b844d_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2aa3b7e7-0012-4016-970d-d4df1ae0cfa7_fixed.java
+@@ -1,19 +1,8 @@
+     protected JavaType _narrow(Class<?> subclass)
+     {
+         if (_class == subclass) {
+             return this;
+         }
+-        // Should we check that there is a sub-class relationship?
+-        // 15-Jan-2016, tatu: Almost yes, but there are some complications with
+-        //    placeholder values (`Void`, `NoClass`), so can not quite do yet.
+-        // TODO: fix in 2.8
+-            /*
+-            throw new IllegalArgumentException("Class "+subclass.getName()+" not sub-type of "
+-                    +_class.getName());
+-                    */
+-            return new SimpleType(subclass, _bindings, this, _superInterfaces,
++        return new SimpleType(subclass, _bindings, _superClass, _superInterfaces,
+                      _valueHandler, _typeHandler, _asStatic);
+-        // Otherwise, stitch together the hierarchy. First, super-class
+-        // if not found, try a super-interface
+-        // should not get here but...
+     }
+\ No newline at end of file

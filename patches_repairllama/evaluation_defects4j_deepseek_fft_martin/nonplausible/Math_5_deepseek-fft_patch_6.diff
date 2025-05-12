@@ -1,0 +1,33 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2f932c34-a81a-4201-842a-17687959d8b9_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/519658ca-0986-4ea2-a332-c682895bc552_fixed.java
+index e23e29c..20edaae 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2f932c34-a81a-4201-842a-17687959d8b9_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/519658ca-0986-4ea2-a332-c682895bc552_fixed.java
+@@ -1,24 +1,24 @@
+     /** {@inheritDoc} */
+     public Complex reciprocal() {
+         if (isNaN) {
+             return NaN;
+         }
+-
+         if (real == 0.0 && imaginary == 0.0) {
+-            return NaN;
+-        }
++// buggy code
++//            return NaN;
++            return Complex.NaN;
+ 
++        }
+         if (isInfinite) {
+             return ZERO;
+         }
+-
+         if (FastMath.abs(real) < FastMath.abs(imaginary)) {
+             double q = real / imaginary;
+             double scale = 1. / (real * q + imaginary);
+             return createComplex(scale * q, -scale);
+         } else {
+             double q = imaginary / real;
+             double scale = 1. / (imaginary * q + real);
+             return createComplex(scale, -scale * q);
+         }
+     }

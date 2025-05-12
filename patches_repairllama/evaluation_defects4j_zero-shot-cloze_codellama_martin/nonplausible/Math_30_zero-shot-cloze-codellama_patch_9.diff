@@ -1,0 +1,25 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4449d401-6d65-4e77-9bdc-c1681b2670c0_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0b3cb1c5-0013-4b82-9679-975b4028637a_fixed.java
+index 1e5a2da..f7c68ac 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4449d401-6d65-4e77-9bdc-c1681b2670c0_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0b3cb1c5-0013-4b82-9679-975b4028637a_fixed.java
+@@ -1,17 +1,14 @@
+     private double calculateAsymptoticPValue(final double Umin,
+                                              final int n1,
+                                              final int n2)
+         throws ConvergenceException, MaxCountExceededException {
+-
+        final int n1n2prod = n1 * n2;
+-
+-        // http://en.wikipedia.org/wiki/Mann%E2%80%93Whitney_U#Normal_approximation
++        if (n1n2prod == 0) {
++            return 1.0;
++        }
+         final double EU = n1n2prod / 2.0;
+         final double VarU = n1n2prod * (n1 + n2 + 1) / 12.0;
+-
+         final double z = (Umin - EU) / FastMath.sqrt(VarU);
+-
+         final NormalDistribution standardNormal = new NormalDistribution(0, 1);
+-
+         return 2 * standardNormal.cumulativeProbability(z);
+     }

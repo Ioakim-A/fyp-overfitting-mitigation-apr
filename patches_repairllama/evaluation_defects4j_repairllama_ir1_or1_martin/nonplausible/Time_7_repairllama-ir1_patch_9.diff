@@ -1,0 +1,37 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5c905503-7626-43af-95c5-61c892315c55_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5d0e80e0-9763-4c51-a1e3-65f5a09a95c0_fixed.java
+index 284dc9c..c287eba 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5c905503-7626-43af-95c5-61c892315c55_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5d0e80e0-9763-4c51-a1e3-65f5a09a95c0_fixed.java
+@@ -1,29 +1,16 @@
+    public int parseInto(ReadWritableInstant instant, String text, int position) {
+         DateTimeParser parser = requireParser();
+         if (instant == null) {
+             throw new IllegalArgumentException("Instant must not be null");
+         }
+-        
+         long instantMillis = instant.getMillis();
+         Chronology chrono = instant.getChronology();
+-        long instantLocal = instantMillis + chrono.getZone().getOffset(instantMillis);
++        long instantLocal = instantMillis + (chrono.getZone() == null ? 0 : chrono.getZone().getOffset(instantMillis));
+         chrono = selectChronology(chrono);
+         int defaultYear = chrono.year().get(instantLocal);
+-        
+         DateTimeParserBucket bucket = new DateTimeParserBucket(
+             instantLocal, chrono, iLocale, iPivotYear, defaultYear);
+         int newPos = parser.parseInto(bucket, text, position);
+         instant.setMillis(bucket.computeMillis(false, text));
+         if (iOffsetParsed && bucket.getOffsetInteger() != null) {
+-            int parsedOffset = bucket.getOffsetInteger();
+-            DateTimeZone parsedZone = DateTimeZone.forOffsetMillis(parsedOffset);
+-            chrono = chrono.withZone(parsedZone);
+-        } else if (bucket.getZone() != null) {
+-            chrono = chrono.withZone(bucket.getZone());
+-        }
+-        instant.setChronology(chrono);
+-        if (iZone != null) {
+-            instant.setZone(iZone);
+-        }
+-        return newPos;
+-    }
++            int parsedOffset = bucket.getOffset
+\ No newline at end of file

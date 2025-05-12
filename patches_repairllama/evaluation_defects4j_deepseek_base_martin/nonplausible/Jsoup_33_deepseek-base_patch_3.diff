@@ -1,0 +1,30 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/60a2f226-6e30-40a8-b07e-4c220a051c57_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/677b4e50-fb76-467e-99de-5d6828261fab_fixed.java
+index dc93be3..8fa5ef1 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/60a2f226-6e30-40a8-b07e-4c220a051c57_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/677b4e50-fb76-467e-99de-5d6828261fab_fixed.java
+@@ -1,14 +1,25 @@
+     Element insert(Token.StartTag startTag) {
+         // handle empty unknown tags
+         // when the spec expects an empty tag, will directly hit insertEmpty, so won't generate this fake end tag.
+         if (startTag.isSelfClosing()) {
+             Element el = insertEmpty(startTag);
+             stack.add(el);
+             tokeniser.emit(new Token.EndTag(el.tagName()));  // ensure we get out of whatever state we are in. emitted for yielded processing
+             return el;
+         }
++        Element el = new Element(Tag.valueOf(startTag.name()), baseUri, startTag.attributes);
++        insert(el);
++        return el;
++    }
+ 
++    Element insertEmpty(Token.StartTag startTag) {
++        if (startTag.isSelfClosing()) {
++            Element el = insertEmpty(startTag);
++            stack.add(el);
++            tokeniser.emit(new Token.EndTag(el.tagName()));  // ensure we get out of whatever state we are in. emitted for yielded processing
++            return el;
++        }
+         Element el = new Element(Tag.valueOf(startTag.name()), baseUri, startTag.attributes);
+         insert(el);
+         return el;
+     }

@@ -1,0 +1,24 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/471141b3-82d8-42b7-bc05-2d7da03f6282_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c3a2438f-b4eb-45fe-b008-62145679bd6b_fixed.java
+index c1f30a5..27393f9 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/471141b3-82d8-42b7-bc05-2d7da03f6282_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c3a2438f-b4eb-45fe-b008-62145679bd6b_fixed.java
+@@ -1,15 +1,19 @@
+     /**
+      * <p>Formats a <code>Calendar</code> object into the
+      * supplied <code>StringBuffer</code>.</p>
+      * 
+      * @param calendar  the calendar to format
+      * @param buf  the buffer to format into
+      * @return the specified string buffer
+      */
+     public StringBuffer format(Calendar calendar, StringBuffer buf) {
+         if (mTimeZoneForced) {
++            if (calendar.getTimeZone().getID().equals(mTimeZone.getID())) {
++                return applyRules(calendar, buf);
++            }
++
+             calendar = (Calendar) calendar.clone();
+             calendar.setTimeZone(mTimeZone);
+         }
+         return applyRules(calendar, buf);
+     }

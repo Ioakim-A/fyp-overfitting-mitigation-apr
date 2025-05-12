@@ -1,0 +1,63 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/228aaf11-665d-4fa3-a451-f4250cb0ded5_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6dbdb905-1bf2-4e7e-8bab-f5438b6ebf34_fixed.java
+index 680d3be..5874d90 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/228aaf11-665d-4fa3-a451-f4250cb0ded5_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6dbdb905-1bf2-4e7e-8bab-f5438b6ebf34_fixed.java
+@@ -1,47 +1,53 @@
+     public void visit(NodeTraversal t, Node n, Node parent) {
+-
+-      // Record global variable and function declarations
+       if (t.inGlobalScope()) {
+         if (NodeUtil.isVarDeclaration(n)) {
+           NameInformation ns = createNameInformation(t, n, parent);
+           Preconditions.checkNotNull(ns);
+           recordSet(ns.name, n);
+         } else if (NodeUtil.isFunctionDeclaration(n)) {
+           Node nameNode = n.getFirstChild();
+           NameInformation ns = createNameInformation(t, nameNode, n);
+           if (ns != null) {
+             JsName nameInfo = getName(nameNode.getString(), true);
+             recordSet(nameInfo.name, nameNode);
+           }
+         } else if (NodeUtil.isObjectLitKey(n, parent)) {
+           NameInformation ns = createNameInformation(t, n, parent);
+           if (ns != null) {
+             recordSet(ns.name, n);
+           }
+         }
+       }
+-
+-      // Record assignments and call sites
+       if (n.isAssign()) {
+         Node nameNode = n.getFirstChild();
+-
+         NameInformation ns = createNameInformation(t, nameNode, n);
+         if (ns != null) {
+           if (ns.isPrototype) {
+             recordPrototypeSet(ns.prototypeClass, ns.prototypeProperty, n);
+           } else {
+             recordSet(ns.name, nameNode);
+           }
+         }
+       } else if (n.isCall()) {
+         Node nameNode = n.getFirstChild();
+         NameInformation ns = createNameInformation(t, nameNode, n);
+         if (ns != null && ns.onlyAffectsClassDef) {
++// buggy code
++//          JsName name = getName(ns.name, false);
++//          if (name != null) {
++//          refNodes.add(new ClassDefiningFunctionNode(
++//              name, n, parent, parent.getParent()));
++//          }
++       }
++      } else if (n.isNew()) {
++        Node nameNode = n.getFirstChild();
++        NameInformation ns = createNameInformation(t, nameNode, n);
++        if (ns != null && ns.onlyAffectsClassDef) {
+           JsName name = getName(ns.name, false);
+           if (name != null) {
+             refNodes.add(new ClassDefiningFunctionNode(
+                 name, n, parent, parent.getParent()));
+           }
+         }
+       }
+     }

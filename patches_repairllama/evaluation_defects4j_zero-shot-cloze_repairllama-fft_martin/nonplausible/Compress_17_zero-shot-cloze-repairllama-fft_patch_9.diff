@@ -1,0 +1,74 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0a82d054-57e2-48c7-abe1-1882e993f858_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1fe8ab35-29cb-4b06-9d90-87451648b637_fixed.java
+index d2fcb52..8a0ea9d 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0a82d054-57e2-48c7-abe1-1882e993f858_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1fe8ab35-29cb-4b06-9d90-87451648b637_fixed.java
+@@ -1,50 +1,57 @@
+     public static long parseOctal(final byte[] buffer, final int offset, final int length) {
+         long    result = 0;
+         int     end = offset + length;
+         int     start = offset;
+-
+         if (length < 2){
+             throw new IllegalArgumentException("Length "+length+" must be at least 2");
+         }
+-
+         if (buffer[start] == 0) {
+             return 0L;
+         }
+-
+-        // Skip leading spaces
+         while (start < end){
+             if (buffer[start] == ' '){
+                 start++;
+             } else {
+                 break;
+             }
+         }
+-
+-        // Must have trailing NUL or space
+         byte trailer;
+         trailer = buffer[end-1];
+         if (trailer == 0 || trailer == ' '){
+             end--;
+         } else {
+             throw new IllegalArgumentException(
+                     exceptionMessage(buffer, offset, length, end-1, trailer));
+         }
+-        // May have additional NULs or spaces
+         trailer = buffer[end - 1];
+-        if (trailer == 0 || trailer == ' '){
++// buggy code
++//        if (trailer == 0 || trailer == ' '){
++//            end--;
++//        } else {
++//            throw new IllegalArgumentException(
++//                    exceptionMessage(buffer, offset, length, end-1, trailer));
++//        }
++        if (trailer == 0){
+             end--;
++        } else {
++            throw new IllegalArgumentException(
++                    exceptionMessage(buffer, offset, length, end-1, trailer));
+         }
++        trailer = buffer[end - 1];
++        if (trailer == 0){
++            end--;
++        } else {
++            throw new IllegalArgumentException(
++                    exceptionMessage(buffer, offset, length, end-1, trailer));
+ 
++        }
+         for ( ;start < end; start++) {
+             final byte currentByte = buffer[start];
+-            // CheckStyle:MagicNumber OFF
+             if (currentByte < '0' || currentByte > '7'){
+                 throw new IllegalArgumentException(
+                         exceptionMessage(buffer, offset, length, start, currentByte));
+             }
+-            result = (result << 3) + (currentByte - '0'); // convert from ASCII
+-            // CheckStyle:MagicNumber ON
++            result = (result << 3) + (currentByte - '0'); 
+         }
+-
+         return result;
+     }

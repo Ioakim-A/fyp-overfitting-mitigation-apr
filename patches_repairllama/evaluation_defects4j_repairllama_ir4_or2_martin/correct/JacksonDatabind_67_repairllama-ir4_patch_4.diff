@@ -1,0 +1,44 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/179303a3-9d14-4496-8d99-34e79645a611_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3a777f43-5ddd-4828-89c1-e34b1c2124bb_fixed.java
+index a19c4db..7937dd9 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/179303a3-9d14-4496-8d99-34e79645a611_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3a777f43-5ddd-4828-89c1-e34b1c2124bb_fixed.java
+@@ -1,32 +1,36 @@
+     public KeyDeserializer createKeyDeserializer(DeserializationContext ctxt,
+             JavaType type)
+         throws JsonMappingException
+     {
+         final DeserializationConfig config = ctxt.getConfig();
+         KeyDeserializer deser = null;
+         if (_factoryConfig.hasKeyDeserializers()) {
+             BeanDescription beanDesc = config.introspectClassAnnotations(type.getRawClass());
+             for (KeyDeserializers d  : _factoryConfig.keyDeserializers()) {
+                 deser = d.findKeyDeserializer(type, config, beanDesc);
+                 if (deser != null) {
+                     break;
+                 }
+             }
+         }
+-        // the only non-standard thing is this:
+         if (deser == null) {
+             if (type.isEnumType()) {
+-                return _createEnumKeyDeserializer(ctxt, type);
++// buggy code
++//                 return _createEnumKeyDeserializer(ctxt, type);
++//             }
++//             deser = StdKeyDeserializers.findStringBasedKeyDeserializer(config, type);
++               deser = _createEnumKeyDeserializer(ctxt, type);
+             }
++            else {
+                 deser = StdKeyDeserializers.findStringBasedKeyDeserializer(config, type);
+             }
+-        // and then post-processing
++        }
+         if (deser != null) {
+             if (_factoryConfig.hasDeserializerModifiers()) {
+                 for (BeanDeserializerModifier mod : _factoryConfig.deserializerModifiers()) {
+                     deser = mod.modifyKeyDeserializer(config, type, deser);
+                 }
+             }
+         }
+         return deser;
+     }

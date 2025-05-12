@@ -1,0 +1,36 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8aae7af5-4a06-416f-b821-7e4c587df2dd_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0d3f1039-2f86-441e-a25a-70b4e2213809_fixed.java
+index 02afa2a..8326986 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8aae7af5-4a06-416f-b821-7e4c587df2dd_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0d3f1039-2f86-441e-a25a-70b4e2213809_fixed.java
+@@ -1,28 +1,22 @@
+   static boolean isValidDefineValue(Node val, Set<String> defines) {
+     switch (val.getType()) {
+       case Token.STRING:
+       case Token.NUMBER:
+       case Token.TRUE:
+       case Token.FALSE:
+         return true;
+-
+-      // Binary operators are only valid if both children are valid.
+-      case Token.BITAND:
++     case Token.NEG:
++      case Token.NOT:
+       case Token.BITNOT:
++      case Token.BITAND:
+       case Token.BITOR:
+       case Token.BITXOR:
+-
+-      // Uniary operators are valid if the child is valid.
+-      case Token.NOT:
+-      case Token.NEG:
+         return isValidDefineValue(val.getFirstChild(), defines);
+-
+-      // Names are valid if and only if they are defines themselves.
+       case Token.NAME:
+       case Token.GETPROP:
+         if (val.isQualifiedName()) {
+           return defines.contains(val.getQualifiedName());
+         }
+     }
+     return false;
+   }

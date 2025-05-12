@@ -1,0 +1,85 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c44338f6-b88d-4b09-8566-f86c21c74674_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5951954f-ca6d-4b5a-9922-366907564d38_fixed.java
+index 7e64f1d..a9b311f 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c44338f6-b88d-4b09-8566-f86c21c74674_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5951954f-ca6d-4b5a-9922-366907564d38_fixed.java
+@@ -1,78 +1,72 @@
+     /**
+      * <p>This flatten method does so using the following rules:
+      * <ol>
+      *  <li>If an {@link Option} exists for the first character of 
+      *  the <code>arguments</code> entry <b>AND</b> an {@link Option} 
+      *  does not exist for the whole <code>argument</code> then
+      *  add the first character as an option to the processed tokens
+      *  list e.g. "-D" and add the rest of the entry to the also.</li>
+      *  <li>Otherwise just add the token to the processed tokens list.
+      *  </li>
+      * </ol>
+      * </p>
+      *
+      * @param options The Options to parse the arguments by.
+      * @param arguments The arguments that have to be flattened.
+      * @param stopAtNonOption specifies whether to stop 
+      * flattening when a non option has been encountered
+      * @return a String array of the flattened arguments
+      */
+     protected String[] flatten(Options options, String[] arguments, boolean stopAtNonOption)
+     {
+         List tokens = new ArrayList();
+-
+         boolean eatTheRest = false;
+-
+         for (int i = 0; i < arguments.length; i++)
+         {
+             String arg = arguments[i];
+-
+             if ("--".equals(arg))
+             {
+                 eatTheRest = true;
+                 tokens.add("--");
+             }
+             else if ("-".equals(arg))
+             {
+                 tokens.add("-");
+             }
+             else if (arg.startsWith("-"))
+             {
+                 String opt = Util.stripLeadingHyphens(arg);
+-
+                 if (options.hasOption(opt))
+                 {
+                     tokens.add(arg);
+                 }
+                 else
+                 {
+-                    if (options.hasOption(arg.substring(0, 2)))
++                    eatTheRest = stopAtNonOption;
++                    if (opt.length() > 1)
+                     {
+-                        // the format is --foo=value or -foo=value
+                         // the format is a special properties option (-Dproperty=value)
+                         tokens.add(arg.substring(0, 2)); // -D
+                         tokens.add(arg.substring(2)); // property=value
+                     }
+                     else
+                     {
+                         eatTheRest = stopAtNonOption;
+                         tokens.add(arg);
+                     }
+                 }
+             }
+             else
+             {
+                 tokens.add(arg);
+             }
+-
+             if (eatTheRest)
+             {
+                 for (i++; i < arguments.length; i++)
+                 {
+                     tokens.add(arguments[i]);
+                 }
+             }
+         }
+-
+         return (String[]) tokens.toArray(new String[tokens.size()]);
+     }

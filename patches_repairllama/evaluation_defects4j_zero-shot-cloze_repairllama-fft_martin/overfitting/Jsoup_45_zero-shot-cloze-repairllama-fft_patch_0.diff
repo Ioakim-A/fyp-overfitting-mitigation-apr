@@ -1,0 +1,63 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1b76df73-db06-4da4-8b65-6823d98d80e8_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2f1cd3cb-1c2c-457e-b712-8b77f731e371_fixed.java
+index 135fc63..3d4a251 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1b76df73-db06-4da4-8b65-6823d98d80e8_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2f1cd3cb-1c2c-457e-b712-8b77f731e371_fixed.java
+@@ -1,48 +1,51 @@
+     void resetInsertionMode() {
+         boolean last = false;
+         for (int pos = stack.size() -1; pos >= 0; pos--) {
+             Element node = stack.get(pos);
+             if (pos == 0) {
+                 last = true;
+                 node = contextElement;
+             }
+             String name = node.nodeName();
+             if ("select".equals(name)) {
+                 transition(HtmlTreeBuilderState.InSelect);
+-                break; // frag
+-            } else if (("td".equals(name) || "td".equals(name) && !last)) {
++                break; 
++// buggy code
++//            } else if (("td".equals(name) || "td".equals(name) && !last)) {
++           } else if (("td".equals(name) || "th".equals(name) && !last)) {
++
+                 transition(HtmlTreeBuilderState.InCell);
+                 break;
+             } else if ("tr".equals(name)) {
+                 transition(HtmlTreeBuilderState.InRow);
+                 break;
+             } else if ("tbody".equals(name) || "thead".equals(name) || "tfoot".equals(name)) {
+                 transition(HtmlTreeBuilderState.InTableBody);
+                 break;
+             } else if ("caption".equals(name)) {
+                 transition(HtmlTreeBuilderState.InCaption);
+                 break;
+             } else if ("colgroup".equals(name)) {
+                 transition(HtmlTreeBuilderState.InColumnGroup);
+-                break; // frag
++                break; 
+             } else if ("table".equals(name)) {
+                 transition(HtmlTreeBuilderState.InTable);
+                 break;
+             } else if ("head".equals(name)) {
+                 transition(HtmlTreeBuilderState.InBody);
+-                break; // frag
++                break; 
+             } else if ("body".equals(name)) {
+                 transition(HtmlTreeBuilderState.InBody);
+                 break;
+             } else if ("frameset".equals(name)) {
+                 transition(HtmlTreeBuilderState.InFrameset);
+-                break; // frag
++                break; 
+             } else if ("html".equals(name)) {
+                 transition(HtmlTreeBuilderState.BeforeHead);
+-                break; // frag
++                break; 
+             } else if (last) {
+                 transition(HtmlTreeBuilderState.InBody);
+-                break; // frag
++                break; 
+             }
+         }
+     }

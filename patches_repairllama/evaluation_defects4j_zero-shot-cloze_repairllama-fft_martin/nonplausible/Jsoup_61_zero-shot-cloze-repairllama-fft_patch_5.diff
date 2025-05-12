@@ -1,0 +1,51 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6a92f8e2-f724-405b-a0d1-82761aab08f5_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a5bb949c-2834-4c21-b303-ab673973ca33_fixed.java
+index e6a5296..1c3c127 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6a92f8e2-f724-405b-a0d1-82761aab08f5_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a5bb949c-2834-4c21-b303-ab673973ca33_fixed.java
+@@ -1,42 +1,35 @@
+     public boolean hasClass(String className) {
+-        final String classAttr = attributes.get("class");
++// buggy code
++//        final String classAttr = attributes.get("class");
++       final String classAttr = attributes.get("class").toLowerCase();
++
+         final int len = classAttr.length();
+         final int wantLen = className.length();
+-
+         if (len == 0 || len < wantLen) {
+             return false;
+         }
+-
+-        // if both lengths are equal, only need compare the className with the attribute
+         if (len == wantLen) {
+             return className.equalsIgnoreCase(classAttr);
+         }
+-
+-        // otherwise, scan for whitespace and compare regions (with no string or arraylist allocations)
+         boolean inClass = false;
+         int start = 0;
+         for (int i = 0; i < len; i++) {
+             if (Character.isWhitespace(classAttr.charAt(i))) {
+                 if (inClass) {
+-                    // white space ends a class name, compare it with the requested one, ignore case
+                     if (i - start == wantLen && classAttr.regionMatches(true, start, className, 0, wantLen)) {
+                         return true;
+                     }
+                     inClass = false;
+                 }
+             } else {
+                 if (!inClass) {
+-                    // we're in a class name : keep the start of the substring
+                     inClass = true;
+                     start = i;
+                 }
+             }
+         }
+-
+-        // check the last entry
+         if (inClass && len - start == wantLen) {
+             return classAttr.regionMatches(true, start, className, 0, wantLen);
+         }
+-
+         return false;
+     }

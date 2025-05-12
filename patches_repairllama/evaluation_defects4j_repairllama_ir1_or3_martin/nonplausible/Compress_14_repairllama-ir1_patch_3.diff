@@ -1,0 +1,63 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/94608a8a-17b7-4fa0-b2c6-49642c191e1a_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2e06d828-0eea-4115-95bb-e500dc0f1824_fixed.java
+index 66dfac8..9e1dd0a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/94608a8a-17b7-4fa0-b2c6-49642c191e1a_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2e06d828-0eea-4115-95bb-e500dc0f1824_fixed.java
+@@ -1,57 +1,46 @@
+     public static long parseOctal(final byte[] buffer, final int offset, final int length) {
+         long    result = 0;
+         int     end = offset + length;
+         int     start = offset; 
+-
+         if (length < 2){
+             throw new IllegalArgumentException("Length "+length+" must be at least 2");
+         }
+-
+         boolean allNUL = true;
+         for (int i = start; i < end; i++){
+             if (buffer[i] != 0){
+                 allNUL = false;
+                 break;
+             }
+         }
+         if (allNUL) {
+             return 0L;
+         }
+-
+-        // Skip leading spaces
+         while (start < end){
+             if (buffer[start] == ' '){
+                 start++;
+             } else {
+                 break;
+             }
+         }
+-
+-        // Must have trailing NUL or space
+         byte trailer;
+         trailer = buffer[end-1];
+         if (trailer == 0 || trailer == ' '){
+             end--;
+         } else {
+             throw new IllegalArgumentException(
+                     exceptionMessage(buffer, offset, length, end-1, trailer));
+         }
+-        // May have additional NUL or space
+         trailer = buffer[end-1];
+         if (trailer == 0 || trailer == ' '){
+             end--;
+         }
+-
+         for ( ;start < end; start++) {
+             final byte currentByte = buffer[start];
+-            // CheckStyle:MagicNumber OFF
+             if (currentByte < '0' || currentByte > '7'){
+                 throw new IllegalArgumentException(
+                         exceptionMessage(buffer, offset, length, start, currentByte));
+             }
+-            result = (result << 3) + (currentByte - '0'); // convert from ASCII
+-            // CheckStyle:MagicNumber ON
++            result = (result << 3) + (currentByte - '0'); 
+         }
+-
+         return result;
+     }

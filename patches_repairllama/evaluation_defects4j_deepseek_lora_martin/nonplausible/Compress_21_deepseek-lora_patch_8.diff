@@ -1,0 +1,33 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d0877eab-ca89-45d4-86bd-d532a272479c_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2a5db3a9-7856-4dca-a1c2-96a7bf93024a_fixed.java
+index ce3d60f..8172469 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d0877eab-ca89-45d4-86bd-d532a272479c_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2a5db3a9-7856-4dca-a1c2-96a7bf93024a_fixed.java
+@@ -1,16 +1,25 @@
+     private void writeBits(final DataOutput header, final BitSet bits, final int length) throws IOException {
+         int cache = 0;
+         int shift = 7;
+         for (int i = 0; i < length; i++) {
+             cache |= ((bits.get(i) ? 1 : 0) << shift);
+-            --shift;
+-            if (shift == 0) {
++// buggy code
++//            --shift;
++//            if (shift == 0) {
++//                header.write(cache);
++//                shift = 7;
++//                cache = 0;
++//            }
++//        }
++//        if (length > 0 && shift > 0) {
++            if (--shift < 0) {
+                 header.write(cache);
+                 shift = 7;
+                 cache = 0;
+             }
+         }
+-        if (length > 0 && shift > 0) {
++        if (shift > 0) {
++
+             header.write(cache);
+         }
+     }

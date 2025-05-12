@@ -1,0 +1,28 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7fd5c458-57b5-46ec-86e7-234715002955_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6af9964f-5f62-4321-be16-9f9b930e67d6_fixed.java
+index 9c14f36..11eefc6 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7fd5c458-57b5-46ec-86e7-234715002955_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6af9964f-5f62-4321-be16-9f9b930e67d6_fixed.java
+@@ -1,11 +1,20 @@
+     public boolean equals(Object obj) {
+-
+         if (obj == this) {
+             return true;
+         }
+         if (!(obj instanceof ShapeList)) {
+             return false;
+         }
+-        return super.equals(obj);
+-
++// buggy code
++//        return super.equals(obj);
++       ShapeList list = (ShapeList) obj;
++        if (list.size() != this.size()) {
++            return false;
++        }
++        for (int i = 0; i < this.size(); i++) {
++            if (!this.get(i).equals(list.get(i))) {
++                return false;
++            }
++        }
++        return true;
+     }

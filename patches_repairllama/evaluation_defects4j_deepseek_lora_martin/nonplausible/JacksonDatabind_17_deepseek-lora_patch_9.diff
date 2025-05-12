@@ -1,0 +1,43 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8784adad-5af9-4b05-95d8-06fc711efb07_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b7ae1c07-cdc7-4f76-8473-173111f808db_fixed.java
+index 01967cc..2a223d0 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8784adad-5af9-4b05-95d8-06fc711efb07_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b7ae1c07-cdc7-4f76-8473-173111f808db_fixed.java
+@@ -1,35 +1,37 @@
+         /**
+          * Method called to check if the default type handler should be
+          * used for given type.
+          * Note: "natural types" (String, Boolean, Integer, Double) will never
+          * use typing; that is both due to them being concrete and final,
+          * and since actual serializers and deserializers will also ignore any
+          * attempts to enforce typing.
+          */
+         public boolean useForType(JavaType t)
+         {
+             switch (_appliesFor) {
+             case NON_CONCRETE_AND_ARRAYS:
+                 while (t.isArrayType()) {
+                     t = t.getContentType();
+                 }
+                 // fall through
+             case OBJECT_AND_NON_CONCRETE:
+ //                return t.isJavaLangObject() || 
+                 return (t.getRawClass() == Object.class)
+                         || (!t.isConcrete()
+                                 // [databind#88] Should not apply to JSON tree models:
+-                        || TreeNode.class.isAssignableFrom(t.getRawClass()));
++// buggy code
++//                        || TreeNode.class.isAssignableFrom(t.getRawClass()));
++                        || (t.getRawClass() == Object.class));
+ 
+             case NON_FINAL:
+                 while (t.isArrayType()) {
+                     t = t.getContentType();
+                 }
+                 // [Issue#88] Should not apply to JSON tree models:
+                 return !t.isFinal() && !TreeNode.class.isAssignableFrom(t.getRawClass());
+             default:
+             //case JAVA_LANG_OBJECT:
+ //                return t.isJavaLangObject();
+                 return (t.getRawClass() == Object.class);
+             }
+         }

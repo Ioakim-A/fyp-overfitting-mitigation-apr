@@ -1,0 +1,41 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7edfe504-6e79-421e-a074-08b34951bad6_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/96c95d01-af4d-4006-9825-f9a88ae24d1f_fixed.java
+index 62e8ec8..372d3bf 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7edfe504-6e79-421e-a074-08b34951bad6_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/96c95d01-af4d-4006-9825-f9a88ae24d1f_fixed.java
+@@ -1,26 +1,36 @@
+     /**
+      * <p>If an {@link Option} exists for <code>token</code> then
+      * set the current option and add the token to the processed 
+      * list.</p>
+      *
+      * <p>If an {@link Option} does not exist and <code>stopAtNonOption</code>
+      * is set then ignore the current token and add the remaining tokens
+      * to the processed tokens list directly.</p>
+      *
+      * @param token The current option token
+      * @param stopAtNonOption Specifies whether flattening should halt
+      * at the first non option.
+      */
+     private void processOptionToken(String token, boolean stopAtNonOption)
+     {
+         if (options.hasOption(token))
+         {
+             currentOption = options.getOption(token);
++// buggy code
++//            tokens.add(token);
++//        }
++//        else if (stopAtNonOption)
++//        {
++//            eatTheRest = true;
++//            tokens.add(token);
++//        }
+             tokens.add(token);
+         }
+         else if (stopAtNonOption)
+         {
+             eatTheRest = true;
+             tokens.add(token);
+         }
++        currentOption = null;
++
+     }

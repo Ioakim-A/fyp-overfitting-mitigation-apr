@@ -1,0 +1,42 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2b0e1745-5232-42f4-8650-5f2588965792_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/aa8d8d58-b0b1-4915-b122-55d729efe2db_fixed.java
+index f955f47..1e9cfdd 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2b0e1745-5232-42f4-8650-5f2588965792_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/aa8d8d58-b0b1-4915-b122-55d729efe2db_fixed.java
+@@ -1,34 +1,31 @@
+         public String getDescription() {
+             if (_desc == null) {
+                 StringBuilder sb = new StringBuilder();
+-
+                 if (_from == null) { // can this ever occur?
+                     sb.append("UNKNOWN");
+                 } else {
+                     Class<?> cls = (_from instanceof Class<?>) ? (Class<?>)_from : _from.getClass();
+                     // Hmmh. Although Class.getName() is mostly ok, it does look
+                     // butt-ugly for arrays.
+                     // 06-Oct-2016, tatu: as per [databind#1403], `getSimpleName()` not so good
+                     //   as it drops enclosing class. So let's try bit different approach
+-                    String pkgName = com.fasterxml.jackson.databind.util.ClassUtil.getPackageName(cls);
+-                    if (pkgName != null) {
+-                        sb.append(pkgName);
+-                        sb.append('.');
++                    sb.append(cls.getName());
++                    if (cls.isArray()) {
++                        sb.append("[]");
+                     }
+-                    sb.append(cls.getSimpleName());
+                 }
+                 sb.append('[');
+                 if (_fieldName != null) {
+                     sb.append('"');
+                     sb.append(_fieldName);
+                     sb.append('"');
+                 } else if (_index >= 0) {
+                     sb.append(_index);
+                 } else {
+                     sb.append('?');
+                 }
+                 sb.append(']');
+                 _desc = sb.toString();
+             }
+             return _desc;
+         }

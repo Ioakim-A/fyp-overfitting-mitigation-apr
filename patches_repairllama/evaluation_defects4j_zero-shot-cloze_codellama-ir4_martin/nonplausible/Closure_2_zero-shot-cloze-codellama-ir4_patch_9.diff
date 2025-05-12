@@ -1,0 +1,42 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dccb73ec-e803-4030-a9ea-b3ba7df0fe9c_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/eae0afa6-db95-4e44-b9f6-5baa2f1b0c39_fixed.java
+index 9a8827e..b77d7f7 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dccb73ec-e803-4030-a9ea-b3ba7df0fe9c_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/eae0afa6-db95-4e44-b9f6-5baa2f1b0c39_fixed.java
+@@ -1,27 +1,34 @@
+   private void checkInterfaceConflictProperties(NodeTraversal t, Node n,
+       String functionName, HashMap<String, ObjectType> properties,
+       HashMap<String, ObjectType> currentProperties,
+       ObjectType interfaceType) {
+     ObjectType implicitProto = interfaceType.getImplicitPrototype();
+     Set<String> currentPropertyNames;
+-      // This can be the case if interfaceType is proxy to a non-existent
+-      // object (which is a bad type annotation, but shouldn't crash).
+-      currentPropertyNames = implicitProto.getOwnPropertyNames();
++// buggy code
++//      currentPropertyNames = implicitProto.getOwnPropertyNames();
++   currentPropertyNames = implicitProto.getPropertyNames();
++    for (String name : properties.keySet()) {
++      if (!currentPropertyNames.contains(name)) {
++        compiler.report(
++            t.makeError(n, INCOMPATIBLE_EXTENDED_PROPERTY, functionName,
++                name, interfaceType.toString()));
++      }
++    }
+     for (String name : currentPropertyNames) {
+       ObjectType oType = properties.get(name);
+       if (oType != null) {
+         if (!interfaceType.getPropertyType(name).isEquivalentTo(
+             oType.getPropertyType(name))) {
+           compiler.report(
+               t.makeError(n, INCOMPATIBLE_EXTENDED_PROPERTY_TYPE,
+                   functionName, name, oType.toString(),
+                   interfaceType.toString()));
+         }
+       }
+       currentProperties.put(name, interfaceType);
+     }
+     for (ObjectType iType : interfaceType.getCtorExtendedInterfaces()) {
+       checkInterfaceConflictProperties(t, n, functionName, properties,
+           currentProperties, iType);
+     }
+   }

@@ -1,0 +1,40 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d92140bd-cf5e-461c-aef3-c6a8990f020d_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/97a51d3c-3829-4465-befe-08315aa41102_fixed.java
+index 544303b..5b13c8d 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d92140bd-cf5e-461c-aef3-c6a8990f020d_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/97a51d3c-3829-4465-befe-08315aa41102_fixed.java
+@@ -1,29 +1,22 @@
+     /**
+      * Get the current solution.
+      * <p>
+      * {@link #solve} should be called first for this to be the optimal solution.
+      * </p>
+      * @return current solution
+      */
+     protected RealPointValuePair getSolution() {
+         double[] coefficients = new double[getOriginalNumDecisionVariables()];
+         Integer basicRow =
+             getBasicRow(getNumObjectiveFunctions() + getOriginalNumDecisionVariables());
+         double mostNegative = basicRow == null ? 0 : getEntry(basicRow, getRhsOffset());
+-        for (int i = 0; i < coefficients.length; i++) {
+-            basicRow = getBasicRow(getNumObjectiveFunctions() + i);
+-                // if multiple variables can take a given value 
+-                // then we choose the first and set the rest equal to 0
+-                coefficients[i] =
+-                    (basicRow == null ? 0 : getEntry(basicRow, getRhsOffset())) -
+-                    (restrictToNonNegative ? 0 : mostNegative);
+-            if (basicRow != null) {
+-                for (int j = getNumObjectiveFunctions(); j < getNumObjectiveFunctions() + i; j++) {
+-                    if (tableau.getEntry(basicRow, j) == 1) {
+-                         coefficients[i] = 0;
+-                    }
+-                }
++        for (int i = 0; i < getOriginalNumDecisionVariables(); i++) {
++            Integer row = getBasicRow(i);
++            if (row != null) {
++                coefficients[i] = getEntry(row, getRhsOffset());
++            } else {
++                coefficients[i] = mostNegative;
+             }
+         }
+         return new RealPointValuePair(coefficients, f.getValue(coefficients));
+     }

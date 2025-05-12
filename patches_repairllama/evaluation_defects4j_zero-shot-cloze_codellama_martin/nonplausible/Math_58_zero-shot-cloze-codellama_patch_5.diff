@@ -1,0 +1,13 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/19d8f3eb-a452-4826-886d-eb2bfef66d3c_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3e1f2a57-043a-446d-b42a-bb91abe0c68e_fixed.java
+index d580047..fc73e60 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/19d8f3eb-a452-4826-886d-eb2bfef66d3c_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3e1f2a57-043a-446d-b42a-bb91abe0c68e_fixed.java
+@@ -1,4 +1,7 @@
+     public double[] fit() {
+         final double[] guess = (new ParameterGuesser(getObservations())).guess();
+-        return fit(new Gaussian.Parametric(), guess);
++       final LevenbergMarquardtOptimizer optimizer = new LevenbergMarquardtOptimizer();
++        final LeastSquaresProblem problem = new LeastSquaresBuilder().start(guess).model(this).target(getObservations()).maxEvaluations(1000).maxIterations(1000).build();
++        final LeastSquaresOptimizer.Optimum result = optimizer.optimize(problem);
++        return result.getPoint().toArray();
+     }

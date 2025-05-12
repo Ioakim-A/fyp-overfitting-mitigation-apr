@@ -1,0 +1,63 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/eba7029c-f858-4614-8e43-bae995fc179b_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c194dab2-37e6-48ea-a51b-eb06f934db46_fixed.java
+index a7d0787..98ce589 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/eba7029c-f858-4614-8e43-bae995fc179b_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c194dab2-37e6-48ea-a51b-eb06f934db46_fixed.java
+@@ -1,54 +1,57 @@
+     /**
+      * Returns the <code>Object</code> of type <code>clazz</code>
+      * with the value of <code>str</code>.
+      *
+      * @param str the command line value
+      * @param clazz the type of argument
+      * @return The instance of <code>clazz</code> initialised with
+      * the value of <code>str</code>.
+      * @throws ParseException if the value creation for the given class failed
+      */
+     @SuppressWarnings("unchecked") // returned value will have type T because it is fixed by clazz
+     public static <T> T createValue(final String str, final Class<T> clazz) throws ParseException
+     {
+         if (PatternOptionBuilder.STRING_VALUE == clazz)
+         {
+             return (T) str;
+         }
+         else if (PatternOptionBuilder.OBJECT_VALUE == clazz)
+         {
+             return (T) createObject(str);
+         }
+         else if (PatternOptionBuilder.NUMBER_VALUE == clazz)
+         {
+             return (T) createNumber(str);
+         }
+         else if (PatternOptionBuilder.DATE_VALUE == clazz)
+         {
+             return (T) createDate(str);
+         }
+         else if (PatternOptionBuilder.CLASS_VALUE == clazz)
+         {
+             return (T) createClass(str);
+         }
+         else if (PatternOptionBuilder.FILE_VALUE == clazz)
+         {
+             return (T) createFile(str);
+         }
+         else if (PatternOptionBuilder.EXISTING_FILE_VALUE == clazz)
+         {
+             return (T) openFile(str);
+         }
+         else if (PatternOptionBuilder.FILES_VALUE == clazz)
+         {
+             return (T) createFiles(str);
+         }
+         else if (PatternOptionBuilder.URL_VALUE == clazz)
+         {
+             return (T) createURL(str);
+         }
+         else
+         {
+-            return null;
++// buggy code
++//            return null;
++            return clazz.cast(null);
++
+         }
+     }

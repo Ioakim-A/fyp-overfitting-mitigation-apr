@@ -1,0 +1,39 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e779c9db-3e2d-427d-bab8-15095a7c3c93_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3aaf6333-1634-4f0f-a98e-a976c8f056b2_fixed.java
+index 546f262..36b49d5 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e779c9db-3e2d-427d-bab8-15095a7c3c93_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3aaf6333-1634-4f0f-a98e-a976c8f056b2_fixed.java
+@@ -1,29 +1,31 @@
+     /**
+      * <p>Throws a {@link MissingOptionException} if all of the
+      * required options are no present.</p>
+      *
+      * @throws MissingOptionException if any of the required Options
+      * are not present.
+      */
+     protected void checkRequiredOptions()
+         throws MissingOptionException
+     {
+         // if there are required options that have not been
+         // processsed
+         if (getRequiredOptions().size() > 0)
+         {
+             Iterator iter = getRequiredOptions().iterator();
+             StringBuffer buff = new StringBuffer("Missing required option");
+             buff.append(getRequiredOptions().size() == 1 ? "" : "s");
+             buff.append(": ");
+-
+-
+             // loop through the required options
+             while (iter.hasNext())
+             {
+                 buff.append(iter.next());
++// buggy code
++//            }
++//            throw new MissingOptionException(buff.toString());
++                buff.append(" ");
+             }
++            throw new MissingOptionException(buff.substring(0, buff.length() - 1));
+ 
+-            throw new MissingOptionException(buff.toString());
+         }
+     }

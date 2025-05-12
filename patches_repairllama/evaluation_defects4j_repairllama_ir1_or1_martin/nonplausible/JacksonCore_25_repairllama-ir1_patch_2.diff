@@ -1,0 +1,52 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f1024b82-4fd0-4544-883e-74ee7f29e438_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3a3b9966-a6eb-403a-b6b9-ffb184c8cafc_fixed.java
+index 8dfbd84..6c2b5e6 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f1024b82-4fd0-4544-883e-74ee7f29e438_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3a3b9966-a6eb-403a-b6b9-ffb184c8cafc_fixed.java
+@@ -1,43 +1,24 @@
+    private String _handleOddName2(int startPtr, int hash, int[] codes) throws IOException
+     {
+         _textBuffer.resetWithShared(_inputBuffer, startPtr, (_inputPtr - startPtr));
+         char[] outBuf = _textBuffer.getCurrentSegment();
+         int outPtr = _textBuffer.getCurrentSegmentSize();
+         final int maxCode = codes.length;
+-
+         while (true) {
+             if (_inputPtr >= _inputEnd) {
+-                if (!_loadMore()) { // acceptable for now (will error out later)
++                if (!_loadMore()) { 
+                     break;
+                 }
+             }
+-            char c = _inputBuffer[_inputPtr];
++            char c = _inputBuffer[_inputPtr++];
+             int i = (int) c;
+             if (i <= maxCode) {
+                 if (codes[i] != 0) {
+                     break;
+                 }
+             } else if (!Character.isJavaIdentifierPart(c)) {
+                 break;
+             }
+-            ++_inputPtr;
+             hash = (hash * CharsToNameCanonicalizer.HASH_MULT) + i;
+-            // Ok, let's add char to output:
+             outBuf[outPtr++] = c;
+-
+-            // Need more room?
+-            if (outPtr >= outBuf.length) {
+-                outBuf = _textBuffer.finishCurrentSegment();
+-                outPtr = 0;
+-            }
+-        }
+-        _textBuffer.setCurrentLength(outPtr);
+-        {
+-            TextBuffer tb = _textBuffer;
+-            char[] buf = tb.getTextBuffer();
+-            int start = tb.getTextOffset();
+-            int len = tb.size();
+-
+-            return _symbols.findSymbol(buf, start, len, hash);
+-        }
+-    }
++            if (outPtr >= out
+\ No newline at end of file

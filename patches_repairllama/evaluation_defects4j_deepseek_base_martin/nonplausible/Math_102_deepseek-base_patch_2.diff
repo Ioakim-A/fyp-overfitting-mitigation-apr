@@ -1,0 +1,66 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/52ac3289-b468-4642-a46b-d086e77d23aa_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f3bab079-5fce-48aa-a968-43012821d02d_fixed.java
+index 8b0cd97..173185b 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/52ac3289-b468-4642-a46b-d086e77d23aa_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f3bab079-5fce-48aa-a968-43012821d02d_fixed.java
+@@ -1,30 +1,57 @@
+      /**
+      * {@inheritDoc}
+      * <p><strong>Note: </strong>This implementation rescales the 
+      * <code>expected</code> array if necessary to ensure that the sum of the
+      * expected and observed counts are equal.</p>
+      * 
+      * @param observed array of observed frequency counts
+      * @param expected array of expected frequency counts
+      * @return chi-square test statistic
+      * @throws IllegalArgumentException if preconditions are not met
+      * or length is less than 2
+      */
+     public double chiSquare(double[] expected, long[] observed)
+         throws IllegalArgumentException {
+         if ((expected.length < 2) || (expected.length != observed.length)) {
+             throw new IllegalArgumentException(
+                     "observed, expected array lengths incorrect");
+         }
+         if (!isPositive(expected) || !isNonNegative(observed)) {
+             throw new IllegalArgumentException(
+                 "observed counts must be non-negative and expected counts must be postive");
+         }
+-        double sumSq = 0.0d;
+-        double dev = 0.0d;
++        double sumSq = 0.0;
+         for (int i = 0; i < observed.length; i++) {
+-                dev = ((double) observed[i] - expected[i]);
+-                sumSq += dev * dev / expected[i];
++            sumSq += Math.pow(observed[i] - expected[i], 2) / expected[i];
++        }
++        return sumSq;
++    }
++
++    /**
++     * {@inheritDoc}
++     * <p><strong>Note: </strong>This implementation rescales the 
++     * <code>expected</code> array if necessary to ensure that the sum of the
++     * expected and observed counts are equal.</p>
++     * 
++     * @param observed array of observed frequency counts
++     * @param expected array of expected frequency counts
++     * @return chi-square test statistic
++     * @throws IllegalArgumentException if preconditions are not met
++     * or length is less than 2
++     */
++    public double chiSquare(double[] expected, int[] observed)
++        throws IllegalArgumentException {
++        if ((expected.length < 2) || (expected.length != observed.length)) {
++            throw new IllegalArgumentException(
++                    "observed, expected array lengths incorrect");
++        }
++        if (!isPositive(expected) || !isNonNegative(observed)) {
++            throw new IllegalArgumentException(
++                "observed counts must be non-negative and expected counts must be postive");
++        }
++        double sumSq = 0.0;
++        for (int i = 0; i < observed.length; i++) {
++            sumSq += Math.pow(observed[i] - expected[i], 2) / expected[i];
+         }
+         return sumSq;
+     }

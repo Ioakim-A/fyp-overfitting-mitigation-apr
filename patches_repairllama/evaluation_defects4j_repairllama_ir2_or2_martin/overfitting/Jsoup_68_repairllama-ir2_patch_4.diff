@@ -1,0 +1,28 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f54cac29-0d7d-4b0f-81ce-a79f522f1be0_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/aaa51812-85d6-4068-9468-ef112864bdeb_fixed.java
+index 511560e..3e35269 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f54cac29-0d7d-4b0f-81ce-a79f522f1be0_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/aaa51812-85d6-4068-9468-ef112864bdeb_fixed.java
+@@ -1,21 +1,17 @@
+     private boolean inSpecificScope(String[] targetNames, String[] baseTypes, String[] extraTypes) {
+-        // https://html.spec.whatwg.org/multipage/parsing.html#has-an-element-in-the-specific-scope
+-        int bottom = stack.size() -1;
++       final int bottom = stack.size() -1;
+         if (bottom > MaxScopeSearchDepth) {
+-            bottom = MaxScopeSearchDepth;
++            return true;
+         }
+         final int top = bottom > MaxScopeSearchDepth ? bottom - MaxScopeSearchDepth : 0;
+-        // don't walk too far up the tree
+-
+         for (int pos = bottom; pos >= top; pos--) {
+             final String elName = stack.get(pos).nodeName();
+             if (inSorted(elName, targetNames))
+                 return true;
+             if (inSorted(elName, baseTypes))
+                 return false;
+             if (extraTypes != null && inSorted(elName, extraTypes))
+                 return false;
+         }
+-        //Validate.fail("Should not be reachable"); // would end up false because hitting 'html' at root (basetypes)
+         return false;
+     }

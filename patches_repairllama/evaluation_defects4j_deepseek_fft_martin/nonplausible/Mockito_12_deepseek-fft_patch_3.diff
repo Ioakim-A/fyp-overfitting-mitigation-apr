@@ -1,0 +1,26 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4043ba2e-979c-477a-b420-3d57a1170c81_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/094ddfb2-488f-4a06-b97a-1d3168c0bc57_fixed.java
+index bada2b6..64f372e 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4043ba2e-979c-477a-b420-3d57a1170c81_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/094ddfb2-488f-4a06-b97a-1d3168c0bc57_fixed.java
+@@ -1,16 +1,20 @@
+     /**
+      * Finds the generic type (parametrized type) of the field. If the field is not generic it returns Object.class. 
+      * 
+      * @param field
+      * @return
+      */
+     public Class getGenericType(Field field) {        
+         Type generic = field.getGenericType();
+         if (generic != null && generic instanceof ParameterizedType) {
+             Type actual = ((ParameterizedType) generic).getActualTypeArguments()[0];
++// buggy code
++//                return (Class) actual;
++//                //in case of nested generics we don't go deep
++            if(actual instanceof Class){
+                 return (Class) actual;
+-                //in case of nested generics we don't go deep
+             }
+ 
++        }
+         return Object.class;
+     }

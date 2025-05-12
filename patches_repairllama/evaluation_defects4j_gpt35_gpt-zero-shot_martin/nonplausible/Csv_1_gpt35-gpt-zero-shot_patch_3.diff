@@ -1,0 +1,19 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/447d5285-92fc-4329-94c8-4e66e142cf83_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/20a81b01-fa9b-457e-b9cd-498f0f1c6682_fixed.java
+index e19f641..bcdba6f 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/447d5285-92fc-4329-94c8-4e66e142cf83_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/20a81b01-fa9b-457e-b9cd-498f0f1c6682_fixed.java
+@@ -1,8 +1,13 @@
+     public int read() throws IOException {
+         int current = super.read();
++        
+         if (current == '\n') {
++            current = super.read();
++            if (current == '\r') {
++                current = super.read();
++            }
+             lineCounter++;
+         }
+         lastChar = current;
+         return lastChar;
+     }
+\ No newline at end of file

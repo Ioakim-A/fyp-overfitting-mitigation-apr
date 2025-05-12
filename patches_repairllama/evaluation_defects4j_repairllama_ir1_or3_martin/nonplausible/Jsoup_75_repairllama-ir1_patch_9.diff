@@ -1,0 +1,24 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bc3a2a62-d407-4d6d-99d8-98df024629a6_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/63036fc2-e9c3-4198-b992-61d9e8406d82_fixed.java
+index 98b456f..e3612f2 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bc3a2a62-d407-4d6d-99d8-98df024629a6_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/63036fc2-e9c3-4198-b992-61d9e8406d82_fixed.java
+@@ -1,17 +1,11 @@
+     final void html(final Appendable accum, final Document.OutputSettings out) throws IOException {
+         final int sz = size;
+         for (int i = 0; i < sz; i++) {
+-            // inlined from Attribute.html()
+             final String key = keys[i];
+             final String val = vals[i];
++            if (key != null) {
+                 accum.append(' ').append(key);
+-
+-            // collapse checked=null, checked="", checked=checked; write out others
+                 if (!(out.syntax() == Document.OutputSettings.Syntax.html
+-                && (val == null || val.equals(key) && Attribute.isBooleanAttribute(key)))) {
+-                accum.append("=\"");
+-                Entities.escape(accum, val == null ? EmptyString : val, out, true, false, false);
+-                accum.append('"');
+-            }
++                    && (val == null || val.equals(key) && Attribute.            }
+         }
+     }

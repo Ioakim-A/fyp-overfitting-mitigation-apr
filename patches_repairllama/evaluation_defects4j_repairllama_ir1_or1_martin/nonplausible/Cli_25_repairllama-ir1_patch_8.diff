@@ -1,0 +1,51 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/37a7db26-3449-4ad0-8e25-79cb09d67d9d_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/42aea083-7e3a-4551-90b9-65465bf95d34_fixed.java
+index a3c5bc0..dd4da08 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/37a7db26-3449-4ad0-8e25-79cb09d67d9d_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/42aea083-7e3a-4551-90b9-65465bf95d34_fixed.java
+@@ -1,43 +1,29 @@
+    protected StringBuffer renderWrappedText(StringBuffer sb, int width, 
+                                              int nextLineTabStop, String text)
+     {
+         int pos = findWrapPos(text, width, 0);
+-
+         if (pos == -1)
+         {
+             sb.append(rtrim(text));
+-
+             return sb;
+         }
+         sb.append(rtrim(text.substring(0, pos))).append(defaultNewLine);
+-
+         if (nextLineTabStop >= width)
+         {
+-            // stops infinite loop happening
+             nextLineTabStop = width - 1;
+         }
+-
+-        // all following lines must be padded with nextLineTabStop space 
+-        // characters
+         final String padding = createPadding(nextLineTabStop);
+-
+         while (true)
+         {
+-            text = padding + text.substring(pos).trim();
++            text = padding + text.substring(pos);
+             pos = findWrapPos(text, width, 0);
+-
+             if (pos == -1)
+             {
+                 sb.append(text);
+-
+                 return sb;
+             }
+-            
+             if ( (text.length() > width) && (pos == nextLineTabStop - 1) ) 
+             {
+                 pos = width;
+             }
+-
+-            sb.append(rtrim(text.substring(0, pos))).append(defaultNewLine);
+-        }
+-    }
++            sb
+\ No newline at end of file

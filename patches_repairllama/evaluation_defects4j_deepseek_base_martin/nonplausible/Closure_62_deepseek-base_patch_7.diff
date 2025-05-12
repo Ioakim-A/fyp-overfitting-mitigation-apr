@@ -1,0 +1,54 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6562725c-7987-4d03-aa33-d34ec90c70e2_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e19c367a-bf77-4b17-a1f3-902d5b659bbc_fixed.java
+index 904dba7..f355fe3 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6562725c-7987-4d03-aa33-d34ec90c70e2_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e19c367a-bf77-4b17-a1f3-902d5b659bbc_fixed.java
+@@ -1,46 +1,44 @@
+   private String format(JSError error, boolean warning) {
+     // extract source excerpt
+     SourceExcerptProvider source = getSource();
+     String sourceExcerpt = source == null ? null :
+         excerpt.get(
+             source, error.sourceName, error.lineNumber, excerptFormatter);
+-
+     // formatting the message
+     StringBuilder b = new StringBuilder();
+     if (error.sourceName != null) {
+       b.append(error.sourceName);
+       if (error.lineNumber > 0) {
+         b.append(':');
+         b.append(error.lineNumber);
+       }
+       b.append(": ");
+     }
+-
+     b.append(getLevelName(warning ? CheckLevel.WARNING : CheckLevel.ERROR));
+     b.append(" - ");
+-
+     b.append(error.description);
+     b.append('\n');
+     if (sourceExcerpt != null) {
+       b.append(sourceExcerpt);
+       b.append('\n');
+       int charno = error.getCharno();
+-
+       // padding equal to the excerpt and arrow at the end
+       // charno == sourceExpert.length() means something is missing
+       // at the end of the line
+       if (excerpt.equals(LINE)
+-          && 0 <= charno && charno < sourceExcerpt.length()) {
++          && charno == sourceExcerpt.length()) {
++        b.append(" ");
++      } else {
+         for (int i = 0; i < charno; i++) {
+           char c = sourceExcerpt.charAt(i);
+           if (Character.isWhitespace(c)) {
+             b.append(c);
+           } else {
+             b.append(' ');
+           }
+         }
+         b.append("^\n");
+       }
+     }
+     return b.toString();
+   }

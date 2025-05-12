@@ -1,0 +1,39 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c597748d-7777-4f0c-90c6-fde42c490bdf_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6e840d68-38ef-49bd-b77f-07e2146f4834_fixed.java
+index 2d9cf24..0c6587a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c597748d-7777-4f0c-90c6-fde42c490bdf_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6e840d68-38ef-49bd-b77f-07e2146f4834_fixed.java
+@@ -1,33 +1,23 @@
+     public void validateSubType(DeserializationContext ctxt, JavaType type) throws JsonMappingException
+     {
+-        // There are certain nasty classes that could cause problems, mostly
+-        // via default typing -- catch them here.
+         final Class<?> raw = type.getRawClass();
+         String full = raw.getName();
+-
+         main_check:
+         do {
+             if (_cfgIllegalClassNames.contains(full)) {
+                 break;
+             }
+-
+-            // 18-Dec-2017, tatu: As per [databind#1855], need bit more sophisticated handling
+-            //    for some Spring framework types
+-            // 05-Jan-2017, tatu: ... also, only applies to classes, not interfaces
+-            if (full.startsWith(PREFIX_STRING)) {
++           if (full.startsWith("org.springframework")) {
+                 for (Class<?> cls = raw; cls != Object.class; cls = cls.getSuperclass()) {
+                     String name = cls.getSimpleName();
+-                    // looking for "AbstractBeanFactoryPointcutAdvisor" but no point to allow any is there?
+                     if ("AbstractPointcutAdvisor".equals(name)
+-                            // ditto  for "FileSystemXmlApplicationContext": block all ApplicationContexts
+                             || "AbstractApplicationContext".equals(name)) {
+                         break main_check;
+                     }
+                 }
+             }
+             return;
+         } while (false);
+-
+         throw JsonMappingException.from(ctxt,
+                 String.format("Illegal type (%s) to deserialize: prevented for security reasons", full));
+     }

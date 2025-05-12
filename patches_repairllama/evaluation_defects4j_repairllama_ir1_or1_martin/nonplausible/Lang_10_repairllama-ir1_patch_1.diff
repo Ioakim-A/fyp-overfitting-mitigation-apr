@@ -1,0 +1,48 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/61e44f1f-77f2-4183-b480-4779eed47941_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/59fd7c12-4edf-4a61-8409-28415cc02676_fixed.java
+index be3dcc8..42a393d 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/61e44f1f-77f2-4183-b480-4779eed47941_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/59fd7c12-4edf-4a61-8409-28415cc02676_fixed.java
+@@ -1,41 +1,34 @@
+    private static StringBuilder escapeRegex(StringBuilder regex, String value, boolean unquote) {
+         boolean wasWhite= false;
+         for(int i= 0; i<value.length(); ++i) {
+             char c= value.charAt(i);
+             if(Character.isWhitespace(c)) {
+                 if(!wasWhite) {
+                     wasWhite= true;
+                     regex.append("\\s*+");
+                 }
+                 continue;
+             }
+             wasWhite= false;
+             switch(c) {
+             case '\'':
+                 if(unquote) {
+                     if(++i==value.length()) {
+                         return regex;
+                     }
+                     c= value.charAt(i);
+                 }
+                 break;
+             case '?':
+             case '[':
+             case ']':
+             case '(':
+             case ')':
+             case '{':
+             case '}':
+             case '\\':
+             case '|':
+             case '*':
+             case '+':
+             case '^':
+-            case '$':
+-            case '.':
+-                regex.append('\\');
+-            }
+-            regex.append(c);
+-        }
+-        return regex;
+-    }
++            case '$
+\ No newline at end of file

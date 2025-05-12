@@ -1,0 +1,69 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f77a6941-36fa-4363-9f71-0aaeb31c49fb_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/74de9f19-113e-4b26-beaf-51346bde9787_fixed.java
+index 7e6373a..e8827af 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f77a6941-36fa-4363-9f71-0aaeb31c49fb_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/74de9f19-113e-4b26-beaf-51346bde9787_fixed.java
+@@ -1,63 +1,51 @@
+-    protected String[] flatten(Options options, String[] arguments, boolean stopAtNonOption)
++    public String[] flatten(Options options, String[] arguments, boolean stopAtNonOption)
+     {
+         init();
+         this.options = options;
+-
+-        // an iterator for the command line tokens
+         Iterator iter = Arrays.asList(arguments).iterator();
+-
+-        // process each command line token
+         while (iter.hasNext())
+         {
+-            // get the next command line token
+             String token = (String) iter.next();
+-
+-            // handle long option --foo or --foo=bar
+             if (token.startsWith("--"))
+             {
+                 if (token.indexOf('=') != -1)
+                 {
+                     tokens.add(token.substring(0, token.indexOf('=')));
+                     tokens.add(token.substring(token.indexOf('=') + 1, token.length()));
+                 }
+                 else
+                 {
+                     tokens.add(token);
+                 }
+             }
+-
+-            // single hyphen
+             else if ("-".equals(token))
+             {
+                 tokens.add(token);
+             }
+             else if (token.startsWith("-"))
+             {
+                 if (token.length() == 2)
+                 {
+                     processOptionToken(token, stopAtNonOption);
+                 }
+                 else if (options.hasOption(token))
+                 {
+                     tokens.add(token);
+                 }
+-                // requires bursting
+                 else
+                 {
+                     burstToken(token, stopAtNonOption);
+                 }
+             }
+             else if (stopAtNonOption)
+             {
+                 process(token);
+             }
+             else
+             {
+                 tokens.add(token);
+             }
+-
+             gobble(iter);
+         }
+-
+         return (String[]) tokens.toArray(new String[tokens.size()]);
+     }

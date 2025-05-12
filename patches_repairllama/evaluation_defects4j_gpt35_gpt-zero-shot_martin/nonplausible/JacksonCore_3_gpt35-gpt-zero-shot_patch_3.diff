@@ -1,0 +1,25 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/77d4a6ab-67b5-4fc9-a438-6a71390c1c70_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f899494f-a3f7-4df0-9e4d-184ad881321f_fixed.java
+index bd45b8e..efad2fa 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/77d4a6ab-67b5-4fc9-a438-6a71390c1c70_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f899494f-a3f7-4df0-9e4d-184ad881321f_fixed.java
+@@ -1,15 +1,5 @@
+-    public UTF8StreamJsonParser(IOContext ctxt, int features, InputStream in,
+-            ObjectCodec codec, BytesToNameCanonicalizer sym,
+-            byte[] inputBuffer, int start, int end,
+-            boolean bufferRecyclable)
+-    {
+-        super(ctxt, features);
+-        _inputStream = in;
+-        _objectCodec = codec;
+-        _symbols = sym;
+-        _inputBuffer = inputBuffer;
+-        _inputPtr = start;
+-        _inputEnd = end;
+-        // If we have offset, need to omit that from byte offset, so:
+-        _bufferRecyclable = bufferRecyclable;
++        if (Feature.STRICT_DUPLICATE_DETECTION.enabledIn(features)) {
++            _seenNames = new HashSet<>();
++        } else {
++            _seenNames = null;
+         }
+\ No newline at end of file

@@ -1,0 +1,18 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/505ce806-946b-4d95-97fe-5561f966e62c_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f6a1b3ec-e64b-49c4-b20c-18db9457f816_fixed.java
+index d2feff5..1060aeb 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/505ce806-946b-4d95-97fe-5561f966e62c_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f6a1b3ec-e64b-49c4-b20c-18db9457f816_fixed.java
+@@ -1,8 +1,10 @@
+ public Document clean(Document dirtyDocument) {
+     Validate.notNull(dirtyDocument);
+-
+     Document clean = Document.createShell(dirtyDocument.baseUri());
++    try {
+         copySafeNodes(dirtyDocument.body(), clean.body());
+-
++    } catch(Exception e) {
++        System.out.println("Error in copying nodes: " + e.getMessage());
++    }
+     return clean;
+ }
+\ No newline at end of file

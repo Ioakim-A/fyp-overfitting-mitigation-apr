@@ -1,0 +1,37 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/209722fd-b921-45ae-8d2c-7f3d1de5191b_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/66896793-8f16-49f9-bfcb-5e6ae3d9d57e_fixed.java
+index 6f9eae3..81a332a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/209722fd-b921-45ae-8d2c-7f3d1de5191b_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/66896793-8f16-49f9-bfcb-5e6ae3d9d57e_fixed.java
+@@ -1,21 +1,28 @@
+     private void popStackToClose(Token.EndTag endTag) {
+-        String elName = endTag.name();
++// buggy code
++//        String elName = endTag.name();
++//        for (int pos = stack.size() -1; pos >= 0; pos--) {
++//            Element next = stack.get(pos);
++//            if (next.nodeName().equals(elName)) {
++//                stack.remove(pos);
++//                break;
++//            }
++//        }
++
+         Element firstFound = null;
+-
+         for (int pos = stack.size() -1; pos >= 0; pos--) {
+             Element next = stack.get(pos);
+             if (next.nodeName().equals(elName)) {
+                 firstFound = next;
+                 break;
+             }
+         }
+         if (firstFound == null)
+-            return; // not found, skip
+-
++            return; 
+         for (int pos = stack.size() -1; pos >= 0; pos--) {
+             Element next = stack.get(pos);
+             stack.remove(pos);
+             if (next == firstFound)
+                 break;
+         }
+     }

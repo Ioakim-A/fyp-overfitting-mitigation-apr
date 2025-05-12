@@ -1,0 +1,27 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0d634e64-05af-4aac-8350-07854a295480_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fafefb14-e40c-4cc9-85e5-6ae7973e13ce_fixed.java
+index 1ac6781..0d416e1 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0d634e64-05af-4aac-8350-07854a295480_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fafefb14-e40c-4cc9-85e5-6ae7973e13ce_fixed.java
+@@ -1,21 +1,20 @@
+     public static boolean verifyCheckSum(byte[] header) {
+         long storedSum = 0;
+         long unsignedSum = 0;
+-        long signedSum = 0;
+-
++        long signedSum = -1;
+         int digits = 0;
+         for (int i = 0; i < header.length; i++) {
+             byte b = header[i];
+             if (CHKSUM_OFFSET  <= i && i < CHKSUM_OFFSET + CHKSUMLEN) {
+                 if ('0' <= b && b <= '7' && digits++ < 6) {
+                     storedSum = storedSum * 8 + b - '0';
+                 } else if (digits > 0) {
+                     digits = 6;
+                 }
+                 b = ' ';
+             }
+             unsignedSum += 0xff & b;
+             signedSum += b;
+         }
+         return storedSum == unsignedSum || storedSum == signedSum;
+     }

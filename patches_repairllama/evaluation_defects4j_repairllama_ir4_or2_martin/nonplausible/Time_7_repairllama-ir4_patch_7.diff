@@ -1,0 +1,42 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1274dd19-4e0c-4c6e-8dbc-a22df5a47bee_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6eaa0be0-6f69-406f-8e11-358193e5d8f9_fixed.java
+index 284dc9c..facd41f 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1274dd19-4e0c-4c6e-8dbc-a22df5a47bee_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6eaa0be0-6f69-406f-8e11-358193e5d8f9_fixed.java
+@@ -1,29 +1,34 @@
+     public int parseInto(ReadWritableInstant instant, String text, int position) {
+         DateTimeParser parser = requireParser();
+         if (instant == null) {
+             throw new IllegalArgumentException("Instant must not be null");
+         }
+-        
+         long instantMillis = instant.getMillis();
+         Chronology chrono = instant.getChronology();
+-        long instantLocal = instantMillis + chrono.getZone().getOffset(instantMillis);
++// buggy code
++//         long instantLocal = instantMillis + chrono.getZone().getOffset(instantMillis);
++//         chrono = selectChronology(chrono);
++//         int defaultYear = chrono.year().get(instantLocal);
++       long instantLocal = instantMillis;
++        if (chrono.getZone() != null) {
++            instantLocal = instantMillis + chrono.getZone().getOffset(instantMillis);
++        }
+         chrono = selectChronology(chrono);
+         int defaultYear = chrono.year().get(instantLocal);
+-        
+         DateTimeParserBucket bucket = new DateTimeParserBucket(
+             instantLocal, chrono, iLocale, iPivotYear, defaultYear);
+         int newPos = parser.parseInto(bucket, text, position);
+         instant.setMillis(bucket.computeMillis(false, text));
+         if (iOffsetParsed && bucket.getOffsetInteger() != null) {
+             int parsedOffset = bucket.getOffsetInteger();
+             DateTimeZone parsedZone = DateTimeZone.forOffsetMillis(parsedOffset);
+             chrono = chrono.withZone(parsedZone);
+         } else if (bucket.getZone() != null) {
+             chrono = chrono.withZone(bucket.getZone());
+         }
+         instant.setChronology(chrono);
+         if (iZone != null) {
+             instant.setZone(iZone);
+         }
+         return newPos;
+     }

@@ -1,0 +1,42 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/176003e4-b68f-46bb-b791-80a553a0472e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8dc07bfc-a53c-4566-a603-2d04bcf32c21_fixed.java
+index 4ae5431..c1a0d7d 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/176003e4-b68f-46bb-b791-80a553a0472e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8dc07bfc-a53c-4566-a603-2d04bcf32c21_fixed.java
+@@ -1,33 +1,32 @@
+     public static boolean equal(GeneralPath p1, GeneralPath p2) {
+-        if (p1 == null) {
+-            return (p2 == null);
++        if (p1 == p2) {
++            return true;
+         }
+-        if (p2 == null) {
++        if (p1 == null || p2 == null) {
+             return false;
+         }
+         if (p1.getWindingRule() != p2.getWindingRule()) {
+             return false;
+         }
+         PathIterator iterator1 = p1.getPathIterator(null);
+-        PathIterator iterator2 = p1.getPathIterator(null);
+-        double[] d1 = new double[6];
++        PathIterator iterator2 =        double[] d1 = new double[6];
+         double[] d2 = new double[6];
+         boolean done = iterator1.isDone() && iterator2.isDone();
+         while (!done) {
+             if (iterator1.isDone() != iterator2.isDone()) {
+                 return false;
+             }
+             int seg1 = iterator1.currentSegment(d1);
+             int seg2 = iterator2.currentSegment(d2);
+             if (seg1 != seg2) {
+                 return false;
+             }
+             if (!Arrays.equals(d1, d2)) {
+                 return false;
+             }
+             iterator1.next();
+             iterator2.next();
+             done = iterator1.isDone() && iterator2.isDone();
+         }
+         return true;
+     }

@@ -1,0 +1,20 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/51f0828a-28d7-4092-a435-72421b4e805b_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/19820ea7-9def-4e72-a225-ebff600e0611_fixed.java
+index 8f6a05a..e113d1e 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/51f0828a-28d7-4092-a435-72421b4e805b_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/19820ea7-9def-4e72-a225-ebff600e0611_fixed.java
+@@ -1,11 +1,13 @@
+     public XmlDeclaration asXmlDeclaration() {
+         String data = getData();
+         Document doc = Jsoup.parse("<" + data.substring(1, data.length() -1) + ">", baseUri(), Parser.xmlParser());
+         XmlDeclaration decl = null;
+-        if (doc.childNodeSize() > 0) {
++
++// fixed code
++        if (!doc.childNodes().isEmpty()) {
+             Element el = doc.child(0);
+             decl = new XmlDeclaration(NodeUtils.parser(doc).settings().normalizeTag(el.tagName()), data.startsWith("!"));
+             decl.attributes().addAll(el.attributes());
+         }
+         return decl;
+     }
+\ No newline at end of file

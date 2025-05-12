@@ -1,0 +1,38 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4f2c3d4f-21b9-4f5c-90d3-3d724e8b6ebc_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/37505abb-5de6-44b1-a8c6-8d1105fd6442_fixed.java
+index 39dd8e7..376a7f1 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4f2c3d4f-21b9-4f5c-90d3-3d724e8b6ebc_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/37505abb-5de6-44b1-a8c6-8d1105fd6442_fixed.java
+@@ -1,30 +1,29 @@
+     private Attribute parseAttribute() {
+         tq.consumeWhitespace();
+         String key = tq.consumeAttributeKey();
+         String value = "";
+         tq.consumeWhitespace();
+         if (tq.matchChomp("=")) {
+             tq.consumeWhitespace();
+-
+             if (tq.matchChomp(SQ)) {
+                 value = tq.chompTo(SQ);
+             } else if (tq.matchChomp(DQ)) {
+                 value = tq.chompTo(DQ);
+             } else {
+                 StringBuilder valueAccum = new StringBuilder();
+-                // no ' or " to look for, so scan to end tag or space (or end of stream)
+                 while (!tq.matchesAny("<", "/>", ">") && !tq.matchesWhitespace() && !tq.isEmpty()) {
+                     valueAccum.append(tq.consume());
+                 }
+                 value = valueAccum.toString();
+             }
+             tq.consumeWhitespace();
+         }
+         if (key.length() != 0)
+             return Attribute.createFromEncoded(key, value);
+         else {
+-            tq.consume();
+-                
++// buggy code
++//             tq.consume();
++           tq.consumeAttributeValue();
+             return null;
+         }
+     }

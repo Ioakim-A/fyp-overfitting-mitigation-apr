@@ -1,0 +1,39 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ab525d6c-ad4a-4eb6-90cf-2246b1d52486_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a245a194-7770-4993-bf96-75e898d4724e_fixed.java
+index b450ee6..af4e1df 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ab525d6c-ad4a-4eb6-90cf-2246b1d52486_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a245a194-7770-4993-bf96-75e898d4724e_fixed.java
+@@ -1,32 +1,31 @@
+     public JsonSerializer<?> createContextual(SerializerProvider serializers,
+             BeanProperty property) throws JsonMappingException
+     {
+         if (property != null) {
+             JsonFormat.Value format = serializers.getAnnotationIntrospector().findFormat((Annotated)property.getMember());
+             if (format != null) {
+-
+-            	// Simple case first: serialize as numeric timestamp?
+                 JsonFormat.Shape shape = format.getShape();
+                 if (shape.isNumeric()) {
+                     return withFormat(Boolean.TRUE, null);
+                 }
++// buggy code
++//                if (format.getShape() == JsonFormat.Shape.STRING) {
+ 
+-                if (format.getShape() == JsonFormat.Shape.STRING) {
+                     TimeZone tz = format.getTimeZone();
+                     final String pattern = format.hasPattern()
+                                     ? format.getPattern()
+                                     : StdDateFormat.DATE_FORMAT_STR_ISO8601;
+                     final Locale loc = format.hasLocale()
+                                     ? format.getLocale()
+                                     : serializers.getLocale();
+                     SimpleDateFormat df = new SimpleDateFormat(pattern, loc);
+                     if (tz == null) {
+                         tz = serializers.getTimeZone();
+                     }
+                     df.setTimeZone(tz);
+                     return withFormat(Boolean.FALSE, df);
+                 }
+             }
+         }
+         return this;
+     }

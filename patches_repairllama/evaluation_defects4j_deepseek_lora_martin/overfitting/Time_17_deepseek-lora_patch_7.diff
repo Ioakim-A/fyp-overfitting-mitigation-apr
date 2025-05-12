@@ -1,0 +1,45 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a487acc4-840b-4ba3-8463-84004b9fb8dd_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cf2c8ad2-af27-42a5-9ab8-8b611b4a550a_fixed.java
+index 03b03d7..0258b55 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a487acc4-840b-4ba3-8463-84004b9fb8dd_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cf2c8ad2-af27-42a5-9ab8-8b611b4a550a_fixed.java
+@@ -1,25 +1,35 @@
+     /**
+      * Adjusts the offset to be the earlier or later one during an overlap.
+      * 
+      * @param instant  the instant to adjust
+      * @param earlierOrLater  false for earlier, true for later
+      * @return the adjusted instant millis
+      */
+     public long adjustOffset(long instant, boolean earlierOrLater) {
+         // a bit messy, but will work in all non-pathological cases
+-        
+         // evaluate 3 hours before and after to work out if anything is happening
+-        long instantBefore = convertUTCToLocal(instant - 3 * DateTimeConstants.MILLIS_PER_HOUR);
+-        long instantAfter = convertUTCToLocal(instant + 3 * DateTimeConstants.MILLIS_PER_HOUR);
++// buggy code
++//        long instantBefore = convertUTCToLocal(instant - 3 * DateTimeConstants.MILLIS_PER_HOUR);
++//        long instantAfter = convertUTCToLocal(instant + 3 * DateTimeConstants.MILLIS_PER_HOUR);
++//        if (instantBefore == instantAfter) {
++//            return instant;  // not an overlap (less than is a gap, equal is normal case)
++//        }
++//        // work out range of instants that have duplicate local times
++//        long local = convertUTCToLocal(instant);
++//        return convertLocalToUTC(local, false, earlierOrLater ? instantAfter : instantBefore);
++//        // calculate result
++//          // currently in later offset
++//          // currently in earlier offset
++        long instantBefore = instant - 3 * DateTimeConstants.MILLIS_PER_HOUR;
++        long instantAfter = instant + 3 * DateTimeConstants.MILLIS_PER_HOUR;
+         if (instantBefore == instantAfter) {
+             return instant;  // not an overlap (less than is a gap, equal is normal case)
+         }
+-        
+         // work out range of instants that have duplicate local times
+         long local = convertUTCToLocal(instant);
+         return convertLocalToUTC(local, false, earlierOrLater ? instantAfter : instantBefore);
+-        
+         // calculate result
+           // currently in later offset
+           // currently in earlier offset
++
+     }

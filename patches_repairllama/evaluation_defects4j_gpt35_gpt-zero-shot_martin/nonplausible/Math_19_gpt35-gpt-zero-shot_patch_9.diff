@@ -1,0 +1,77 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/606d6348-8ffc-44c2-8725-a7061d3a0b23_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c12218a8-e55e-412f-b5e7-06a5b8a906ca_fixed.java
+index 248f3ee..416ec39 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/606d6348-8ffc-44c2-8725-a7061d3a0b23_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c12218a8-e55e-412f-b5e7-06a5b8a906ca_fixed.java
+@@ -1,58 +1,61 @@
+     private void checkParameters() {
+         final double[] init = getStartPoint();
+         final double[] lB = getLowerBound();
+         final double[] uB = getUpperBound();
+-
+-        // Checks whether there is at least one finite bound value.
+         boolean hasFiniteBounds = false;
+         for (int i = 0; i < lB.length; i++) {
+             if (!Double.isInfinite(lB[i]) ||
+                 !Double.isInfinite(uB[i])) {
+                 hasFiniteBounds = true;
+                 break;
+             }
+         }
+-        // Checks whether there is at least one infinite bound value.
+         boolean hasInfiniteBounds = false;
+         if (hasFiniteBounds) {
+             for (int i = 0; i < lB.length; i++) {
+                 if (Double.isInfinite(lB[i]) ||
+                     Double.isInfinite(uB[i])) {
+                     hasInfiniteBounds = true;
+                     break;
+                 }
+             }
+-
+             if (hasInfiniteBounds) {
+-                // If there is at least one finite bound, none can be infinite,
+-                // because mixed cases are not supported by the current code.
+                 throw new MathUnsupportedOperationException();
+             } else {
+-                // Convert API to internal handling of boundaries.
+                 boundaries = new double[2][];
+                 boundaries[0] = lB;
+                 boundaries[1] = uB;
+ 
+-                // Abort early if the normalization will overflow (cf. "encode" method).
++                // FIX: Check if boundaries is null instead of not null
++                if (boundaries != null) {
++                    boolean validBounds = true;
++                    for (int i = 0; i < boundaries[0].length; i++) {
++                        if (boundaries[0][i] > boundaries[1][i]) {
++                            validBounds = false;
++                            break;
++                        }
++                    }
++                    if (!validBounds) {
++                        throw new NotPositiveException("Invalid bounds");
++                    }
++                }
+             }
+         } else {
+-            // Convert API to internal handling of boundaries.
+             boundaries = null;
+         }
+-
+         if (inputSigma != null) {
+             if (inputSigma.length != init.length) {
+                 throw new DimensionMismatchException(inputSigma.length, init.length);
+             }
+             for (int i = 0; i < init.length; i++) {
+                 if (inputSigma[i] < 0) {
+                     throw new NotPositiveException(inputSigma[i]);
+                 }
+                 if (boundaries != null) {
+                     if (inputSigma[i] > boundaries[1][i] - boundaries[0][i]) {
+                         throw new OutOfRangeException(inputSigma[i], 0, boundaries[1][i] - boundaries[0][i]);
+                     }
+                 }
+             }
+         }
+     }
+\ No newline at end of file

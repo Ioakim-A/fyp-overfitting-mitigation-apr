@@ -1,0 +1,58 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8c22eac1-ca5e-4692-98a3-871fdf720e50_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cbc19b4a-4c2e-4e72-853c-90dd073a5fbf_fixed.java
+index cf3a96a..47c4f58 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8c22eac1-ca5e-4692-98a3-871fdf720e50_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cbc19b4a-4c2e-4e72-853c-90dd073a5fbf_fixed.java
+@@ -1,43 +1,52 @@
+     public static <T> T createValue(final String str, final Class<T> clazz) throws ParseException
+     {
+         if (PatternOptionBuilder.STRING_VALUE == clazz)
+         {
+             return (T) str;
+         }
+         else if (PatternOptionBuilder.OBJECT_VALUE == clazz)
+         {
+             return (T) createObject(str);
+         }
+         else if (PatternOptionBuilder.NUMBER_VALUE == clazz)
+         {
+             return (T) createNumber(str);
+         }
+         else if (PatternOptionBuilder.DATE_VALUE == clazz)
+         {
+             return (T) createDate(str);
+         }
+         else if (PatternOptionBuilder.CLASS_VALUE == clazz)
+         {
+             return (T) createClass(str);
+         }
+         else if (PatternOptionBuilder.FILE_VALUE == clazz)
+         {
+             return (T) createFile(str);
+         }
+         else if (PatternOptionBuilder.EXISTING_FILE_VALUE == clazz)
+         {
+             return (T) openFile(str);
+         }
+         else if (PatternOptionBuilder.FILES_VALUE == clazz)
+         {
+             return (T) createFiles(str);
+         }
+         else if (PatternOptionBuilder.URL_VALUE == clazz)
+         {
+             return (T) createURL(str);
+         }
+         else
+         {
+-            return null;
++// buggy code
++//            return null;
++           try
++            {
++                return (T) clazz.getConstructor(String.class).newInstance(str);
++            }
++            catch (Exception e)
++            {
++                throw new ParseException(e.getMessage());
++            }
+         }
+     }

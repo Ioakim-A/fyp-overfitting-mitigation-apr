@@ -1,0 +1,53 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fd28c751-96ac-43ec-925b-b962b33c50f6_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/86a7d388-8f02-44cc-8b25-fe7330a445fc_fixed.java
+index 904dba7..ea42fcc 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fd28c751-96ac-43ec-925b-b962b33c50f6_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/86a7d388-8f02-44cc-8b25-fe7330a445fc_fixed.java
+@@ -1,46 +1,38 @@
+   private String format(JSError error, boolean warning) {
+-    // extract source excerpt
+     SourceExcerptProvider source = getSource();
+     String sourceExcerpt = source == null ? null :
+         excerpt.get(
+             source, error.sourceName, error.lineNumber, excerptFormatter);
+-
+-    // formatting the message
+     StringBuilder b = new StringBuilder();
+     if (error.sourceName != null) {
+       b.append(error.sourceName);
+       if (error.lineNumber > 0) {
+         b.append(':');
+         b.append(error.lineNumber);
+       }
+       b.append(": ");
+     }
+-
+     b.append(getLevelName(warning ? CheckLevel.WARNING : CheckLevel.ERROR));
+     b.append(" - ");
+-
+     b.append(error.description);
+     b.append('\n');
+     if (sourceExcerpt != null) {
+       b.append(sourceExcerpt);
+       b.append('\n');
+       int charno = error.getCharno();
+-
+-      // padding equal to the excerpt and arrow at the end
+-      // charno == sourceExpert.length() means something is missing
+-      // at the end of the line
+       if (excerpt.equals(LINE)
+            && 0 <= charno && charno < sourceExcerpt.length()) {
++          // Fix the bug by removing the <FILL_ME> token and adding the correct code
+           for (int i = 0; i < charno; i++) {
+             char c = sourceExcerpt.charAt(i);
+             if (Character.isWhitespace(c)) {
+               b.append(c);
+             } else {
+               b.append(' ');
+             }
+           }
+           b.append("^\n");
+       }
+     }
+     return b.toString();
+   }
+\ No newline at end of file

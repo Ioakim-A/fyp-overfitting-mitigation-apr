@@ -1,0 +1,22 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f9d9e688-aab1-4f54-940d-8036a47fca2c_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/52088c25-6722-4cc2-9161-1ad661ad592e_fixed.java
+index 638669b..485786c 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f9d9e688-aab1-4f54-940d-8036a47fca2c_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/52088c25-6722-4cc2-9161-1ad661ad592e_fixed.java
+@@ -1,11 +1,14 @@
+     public ZipArchiveInputStream(InputStream inputStream,
+                                  String encoding,
+                                  boolean useUnicodeExtraFields,
+                                  boolean allowStoredEntriesWithDataDescriptor) {
+         zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
+         this.useUnicodeExtraFields = useUnicodeExtraFields;
+-        in = new PushbackInputStream(inputStream, buf.capacity());
++        in = new PushbackInputStream(inputStream, buf.length);
+         this.allowStoredEntriesWithDataDescriptor =
+             allowStoredEntriesWithDataDescriptor;
+-        // haven't read anything so far
++        if (zipEncoding instanceof UnicodeExtraFieldPolicy) {
++            unicodeExtraFieldPolicy = (UnicodeExtraFieldPolicy) zipEncoding;
++        }
++        buf = new byte[512];
+     }
+\ No newline at end of file

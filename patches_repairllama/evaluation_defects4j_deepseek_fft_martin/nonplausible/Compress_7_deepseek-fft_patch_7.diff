@@ -1,0 +1,35 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/24ecccdd-a36b-4805-a4b5-9d491183e1c3_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e844a055-21a8-4568-a4a8-acf7126aeb11_fixed.java
+index d6662c7..fb98ace 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/24ecccdd-a36b-4805-a4b5-9d491183e1c3_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e844a055-21a8-4568-a4a8-acf7126aeb11_fixed.java
+@@ -1,23 +1,27 @@
+     /**
+      * Parse an entry name from a buffer.
+      * Parsing stops when a NUL is found
+      * or the buffer length is reached.
+      *
+      * @param buffer The buffer from which to parse.
+      * @param offset The offset into the buffer from which to parse.
+      * @param length The maximum number of bytes to parse.
+      * @return The entry name.
+      */
+     public static String parseName(byte[] buffer, final int offset, final int length) {
+         StringBuffer result = new StringBuffer(length);
+         int          end = offset + length;
+-
+         for (int i = offset; i < end; ++i) {
+-            if (buffer[i] == 0) {
++// buggy code
++//            if (buffer[i] == 0) {
++//                break;
++//            }
++//            result.append((char) buffer[i]);
++            if (buffer[i] == (byte) 0) {
+                 break;
+             }
+             result.append((char) buffer[i]);
+-        }
+ 
++        }
+         return result.toString();
+     }

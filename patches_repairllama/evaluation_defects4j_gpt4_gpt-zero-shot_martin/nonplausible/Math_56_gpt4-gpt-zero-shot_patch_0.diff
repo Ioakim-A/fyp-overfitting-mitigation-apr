@@ -1,0 +1,42 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/23f33cc6-4613-439b-929e-0b4daf4401ec_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/758cb95e-01da-4449-987c-6692793322b5_fixed.java
+index 6aa74ce..abe27f7 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/23f33cc6-4613-439b-929e-0b4daf4401ec_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/758cb95e-01da-4449-987c-6692793322b5_fixed.java
+@@ -1,31 +1,29 @@
+ public int[] getCounts(int index) {
+     if (index < 0 ||
+         index >= totalSize) {
+         throw new OutOfRangeException(index, 0, totalSize);
+     }
+-
+     final int[] indices = new int[dimension];
+-
+     int count = 0;
+     for (int i = 0; i < last; i++) {
+         int idx = 0;
+         final int offset = uniCounterOffset[i];
+         while (count <= index) {
+             count += offset;
+             ++idx;
+         }
+         --idx;
+         count -= offset;
+         indices[i] = idx;
+     }
+-
+-        int idx = 1;
+-        while (count < index) {
+-            count += idx;
++    // corrected code
++    int idx = 0;
++    final int offset = uniCounterOffset[last];
++    while (count <= index) {
++        count += offset;
+         ++idx;
+     }
+     --idx;
+     indices[last] = idx;
+-
+     return indices;
+ }
+\ No newline at end of file

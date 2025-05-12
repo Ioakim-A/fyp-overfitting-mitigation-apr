@@ -1,0 +1,41 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bacdfb7a-c311-4b09-b78d-7e704256424c_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/31172ff8-c663-460c-8ae0-5a087242a61a_fixed.java
+index b2d53db..bc87ddc 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bacdfb7a-c311-4b09-b78d-7e704256424c_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/31172ff8-c663-460c-8ae0-5a087242a61a_fixed.java
+@@ -1,34 +1,30 @@
+        void read(Tokeniser t, CharacterReader r) {
+             if (r.matchesLetter()) {
+                 String name = r.consumeLetterSequence();
+                 t.tagPending.appendTagName(name.toLowerCase());
+                 t.dataBuffer.append(name);
+                 r.advance();
+                 return;
+             }
+-
+             if (t.isAppropriateEndTagToken() && !r.isEmpty()) {
+                 char c = r.consume();
+                 switch (c) {
+                     case '\t':
+                     case '\n':
+                     case '\f':
+                     case ' ':
+                         t.transition(BeforeAttributeName);
+                         break;
+                     case '/':
+                         t.transition(SelfClosingStartTag);
+                         break;
+                     case '>':
+                         t.emitTagPending();
+                         t.transition(Data);
+                         break;
+                     default:
+                         t.dataBuffer.append(c);
+                         anythingElse(t, r);
+                         break;
+                 }
+-            } else {
+-                anythingElse(t, r);
+-            }
+-        }
++            } else
+\ No newline at end of file

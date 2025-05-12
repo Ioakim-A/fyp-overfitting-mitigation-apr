@@ -1,0 +1,18 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/61fd6df8-f380-4b38-aa89-25f4478b9e5f_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d0569fa1-6f13-4fbb-ab37-befecb0dfd53_fixed.java
+index 271076e..a12bb6c 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/61fd6df8-f380-4b38-aa89-25f4478b9e5f_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d0569fa1-6f13-4fbb-ab37-befecb0dfd53_fixed.java
+@@ -1,7 +1,10 @@
+     public StringBuffer format(Calendar calendar, StringBuffer buf) {
+         if (mTimeZoneForced) {
+-            calendar = (Calendar) calendar.clone();
+-            calendar.setTimeZone(mTimeZone);
++            // Fix: Create a new instance of Calendar and set it to the same time as the original calendar
++            Calendar newCalendar = Calendar.getInstance();
++            newCalendar.setTimeInMillis(calendar.getTimeInMillis());
++            newCalendar.setTimeZone(mTimeZone);
++            calendar = newCalendar;
+         }
+         return applyRules(calendar, buf);
+     }
+\ No newline at end of file

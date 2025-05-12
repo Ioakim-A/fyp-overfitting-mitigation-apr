@@ -1,0 +1,38 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/98a46ed1-260e-4c2d-9ff7-6409e5510541_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2b1e4ef5-5be7-44bd-b368-aeb065f69c66_fixed.java
+index bfa2423..1252c42 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/98a46ed1-260e-4c2d-9ff7-6409e5510541_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2b1e4ef5-5be7-44bd-b368-aeb065f69c66_fixed.java
+@@ -1,23 +1,28 @@
+     /**
+      * Generate a random sample from the distribution.
+      *
+      * @param sampleSize the number of random values to generate.
+      * @return an array representing the random sample.
+      * @throws NotStrictlyPositiveException if {@code sampleSize} is not
+      * positive.
+      */
+-    public T[] sample(int sampleSize) throws NotStrictlyPositiveException {
++// buggy code
++//    public T[] sample(int sampleSize) throws NotStrictlyPositiveException {
++//        if (sampleSize <= 0) {
++//            throw new NotStrictlyPositiveException(LocalizedFormats.NUMBER_OF_SAMPLES,
++//                    sampleSize);
++//        }
++//        final T[]out = (T[]) java.lang.reflect.Array.newInstance(singletons.get(0).getClass(), sampleSize);
++    public T[] sample(final int sampleSize) throws NotStrictlyPositiveException {
+         if (sampleSize <= 0) {
+             throw new NotStrictlyPositiveException(LocalizedFormats.NUMBER_OF_SAMPLES,
+                     sampleSize);
+         }
+-
+-        final T[]out = (T[]) java.lang.reflect.Array.newInstance(singletons.get(0).getClass(), sampleSize);
++        final T[]out = (T[]) java.lang.reflect.Array.newInstance(singletons.get(0).getClass(),
++                sampleSize);
+ 
+         for (int i = 0; i < sampleSize; i++) {
+             out[i] = sample();
+         }
+-
+         return out;
+-
+     }

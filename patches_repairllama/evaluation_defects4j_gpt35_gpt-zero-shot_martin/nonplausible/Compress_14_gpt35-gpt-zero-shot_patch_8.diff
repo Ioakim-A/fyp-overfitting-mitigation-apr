@@ -1,0 +1,64 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4a24c691-c67d-433e-9ff6-e48e56d40d29_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4f1f3463-5d62-4279-95ba-ecf92ceebf92_fixed.java
+index 66dfac8..e821a9e 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4a24c691-c67d-433e-9ff6-e48e56d40d29_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4f1f3463-5d62-4279-95ba-ecf92ceebf92_fixed.java
+@@ -1,57 +1,46 @@
+ public static long parseOctal(final byte[] buffer, final int offset, final int length) {
+     long    result = 0;
+     int     end = offset + length;
+     int     start = offset;
+-
+     if (length < 2){
+         throw new IllegalArgumentException("Length "+length+" must be at least 2");
+     }
+-
+     boolean allNUL = true;
+     for (int i = start; i < end; i++){
+         if (buffer[i] != 0){
+             allNUL = false;
+             break;
+         }
+     }
+     if (allNUL) {
+         return 0L;
+     }
+-
+-        // Skip leading spaces
+     while (start < end){
+         if (buffer[start] == ' '){
+             start++;
+         } else {
+             break;
+         }
+     }
+-
+-        // Must have trailing NUL or space
+     byte trailer;
+     trailer = buffer[end-1];
+     if (trailer == 0 || trailer == ' '){
+         end--;
+     } else {
+         throw new IllegalArgumentException(
+                 exceptionMessage(buffer, offset, length, end-1, trailer));
+     }
+-        // May have additional NUL or space
+     trailer = buffer[end-1];
+     if (trailer == 0 || trailer == ' '){
+         end--;
+     }
+-
+     for ( ;start < end; start++) {
+         final byte currentByte = buffer[start];
+-            // CheckStyle:MagicNumber OFF
+         if (currentByte < '0' || currentByte > '7'){
+             throw new IllegalArgumentException(
+                     exceptionMessage(buffer, offset, length, start, currentByte));
+         }
+-            result = (result << 3) + (currentByte - '0'); // convert from ASCII
+-            // CheckStyle:MagicNumber ON
++        result = (result << 3) + (currentByte - '0'); 
+     }
+-
+     return result;
+ }
+\ No newline at end of file

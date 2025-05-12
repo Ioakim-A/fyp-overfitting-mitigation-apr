@@ -1,0 +1,31 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d14a2141-b81e-4734-8f35-226cd26fb0e2_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5ff79130-a69b-4999-b065-a8e0f499c68a_fixed.java
+index f8677d4..89280b1 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d14a2141-b81e-4734-8f35-226cd26fb0e2_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5ff79130-a69b-4999-b065-a8e0f499c68a_fixed.java
+@@ -1,24 +1,20 @@
+    public String absUrl(String attributeKey) {
+         Validate.notEmpty(attributeKey);
+-
+         String relUrl = attr(attributeKey);
+         if (!hasAttr(attributeKey)) {
+-            return ""; // nothing to make absolute with
++            return ""; 
+         } else {
+             URL base;
+             try {
+                 try {
+                     base = new URL(baseUri);
+                 } catch (MalformedURLException e) {
+-                    // the base is unsuitable, but the attribute may be abs on its own, so try that
+-                    URL abs = new URL(relUrl);
+-                    return abs.toExternalForm();
++                    return relUrl; 
+                 }
+-                // workaround: java resolves '//path/file + ?foo' to '//path/?foo', not '//path/file?foo' as desired
+                 URL abs = new URL(base, relUrl);
+                 return abs.toExternalForm();
+             } catch (MalformedURLException e) {
+                 return "";
+             }
+         }
+     }

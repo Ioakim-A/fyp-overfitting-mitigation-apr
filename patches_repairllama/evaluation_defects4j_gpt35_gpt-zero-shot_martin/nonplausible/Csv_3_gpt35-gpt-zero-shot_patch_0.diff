@@ -1,0 +1,38 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1bed3913-3928-43e2-aba7-f0c80e7af6ba_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a65246e1-a39c-49e3-ba91-dad4d7dc5bc1_fixed.java
+index ef0a9f0..638809a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1bed3913-3928-43e2-aba7-f0c80e7af6ba_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a65246e1-a39c-49e3-ba91-dad4d7dc5bc1_fixed.java
+@@ -1,28 +1,25 @@
+ int readEscape() throws IOException {
+-        // the escape char has just been read (normally a backslash)
+     final int c = in.read();
+     switch (c) {
+     case 'r':
+         return CR;
+     case 'n':
+         return LF;
+     case 't':
+         return TAB;
+     case 'b':
+         return BACKSPACE;
+     case 'f':
+         return FF;
+     case CR:
+     case LF:
+-        case FF: // TODO is this correct?
+-        case TAB: // TODO is this correct? Do tabs need to be escaped?
+-        case BACKSPACE: // TODO is this correct?
++    case FF: 
++    case TAB: 
++    case BACKSPACE: 
+         return c;
+     case END_OF_STREAM:
+         throw new IOException("EOF whilst processing escape sequence");
+     default:
+-            // Now check for meta-characters
+-                return c;
+-            // indicate unexpected char - available from in.getLastChar()
++        throw new IOException("Invalid escape sequence character: " + c);
+     }
+ }
+\ No newline at end of file

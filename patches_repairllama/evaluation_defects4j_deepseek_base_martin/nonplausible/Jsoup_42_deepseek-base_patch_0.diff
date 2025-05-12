@@ -1,0 +1,47 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7a2e6e17-c7ad-4413-af68-288f94ef22dd_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d4e82770-a39e-4c07-938b-a137266917b9_fixed.java
+index 442a001..710a1bb 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7a2e6e17-c7ad-4413-af68-288f94ef22dd_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d4e82770-a39e-4c07-938b-a137266917b9_fixed.java
+@@ -1,39 +1,21 @@
+     /**
+      * Get the data that this form submits. The returned list is a copy of the data, and changes to the contents of the
+      * list will not be reflected in the DOM.
+      * @return a list of key vals
+      */
+     public List<Connection.KeyVal> formData() {
+         ArrayList<Connection.KeyVal> data = new ArrayList<Connection.KeyVal>();
+-
+         // iterate the form control elements and accumulate their values
+         for (Element el: elements) {
+             if (!el.tag().isFormSubmittable()) continue; // contents are form listable, superset of submitable
+-            String name = el.attr("name");
+-            if (name.length() == 0) continue;
+-            String type = el.attr("type");
+-
+-            if ("select".equals(el.tagName())) {
+-                Elements options = el.select("option[selected]");
+-                boolean set = false;
+-                for (Element option: options) {
+-                    data.add(HttpConnection.KeyVal.create(name, option.val()));
+-                    set = true;
+-                }
+-                if (!set) {
+-                    Element option = el.select("option").first();
+-                    if (option != null)
+-                        data.add(HttpConnection.KeyVal.create(name, option.val()));
+-                }
+-            } else if ("checkbox".equalsIgnoreCase(type) || "radio".equalsIgnoreCase(type)) {
+-                // only add checkbox or radio if they have the checked attribute
+-                if (el.hasAttr("checked")) {
+-                    final String val = el.val();
++            String name = el.name();
++            if (el.multiple()) {
++                for (String val: el.vals()) {
+                     data.add(HttpConnection.KeyVal.create(name, val));
+                 }
+             } else {
+                 data.add(HttpConnection.KeyVal.create(name, el.val()));
+             }
+         }
+         return data;
+     }

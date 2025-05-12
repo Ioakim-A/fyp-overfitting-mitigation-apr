@@ -1,0 +1,21 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5e2874fc-ca4b-48f5-9917-118b9dcd558f_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b4eb9a95-245e-42c0-a983-ce3abaa79c38_fixed.java
+index aced44d..9d31818 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5e2874fc-ca4b-48f5-9917-118b9dcd558f_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b4eb9a95-245e-42c0-a983-ce3abaa79c38_fixed.java
+@@ -1,11 +1,12 @@
+ private boolean _hasCustomHandlers(JavaType t) {
+     if (t.isContainerType()) {
+-            // First: value types may have both value and type handlers
+         JavaType ct = t.getContentType();
+         if (ct != null) {
+-                return (ct.getValueHandler() != null) || (ct.getTypeHandler() != null);
+-            // Second: map(-like) types may have value handler for key (but not type; keys are untyped)
++            CustomHandler customHandler = ct.getCustomHandler();
++            if (customHandler != null) {
++                return (customHandler.getValueHandler() != null) || (customHandler.getTypeHandler() != null);
++            }
+         }
+     }
+     return false;
+ }
+\ No newline at end of file

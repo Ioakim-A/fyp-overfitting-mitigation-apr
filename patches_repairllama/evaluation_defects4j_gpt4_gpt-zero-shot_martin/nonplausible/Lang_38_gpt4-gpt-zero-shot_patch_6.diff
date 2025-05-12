@@ -1,0 +1,18 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fa021fbd-709a-43d3-a02d-145648618c00_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1e6d0c9c-cb48-4ab3-9acc-032fb5ba4d5d_fixed.java
+index 271076e..53716b2 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fa021fbd-709a-43d3-a02d-145648618c00_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1e6d0c9c-cb48-4ab3-9acc-032fb5ba4d5d_fixed.java
+@@ -1,7 +1,12 @@
++    TimeZone mTimeZone; // Make sure to initialize this somewhere
++
+     public StringBuffer format(Calendar calendar, StringBuffer buf) {
+         if (mTimeZoneForced) {
++            if (calendar == null || mTimeZone == null) {
++                throw new IllegalArgumentException("Calendar and TimeZone cannot be null");
++            }
+             calendar = (Calendar) calendar.clone();
+             calendar.setTimeZone(mTimeZone);
+         }
+         return applyRules(calendar, buf);
+     }
+\ No newline at end of file

@@ -1,0 +1,53 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b86695d8-c1ea-4e0e-a9bb-d91e8bba9229_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8868a2b2-fc51-4f2e-a6ad-aa8458c26af6_fixed.java
+index 18c915f..32c8a5e 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b86695d8-c1ea-4e0e-a9bb-d91e8bba9229_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8868a2b2-fc51-4f2e-a6ad-aa8458c26af6_fixed.java
+@@ -1,45 +1,33 @@
+    protected void processProperties(Properties properties)
+     {
+         if (properties == null)
+         {
+             return;
+         }
+-
+         for (Enumeration e = properties.propertyNames(); e.hasMoreElements();)
+         {
+             String option = e.nextElement().toString();
+-
+             if (!cmd.hasOption(option))
+             {
+                 Option opt = getOptions().getOption(option);
+-
+-                // get the value from the properties instance
++                if (opt != null)
++                {
+                     String value = properties.getProperty(option);
+-
+                     if (opt.hasArg())
+                     {
+                         if (opt.getValues() == null || opt.getValues().length == 0)
+                         {
+                             try
+                             {
+                                 opt.addValueForProcessing(value);
+                             }
+                             catch (RuntimeException exp)
+                             {
+-                            // if we cannot add the value don't worry about it
+                             }
+                         }
+                     }
+                     else if (!("yes".equalsIgnoreCase(value)
+                             || "true".equalsIgnoreCase(value)
+                             || "1".equalsIgnoreCase(value)))
+                     {
+-                    // if the value is not yes, true or 1 then don't add the
+-                    // option to the CommandLine
+-                    break;
+-                }
+                        
+\ No newline at end of file
+-                cmd.addOption(opt);
+-            }
+-        }
+-    }

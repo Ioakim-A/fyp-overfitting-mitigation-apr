@@ -1,0 +1,27 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7fb423d9-5acd-4940-a5be-66f3002d2bea_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b565a00c-e47a-4c14-ac52-410be25de0d3_fixed.java
+index 2078667..6b9e9e8 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7fb423d9-5acd-4940-a5be-66f3002d2bea_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b565a00c-e47a-4c14-ac52-410be25de0d3_fixed.java
+@@ -1,15 +1,15 @@
+-    public T[] sample(int sampleSize) throws NotStrictlyPositiveException {
++// Fixed code
++public T[] sample(int sampleSize) throws NotStrictlyPositiveException, NoSuchElementException {
+     if (sampleSize <= 0) {
+-            throw new NotStrictlyPositiveException(LocalizedFormats.NUMBER_OF_SAMPLES,
+-                    sampleSize);
++        throw new NotStrictlyPositiveException(LocalizedFormats.NUMBER_OF_SAMPLES, sampleSize);
++    }
++    if(singletons.isEmpty()) {
++        throw new NoSuchElementException("The singletons list is empty.");
+     }
+-
+     final T[] out = (T[]) java.lang.reflect.Array.newInstance(singletons.get(0).getClass(), sampleSize);
+     
+     for (int i = 0; i < sampleSize; i++) {
+         out[i] = sample();
+     }
+-
+     return out;
+-
+ }
+\ No newline at end of file

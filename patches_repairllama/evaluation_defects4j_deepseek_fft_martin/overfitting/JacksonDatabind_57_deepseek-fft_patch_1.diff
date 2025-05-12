@@ -1,0 +1,22 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/835d7feb-6727-433b-86a4-bb0af3da3c79_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7dbff351-6006-49ea-b394-8f65d4d3e8e2_fixed.java
+index 08a41cf..709223a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/835d7feb-6727-433b-86a4-bb0af3da3c79_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7dbff351-6006-49ea-b394-8f65d4d3e8e2_fixed.java
+@@ -1,12 +1,16 @@
+     /**
+      * Overloaded version of {@link #readValue(InputStream)}.
+      */
+     public <T> MappingIterator<T> readValues(byte[] src, int offset, int length)
+         throws IOException, JsonProcessingException
+     {
+         if (_dataFormatReaders != null) {
+             return _detectBindAndReadValues(_dataFormatReaders.findFormat(src, offset, length), false);
+         }
+-        return _bindAndReadValues(_considerFilter(_parserFactory.createParser(src),
++// buggy code
++//        return _bindAndReadValues(_considerFilter(_parserFactory.createParser(src),
++        return _bindAndReadValues(_considerFilter(
++                _parserFactory.createParser(src, offset, length),
++
+                 true));
+     }

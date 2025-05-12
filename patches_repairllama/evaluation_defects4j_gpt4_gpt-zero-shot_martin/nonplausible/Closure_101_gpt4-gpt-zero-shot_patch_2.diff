@@ -1,0 +1,29 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/34c9a1f8-3c62-4411-b95b-526006779ff1_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/03e626bb-7d96-4744-8e0f-cccd9633b2a8_fixed.java
+index a1e21c4..7a6c5d8 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/34c9a1f8-3c62-4411-b95b-526006779ff1_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/03e626bb-7d96-4744-8e0f-cccd9633b2a8_fixed.java
+@@ -1,21 +1,20 @@
+   protected CompilerOptions createOptions() {
+     CompilerOptions options = new CompilerOptions();
+     options.setCodingConvention(new ClosureCodingConvention());
+     CompilationLevel level = flags.compilation_level;
+     level.setOptionsForCompilationLevel(options);
+     if (flags.debug) {
+       level.setDebugOptionsForCompilationLevel(options);
+     }
+-
+     WarningLevel wLevel = flags.warning_level;
+     wLevel.setOptionsForWarningLevel(options);
+     for (FormattingOption formattingOption : flags.formatting) {
+       formattingOption.applyToOptions(options);
+     }
++    // fixed code
+     if (flags.process_closure_primitives) {
+-      options.closurePass = true;
++      options.setClosurePass(true);
+     }
+-
+     initOptionsFromFlags(options);
+     return options;
+   }
+\ No newline at end of file

@@ -1,0 +1,32 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a2f64f70-502e-462d-b5dd-dd40562dbd79_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/248ac3f2-8406-4668-acf3-4230aab941e4_fixed.java
+index 5e71e41..aed6d8f 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a2f64f70-502e-462d-b5dd-dd40562dbd79_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/248ac3f2-8406-4668-acf3-4230aab941e4_fixed.java
+@@ -1,4 +1,26 @@
+     public double solve(final UnivariateRealFunction f, double min, double max, double initial)
+         throws MaxIterationsExceededException, FunctionEvaluationException {
+-        return solve(min, max);
++       double fmin = f.evaluate(min);
++        double fmax = f.evaluate(max);
++        if (fmin * fmax > 0.0) {
++            throw new IllegalArgumentException("Root must be bracketed");
++        }
++        if (fmin == 0.0) {
++            return min;
++        }
++        if (fmax == 0.0) {
++            return max;
++        }
++        double f0 = f.evaluate(initial);
++        if (f0 == 0.0) {
++            return initial;
++        }
++        if (f0 * fmin < 0.0) {
++            min = initial;
++            fmin = f0;
++        } else if (f0 * fmax < 0.0) {
++            max = initial;
++            fmax = f0;
++        } else {
++            throw new IllegalArgumentException("Initial value must be bracketed");
+     }

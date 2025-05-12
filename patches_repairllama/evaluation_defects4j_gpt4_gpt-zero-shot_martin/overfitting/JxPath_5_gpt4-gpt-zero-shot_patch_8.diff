@@ -1,0 +1,41 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0645fc97-e89a-4178-ab8a-c528a6cb062f_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5ead51b5-260d-4857-8b51-4267d98a578c_fixed.java
+index 5f8ac1a..e557aa4 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0645fc97-e89a-4178-ab8a-c528a6cb062f_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5ead51b5-260d-4857-8b51-4267d98a578c_fixed.java
+@@ -1,34 +1,29 @@
+     private int compareNodePointers(
+         NodePointer p1,
+         int depth1,
+         NodePointer p2,
+         int depth2) 
+     {
+         if (depth1 < depth2) {
+             int r = compareNodePointers(p1, depth1, p2.parent, depth2 - 1);
+             return r == 0 ? -1 : r;
+         }
+         if (depth1 > depth2) {
+             int r = compareNodePointers(p1.parent, depth1 - 1, p2, depth2);
+             return r == 0 ? 1 : r;
+         }
+         if (p1 == null && p2 == null) {
+             return 0;
+         }
+-
+         if (p1 != null && p1.equals(p2)) {
+             return 0;
+         }
+-
+         if (depth1 == 1) {
+-            throw new JXPathException(
+-                    "Cannot compare pointers that do not belong to the same tree: '"
+-                            + p1 + "' and '" + p2 + "'");
++            return (p1 != null && !p1.equals(p2)) ? 1 : -1; 
+         }
+         int r = compareNodePointers(p1.parent, depth1 - 1, p2.parent, depth2 - 1);
+         if (r != 0) {
+             return r;
+         }
+-
+         return p1.parent.compareChildNodePointers(p1, p2);
+     }
+\ No newline at end of file

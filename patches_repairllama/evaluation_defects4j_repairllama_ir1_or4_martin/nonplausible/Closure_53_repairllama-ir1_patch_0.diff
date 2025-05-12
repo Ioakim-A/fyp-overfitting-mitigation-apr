@@ -1,0 +1,65 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/74aac564-221e-4253-a256-feff8ccdcb8e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a6da0cb9-3c61-4ecd-bd82-189e6c0f3f24_fixed.java
+index 6926bd5..ebb2ca1 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/74aac564-221e-4253-a256-feff8ccdcb8e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a6da0cb9-3c61-4ecd-bd82-189e6c0f3f24_fixed.java
+@@ -1,58 +1,47 @@
+     private void replaceAssignmentExpression(Var v, Reference ref,
+                                              Map<String, String> varmap) {
+-      // Compute all of the assignments necessary
++    private void replaceAssignmentExpression(Var v, Reference ref,
++                                             Map<String, String> varmap) {
+       List<Node> nodes = Lists.newArrayList();
+       Node val = ref.getAssignedValue();
+       blacklistVarReferencesInTree(val, v.scope);
+       Preconditions.checkState(val.getType() == Token.OBJECTLIT);
+       Set<String> all = Sets.newLinkedHashSet(varmap.keySet());
+       for (Node key = val.getFirstChild(); key != null;
+            key = key.getNext()) {
+         String var = key.getString();
+         Node value = key.removeFirstChild();
+-        // TODO(user): Copy type information.
+         nodes.add(
+           new Node(Token.ASSIGN,
+                    Node.newString(Token.NAME, varmap.get(var)), value));
+         all.remove(var);
+       }
+-
+-      // TODO(user): Better source information.
+       for (String var : all) {
+         nodes.add(
+           new Node(Token.ASSIGN,
+                    Node.newString(Token.NAME, varmap.get(var)),
+                    NodeUtil.newUndefinedNode(null)));
+       }
+-
+       Node replacement;
+-        // All assignments evaluate to true, so make sure that the
+-        // expr statement evaluates to true in case it matters.
+         nodes.add(new Node(Token.TRUE));
+-
+-        // Join these using COMMA.  A COMMA node must have 2 children, so we
+-        // create a tree. In the tree the first child be the COMMA to match
+-        // the parser, otherwise tree equality tests fail.
+         nodes = Lists.reverse(nodes);
+         replacement = new Node(Token.COMMA);
+         Node cur = replacement;
+         int i;
+         for (i = 0; i < nodes.size() - 2; i++) {
+           cur.addChildToFront(nodes.get(i));
+           Node t = new Node(Token.COMMA);
+           cur.addChildToFront(t);
+           cur = t;
+         }
+         cur.addChildToFront(nodes.get(i));
+         cur.addChildToFront(nodes.get(i + 1));
+-
+       Node replace = ref.getParent();
+       replacement.copyInformationFromForTree(replace);
+-
+       if (replace.getType() == Token.VAR) {
+         replace.getParent().replaceChild(
+             replace, NodeUtil.newExpr(replacement));
+       } else {
+         replace.getParent().replaceChild(replace, replacement);
+       }
+     }

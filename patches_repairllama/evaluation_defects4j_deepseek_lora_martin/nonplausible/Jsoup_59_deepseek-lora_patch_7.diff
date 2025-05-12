@@ -1,0 +1,40 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/efaa9bb3-44e0-424a-9957-5993de1461be_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cdc9f61d-735f-477a-a311-d32ebe218a85_fixed.java
+index 7de6748..ad7c085 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/efaa9bb3-44e0-424a-9957-5993de1461be_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cdc9f61d-735f-477a-a311-d32ebe218a85_fixed.java
+@@ -1,23 +1,34 @@
+         final void newAttribute() {
+             if (attributes == null)
+                 attributes = new Attributes();
+-
+             if (pendingAttributeName != null) {
+                 // the tokeniser has skipped whitespace control chars, but trimming could collapse to empty for other control codes, so verify here
+                 pendingAttributeName = pendingAttributeName.trim();
++// buggy code
++//                    Attribute attribute;
++//                    if (hasPendingAttributeValue)
++//                        attribute = new Attribute(pendingAttributeName,
++//                            pendingAttributeValue.length() > 0 ? pendingAttributeValue.toString() : pendingAttributeValueS);
++//                    else if (hasEmptyAttributeValue)
++//                        attribute = new Attribute(pendingAttributeName, "");
++//                    else
++//                        attribute = new BooleanAttribute(pendingAttributeName);
++//                    attributes.put(attribute);
+                     Attribute attribute;
+                     if (hasPendingAttributeValue)
+                         attribute = new Attribute(pendingAttributeName,
+                             pendingAttributeValue.length() > 0 ? pendingAttributeValue.toString() : pendingAttributeValueS);
+                     else if (hasEmptyAttributeValue)
+                         attribute = new Attribute(pendingAttributeName, "");
+                     else
+                         attribute = new BooleanAttribute(pendingAttributeName);
+                     attributes.put(attribute);
+                 }
++
++            }
+             pendingAttributeName = null;
+             hasEmptyAttributeValue = false;
+             hasPendingAttributeValue = false;
+             reset(pendingAttributeValue);
+             pendingAttributeValueS = null;
+         }

@@ -1,0 +1,31 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8986db4c-b164-48a7-94b5-30a1b57e1338_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c8eb2b54-9119-4d32-ae80-d7f9b33415e3_fixed.java
+index 2648a38..6292202 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8986db4c-b164-48a7-94b5-30a1b57e1338_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c8eb2b54-9119-4d32-ae80-d7f9b33415e3_fixed.java
+@@ -1,25 +1,26 @@
+     public TimeSeries createCopy(int start, int end)
+             throws CloneNotSupportedException {
+         if (start < 0) {
+             throw new IllegalArgumentException("Requires start >= 0.");
+         }
+         if (end < start) {
+             throw new IllegalArgumentException("Requires start <= end.");
+         }
+         TimeSeries copy = (TimeSeries) super.clone();
++       copy.seriesKey = (TimeSeriesKey) copy.seriesKey.clone();
+         copy.data = new java.util.ArrayList();
+         if (this.data.size() > 0) {
+             for (int index = start; index <= end; index++) {
+                 TimeSeriesDataItem item
+                         = (TimeSeriesDataItem) this.data.get(index);
+                 TimeSeriesDataItem clone = (TimeSeriesDataItem) item.clone();
+                 try {
+                     copy.add(clone);
+                 }
+                 catch (SeriesException e) {
+                     e.printStackTrace();
+                 }
+             }
+         }
+         return copy;
+     }

@@ -1,0 +1,35 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0a59f3ee-89d5-4b5b-a049-a93deb172e90_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/136e0aca-629a-4300-85bd-0ccf81c02963_fixed.java
+index b5d94e0..e0959be 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0a59f3ee-89d5-4b5b-a049-a93deb172e90_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/136e0aca-629a-4300-85bd-0ccf81c02963_fixed.java
+@@ -1,26 +1,18 @@
+ private void traverse(Node node) {
+-    // The goal here is to avoid retraversing
+-    // the entire AST to catch newly created opportunities.
+-    // So we track whether a "unit of code" has changed,
+-    // and revisit immediately.
+   if (!shouldVisit(node)) {
+     return;
+   }
+-
+   int visits = 0;
+   do {
+     Node c = node.getFirstChild();
+     while(c != null) {
+-        traverse(c);
+-        Node next = c.getNext();
++      Node next = c.getNext(); // FIXED: Retrieve the next sibling of the current node
++      traverse(c); // FIXED: Traverse the current child node
+       c = next;
+     }
+-
+     visit(node);
+     visits++;
+-
+-      Preconditions.checkState(visits < 10000, "too many interations");
++    Preconditions.checkState(visits < 10000, "too many iterations");
+   } while (shouldRetraverse(node));
+-
+   exitNode(node);
+ }
+\ No newline at end of file

@@ -1,0 +1,51 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/47adfe0c-88da-4182-84ed-920dd9a7dba7_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9e9c02d6-fecf-4d70-988f-ece0b645484d_fixed.java
+index cf3a96a..6f8ea4f 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/47adfe0c-88da-4182-84ed-920dd9a7dba7_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9e9c02d6-fecf-4d70-988f-ece0b645484d_fixed.java
+@@ -1,43 +1,45 @@
+     public static <T> T createValue(final String str, final Class<T> clazz) throws ParseException
+     {
+         if (PatternOptionBuilder.STRING_VALUE == clazz)
+         {
+             return (T) str;
+         }
+         else if (PatternOptionBuilder.OBJECT_VALUE == clazz)
+         {
+             return (T) createObject(str);
+         }
+         else if (PatternOptionBuilder.NUMBER_VALUE == clazz)
+         {
+             return (T) createNumber(str);
+         }
+         else if (PatternOptionBuilder.DATE_VALUE == clazz)
+         {
+             return (T) createDate(str);
+         }
+         else if (PatternOptionBuilder.CLASS_VALUE == clazz)
+         {
+             return (T) createClass(str);
+         }
+         else if (PatternOptionBuilder.FILE_VALUE == clazz)
+         {
+             return (T) createFile(str);
+         }
+         else if (PatternOptionBuilder.EXISTING_FILE_VALUE == clazz)
+         {
+             return (T) openFile(str);
+         }
+         else if (PatternOptionBuilder.FILES_VALUE == clazz)
+         {
+             return (T) createFiles(str);
+         }
+         else if (PatternOptionBuilder.URL_VALUE == clazz)
+         {
+             return (T) createURL(str);
+         }
+         else
+         {
+-            return null;
++// buggy code
++//             return null;
++           throw new IllegalArgumentException("Unsupported type: " + clazz);
+         }
+     }

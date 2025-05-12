@@ -1,0 +1,37 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f8a3f4f3-67d6-478f-8166-d6db6a9f6815_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e9bea930-06ef-4de9-910c-066f9bec80df_fixed.java
+index 3110cf7..40e823a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f8a3f4f3-67d6-478f-8166-d6db6a9f6815_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e9bea930-06ef-4de9-910c-066f9bec80df_fixed.java
+@@ -1,26 +1,22 @@
+       public boolean apply(Node n) {
+-        // When the node is null it means, we reached the implicit return
+-        // where the function returns (possibly without an return statement)
+         if (n == null) {
+           return false;
+         }
+-
+-        // TODO(user): We only care about calls to functions that
+-        // passes one of the dependent variable to a non-side-effect free
+-        // function.
+         if (n.isCall() && NodeUtil.functionCallHasSideEffects(n)) {
+           return true;
+         }
+-
+         if (n.isNew() && NodeUtil.constructorCallHasSideEffects(n)) {
+           return true;
+         }
+-
+-
++        // Added code
++        // Check if the node has side effects
++        if (NodeUtil.nodeHasSideEffects(n)) {
++          return true;
++        }
+         for (Node c = n.getFirstChild(); c != null; c = c.getNext()) {
+           if (!ControlFlowGraph.isEnteringNewCfgNode(c) && apply(c)) {
+             return true;
+           }
+         }
+         return false;
+       }
+\ No newline at end of file

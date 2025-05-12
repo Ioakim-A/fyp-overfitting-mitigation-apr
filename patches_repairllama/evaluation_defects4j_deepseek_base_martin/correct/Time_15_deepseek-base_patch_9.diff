@@ -1,0 +1,32 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e606c349-790a-4398-8f7d-39c93cd1d1b7_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/91728c18-de52-425e-b483-79dc023c94af_fixed.java
+index a9a5e27..b0ad2a6 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e606c349-790a-4398-8f7d-39c93cd1d1b7_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/91728c18-de52-425e-b483-79dc023c94af_fixed.java
+@@ -1,24 +1,27 @@
+     /**
+      * Multiply two values throwing an exception if overflow occurs.
+      * 
+      * @param val1  the first value
+      * @param val2  the second value
+      * @return the new total
+      * @throws ArithmeticException if the value is too big or too small
+      * @since 1.2
+      */
+     public static long safeMultiply(long val1, int val2) {
+         switch (val2) {
+             case -1:
++                if (val1 == Long.MIN_VALUE) {
++                    throw new ArithmeticException("Multiplication overflows a long: " + val1 + " * " + val2);
++                }
+                 return -val1;
+             case 0:
+                 return 0L;
+             case 1:
+                 return val1;
+         }
+         long total = val1 * val2;
+         if (total / val2 != val1) {
+           throw new ArithmeticException("Multiplication overflows a long: " + val1 + " * " + val2);
+         }
+         return total;
+     }

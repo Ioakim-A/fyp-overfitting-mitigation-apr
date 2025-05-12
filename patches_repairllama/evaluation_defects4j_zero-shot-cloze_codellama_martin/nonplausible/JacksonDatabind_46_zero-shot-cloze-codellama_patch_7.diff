@@ -1,0 +1,19 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8af24466-eb82-4226-8576-202e89044253_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d28f506c-2eec-43df-9b7e-2ab821d886d8_fixed.java
+index ec0062a..98da2f5 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8af24466-eb82-4226-8576-202e89044253_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d28f506c-2eec-43df-9b7e-2ab821d886d8_fixed.java
+@@ -1,8 +1,13 @@
+     public StringBuilder getGenericSignature(StringBuilder sb)
+     {
+         _classSignature(_class, sb, false);
+         sb.append('<');
+         sb = _referencedType.getGenericSignature(sb);
+-        sb.append(';');
++       for (int i = 0; i < _arguments.length; i++)
++        {
++            sb.append(',');
++            sb = _arguments[i].getGenericSignature(sb);
++        }
++        sb.append('>');
+         return sb;
+     }

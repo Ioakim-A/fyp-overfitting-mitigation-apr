@@ -1,0 +1,23 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c71ab834-878a-4adc-9457-b2058ceb572b_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/039c949b-623a-47f1-ad47-8a201cf3fcdf_fixed.java
+index 638669b..2792c18 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c71ab834-878a-4adc-9457-b2058ceb572b_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/039c949b-623a-47f1-ad47-8a201cf3fcdf_fixed.java
+@@ -1,11 +1,16 @@
+     public ZipArchiveInputStream(InputStream inputStream,
+                                  String encoding,
+                                  boolean useUnicodeExtraFields,
+                                  boolean allowStoredEntriesWithDataDescriptor) {
+         zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
+         this.useUnicodeExtraFields = useUnicodeExtraFields;
++        buf = ByteBuffer.allocate(1024); // Buffer size
++        try {
+             in = new PushbackInputStream(inputStream, buf.capacity());
++        } catch(IOException e) {
++            // Handle exception
++            e.printStackTrace();
++        }
+         this.allowStoredEntriesWithDataDescriptor =
+             allowStoredEntriesWithDataDescriptor;
+-        // haven't read anything so far
+     }
+\ No newline at end of file

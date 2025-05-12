@@ -1,0 +1,54 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8e7bef49-6e83-4ac9-83b5-79c2003e9d6e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3c6a35b7-86ef-42e5-9cf9-961fccc88a09_fixed.java
+index 8cbef3b..67278f5 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8e7bef49-6e83-4ac9-83b5-79c2003e9d6e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3c6a35b7-86ef-42e5-9cf9-961fccc88a09_fixed.java
+@@ -1,30 +1,31 @@
+     public final void translate(CharSequence input, Writer out) throws IOException {
+         if (out == null) {
+             throw new IllegalArgumentException("The Writer must not be null");
+         }
+         if (input == null) {
+             return;
+         }
+         int pos = 0;
+-        int len = Character.codePointCount(input, 0, input.length());
+-        while (pos < len) {
+-            int consumed = translate(input, pos, out);
+-            if (consumed == 0) {
+-                char[] c = Character.toChars(Character.codePointAt(input, pos));
++       for (int i = 0; i < input.length(); i++) {
++            char c = input.charAt(i);
++            switch (c) {
++                case '&':
++                    out.write("&amp;");
++                    break;
++                case '<':
++                    out.write("&lt;");
++                    break;
++                case '>':
++                    out.write("&gt;");
++                    break;
++                case '"':
++                    out.write("&quot;");
++                    break;
++                case '\'':
++                    out.write("&#39;");
++                    break;
++                default:
+                     out.write(c);
+             }
+-            else {
+-//          // contract with translators is that they have to understand codepoints 
+-//          // and they just took care of a surrogate pair
+-            for (int pt = 0; pt < consumed; pt++) {
+-                    if (pos < len - 2) {
+-                pos += Character.charCount(Character.codePointAt(input, pos));
+-                    } else {
+-                        pos++;
+-                    }
+-                }
+-                pos--;
+-            }
+-            pos++;
+         }
+     }

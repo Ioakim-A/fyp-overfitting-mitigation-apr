@@ -1,0 +1,31 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/095ae416-13a2-4e49-9a6b-18d39d091587_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6a36eb84-bd09-48ff-97d6-4f5bf2c7139c_fixed.java
+index 2078667..0061843 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/095ae416-13a2-4e49-9a6b-18d39d091587_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6a36eb84-bd09-48ff-97d6-4f5bf2c7139c_fixed.java
+@@ -1,15 +1,19 @@
++// fixed code
+ public T[] sample(int sampleSize) throws NotStrictlyPositiveException {
+     if (sampleSize <= 0) {
+-            throw new NotStrictlyPositiveException(LocalizedFormats.NUMBER_OF_SAMPLES,
+-                    sampleSize);
++        throw new NotStrictlyPositiveException(LocalizedFormats.NUMBER_OF_SAMPLES, sampleSize);
++    }
++    if (singletons == null || singletons.isEmpty()) {
++        throw new IllegalArgumentException("The list of singletons cannot be null or empty");
+     }
+-
+     final T[] out = (T[]) java.lang.reflect.Array.newInstance(singletons.get(0).getClass(), sampleSize);
+-
++    Random rand = new Random();
+     for (int i = 0; i < sampleSize; i++) {
+-            out[i] = sample();
++        out[i] = sample(rand);
+     }
+-
+     return out;
++}
+ 
++public T sample(Random rand) {
++    return singletons.get(rand.nextInt(singletons.size()));
+ }
+\ No newline at end of file

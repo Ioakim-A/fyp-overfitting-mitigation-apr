@@ -1,0 +1,36 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0f036324-3f34-4bb0-9fb9-ed317715170b_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2ea22c5f-9d0a-4af8-bc9b-729851f4affe_fixed.java
+index c50b3cc..ecf6329 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0f036324-3f34-4bb0-9fb9-ed317715170b_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2ea22c5f-9d0a-4af8-bc9b-729851f4affe_fixed.java
+@@ -1,23 +1,14 @@
+    public Period normalizedStandard(PeriodType type) {
+         type = DateTimeUtils.getPeriodType(type);
+-        long millis = getMillis();  // no overflow can happen, even with Integer.MAX_VALUEs
+-        millis += (((long) getSeconds()) * ((long) DateTimeConstants.MILLIS_PER_SECOND));
+-        millis += (((long) getMinutes()) * ((long) DateTimeConstants.MILLIS_PER_MINUTE));
+-        millis += (((long) getHours()) * ((long) DateTimeConstants.MILLIS_PER_HOUR));
+-        millis += (((long) getDays()) * ((long) DateTimeConstants.MILLIS_PER_DAY));
+-        millis += (((long) getWeeks()) * ((long) DateTimeConstants.MILLIS_PER_WEEK));
++        long millis = getMillis();  
++        millis += ((long) getSeconds()) * ((long) DateTimeConstants.MILLIS_PER_SECOND);
++        millis += ((long) getMinutes()) * ((long) DateTimeConstants.MILLIS_PER_MINUTE);
++        millis += ((long) getHours()) * ((long) DateTimeConstants.MILLIS_PER_HOUR);
++        millis += ((long) getDays()) * ((long) DateTimeConstants.MILLIS_PER_DAY);
++        millis += ((long) getWeeks()) * ((long) DateTimeConstants.MILLIS_PER_WEEK);
+         Period result = new Period(millis, type, ISOChronology.getInstanceUTC());
+         int years = getYears();
+         int months = getMonths();
+         if (years != 0 || months != 0) {
+             years = FieldUtils.safeAdd(years, months / 12);
+-            months = months % 12;
+-            if (years != 0) {
+-                result = result.withYears(years);
+-            }
+-            if (months != 0) {
+-                result = result.withMonths(months);
+-            }
+-        }
+-        return result;
+-    }
++            months = months % 
+\ No newline at end of file

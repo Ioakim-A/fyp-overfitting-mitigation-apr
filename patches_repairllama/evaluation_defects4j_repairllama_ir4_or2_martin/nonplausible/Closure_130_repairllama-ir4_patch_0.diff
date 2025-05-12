@@ -1,0 +1,45 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ad19999d-54d9-4087-a932-06f7330f312d_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ee6798df-9aa2-426f-a251-0e99a37cddea_fixed.java
+index f3bca8d..1456bd7 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ad19999d-54d9-4087-a932-06f7330f312d_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ee6798df-9aa2-426f-a251-0e99a37cddea_fixed.java
+@@ -1,37 +1,27 @@
+   private void inlineAliases(GlobalNamespace namespace) {
+-    // Invariant: All the names in the worklist meet condition (a).
+     Deque<Name> workList = new ArrayDeque<Name>(namespace.getNameForest());
+     while (!workList.isEmpty()) {
+       Name name = workList.pop();
+-
+-      // Don't attempt to inline a getter or setter property as a variable.
+       if (name.type == Name.Type.GET || name.type == Name.Type.SET) {
+         continue;
+       }
+-
+-      if (name.globalSets == 1 && name.localSets == 0 &&
++// buggy code
++//       if (name.globalSets == 1 && name.localSets == 0 &&
++     if (name.globalSets == 0 && name.localSets == 1 &&
+           name.aliasingGets > 0) {
+-        // {@code name} meets condition (b). Find all of its local aliases
+-        // and try to inline them.
+         List<Ref> refs = Lists.newArrayList(name.getRefs());
+         for (Ref ref : refs) {
+           if (ref.type == Type.ALIASING_GET && ref.scope.isLocal()) {
+-            // {@code name} meets condition (c). Try to inline it.
+             if (inlineAliasIfPossible(ref, namespace)) {
+               name.removeRef(ref);
+             }
+           }
+         }
+       }
+-
+-      // Check if {@code name} has any aliases left after the
+-      // local-alias-inlining above.
+       if ((name.type == Name.Type.OBJECTLIT ||
+            name.type == Name.Type.FUNCTION) &&
+           name.aliasingGets == 0 && name.props != null) {
+-        // All of {@code name}'s children meet condition (a), so they can be
+-        // added to the worklist.
+         workList.addAll(name.props);
+       }
+     }
+   }

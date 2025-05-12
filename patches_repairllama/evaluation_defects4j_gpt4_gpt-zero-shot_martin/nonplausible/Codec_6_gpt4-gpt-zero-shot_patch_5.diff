@@ -1,0 +1,50 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/922be1e7-6e08-46c3-93e3-d7d87c6a1529_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5503b9da-e3c3-4ce6-be03-a9e1cbc7f4b5_fixed.java
+index 5424d9c..687c91d 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/922be1e7-6e08-46c3-93e3-d7d87c6a1529_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5503b9da-e3c3-4ce6-be03-a9e1cbc7f4b5_fixed.java
+@@ -1,43 +1,25 @@
+-    public int read(byte b[], int offset, int len) throws IOException {
++    public int read(Base64 base64, InputStream in, byte b[], int offset, int len, boolean doEncode) throws IOException {
+         if (b == null) {
+             throw new NullPointerException();
+         } else if (offset < 0 || len < 0) {
+             throw new IndexOutOfBoundsException();
+         } else if (offset > b.length || offset + len > b.length) {
+             throw new IndexOutOfBoundsException();
+         } else if (len == 0) {
+             return 0;
+         } else {
+-            /*
+-             Rationale for while-loop on (readLen == 0):
+-             -----
+-             Base64.readResults() usually returns > 0 or EOF (-1).  In the
+-             rare case where it returns 0, we just keep trying.
+-
+-             This is essentially an undocumented contract for InputStream
+-             implementors that want their code to work properly with
+-             java.io.InputStreamReader, since the latter hates it when
+-             InputStream.read(byte[]) returns a zero.  Unfortunately our
+-             readResults() call must return 0 if a large amount of the data
+-             being decoded was non-base64, so this while-loop enables proper
+-             interop with InputStreamReader for that scenario.
+-             -----
+-             This is a fix for CODEC-101
+-            */
+             if (!base64.hasData()) {
+                 byte[] buf = new byte[doEncode ? 4096 : 8192];
+                 int c = in.read(buf);
+-                    // A little optimization to avoid System.arraycopy()
+-                    // when possible.
+                 if (c > 0 && b.length == len) {
+                     base64.setInitialBuffer(b, offset, len);
+                 }
+                 if (doEncode) {
+                     base64.encode(buf, 0, c);
+                 } else {
+                     base64.decode(buf, 0, c);
+                 }
+             }
+             return base64.readResults(b, offset, len);
+         }
+     }
+\ No newline at end of file

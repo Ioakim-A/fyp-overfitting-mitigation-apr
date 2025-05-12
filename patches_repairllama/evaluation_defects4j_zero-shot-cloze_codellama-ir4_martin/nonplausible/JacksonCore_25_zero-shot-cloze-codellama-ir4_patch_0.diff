@@ -1,0 +1,57 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/27cb48d1-dd30-437c-acb3-69562783a723_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6a2444fd-0171-4a4f-a579-fea5be9952c7_fixed.java
+index 8dfbd84..d4d229c 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/27cb48d1-dd30-437c-acb3-69562783a723_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6a2444fd-0171-4a4f-a579-fea5be9952c7_fixed.java
+@@ -1,43 +1,46 @@
+     private String _handleOddName2(int startPtr, int hash, int[] codes) throws IOException
+     {
+         _textBuffer.resetWithShared(_inputBuffer, startPtr, (_inputPtr - startPtr));
+         char[] outBuf = _textBuffer.getCurrentSegment();
+         int outPtr = _textBuffer.getCurrentSegmentSize();
+         final int maxCode = codes.length;
+-
+         while (true) {
+             if (_inputPtr >= _inputEnd) {
+-                if (!_loadMore()) { // acceptable for now (will error out later)
++                if (!_loadMore()) { 
+                     break;
+                 }
+             }
+             char c = _inputBuffer[_inputPtr];
+             int i = (int) c;
++// buggy code
++//            if (i <= maxCode) {
++//                if (codes[i] != 0) {
++//                    break;
++//                }
++//            } else if (!Character.isJavaIdentifierPart(c)) {
++//                break;
++//            }
+             if (i <= maxCode) {
+                 if (codes[i] != 0) {
+                     break;
+                 }
+             } else if (!Character.isJavaIdentifierPart(c)) {
+                 break;
+             }
+             ++_inputPtr;
+             hash = (hash * CharsToNameCanonicalizer.HASH_MULT) + i;
+-            // Ok, let's add char to output:
+             outBuf[outPtr++] = c;
+-
+-            // Need more room?
+             if (outPtr >= outBuf.length) {
+                 outBuf = _textBuffer.finishCurrentSegment();
+                 outPtr = 0;
+             }
+         }
+         _textBuffer.setCurrentLength(outPtr);
+         {
+             TextBuffer tb = _textBuffer;
+             char[] buf = tb.getTextBuffer();
+             int start = tb.getTextOffset();
+             int len = tb.size();
+-
+             return _symbols.findSymbol(buf, start, len, hash);
+         }
+     }

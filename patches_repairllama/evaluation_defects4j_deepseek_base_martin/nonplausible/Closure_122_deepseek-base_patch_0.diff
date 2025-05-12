@@ -1,0 +1,25 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6bc126d2-3ab5-466c-9099-643ce975b415_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7dfcb384-5655-4095-ba63-20e057e517b4_fixed.java
+index 308b324..ea28414 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6bc126d2-3ab5-466c-9099-643ce975b415_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7dfcb384-5655-4095-ba63-20e057e517b4_fixed.java
+@@ -1,11 +1,19 @@
+   /**
+    * Check to see if the given block comment looks like it should be JSDoc.
+    */
+   private void handleBlockComment(Comment comment) {
+-    if (comment.getValue().indexOf("/* @") != -1 || comment.getValue().indexOf("\n * @") != -1) {
++    String sourceName = comment.getSourceName();
++    if (sourceName == null) {
++      return;
++    }
++    if (!sourceName.endsWith(".js")) {
++      return;
++    }
++    String text = comment.getText();
++    if (text.startsWith("/**") && text.endsWith("*/")) {
+       errorReporter.warning(
+           SUSPICIOUS_COMMENT_WARNING,
+           sourceName,
+           comment.getLineno(), "", 0);
+     }
+   }

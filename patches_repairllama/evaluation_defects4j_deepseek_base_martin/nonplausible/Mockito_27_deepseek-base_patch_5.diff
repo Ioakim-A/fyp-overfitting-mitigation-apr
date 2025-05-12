@@ -1,0 +1,25 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f2cde47b-9472-4aea-bdc6-3e5fe58545d4_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ee937c29-7a8d-48bc-ae1e-3175e29123d4_fixed.java
+index 5c5286c..1804520 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f2cde47b-9472-4aea-bdc6-3e5fe58545d4_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ee937c29-7a8d-48bc-ae1e-3175e29123d4_fixed.java
+@@ -1,6 +1,18 @@
+     public <T> void resetMock(T mock) {
+         MockHandlerInterface<T> oldMockHandler = getMockHandler(mock);
+-        MockHandler<T> newMockHandler = new MockHandler<T>(oldMockHandler);
+-        MethodInterceptorFilter newFilter = new MethodInterceptorFilter(newMockHandler, (MockSettingsImpl) org.mockito.Mockito.withSettings().defaultAnswer(org.mockito.Mockito.RETURNS_DEFAULTS));
++        if (oldMockHandler != null) {
++            oldMockHandler.reset();
++        }
++    }
++
++    @SuppressWarnings("unchecked")
++    private <T> MockHandlerInterface<T> getMockHandler(T mock) {
++        if (mock instanceof Factory) {
++            return (MockHandlerInterface<T>) ((Factory) mock).getCallback(0);
++        }
++        return null;
++    }
++
++    private <T> void setMockHandler(T mock, MockHandlerInterface<T> newFilter) {
+         ((Factory) mock).setCallback(0, newFilter);
+     }

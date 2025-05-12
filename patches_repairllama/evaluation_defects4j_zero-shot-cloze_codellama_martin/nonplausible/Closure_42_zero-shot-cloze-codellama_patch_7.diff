@@ -1,0 +1,17 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6f817995-6923-4466-bcbf-e154f64bf8ea_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cd065e98-1f16-4298-bcc4-81be9ba5ecd3_fixed.java
+index 72583b5..a515ae0 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6f817995-6923-4466-bcbf-e154f64bf8ea_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cd065e98-1f16-4298-bcc4-81be9ba5ecd3_fixed.java
+@@ -1,9 +1,10 @@
+     Node processForInLoop(ForInLoop loopNode) {
+-
+-        // Return the bare minimum to put the AST in a valid state.
++     if (loopNode.getIteratedObject() == null) {
++        return transform(loopNode.getIterator());
++      }
+       return newNode(
+           Token.FOR,
+           transform(loopNode.getIterator()),
+           transform(loopNode.getIteratedObject()),
+           transformBlock(loopNode.getBody()));
+     }

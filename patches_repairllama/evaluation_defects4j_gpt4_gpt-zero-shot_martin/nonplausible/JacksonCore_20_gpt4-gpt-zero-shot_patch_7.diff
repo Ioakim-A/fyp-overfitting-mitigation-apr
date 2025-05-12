@@ -1,0 +1,20 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3aaaba14-1acc-405c-bd1f-765deedc298f_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cd1c75ab-969a-4d72-bb97-db558457ff4a_fixed.java
+index fa15a1c..85b4190 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3aaaba14-1acc-405c-bd1f-765deedc298f_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cd1c75ab-969a-4d72-bb97-db558457ff4a_fixed.java
+@@ -1,5 +1,11 @@
++import com.fasterxml.jackson.databind.ObjectMapper;
++
+ public void writeEmbeddedObject(Object object) throws IOException {
+-        // 01-Sep-2016, tatu: As per [core#318], handle small number of cases
+-        throw new JsonGenerationException("No native support for writing embedded objects",
+-                this);
++    ObjectMapper objectMapper = new ObjectMapper();
++    try {
++        String json = objectMapper.writeValueAsString(object);
++        System.out.println(json);
++    } catch (IOException e) {
++        throw new IOException("Error while writing object as JSON", e);
++    }
+ }
+\ No newline at end of file

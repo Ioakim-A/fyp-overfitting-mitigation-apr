@@ -1,0 +1,43 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8e3de918-8749-4e57-934c-0e90c0a178a0_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4327cdd8-df67-4627-8f94-fb728a63fa9e_fixed.java
+index 32ebe90..d214fde 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8e3de918-8749-4e57-934c-0e90c0a178a0_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4327cdd8-df67-4627-8f94-fb728a63fa9e_fixed.java
+@@ -1,29 +1,20 @@
+-    protected void burstToken(String token, boolean stopAtNonOption)
+-    {
+-        for (int i = 1; i < token.length(); i++)
+-        {
++protected void burstToken(String token, boolean stopAtNonOption) {
++    for (int i = 1; i < token.length(); i++) {
+         String ch = String.valueOf(token.charAt(i));
+-
+-            if (options.hasOption(ch))
+-            {
++        if (options.hasOption(ch)) {
+             tokens.add("-" + ch);
+             currentOption = options.getOption(ch);
+-
+-                if (currentOption.hasArg() && (token.length() != (i + 1)))
+-                {
++            if (currentOption.hasArg() && (token.length() != (i + 1))) {
+                 tokens.add(token.substring(i + 1));
+-
+                 break;
+             }
+-            }
+-            else if (stopAtNonOption)
+-            {
++        } else if (stopAtNonOption) {
+             process(token.substring(i));
+-            }
+-            else
+-            {
++            tokens.add(token.substring(i));
++            break;
++        } else {
+             tokens.add(token);
+             break;
+         }
+     }
+ }
+\ No newline at end of file

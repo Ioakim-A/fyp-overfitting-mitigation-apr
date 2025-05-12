@@ -1,0 +1,46 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b0ed123c-20ab-4fca-b6b4-e68792d3ff04_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7572f35d-b406-41f7-86f4-7668ba7e6a7a_fixed.java
+index 50cbfb2..6814cc1 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b0ed123c-20ab-4fca-b6b4-e68792d3ff04_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7572f35d-b406-41f7-86f4-7668ba7e6a7a_fixed.java
+@@ -1,39 +1,21 @@
+    protected void iterateSimplex(final Comparator<RealPointValuePair> comparator)
+         throws FunctionEvaluationException, OptimizationException, IllegalArgumentException {
+-
+         while (true) {
+-
+             incrementIterationsCounter();
+-
+-            // save the original vertex
+             final RealPointValuePair[] original = simplex;
+             final RealPointValuePair best = original[0];
+-
+-            // perform a reflection step
+             final RealPointValuePair reflected = evaluateNewSimplex(original, 1.0, comparator);
+-            if (comparator.compare(reflected, best) < 0) {
+-
+-                // compute the expanded simplex
++            if (comparator.compare(reflected, best) <= 0) {
+                 final RealPointValuePair[] reflectedSimplex = simplex;
+                 final RealPointValuePair expanded = evaluateNewSimplex(original, khi, comparator);
+                 if (comparator.compare(reflected, expanded) <= 0) {
+-                    // accept the reflected simplex
+                     simplex = reflectedSimplex;
+                 }
+-
+                 return;
+-
+             }
+-
+-            // compute the contracted simplex
+             final RealPointValuePair contracted = evaluateNewSimplex(original, gamma, comparator);
+-            if (comparator.compare(contracted, best) < 0) {
+-                // accept the contracted simplex
+-
+-            // check convergence
++            if (comparator.compare(contracted, best) <= 0) {
+                 return;
+             }
+-
+         }
+-
+     }

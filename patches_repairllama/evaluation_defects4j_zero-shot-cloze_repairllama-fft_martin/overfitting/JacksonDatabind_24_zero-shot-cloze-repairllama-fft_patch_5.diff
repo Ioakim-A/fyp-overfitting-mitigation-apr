@@ -1,0 +1,21 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9b8b1bb6-46d9-477d-9d1b-5b5808a2cb95_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ed00e3d9-0efa-44be-bbc6-bad7cec4ff46_fixed.java
+index 0502fea..cdf35c0 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9b8b1bb6-46d9-477d-9d1b-5b5808a2cb95_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ed00e3d9-0efa-44be-bbc6-bad7cec4ff46_fixed.java
+@@ -1,9 +1,14 @@
+     public BaseSettings withDateFormat(DateFormat df) {
+         if (_dateFormat == df) {
+             return this;
+         }
+-        TimeZone tz = (df == null) ? _timeZone : df.getTimeZone();
++// buggy code
++//        TimeZone tz = (df == null) ? _timeZone : df.getTimeZone();
++//        return new BaseSettings(_classIntrospector, _annotationIntrospector, _visibilityChecker, _propertyNamingStrategy, _typeFactory,
++//                _typeResolverBuilder, df, _handlerInstantiator, _locale,
++//                tz, _defaultBase64);
+        return new BaseSettings(_classIntrospector, _annotationIntrospector, _visibilityChecker, _propertyNamingStrategy, _typeFactory,
+                 _typeResolverBuilder, df, _handlerInstantiator, _locale,
+-                tz, _defaultBase64);
++                (_dateFormat == null) ? _timeZone : _dateFormat.getTimeZone(), _defaultBase64);
++
+     }

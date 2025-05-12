@@ -1,0 +1,39 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8b93f6a0-9a5d-4ed7-9b3c-847d2aeb8a9c_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0f9af7eb-0d51-41a3-8e47-a5278639ab42_fixed.java
+index 43c8ee0..abcd122 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8b93f6a0-9a5d-4ed7-9b3c-847d2aeb8a9c_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0f9af7eb-0d51-41a3-8e47-a5278639ab42_fixed.java
+@@ -1,3 +1,33 @@
+   private Node parseContextTypeExpression(JsDocToken token) {
+-          return parseTypeName(token);
++         if (token == null) {
++              return null;
+           }
++          if (token.getType() != JsDocTokenId.IDENTIFIER) {
++              return null;
++          }
++          String name = token.getImage();
++          if (name.length() == 0) {
++              return null;
++          }
++          if (name.charAt(0) != '@') {
++              return null;
++          }
++          name = name.substring(1);
++          if (name.length() == 0) {
++              return null;
++          }
++          if (name.charAt(0) != '{') {
++              return null;
++          }
++          name = name.substring(1);
++          if (name.length() == 0) {
++              return null;
++          }
++          if (name.charAt(name.length()-1) != '}') {
++              return null;
++          }
++          name = name.substring(0, name.length()-1);
++          if (name.length() == 0) {
++              return null;
++          }
++          return  }

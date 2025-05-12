@@ -1,0 +1,65 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e3a735a3-f507-454e-90b7-dce355deae21_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a1252d42-97f7-4614-91be-85b5f94a79ba_fixed.java
+index e4d90e7..441dba6 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e3a735a3-f507-454e-90b7-dce355deae21_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a1252d42-97f7-4614-91be-85b5f94a79ba_fixed.java
+@@ -1,45 +1,52 @@
+   @Override
+   String toStringHelper(boolean forAnnotations) {
+     if (hasReferenceName()) {
+       return getReferenceName();
+     } else if (prettyPrint) {
+       // Don't pretty print recursively.
+       prettyPrint = false;
+-
+       // Use a tree set so that the properties are sorted.
+       Set<String> propertyNames = Sets.newTreeSet();
+       for (ObjectType current = this;
+            current != null && !current.isNativeObjectType() &&
+                propertyNames.size() <= MAX_PRETTY_PRINTED_PROPERTIES;
+            current = current.getImplicitPrototype()) {
+         propertyNames.addAll(current.getOwnPropertyNames());
+       }
+-
+       StringBuilder sb = new StringBuilder();
+       sb.append("{");
+-
+       int i = 0;
+       for (String property : propertyNames) {
+         if (i > 0) {
+           sb.append(", ");
+         }
+-
+         sb.append(property);
+         sb.append(": ");
+-        sb.append(getPropertyType(property).toString());
+-
++// buggy code
++//        sb.append(getPropertyType(property).toString());
++//        ++i;
++//        if (i == MAX_PRETTY_PRINTED_PROPERTIES) {
++//          sb.append(", ...");
++//          break;
++//        }
++//      }
++//      sb.append("}");
++//      prettyPrint = true;
++//      return sb.toString();
++//    } else {
++//      return "{...}";
++        sb.append(getPropertyType(property));
+         ++i;
+         if (i == MAX_PRETTY_PRINTED_PROPERTIES) {
+           sb.append(", ...");
+           break;
+         }
+       }
+-
+       sb.append("}");
+-
+       prettyPrint = true;
+       return sb.toString();
+     } else {
+       return "{...}";
++
+     }
+   }

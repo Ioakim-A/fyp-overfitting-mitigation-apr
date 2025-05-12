@@ -1,0 +1,51 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9c8d24b7-5440-457f-8511-97ed6967924a_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a553b5df-03ad-4356-89a1-b02859b43f6e_fixed.java
+index 18c915f..a60c362 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9c8d24b7-5440-457f-8511-97ed6967924a_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a553b5df-03ad-4356-89a1-b02859b43f6e_fixed.java
+@@ -1,45 +1,36 @@
+     protected void processProperties(Properties properties)
+     {
+         if (properties == null)
+         {
+             return;
+         }
+-
+         for (Enumeration e = properties.propertyNames(); e.hasMoreElements();)
+         {
+             String option = e.nextElement().toString();
+-
+             if (!cmd.hasOption(option))
+             {
+                 Option opt = getOptions().getOption(option);
+-
+-                // get the value from the properties instance
+                 String value = properties.getProperty(option);
+-
+                 if (opt.hasArg())
+                 {
+                     if (opt.getValues() == null || opt.getValues().length == 0)
+                     {
+                         try
+                         {
+                             opt.addValueForProcessing(value);
+                         }
+                         catch (RuntimeException exp)
+                         {
+-                            // if we cannot add the value don't worry about it
+                         }
+                     }
+                 }
+                 else if (!("yes".equalsIgnoreCase(value)
+                         || "true".equalsIgnoreCase(value)
+                         || "1".equalsIgnoreCase(value)))
+                 {
+-                    // if the value is not yes, true or 1 then don't add the
+-                    // option to the CommandLine
+-                    break;
++                   return;
+                 }
+-
+                 cmd.addOption(opt);
+             }
+         }
+     }

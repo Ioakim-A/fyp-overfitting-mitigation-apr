@@ -1,0 +1,46 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8ba1bed3-3e99-4f58-aeb6-fa1797e2c420_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/59a9b42c-242d-494f-ae28-fa7b740e6c51_fixed.java
+index af634a5..dcfa03f 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8ba1bed3-3e99-4f58-aeb6-fa1797e2c420_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/59a9b42c-242d-494f-ae28-fa7b740e6c51_fixed.java
+@@ -1,39 +1,40 @@
+     public void reparseCentralDirectoryData(boolean hasUncompressedSize,
+                                             boolean hasCompressedSize,
+                                             boolean hasRelativeHeaderOffset,
+-                                            boolean hasDiskStart)
++                                            boolean hasDiskStart,
++                                            boolean hasInternalAttributes)
+         throws ZipException {
+         if (rawCentralDirectoryData != null) {
+             int expectedLength = (hasUncompressedSize ? DWORD : 0)
+                 + (hasCompressedSize ? DWORD : 0)
+                 + (hasRelativeHeaderOffset ? DWORD : 0)
+                 + (hasDiskStart ? WORD : 0);
+             if (rawCentralDirectoryData.length != expectedLength) {
+                 throw new ZipException("central directory zip64 extended"
+                                        + " information extra field's length"
+                                        + " doesn't match central directory"
+                                        + " data.  Expected length "
+                                        + expectedLength + " but is "
+                                        + rawCentralDirectoryData.length);
+             }
+             int offset = 0;
+             if (hasUncompressedSize) {
+                 size = new ZipEightByteInteger(rawCentralDirectoryData, offset);
+                 offset += DWORD;
+             }
+             if (hasCompressedSize) {
+                 compressedSize = new ZipEightByteInteger(rawCentralDirectoryData,
+                                                          offset);
+                 offset += DWORD;
+             }
+             if (hasRelativeHeaderOffset) {
+                 relativeHeaderOffset =
+                     new ZipEightByteInteger(rawCentralDirectoryData, offset);
+                 offset += DWORD;
+             }
+             if (hasDiskStart) {
+                 diskStart = new ZipLong(rawCentralDirectoryData, offset);
+                 offset += WORD;
+             }
+         }
+     }

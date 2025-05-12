@@ -1,0 +1,50 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/94e31016-d4d5-45c5-9c67-e6b42e458739_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/61ed84e2-8d5a-4127-87d7-a61a66299135_fixed.java
+index be3dcc8..0fe43b4 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/94e31016-d4d5-45c5-9c67-e6b42e458739_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/61ed84e2-8d5a-4127-87d7-a61a66299135_fixed.java
+@@ -1,41 +1,41 @@
+     private static StringBuilder escapeRegex(StringBuilder regex, String value, boolean unquote) {
+-        boolean wasWhite= false;
++       boolean white= false;
+         for(int i= 0; i<value.length(); ++i) {
+             char c= value.charAt(i);
+             if(Character.isWhitespace(c)) {
+-                if(!wasWhite) {
+-                    wasWhite= true;
++                if(!white) {
++                    white= true;
+                     regex.append("\\s*+");
+                 }
+                 continue;
+             }
+-            wasWhite= false;
++            white= false;
+             switch(c) {
+             case '\'':
+                 if(unquote) {
+                     if(++i==value.length()) {
+                         return regex;
+                     }
+                     c= value.charAt(i);
+                 }
+                 break;
+             case '?':
+             case '[':
+             case ']':
+             case '(':
+             case ')':
+             case '{':
+             case '}':
+             case '\\':
+             case '|':
+             case '*':
+             case '+':
+             case '^':
+             case '$':
+             case '.':
+                 regex.append('\\');
+             }
+             regex.append(c);
+         }
+         return regex;
+     }

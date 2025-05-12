@@ -1,0 +1,32 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8e55be2a-00c0-42b7-a99d-594c7b4bca02_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d061f834-ffc1-40f4-9dc7-ee0762036173_fixed.java
+index b108107..00d9a3e 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8e55be2a-00c0-42b7-a99d-594c7b4bca02_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d061f834-ffc1-40f4-9dc7-ee0762036173_fixed.java
+@@ -1,25 +1,24 @@
+   private void inferPropertyTypesToMatchConstraint(
+       JSType type, JSType constraint) {
+     if (type == null || constraint == null) {
+       return;
+     }
+-
+     ObjectType constraintObj =
+         ObjectType.cast(constraint.restrictByNotNullOrUndefined());
+-    if (constraintObj != null && constraintObj.isRecordType()) {
++   if (constraintObj != null) {
+       ObjectType objType = ObjectType.cast(type.restrictByNotNullOrUndefined());
+-      if (objType != null) {
++      if (objType != null && constraintObj.isRecordType()) {
+         for (String prop : constraintObj.getOwnPropertyNames()) {
+           JSType propType = constraintObj.getPropertyType(prop);
+           if (!objType.isPropertyTypeDeclared(prop)) {
+             JSType typeToInfer = propType;
+             if (!objType.hasProperty(prop)) {
+               typeToInfer =
+                   getNativeType(VOID_TYPE).getLeastSupertype(propType);
+             }
+             objType.defineInferredProperty(prop, typeToInfer, null);
+           }
+         }
+       }
+     }
+   }

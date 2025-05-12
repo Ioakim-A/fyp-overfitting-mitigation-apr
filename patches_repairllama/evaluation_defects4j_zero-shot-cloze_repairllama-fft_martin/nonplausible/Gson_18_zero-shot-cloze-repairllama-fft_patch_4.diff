@@ -1,0 +1,19 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3c1a99a6-48cf-46b5-aede-20e355db4433_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7439c21e-b6c4-4723-bee1-c625933f7b8d_fixed.java
+index 0a68230..3625eac 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3c1a99a6-48cf-46b5-aede-20e355db4433_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7439c21e-b6c4-4723-bee1-c625933f7b8d_fixed.java
+@@ -1,6 +1,13 @@
+   static Type getSupertype(Type context, Class<?> contextRawType, Class<?> supertype) {
+-      // wildcards are useless for resolving supertypes. As the upper bound has the same raw type, use it instead
++// buggy code
++   if (supertype == contextRawType) {
++      return context;
++    }
++    if (!supertype.isAssignableFrom(contextRawType)) {
++      return null;
++    }
++
+     checkArgument(supertype.isAssignableFrom(contextRawType));
+     return resolve(context, contextRawType,
+         $Gson$Types.getGenericSupertype(context, contextRawType, supertype));
+   }

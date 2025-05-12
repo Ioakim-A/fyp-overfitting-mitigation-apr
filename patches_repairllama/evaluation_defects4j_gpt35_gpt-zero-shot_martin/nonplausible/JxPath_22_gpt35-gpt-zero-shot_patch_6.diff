@@ -1,0 +1,32 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/049a9db1-b515-4f9e-841b-d90ff4ab8c11_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1be28eb8-437b-4af1-a235-b6899b8753ac_fixed.java
+index 1326b4e..0bdac1c 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/049a9db1-b515-4f9e-841b-d90ff4ab8c11_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1be28eb8-437b-4af1-a235-b6899b8753ac_fixed.java
+@@ -1,26 +1,23 @@
+ public static String getNamespaceURI(Node node) {
+     if (node instanceof Document) {
+         node = ((Document) node).getDocumentElement();
+     }
+-
+     Element element = (Element) node;
+-
+     String uri = element.getNamespaceURI();
+     if (uri == null) {
+         String prefix = getPrefix(node);
+         String qname = prefix == null ? "xmlns" : "xmlns:" + prefix;
+-    
+         Node aNode = node;
+         while (aNode != null) {
+             if (aNode.getNodeType() == Node.ELEMENT_NODE) {
+                 Attr attr = ((Element) aNode).getAttributeNode(qname);
+                 if (attr != null) {
+                     return attr.getValue();
+                 }
+             }
+             aNode = aNode.getParentNode();
+         }
+         return null;
+     }
+     return uri;
+ }
+\ No newline at end of file

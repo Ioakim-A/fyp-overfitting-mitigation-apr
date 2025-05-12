@@ -1,0 +1,29 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f7aaced8-94a0-4bbd-9eed-89623fd45969_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e6a55b5c-a4f8-4a8b-b2f6-507ba0059f28_fixed.java
+index 05d6a6d..4ffd887 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f7aaced8-94a0-4bbd-9eed-89623fd45969_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e6a55b5c-a4f8-4a8b-b2f6-507ba0059f28_fixed.java
+@@ -1,21 +1,17 @@
+     public void setSelected(Option option) throws AlreadySelectedException
+     {
+         if (option == null)
+         {
+-            // reset the option previously selected
+             selected = null;
+             return;
+         }
+-        
+-        // if no option has already been selected or the 
+-        // same option is being reselected then set the
+-        // selected member variable
+-        if (selected == null || selected.equals(option.getOpt()))
++       if (selected == null || !selected.equals(option))
+         {
+-            selected = option.getOpt();
++            selected = option;
++            fireOptionSelected(option);
+         }
+         else
+         {
+             throw new AlreadySelectedException(this, option);
+         }
+     }

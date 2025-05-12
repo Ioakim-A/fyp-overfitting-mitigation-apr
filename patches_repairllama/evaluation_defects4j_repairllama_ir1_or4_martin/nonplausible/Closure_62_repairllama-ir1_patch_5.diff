@@ -1,0 +1,56 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5250c747-e72b-461f-8d98-a29cfb0fa04b_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7b9117cf-b51a-43cb-ae5d-b49698b166f6_fixed.java
+index 904dba7..4bb8d90 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5250c747-e72b-461f-8d98-a29cfb0fa04b_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7b9117cf-b51a-43cb-ae5d-b49698b166f6_fixed.java
+@@ -1,46 +1,39 @@
+   private String format(JSError error, boolean warning) {
+-    // extract source excerpt
++    String sourceExcerpt = null;
+     SourceExcerptProvider source = getSource();
+-    String sourceExcerpt = source == null ? null :
+-        excerpt.get(
+-            source, error.sourceName, error.lineNumber, excerptFormatter);
+-
+-    // formatting the message
++    if (source != null) {
++      sourceExcerpt =
++          excerpt.get(source, error.sourceName, error.lineNumber, excerptFormatter);
++    }
+     StringBuilder b = new StringBuilder();
+     if (error.sourceName != null) {
+       b.append(error.sourceName);
+       if (error.lineNumber > 0) {
+         b.append(':');
+         b.append(error.lineNumber);
+       }
+       b.append(": ");
+     }
+-
+     b.append(getLevelName(warning ? CheckLevel.WARNING : CheckLevel.ERROR));
+     b.append(" - ");
+-
+     b.append(error.description);
+     b.append('\n');
+     if (sourceExcerpt != null) {
+       b.append(sourceExcerpt);
+       b.append('\n');
+       int charno = error.getCharno();
+-
+-      // padding equal to the excerpt and arrow at the end
+-      // charno == sourceExpert.length() means something is missing
+-      // at the end of the line
+       if (excerpt.equals(LINE)
+           && 0 <= charno && charno < sourceExcerpt.length()) {
+         for (int i = 0; i < charno; i++) {
+           char c = sourceExcerpt.charAt(i);
+           if (Character.isWhitespace(c)) {
+             b.append(c);
+           } else {
+             b.append(' ');
+           }
+         }
+         b.append("^\n");
+       }
+     }
+     return b.toString();
+   }

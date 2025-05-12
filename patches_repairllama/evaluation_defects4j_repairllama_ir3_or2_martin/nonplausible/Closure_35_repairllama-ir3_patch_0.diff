@@ -1,0 +1,43 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4dfa1e71-d1be-4918-afc3-b881b1101ed9_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/31139074-6ea0-42c5-aa40-da14df4d4db2_fixed.java
+index b108107..1475956 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4dfa1e71-d1be-4918-afc3-b881b1101ed9_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/31139074-6ea0-42c5-aa40-da14df4d4db2_fixed.java
+@@ -1,25 +1,26 @@
+   private void inferPropertyTypesToMatchConstraint(
+       JSType type, JSType constraint) {
+     if (type == null || constraint == null) {
+       return;
+     }
+-
+     ObjectType constraintObj =
+         ObjectType.cast(constraint.restrictByNotNullOrUndefined());
+-    if (constraintObj != null && constraintObj.isRecordType()) {
+-      ObjectType objType = ObjectType.cast(type.restrictByNotNullOrUndefined());
+-      if (objType != null) {
+-        for (String prop : constraintObj.getOwnPropertyNames()) {
+-          JSType propType = constraintObj.getPropertyType(prop);
+-          if (!objType.isPropertyTypeDeclared(prop)) {
+-            JSType typeToInfer = propType;
+-            if (!objType.hasProperty(prop)) {
+-              typeToInfer =
+-                  getNativeType(VOID_TYPE).getLeastSupertype(propType);
++   if (constraintObj == null) {
++      return;
+     }
+-            objType.defineInferredProperty(prop, typeToInfer, null);
++    ObjectType typeObj = ObjectType.cast(type.restrictByNotNullOrUndefined());
++    if (typeObj == null) {
++      return;
+     }
++    for (String propertyName : constraintObj.getOwnPropertyNames()) {
++      JSType propertyType = typeObj.getPropertyType(propertyName);
++      if (propertyType == null) {
++        continue;
+       }
++      JSType constraintPropertyType = constraintObj.getPropertyType(propertyName);
++      if (constraintPropertyType == null) {
++        continue;
+       }
++      inferPropertyTypesToMatchConstraint(propertyType, constraintPropertyType);
+     }
+   }

@@ -1,0 +1,45 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/547bf9d5-1d4d-4d8f-bea3-9f8e47296023_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f99a9757-5432-4a2a-bd68-a006d73b496f_fixed.java
+index 0cc5123..4e94061 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/547bf9d5-1d4d-4d8f-bea3-9f8e47296023_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f99a9757-5432-4a2a-bd68-a006d73b496f_fixed.java
+@@ -1,37 +1,25 @@
+    public XYDataItem addOrUpdate(Number x, Number y) {
+         if (x == null) {
+             throw new IllegalArgumentException("Null 'x' argument.");
+         }
+-
+-        // if we get to here, we know that duplicate X values are not permitted
+         XYDataItem overwritten = null;
+         int index = indexOf(x);
+         if (index >= 0 && !this.allowDuplicateXValues) {
+             XYDataItem existing = (XYDataItem) this.data.get(index);
+             try {
+                 overwritten = (XYDataItem) existing.clone();
+             }
+             catch (CloneNotSupportedException e) {
+                 throw new SeriesException("Couldn't clone XYDataItem!");
+             }
+             existing.setY(y);
+         }
+         else {
+-            // if the series is sorted, the negative index is a result from
+-            // Collections.binarySearch() and tells us where to insert the
+-            // new item...otherwise it will be just -1 and we should just
+-            // append the value to the list...
+             if (this.autoSort) {
+                 this.data.add(-index - 1, new XYDataItem(x, y));
+             }
+             else {
+                 this.data.add(new XYDataItem(x, y));
+             }
+-            // check if this addition will exceed the maximum item count...
+-            if (getItemCount() > this.maximumItemCount) {
+-                this.data.remove(0);
+-            }
+-        }
+-        fireSeriesChanged();
+-        return overwritten;
+-    }
++            while (getItemCount() > this.maximumItemCount) {
++               
+\ No newline at end of file

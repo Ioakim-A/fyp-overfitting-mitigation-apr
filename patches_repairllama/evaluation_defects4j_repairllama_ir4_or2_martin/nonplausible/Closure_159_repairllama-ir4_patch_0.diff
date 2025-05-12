@@ -1,0 +1,27 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c6515902-7ffb-4f78-add3-e609b7035836_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0e10d236-c26a-46f4-824a-dc3627bfe23c_fixed.java
+index e404855..da6f2d9 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c6515902-7ffb-4f78-add3-e609b7035836_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0e10d236-c26a-46f4-824a-dc3627bfe23c_fixed.java
+@@ -1,15 +1,18 @@
+   private void findCalledFunctions(
+       Node node, Set<String> changed) {
+     Preconditions.checkArgument(changed != null);
+-    // For each referenced function, add a new reference
+-    if (node.getType() == Token.CALL) {
++// buggy code
++//     if (node.getType() == Token.CALL) {
++//       Node child = node.getFirstChild();
++//       if (child.getType() == Token.NAME) {
++//         changed.add(child.getString());
++   if (node != null && node.getType() == Token.CALL) {
+       Node child = node.getFirstChild();
+-      if (child.getType() == Token.NAME) {
++      if (child != null && child.getType() == Token.NAME) {
+         changed.add(child.getString());
+       }
+     }
+-
+     for (Node c = node.getFirstChild(); c != null; c = c.getNext()) {
+       findCalledFunctions(c, changed);
+     }
+   }

@@ -1,0 +1,28 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1b77bf56-a128-4866-a832-beba02652544_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7b556260-96b9-4693-abd8-3e822dabbf46_fixed.java
+index 7dc89ed..e9d0248 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1b77bf56-a128-4866-a832-beba02652544_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7b556260-96b9-4693-abd8-3e822dabbf46_fixed.java
+@@ -1,20 +1,22 @@
+         boolean anyOtherEndTag(Token t, HtmlTreeBuilder tb) {
+-            String name = t.asEndTag().normalName();
++// buggy code
++//             String name = t.asEndTag().normalName();
++           String name = t.normalName();
+             ArrayList<Element> stack = tb.getStack();
+             for (int pos = stack.size() -1; pos >= 0; pos--) {
+                 Element node = stack.get(pos);
+                 if (node.nodeName().equals(name)) {
+                     tb.generateImpliedEndTags(name);
+                     if (!name.equals(tb.currentElement().nodeName()))
+                         tb.error(this);
+                     tb.popStackToClose(name);
+                     break;
+                 } else {
+                     if (tb.isSpecial(node)) {
+                         tb.error(this);
+                         return false;
+                     }
+                 }
+             }
+             return true;
+         }

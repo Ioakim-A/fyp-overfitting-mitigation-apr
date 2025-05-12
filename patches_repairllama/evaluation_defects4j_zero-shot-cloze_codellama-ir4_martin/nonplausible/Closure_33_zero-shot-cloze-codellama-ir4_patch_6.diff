@@ -1,0 +1,42 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/db04d5ff-345a-49d2-966c-d039011bd442_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/79452c82-5f2a-4ec0-8fad-bff512969973_fixed.java
+index 370507c..4514f1e 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/db04d5ff-345a-49d2-966c-d039011bd442_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/79452c82-5f2a-4ec0-8fad-bff512969973_fixed.java
+@@ -1,26 +1,27 @@
+   public void matchConstraint(ObjectType constraintObj) {
+-    // We only want to match contraints on anonymous types.
++// buggy code
++//    if (constraintObj.isRecordType()) {
++//      for (String prop : constraintObj.getOwnPropertyNames()) {
++//        JSType propType = constraintObj.getPropertyType(prop);
++//        if (!isPropertyTypeDeclared(prop)) {
++//          defineInferredProperty(prop, propType, null);
++//        }
++//      }
++//    }
++//  }
+ 
+-    // Handle the case where the constraint object is a record type.
+-    //
+-    // param constraintObj {{prop: (number|undefined)}}
+-    // function f(constraintObj) {}
+-    // f({});
+-    //
+-    // We want to modify the object literal to match the constraint, by
+-    // taking any each property on the record and trying to match
+-    // properties on this object.
++  public void matchConstraint(ObjectType constraintObj) {
+     if (constraintObj.isRecordType()) {
+       for (String prop : constraintObj.getOwnPropertyNames()) {
+         JSType propType = constraintObj.getPropertyType(prop);
+         if (!isPropertyTypeDeclared(prop)) {
+           JSType typeToInfer = propType;
+           if (!hasProperty(prop)) {
+             typeToInfer = getNativeType(JSTypeNative.VOID_TYPE)
+                 .getLeastSupertype(propType);
+           }
+           defineInferredProperty(prop, typeToInfer, null);
+         }
+       }
+     }
+   }

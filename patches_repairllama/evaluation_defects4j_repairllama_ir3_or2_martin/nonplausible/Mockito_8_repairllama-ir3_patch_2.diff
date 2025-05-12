@@ -1,0 +1,26 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/31588aef-2f93-416d-afae-679505086741_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/32be6a5e-5e81-4ee5-8aaf-67b59b3a6934_fixed.java
+index 42b58d0..c3c5a43 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/31588aef-2f93-416d-afae-679505086741_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/32be6a5e-5e81-4ee5-8aaf-67b59b3a6934_fixed.java
+@@ -1,19 +1,19 @@
+     protected void registerTypeVariablesOn(Type classType) {
+         if (!(classType instanceof ParameterizedType)) {
+             return;
+         }
+         ParameterizedType parameterizedType = (ParameterizedType) classType;
+         TypeVariable[] typeParameters = ((Class<?>) parameterizedType.getRawType()).getTypeParameters();
+         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+         for (int i = 0; i < actualTypeArguments.length; i++) {
+             TypeVariable typeParameter = typeParameters[i];
+             Type actualTypeArgument = actualTypeArguments[i];
+-
+             if (actualTypeArgument instanceof WildcardType) {
+                 contextualActualTypeParameters.put(typeParameter, boundsOf((WildcardType) actualTypeArgument));
++           } else if (actualTypeArgument instanceof ParameterizedType) {
++                contextualActualTypeParameters.put(typeParameter, actualTypeArgument);
+             } else {
+                 contextualActualTypeParameters.put(typeParameter, actualTypeArgument);
+             }
+-            // logger.log("For '" + parameterizedType + "' found type variable : { '" + typeParameter + "(" + System.identityHashCode(typeParameter) + ")" + "' : '" + actualTypeArgument + "(" + System.identityHashCode(typeParameter) + ")" + "' }");
+         }
+     }

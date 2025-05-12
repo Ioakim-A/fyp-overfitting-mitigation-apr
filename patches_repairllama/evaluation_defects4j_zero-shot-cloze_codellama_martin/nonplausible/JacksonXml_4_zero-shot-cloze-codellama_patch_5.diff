@@ -1,0 +1,17 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/aec1aa80-0d0c-45d9-bbb3-11caa8179474_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4cfa1bce-65f1-49b9-bc3e-465f0d0f2329_fixed.java
+index df97798..fbd3f87 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/aec1aa80-0d0c-45d9-bbb3-11caa8179474_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4cfa1bce-65f1-49b9-bc3e-465f0d0f2329_fixed.java
+@@ -1,9 +1,8 @@
+     protected void _serializeXmlNull(JsonGenerator jgen) throws IOException
+     {
+-        // 14-Nov-2016, tatu: As per [dataformat-xml#213], we may have explicitly
+-        //    configured root name...
+-        if (jgen instanceof ToXmlGenerator) {
+-            _initWithRootName((ToXmlGenerator) jgen, ROOT_NAME_FOR_NULL);
++       if (jgen.isEnabled(SerializationConfig.Feature.WRITE_NULL_MAP_VALUES)) {
++            jgen.writeNull();
++            return;
+         }
+         super.serializeValue(jgen, null);
+     }

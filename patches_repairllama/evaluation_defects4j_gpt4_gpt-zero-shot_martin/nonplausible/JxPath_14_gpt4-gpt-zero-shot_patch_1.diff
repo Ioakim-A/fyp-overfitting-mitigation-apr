@@ -1,0 +1,18 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ec467fcb-6b3f-440c-954d-528ee1455d40_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2f30bb7b-a8e4-402c-93e6-e54e7c29978b_fixed.java
+index bc40fbe..656d9ea 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ec467fcb-6b3f-440c-954d-528ee1455d40_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2f30bb7b-a8e4-402c-93e6-e54e7c29978b_fixed.java
+@@ -1,5 +1,10 @@
+ protected Object functionFloor(EvalContext context) {
+-        assertArgCount(1);
+-        double v = InfoSetUtil.doubleValue(getArg1().computeValue(context));
++    if(context.getArgCount() != 1) throw new IllegalArgumentException("Expected exactly one argument");
++    double v;
++    try {
++        v = InfoSetUtil.doubleValue(context.getArg1().computeValue());
++    } catch (Exception e) {
++        throw new IllegalArgumentException("Could not compute value", e);
++    }
+     return new Double(Math.floor(v));
+ }
+\ No newline at end of file

@@ -1,0 +1,27 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/caa36d3e-131b-423e-a7dd-508669904158_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ef22d779-c23f-4020-bdcc-7a2c26034674_fixed.java
+index 638669b..50f7b71 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/caa36d3e-131b-423e-a7dd-508669904158_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ef22d779-c23f-4020-bdcc-7a2c26034674_fixed.java
+@@ -1,11 +1,16 @@
++public class ZipArchiveInputStream {
++    private InputStream in;
++    private String zipEncoding;
++    private boolean useUnicodeExtraFields;
++    private boolean allowStoredEntriesWithDataDescriptor;
++    
+     public ZipArchiveInputStream(InputStream inputStream,
+                                 String encoding,
+                                 boolean useUnicodeExtraFields,
+                                 boolean allowStoredEntriesWithDataDescriptor) {
+-        zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
++        this.in = inputStream;
++        this.zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
+         this.useUnicodeExtraFields = useUnicodeExtraFields;
+-        in = new PushbackInputStream(inputStream, buf.capacity());
+-        this.allowStoredEntriesWithDataDescriptor =
+-            allowStoredEntriesWithDataDescriptor;
+-        // haven't read anything so far
++        this.allowStoredEntriesWithDataDescriptor = allowStoredEntriesWithDataDescriptor;
++    }
+ }
+\ No newline at end of file

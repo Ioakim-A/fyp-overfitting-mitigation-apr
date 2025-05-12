@@ -1,0 +1,48 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/733b3eaa-6f98-4790-bdf9-bed8189af551_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/be98a1f2-16b2-43f4-b277-28950cf34f53_fixed.java
+index 50cbfb2..8df8228 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/733b3eaa-6f98-4790-bdf9-bed8189af551_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/be98a1f2-16b2-43f4-b277-28950cf34f53_fixed.java
+@@ -1,39 +1,23 @@
+     protected void iterateSimplex(final Comparator<RealPointValuePair> comparator)
+         throws FunctionEvaluationException, OptimizationException, IllegalArgumentException {
+-
+-        while (true) {
+-
+-            incrementIterationsCounter();
+-
+-            // save the original vertex
+        final RealPointValuePair[] original = simplex;
+         final RealPointValuePair best = original[0];
+-
+-            // perform a reflection step
++        while (true) {
++            incrementIterationsCounter();
+             final RealPointValuePair reflected = evaluateNewSimplex(original, 1.0, comparator);
+             if (comparator.compare(reflected, best) < 0) {
+-
+-                // compute the expanded simplex
+                 final RealPointValuePair[] reflectedSimplex = simplex;
+                 final RealPointValuePair expanded = evaluateNewSimplex(original, khi, comparator);
+                 if (comparator.compare(reflected, expanded) <= 0) {
+-                    // accept the reflected simplex
+                     simplex = reflectedSimplex;
+                 }
+-
+                 return;
+-
+             }
+-
+-            // compute the contracted simplex
+             final RealPointValuePair contracted = evaluateNewSimplex(original, gamma, comparator);
+             if (comparator.compare(contracted, best) < 0) {
+-                // accept the contracted simplex
+-
+-            // check convergence
++                simplex = original;
+                 return;
+             }
+-
++            original[0] = contracted;
+         }
+-
+     }

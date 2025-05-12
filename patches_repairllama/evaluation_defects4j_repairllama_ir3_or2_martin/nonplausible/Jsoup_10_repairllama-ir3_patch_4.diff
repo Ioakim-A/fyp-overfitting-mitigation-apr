@@ -1,0 +1,33 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e18923f0-352f-4f6c-b301-528c5d78fc87_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e924e91a-d01b-4add-bafc-c508c1d45b29_fixed.java
+index f8677d4..57c05dd 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e18923f0-352f-4f6c-b301-528c5d78fc87_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e924e91a-d01b-4add-bafc-c508c1d45b29_fixed.java
+@@ -1,24 +1,24 @@
+     public String absUrl(String attributeKey) {
+         Validate.notEmpty(attributeKey);
+-
+         String relUrl = attr(attributeKey);
+         if (!hasAttr(attributeKey)) {
+-            return ""; // nothing to make absolute with
++            return ""; 
+         } else {
+             URL base;
+             try {
+                 try {
+                     base = new URL(baseUri);
+                 } catch (MalformedURLException e) {
+-                    // the base is unsuitable, but the attribute may be abs on its own, so try that
+                     URL abs = new URL(relUrl);
+                     return abs.toExternalForm();
+                 }
+-                // workaround: java resolves '//path/file + ?foo' to '//path/?foo', not '//path/file?foo' as desired
++               if (!base.getProtocol().equals("http") && !base.getProtocol().equals("https")) {
++                    return "";
++                }
+                 URL abs = new URL(base, relUrl);
+                 return abs.toExternalForm();
+             } catch (MalformedURLException e) {
+                 return "";
+             }
+         }
+     }

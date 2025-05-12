@@ -1,0 +1,66 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c6acc60b-4a53-4610-a2ab-4874b1dad114_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f3b5fb76-e176-44c4-8a5f-e9e37d1932d3_fixed.java
+index c8ee48f..9d68794 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c6acc60b-4a53-4610-a2ab-4874b1dad114_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f3b5fb76-e176-44c4-8a5f-e9e37d1932d3_fixed.java
+@@ -1,48 +1,56 @@
+     /**
+      * Escape constant fields into regular expression
+      * @param regex The destination regex
+      * @param value The source field
+      * @param unquote If true, replace two success quotes ('') with single quote (')
+      * @return The <code>StringBuilder</code>
+      */
+     private static StringBuilder escapeRegex(StringBuilder regex, String value, boolean unquote) {
+-        boolean wasWhite= false;
++// buggy code
++//        boolean wasWhite= false;
++//        for(int i= 0; i<value.length(); ++i) {
++//            char c= value.charAt(i);
++//            if(Character.isWhitespace(c)) {
++//                if(!wasWhite) {
++//                    wasWhite= true;
++//                    regex.append("\\s*+");
++//                }
++//                continue;
++//            }
++//            wasWhite= false;
+         for(int i= 0; i<value.length(); ++i) {
+             char c= value.charAt(i);
+             if(Character.isWhitespace(c)) {
+-                if(!wasWhite) {
+-                    wasWhite= true;
+                 regex.append("\\s*+");
+-                }
+                 continue;
+             }
+-            wasWhite= false;
++
+             switch(c) {
+             case '\'':
+                 if(unquote) {
+                     if(++i==value.length()) {
+                         return regex;
+                     }
+                     c= value.charAt(i);
+                 }
+                 break;
+             case '?':
+             case '[':
+             case ']':
+             case '(':
+             case ')':
+             case '{':
+             case '}':
+             case '\\':
+             case '|':
+             case '*':
+             case '+':
+             case '^':
+             case '$':
+             case '.':
+                 regex.append('\\');
+             }
+             regex.append(c);
+         }
+         return regex;
+     }

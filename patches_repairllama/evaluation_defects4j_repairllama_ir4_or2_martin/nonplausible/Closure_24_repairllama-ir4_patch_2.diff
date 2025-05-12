@@ -1,0 +1,45 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/feec0e46-0127-4787-b64b-4fe2e8d8f3f4_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e39346b6-add2-4818-9f36-c83ce360baa8_fixed.java
+index 602226b..c2407b6 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/feec0e46-0127-4787-b64b-4fe2e8d8f3f4_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e39346b6-add2-4818-9f36-c83ce360baa8_fixed.java
+@@ -1,26 +1,33 @@
+     private void findAliases(NodeTraversal t) {
+       Scope scope = t.getScope();
+       for (Var v : scope.getVarIterable()) {
+         Node n = v.getNode();
+         int type = n.getType();
+         Node parent = n.getParent();
+-        if (parent.isVar()) {
++// buggy code
++//         if (parent.isVar()) {
++//           if (n.hasChildren() && n.getFirstChild().isQualifiedName()) {
++//           String name = n.getString();
++//           Var aliasVar = scope.getVar(name);
++//           aliases.put(name, aliasVar);
++//           String qualifiedName =
++//               aliasVar.getInitialValue().getQualifiedName();
++//           transformation.addAlias(name, qualifiedName);
++//         } else {
++//           report(t, n, GOOG_SCOPE_NON_ALIAS_LOCAL, n.getString());
++//         }
++//         }
++       if (type == Token.VAR) {
+           if (n.hasChildren() && n.getFirstChild().isQualifiedName()) {
+             String name = n.getString();
+             Var aliasVar = scope.getVar(name);
+             aliases.put(name, aliasVar);
+-
+             String qualifiedName =
+                 aliasVar.getInitialValue().getQualifiedName();
+             transformation.addAlias(name, qualifiedName);
+-          // Bleeding functions already get a BAD_PARAMETERS error, so just
+-          // do nothing.
+-          // Parameters of the scope function also get a BAD_PARAMETERS
+-          // error.
+           } else {
+-          // TODO(robbyw): Support using locals for private variables.
+             report(t, n, GOOG_SCOPE_NON_ALIAS_LOCAL, n.getString());
+           }
+         }
+       }
+     }

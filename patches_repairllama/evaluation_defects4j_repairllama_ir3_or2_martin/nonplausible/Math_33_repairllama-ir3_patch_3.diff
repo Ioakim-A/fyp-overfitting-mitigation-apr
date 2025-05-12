@@ -1,0 +1,46 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/73734d46-ffe4-4795-8592-c59e3c8ecea3_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/51f23505-b6e0-4652-b8c3-e6d6d5d61162_fixed.java
+index 125b071..67f2908 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/73734d46-ffe4-4795-8592-c59e3c8ecea3_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/51f23505-b6e0-4652-b8c3-e6d6d5d61162_fixed.java
+@@ -1,41 +1,32 @@
+     protected void dropPhase1Objective() {
+         if (getNumObjectiveFunctions() == 1) {
+             return;
+         }
+-
+         List<Integer> columnsToDrop = new ArrayList<Integer>();
+         columnsToDrop.add(0);
+-
+-        // positive cost non-artificial variables
+         for (int i = getNumObjectiveFunctions(); i < getArtificialVariableOffset(); i++) {
+             final double entry = tableau.getEntry(0, i);
+-            if (Precision.compareTo(entry, 0d, maxUlps) > 0) {
+                 columnsToDrop.add(i);
+             }
+         }
+-
+-        // non-basic artificial variables
+         for (int i = 0; i < getNumArtificialVariables(); i++) {
+           int col = i + getArtificialVariableOffset();
+           if (getBasicRow(col) == null) {
+             columnsToDrop.add(col);
+           }
+         }
+-
+         double[][] matrix = new double[getHeight() - 1][getWidth() - columnsToDrop.size()];
+         for (int i = 1; i < getHeight(); i++) {
+           int col = 0;
+           for (int j = 0; j < getWidth(); j++) {
+             if (!columnsToDrop.contains(j)) {
+               matrix[i - 1][col++] = tableau.getEntry(i, j);
+             }
+           }
+         }
+-
+         for (int i = columnsToDrop.size() - 1; i >= 0; i--) {
+           columnLabels.remove((int) columnsToDrop.get(i));
+         }
+-
+         this.tableau = new Array2DRowRealMatrix(matrix);
+         this.numArtificialVariables = 0;
+     }

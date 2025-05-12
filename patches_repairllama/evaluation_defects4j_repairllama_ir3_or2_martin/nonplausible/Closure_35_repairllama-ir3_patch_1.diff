@@ -1,0 +1,44 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8f98e12e-253a-4391-ac37-2cd8ce8319bc_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7c7bf870-86c3-49ca-b3f4-525bea7be224_fixed.java
+index b108107..172e755 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8f98e12e-253a-4391-ac37-2cd8ce8319bc_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7c7bf870-86c3-49ca-b3f4-525bea7be224_fixed.java
+@@ -1,25 +1,27 @@
+   private void inferPropertyTypesToMatchConstraint(
+       JSType type, JSType constraint) {
+     if (type == null || constraint == null) {
+       return;
+     }
+-
+     ObjectType constraintObj =
+         ObjectType.cast(constraint.restrictByNotNullOrUndefined());
+-    if (constraintObj != null && constraintObj.isRecordType()) {
+-      ObjectType objType = ObjectType.cast(type.restrictByNotNullOrUndefined());
+-      if (objType != null) {
+-        for (String prop : constraintObj.getOwnPropertyNames()) {
+-          JSType propType = constraintObj.getPropertyType(prop);
+-          if (!objType.isPropertyTypeDeclared(prop)) {
+-            JSType typeToInfer = propType;
+-            if (!objType.hasProperty(prop)) {
+-              typeToInfer =
+-                  getNativeType(VOID_TYPE).getLeastSupertype(propType);
++   if (constraintObj == null) {
++      return;
+     }
+-            objType.defineInferredProperty(prop, typeToInfer, null);
++    ObjectType typeObj = ObjectType.cast(type.restrictByNotNullOrUndefined());
++    if (typeObj == null) {
++      return;
+     }
++    for (String propertyName : constraintObj.getOwnPropertyNames()) {
++      JSType propertyType = constraintObj.getPropertyType(propertyName);
++      if (propertyType == null) {
++        continue;
+       }
++      JSType existingType = typeObj.getPropertyType(propertyName);
++      if (existingType == null) {
++        typeObj.defineInferredProperty(propertyName, propertyType);
++      } else {
++        inferPropertyTypesToMatchConstraint(existingType, propertyType);
+       }
+     }
+   }

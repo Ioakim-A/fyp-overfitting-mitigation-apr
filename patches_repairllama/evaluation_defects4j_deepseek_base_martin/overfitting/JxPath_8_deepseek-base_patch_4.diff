@@ -1,0 +1,31 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e4ac67e3-2874-48b1-ba71-b284be6935ce_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b957cc78-d6ba-4ad2-87ce-5d6e547dc8da_fixed.java
+index 98d89dc..122a82b 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e4ac67e3-2874-48b1-ba71-b284be6935ce_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b957cc78-d6ba-4ad2-87ce-5d6e547dc8da_fixed.java
+@@ -1,23 +1,25 @@
+     private boolean compute(Object left, Object right) {
+         left = reduce(left);
+         right = reduce(right);
+-
+         if (left instanceof InitialContext) {
+             ((InitialContext) left).reset();
+         }
+         if (right instanceof InitialContext) {
+             ((InitialContext) right).reset();
+         }
+         if (left instanceof Iterator && right instanceof Iterator) {
+             return findMatch((Iterator) left, (Iterator) right);
+         }
+         if (left instanceof Iterator) {
+             return containsMatch((Iterator) left, right);
+         }
+         if (right instanceof Iterator) {
+             return containsMatch((Iterator) right, left);
+         }
+         double ld = InfoSetUtil.doubleValue(left);
+         double rd = InfoSetUtil.doubleValue(right);
++        if (ld != ld || rd != rd) {
++            return false;
++        }
+         return evaluateCompare(ld == rd ? 0 : ld < rd ? -1 : 1);
+     }

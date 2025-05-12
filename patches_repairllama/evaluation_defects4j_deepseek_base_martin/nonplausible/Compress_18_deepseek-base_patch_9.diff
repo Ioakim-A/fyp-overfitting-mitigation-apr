@@ -1,0 +1,48 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9b2e4b82-42ed-454a-8d79-f0a353c2aa45_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7cc2c73d-6d02-44d2-868d-fd4b615e9844_fixed.java
+index 08093b4..90ac209 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9b2e4b82-42ed-454a-8d79-f0a353c2aa45_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7cc2c73d-6d02-44d2-868d-fd4b615e9844_fixed.java
+@@ -1,42 +1,40 @@
+     /**
+      * Writes a PAX extended header with the given map as contents.
+      * @since 1.4
+      */
+     void writePaxHeaders(String entryName,
+                          Map<String, String> headers) throws IOException {
+         String name = "./PaxHeaders.X/" + stripTo7Bits(entryName);
+-            // TarEntry's constructor would think this is a directory
+-            // and not allow any data to be written
++
+         if (name.length() >= TarConstants.NAMELEN) {
+             name = name.substring(0, TarConstants.NAMELEN - 1);
+         }
+         TarArchiveEntry pex = new TarArchiveEntry(name,
+                                                   TarConstants.LF_PAX_EXTENDED_HEADER_LC);
+-
+         StringWriter w = new StringWriter();
+         for (Map.Entry<String, String> h : headers.entrySet()) {
+             String key = h.getKey();
+             String value = h.getValue();
+             int len = key.length() + value.length()
+                 + 3 /* blank, equals and newline */
+                 + 2 /* guess 9 < actual length < 100 */;
+             String line = len + " " + key + "=" + value + "\n";
+             int actualLength = line.getBytes(CharsetNames.UTF_8).length;
+             while (len != actualLength) {
+                 // Adjust for cases where length < 10 or > 100
+                 // or where UTF-8 encoding isn't a single octet
+                 // per character.
+                 // Must be in loop as size may go from 99 to 100 in
+                 // first pass so we'd need a second.
+                 len = actualLength;
+                 line = len + " " + key + "=" + value + "\n";
+                 actualLength = line.getBytes(CharsetNames.UTF_8).length;
+             }
+             w.write(line);
+         }
+         byte[] data = w.toString().getBytes(CharsetNames.UTF_8);
+         pex.setSize(data.length);
+         putArchiveEntry(pex);
+         write(data);
+         closeArchiveEntry();
+     }

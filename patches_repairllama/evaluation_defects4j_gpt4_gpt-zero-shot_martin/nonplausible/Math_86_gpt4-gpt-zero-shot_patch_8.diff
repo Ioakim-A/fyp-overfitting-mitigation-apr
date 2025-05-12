@@ -1,0 +1,72 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3ab2964a-2743-49c9-9d24-0d4fe41df9de_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/47fcd2a1-8fd6-4ec6-8dc7-c35e986ffa2e_fixed.java
+index 2ea7a7c..2ebd346 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3ab2964a-2743-49c9-9d24-0d4fe41df9de_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/47fcd2a1-8fd6-4ec6-8dc7-c35e986ffa2e_fixed.java
+@@ -1,59 +1,27 @@
+ public CholeskyDecompositionImpl(final RealMatrix matrix,
+                                  final double relativeSymmetryThreshold,
+                                  final double absolutePositivityThreshold)
+     throws NonSquareMatrixException,
+            NotSymmetricMatrixException, NotPositiveDefiniteMatrixException {
+-
+     if (!matrix.isSquare()) {
+         throw new NonSquareMatrixException(matrix.getRowDimension(),
+                                            matrix.getColumnDimension());
+     }
+-
+     final int order = matrix.getRowDimension();
+     lTData   = matrix.getData();
+     cachedL  = null;
+     cachedLT = null;
+-
+-        // check the matrix before transformation
+     for (int i = 0; i < order; ++i) {
+-
+         final double[] lI = lTData[i];
+-
+-            if (lTData[i][i] < absolutePositivityThreshold) {
++        for (int j = 0; j <= i; ++j) {
++            double sum = 0.0;
++            for (int k = 0; k < j; ++k) {
++                sum += lI[k] * lTData[j][k];
++            }
++            lI[j] = i == j ? Math.sqrt(lI[i] - sum) : (1.0 / lTData[j][j] * (lI[j] - sum));
++            if (i == j && lI[j] <= absolutePositivityThreshold) {
+                 throw new NotPositiveDefiniteMatrixException();
+             }
+-            // check off-diagonal elements (and reset them to 0)
+-            for (int j = i + 1; j < order; ++j) {
+-                final double[] lJ = lTData[j];
+-                final double lIJ = lI[j];
+-                final double lJI = lJ[i];
+-                final double maxDelta =
+-                    relativeSymmetryThreshold * Math.max(Math.abs(lIJ), Math.abs(lJI));
+-                if (Math.abs(lIJ - lJI) > maxDelta) {
+-                    throw new NotSymmetricMatrixException();
+         }
+-                lJ[i] = 0;
+     }
+ }
+\ No newline at end of file
+-
+-        // transform the matrix
+-        for (int i = 0; i < order; ++i) {
+-
+-            final double[] ltI = lTData[i];
+-
+-            // check diagonal element
+-
+-            ltI[i] = Math.sqrt(ltI[i]);
+-            final double inverse = 1.0 / ltI[i];
+-
+-            for (int q = order - 1; q > i; --q) {
+-                ltI[q] *= inverse;
+-                final double[] ltQ = lTData[q];
+-                for (int p = q; p < order; ++p) {
+-                    ltQ[p] -= ltI[q] * ltI[p];
+-                }
+-            }
+-
+-        }
+-
+-    }

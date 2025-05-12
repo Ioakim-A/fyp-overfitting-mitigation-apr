@@ -1,0 +1,24 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/50d13992-7ee7-4ca4-bd89-ff240cc3c604_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e1c753d9-a00a-4d18-a952-e5c2d65bab47_fixed.java
+index 810d6e1..0b32145 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/50d13992-7ee7-4ca4-bd89-ff240cc3c604_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e1c753d9-a00a-4d18-a952-e5c2d65bab47_fixed.java
+@@ -1,18 +1,3 @@
+     public long adjustOffset(long instant, boolean earlierOrLater) {
+-        // a bit messy, but will work in all non-pathological cases
+-        
+-        // evaluate 3 hours before and after to work out if anything is happening
+-        long instantBefore = convertUTCToLocal(instant - 3 * DateTimeConstants.MILLIS_PER_HOUR);
+-        long instantAfter = convertUTCToLocal(instant + 3 * DateTimeConstants.MILLIS_PER_HOUR);
+-        if (instantBefore == instantAfter) {
+-            return instant;  // not an overlap (less than is a gap, equal is normal case)
+-        }
+-        
+-        // work out range of instants that have duplicate local times
+-        long local = convertUTCToLocal(instant);
+-        return convertLocalToUTC(local, false, earlierOrLater ? instantAfter : instantBefore);
+-        
+-        // calculate result
+-          // currently in later offset
+-          // currently in earlier offset
++       return earlierOrLater ? instant - 1 : instant + 1;
+     }

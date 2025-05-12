@@ -1,0 +1,40 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5ae365f4-4a87-4a86-9a82-29bc1a5d22dc_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/869cbcaf-adf4-444a-ba5c-940c5d95803c_fixed.java
+index f2aab88..e29d536 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5ae365f4-4a87-4a86-9a82-29bc1a5d22dc_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/869cbcaf-adf4-444a-ba5c-940c5d95803c_fixed.java
+@@ -1,6 +1,29 @@
+-    public Complex add(Complex rhs)
+-        throws NullArgumentException {
+-        MathUtils.checkNotNull(rhs);
+-        return createComplex(real + rhs.getReal(),
+-            imaginary + rhs.getImaginary());
++public class Complex {
++    private double real;
++    private double imaginary;
++
++    public Complex(double real, double imaginary) {
++        this.real = real;
++        this.imaginary = imaginary;
++    }
++
++    public Complex add(Complex rhs) throws NullArgumentException {
++        if(rhs == null) {
++            throw new NullArgumentException("Argument cannot be null");
++        }
++
++        return createComplex(real + rhs.getReal(), imaginary + rhs.getImaginary());
++    }
++
++    public double getReal() {
++        return real;
++    }
++
++    public double getImaginary() {
++        return imaginary;
++    }
++
++    private Complex createComplex(double real, double imaginary) {
++        return new Complex(real, imaginary);
++    }
+ }
+\ No newline at end of file

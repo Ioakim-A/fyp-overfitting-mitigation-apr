@@ -1,0 +1,48 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2b7e0086-4e92-4d23-b16f-0bbb127e0435_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/71ad417a-f129-45f2-8efb-3601182b75f4_fixed.java
+index 5abdeb5..1c43188 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2b7e0086-4e92-4d23-b16f-0bbb127e0435_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/71ad417a-f129-45f2-8efb-3601182b75f4_fixed.java
+@@ -1,29 +1,31 @@
+     /**
+      * Computes the number of uses of the variable varName and store it in
+      * numUseWithinUseCfgNode.
+      */
+     private void getNumUseInUseCfgNode(final Node cfgNode) {
+-
+       numUsesWithinCfgNode = 0;
+       AbstractCfgNodeTraversalCallback gatherCb =
+           new AbstractCfgNodeTraversalCallback() {
+-
+         @Override
+         public void visit(NodeTraversal t, Node n, Node parent) {
+-          if (n.isName() && n.getString().equals(varName) &&
+-            // We make a special exception when the entire cfgNode is a chain
+-            // of assignments, since in that case the assignment statements
+-            // will happen after the inlining of the right hand side.
+-            // TODO(blickly): Make the SIDE_EFFECT_PREDICATE check more exact
+-            //   and remove this special case.
+-              !(parent.isAssign() &&
+-               (parent.getFirstChild() == n))) {
++// buggy code
++//          if (n.isName() && n.getString().equals(varName) &&
++//            // We make a special exception when the entire cfgNode is a chain
++//            // of assignments, since in that case the assignment statements
++//            // will happen after the inlining of the right hand side.
++//            // TODO(blickly): Make the SIDE_EFFECT_PREDICATE check more exact
++//            //   and remove this special case.
++//              !(parent.isAssign() &&
++//               (parent.getFirstChild() == n))) {
++//              // Don't count lhs of top-level assignment chain
++//              numUsesWithinCfgNode++;
++//          }
++          if (n.isName() && n.getString().equals(varName)) {
+               // Don't count lhs of top-level assignment chain
+               numUsesWithinCfgNode++;
+           }
+-        }
+ 
++        }
+       };
+-
+       NodeTraversal.traverse(compiler, cfgNode, gatherCb);
+     }

@@ -1,0 +1,24 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7409253f-b642-4126-908c-3a9552d0e73e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c8cdceed-1ade-47f7-a3d5-cf11d4c244e8_fixed.java
+index 7498011..ab9aebe 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7409253f-b642-4126-908c-3a9552d0e73e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c8cdceed-1ade-47f7-a3d5-cf11d4c244e8_fixed.java
+@@ -1,12 +1,18 @@
+     /**
+      * Retrieves the element's inner HTML. E.g. on a {@code <div>} with one empty {@code <p>}, would return
+      * {@code <p></p>}. (Whereas {@link #outerHtml()} would return {@code <div><p></p></div>}.)
+      * 
+      * @return String of HTML.
+      * @see #outerHtml()
+      */
+     public String html() {
+         StringBuilder accum = new StringBuilder();
+         html(accum);
+-        return accum.toString().trim();
++        return accum.toString();
++    }
++
++    private void html(StringBuilder accum) {
++        for (Element child : children) {
++            child.html(accum);
++        }
+     }

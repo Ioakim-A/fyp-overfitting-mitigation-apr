@@ -1,0 +1,39 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/766af1f6-9af3-48cb-8a68-6dc0f840d71b_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bd26faf1-dab0-4c39-9269-2a4d031a9d97_fixed.java
+index b450ee6..87250d9 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/766af1f6-9af3-48cb-8a68-6dc0f840d71b_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bd26faf1-dab0-4c39-9269-2a4d031a9d97_fixed.java
+@@ -1,32 +1,29 @@
+     public JsonSerializer<?> createContextual(SerializerProvider serializers,
+             BeanProperty property) throws JsonMappingException
+     {
+         if (property != null) {
+             JsonFormat.Value format = serializers.getAnnotationIntrospector().findFormat((Annotated)property.getMember());
+             if (format != null) {
+-
+-            	// Simple case first: serialize as numeric timestamp?
+                 JsonFormat.Shape shape = format.getShape();
+                 if (shape.isNumeric()) {
+                     return withFormat(Boolean.TRUE, null);
+                 }
+-
+-                if (format.getShape() == JsonFormat.Shape.STRING) {
++                else if (shape == JsonFormat.Shape.STRING) {
+                     TimeZone tz = format.getTimeZone();
+                     final String pattern = format.hasPattern()
+                                     ? format.getPattern()
+                                     : StdDateFormat.DATE_FORMAT_STR_ISO8601;
+                     final Locale loc = format.hasLocale()
+                                     ? format.getLocale()
+                                     : serializers.getLocale();
+                     SimpleDateFormat df = new SimpleDateFormat(pattern, loc);
+                     if (tz == null) {
+                         tz = serializers.getTimeZone();
+                     }
+                     df.setTimeZone(tz);
+                     return withFormat(Boolean.FALSE, df);
+                 }
+             }
+         }
+         return this;
+     }
+\ No newline at end of file

@@ -1,0 +1,24 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ba89ef77-1932-494c-b209-7474c8eb74e9_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/93fa7670-ea88-459f-a75c-f722106084d0_fixed.java
+index e404855..dbaa22b 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ba89ef77-1932-494c-b209-7474c8eb74e9_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/93fa7670-ea88-459f-a75c-f722106084d0_fixed.java
+@@ -1,15 +1,15 @@
+   private void findCalledFunctions(
+       Node node, Set<String> changed) {
+     Preconditions.checkArgument(changed != null);
+-    // For each referenced function, add a new reference
++    if (node != null) {
+       if (node.getType() == Token.CALL) {
+         Node child = node.getFirstChild();
+-      if (child.getType() == Token.NAME) {
++        if (child != null && child.getType() == Token.NAME) {
+           changed.add(child.getString());
+         }
+       }
+-
++    }
+     for (Node c = node.getFirstChild(); c != null; c = c.getNext()) {
+       findCalledFunctions(c, changed);
+     }
+   }
+\ No newline at end of file

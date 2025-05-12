@@ -1,0 +1,27 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/07d1e918-62bd-4f8c-9059-2443a9d16152_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f7271451-ca17-4435-b2cb-2dc1d238f14f_fixed.java
+index 4e76e23..cb2726b 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/07d1e918-62bd-4f8c-9059-2443a9d16152_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f7271451-ca17-4435-b2cb-2dc1d238f14f_fixed.java
+@@ -1,19 +1,9 @@
+     protected JavaType _narrow(Class<?> subclass)
+     {
+         if (_class == subclass) {
+             return this;
+         }
+-        // Should we check that there is a sub-class relationship?
+-        // 15-Jan-2016, tatu: Almost yes, but there are some complications with
+-        //    placeholder values (`Void`, `NoClass`), so can not quite do yet.
+-        // TODO: fix in 2.8
+-            /*
+-            throw new IllegalArgumentException("Class "+subclass.getName()+" not sub-type of "
+-                    +_class.getName());
+-                    */
+-            return new SimpleType(subclass, _bindings, this, _superInterfaces,
+-                    _valueHandler, _typeHandler, _asStatic);
+-        // Otherwise, stitch together the hierarchy. First, super-class
+-        // if not found, try a super-interface
+-        // should not get here but...
++       if (!_class.isAssignableFrom(subclass)) {
++            throw new IllegalArgumentException("Cannot narrow " + _class.getName() + " to " + subclass.getName());
++        }
+     }

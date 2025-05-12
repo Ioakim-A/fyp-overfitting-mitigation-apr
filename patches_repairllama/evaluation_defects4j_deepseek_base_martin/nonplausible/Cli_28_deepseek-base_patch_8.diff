@@ -1,0 +1,56 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3c7a5dd5-8e9d-48b7-8d16-f9ec87ce2866_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c36f1396-6ce8-4a8b-a772-479097e77b4c_fixed.java
+index a7549f0..c20344c 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3c7a5dd5-8e9d-48b7-8d16-f9ec87ce2866_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c36f1396-6ce8-4a8b-a772-479097e77b4c_fixed.java
+@@ -1,50 +1,45 @@
+     /**
+      * Sets the values of Options using the values in <code>properties</code>.
+      *
+      * @param properties The value properties to be processed.
+      */
+     protected void processProperties(Properties properties)
+     {
+         if (properties == null)
+         {
+             return;
+         }
+-
+         for (Enumeration e = properties.propertyNames(); e.hasMoreElements();)
+         {
+             String option = e.nextElement().toString();
+-
+             if (!cmd.hasOption(option))
+             {
+                 Option opt = getOptions().getOption(option);
+-
+                 // get the value from the properties instance
+                 String value = properties.getProperty(option);
+-
+                 if (opt.hasArg())
+                 {
+                     if (opt.getValues() == null || opt.getValues().length == 0)
+                     {
+                         try
+                         {
+                             opt.addValueForProcessing(value);
+                         }
+                         catch (RuntimeException exp)
+                         {
+                             // if we cannot add the value don't worry about it
+                         }
+                     }
+                 }
+                 else if (!("yes".equalsIgnoreCase(value)
+                         || "true".equalsIgnoreCase(value)
+                         || "1".equalsIgnoreCase(value)))
+                 {
+                     // if the value is not yes, true or 1 then don't add the
+                     // option to the CommandLine
+-                    break;
++                    cmd.addOption(option);
+                 }
+-
+                 cmd.addOption(opt);
+             }
+         }
+     }

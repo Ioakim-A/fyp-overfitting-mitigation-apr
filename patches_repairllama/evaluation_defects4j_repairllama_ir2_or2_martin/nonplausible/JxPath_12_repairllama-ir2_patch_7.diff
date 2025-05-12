@@ -1,0 +1,58 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/701d61f0-1f28-4e8b-a91f-8fef23770d7d_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/44d5e5b5-dd04-4633-8388-9b06dbb25ca9_fixed.java
+index 40f74f7..15be5fd 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/701d61f0-1f28-4e8b-a91f-8fef23770d7d_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/44d5e5b5-dd04-4633-8388-9b06dbb25ca9_fixed.java
+@@ -1,50 +1,52 @@
+     public static boolean testNode(Node node, NodeTest test) {
+         if (test == null) {
+             return true;
+         }
+         if (test instanceof NodeNameTest) {
+             if (node.getNodeType() != Node.ELEMENT_NODE) {
+                 return false;
+             }
+-
+             NodeNameTest nodeNameTest = (NodeNameTest) test;
+             QName testName = nodeNameTest.getNodeName();
+             String namespaceURI = nodeNameTest.getNamespaceURI();
+             boolean wildcard = nodeNameTest.isWildcard();
+             String testPrefix = testName.getPrefix();
+             if (wildcard && testPrefix == null) {
+                 return true;
+             }
+             if (wildcard
+                 || testName.getName()
+                         .equals(DOMNodePointer.getLocalName(node))) {
+                 String nodeNS = DOMNodePointer.getNamespaceURI(node);
++               if (namespaceURI != null) {
+                     return equalStrings(namespaceURI, nodeNS);
+                 }
++                return true;
++            }
+             return false;
+         }
+         if (test instanceof NodeTypeTest) {
+             int nodeType = node.getNodeType();
+             switch (((NodeTypeTest) test).getNodeType()) {
+                 case Compiler.NODE_TYPE_NODE :
+                     return nodeType == Node.ELEMENT_NODE
+                             || nodeType == Node.DOCUMENT_NODE;
+                 case Compiler.NODE_TYPE_TEXT :
+                     return nodeType == Node.CDATA_SECTION_NODE
+                         || nodeType == Node.TEXT_NODE;
+                 case Compiler.NODE_TYPE_COMMENT :
+                     return nodeType == Node.COMMENT_NODE;
+                 case Compiler.NODE_TYPE_PI :
+                     return nodeType == Node.PROCESSING_INSTRUCTION_NODE;
+             }
+             return false;
+         }
+         if (test instanceof ProcessingInstructionTest) {
+             if (node.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE) {
+                 String testPI = ((ProcessingInstructionTest) test).getTarget();
+                 String nodePI = ((ProcessingInstruction) node).getTarget();
+                 return testPI.equals(nodePI);
+             }
+         }
+         return false;
+     }

@@ -1,0 +1,35 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dd9ee3d8-15d0-486a-a59d-62d9aaaf8782_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/01ebee8a-28b9-4940-9e53-1ebb5f9a5bba_fixed.java
+index 3c69e10..7a51c01 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dd9ee3d8-15d0-486a-a59d-62d9aaaf8782_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/01ebee8a-28b9-4940-9e53-1ebb5f9a5bba_fixed.java
+@@ -1,27 +1,25 @@
+     /**
+      * @param Umin smallest Mann-Whitney U value
+      * @param n1 number of subjects in first sample
+      * @param n2 number of subjects in second sample
+      * @return two-sided asymptotic p-value
+      * @throws ConvergenceException if the p-value can not be computed
+      * due to a convergence error
+      * @throws MaxCountExceededException if the maximum number of
+      * iterations is exceeded
+      */
+     private double calculateAsymptoticPValue(final double Umin,
+                                              final int n1,
+                                              final int n2)
+         throws ConvergenceException, MaxCountExceededException {
+-
+-        final int n1n2prod = n1 * n2;
++// buggy code
++//        final int n1n2prod = n1 * n2;
++        final int n1n2prod = n1 * n2 - 1;
+ 
+         // http://en.wikipedia.org/wiki/Mann%E2%80%93Whitney_U#Normal_approximation
+         final double EU = n1n2prod / 2.0;
+         final double VarU = n1n2prod * (n1 + n2 + 1) / 12.0;
+-
+         final double z = (Umin - EU) / FastMath.sqrt(VarU);
+-
+         final NormalDistribution standardNormal = new NormalDistribution(0, 1);
+-
+         return 2 * standardNormal.cumulativeProbability(z);
+     }

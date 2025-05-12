@@ -1,0 +1,57 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7fc50ec1-aa37-4023-ba15-82d253aa76c7_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a59e3e6c-3b4d-49f4-83de-349a33fa50a6_fixed.java
+index f274c45..ef83090 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7fc50ec1-aa37-4023-ba15-82d253aa76c7_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a59e3e6c-3b4d-49f4-83de-349a33fa50a6_fixed.java
+@@ -1,43 +1,46 @@
+     public EqualsBuilder append(Object lhs, Object rhs) {
+         if (isEquals == false) {
+             return this;
+         }
+         if (lhs == rhs) {
+             return this;
+         }
+         if (lhs == null || rhs == null) {
+             this.setEquals(false);
+             return this;
+         }
+         Class lhsClass = lhs.getClass();
+         if (!lhsClass.isArray()) {
+-                // The simple case, not an array, just test the element
+-                isEquals = lhs.equals(rhs);
++// buggy code
++//                isEquals = lhs.equals(rhs);
++           this.setEquals(lhs.equals(rhs));
++            return this;
++        }
++        if (lhs.getClass() != rhs.getClass()) {
++            this.setEquals(false);
++            return this;
++
+         } else if (lhs.getClass() != rhs.getClass()) {
+-            // Here when we compare different dimensions, for example: a boolean[][] to a boolean[] 
+             this.setEquals(false);
+         }
+-        // 'Switch' on type of array, to dispatch to the correct handler
+-        // This handles multi dimensional arrays of the same depth
+         else if (lhs instanceof long[]) {
+             append((long[]) lhs, (long[]) rhs);
+         } else if (lhs instanceof int[]) {
+             append((int[]) lhs, (int[]) rhs);
+         } else if (lhs instanceof short[]) {
+             append((short[]) lhs, (short[]) rhs);
+         } else if (lhs instanceof char[]) {
+             append((char[]) lhs, (char[]) rhs);
+         } else if (lhs instanceof byte[]) {
+             append((byte[]) lhs, (byte[]) rhs);
+         } else if (lhs instanceof double[]) {
+             append((double[]) lhs, (double[]) rhs);
+         } else if (lhs instanceof float[]) {
+             append((float[]) lhs, (float[]) rhs);
+         } else if (lhs instanceof boolean[]) {
+             append((boolean[]) lhs, (boolean[]) rhs);
+         } else {
+-            // Not an array of primitives
+             append((Object[]) lhs, (Object[]) rhs);
+         }
+         return this;
+     }

@@ -1,0 +1,59 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/63d95464-f2ee-45b8-a27c-c85e5249c2f0_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f6bee855-e4b9-4311-8013-1c01f1ec0993_fixed.java
+index 81cea7b..ae322ae 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/63d95464-f2ee-45b8-a27c-c85e5249c2f0_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f6bee855-e4b9-4311-8013-1c01f1ec0993_fixed.java
+@@ -1,39 +1,44 @@
+     protected boolean equal(
+         EvalContext context,
+         Expression left,
+         Expression right) 
+     {
+         Object l = left.compute(context);
+         Object r = right.compute(context);
+-
+-//        System.err.println("COMPARING: " +
+-//            (l == null ? "null" : l.getClass().getName()) + " " +
+-//            (r == null ? "null" : r.getClass().getName()));
+-
+-        if (l instanceof InitialContext || l instanceof SelfContext) {
++// buggy code
++//        if (l instanceof InitialContext || l instanceof SelfContext) {
++//            l = ((EvalContext) l).getSingleNodePointer();
++//        }
++//        if (r instanceof InitialContext || r instanceof SelfContext) {
++//            r = ((EvalContext) r).getSingleNodePointer();
++//        }
++        if (l instanceof EvalContext) {
+             l = ((EvalContext) l).getSingleNodePointer();
+         }
+-
+-        if (r instanceof InitialContext || r instanceof SelfContext) {
++        if (r instanceof EvalContext) {
+             r = ((EvalContext) r).getSingleNodePointer();
+         }
++        if (l instanceof SelfContext) {
++            l = ((EvalContext) l).getSingleNodePointer();
++        }
++        if (r instanceof SelfContext) {
+ 
++            r = ((EvalContext) r).getSingleNodePointer();
++        }
+         if (l instanceof Collection) {
+             l = ((Collection) l).iterator();
+         }
+-
+         if (r instanceof Collection) {
+             r = ((Collection) r).iterator();
+         }
+-
+         if ((l instanceof Iterator) && !(r instanceof Iterator)) {
+             return contains((Iterator) l, r);
+         }
+         if (!(l instanceof Iterator) && (r instanceof Iterator)) {
+             return contains((Iterator) r, l);
+         }
+         if (l instanceof Iterator && r instanceof Iterator) {
+             return findMatch((Iterator) l, (Iterator) r);
+         }
+         return equal(l, r);
+     }

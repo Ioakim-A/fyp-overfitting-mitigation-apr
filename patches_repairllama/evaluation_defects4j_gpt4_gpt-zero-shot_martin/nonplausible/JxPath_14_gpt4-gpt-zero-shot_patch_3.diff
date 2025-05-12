@@ -1,0 +1,16 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/204ab42a-a7a4-401f-b55f-c6d241d5f8c7_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/234ac94e-ef67-482b-8840-9df922be2b20_fixed.java
+index bc40fbe..71dddd3 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/204ab42a-a7a4-401f-b55f-c6d241d5f8c7_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/234ac94e-ef67-482b-8840-9df922be2b20_fixed.java
+@@ -1,5 +1,10 @@
+     protected Object functionFloor(EvalContext context) {
+         assertArgCount(1);
+         double v = InfoSetUtil.doubleValue(getArg1().computeValue(context));
++
++        if (Double.isNaN(v) || Double.isInfinite(v)) {
++            throw new IllegalArgumentException("Cannot calculate floor of NaN or infinity");
++        }
++
+         return new Double(Math.floor(v));
+     }
+\ No newline at end of file

@@ -1,0 +1,34 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/961bb0ff-ccd4-4e1d-a31d-604e7d20bf7e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d57efd8b-2efb-491f-b3e6-20b0a037701d_fixed.java
+index 29d025a..8de379c 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/961bb0ff-ccd4-4e1d-a31d-604e7d20bf7e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d57efd8b-2efb-491f-b3e6-20b0a037701d_fixed.java
+@@ -1,13 +1,26 @@
+ private void _verifySharing()
+ {
+     if (_hashShared) {
+         _hashArea = Arrays.copyOf(_hashArea, _hashArea.length);
+         _names = Arrays.copyOf(_names, _names.length);
+         _hashShared = false;
+-            // 09-Sep-2015, tatu: As per [jackson-core#216], also need to ensure
+-            //    we rehash as needed, as need-rehash flag is not copied from parent
++
++        // Fix: Initialize the new arrays with the same length as the original arrays
++        int hashSize = _hashArea.length;
++        int namesSize = _names.length;
++        int newSize = Math.max(hashSize, namesSize);
++        int[] newHashArea = new int[newSize];
++        String[] newNames = new String[newSize];
++
++        // Fix: Copy the elements from the original arrays into the new arrays
++        System.arraycopy(_hashArea, 0, newHashArea, 0, hashSize);
++        System.arraycopy(_names, 0, newNames, 0, namesSize);
++
++        // Fix: Assign the new arrays to the original variables
++        _hashArea = newHashArea;
++        _names = newNames;
+     }
+     if (_needRehash) {
+         rehash();
+     }
+ }
+\ No newline at end of file

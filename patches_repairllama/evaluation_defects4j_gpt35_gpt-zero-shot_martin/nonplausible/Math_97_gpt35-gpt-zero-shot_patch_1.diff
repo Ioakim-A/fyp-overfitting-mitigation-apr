@@ -1,0 +1,36 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4de52b9b-b469-4a07-ac8d-38a9f842709e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d64b2271-df16-4b32-b083-674430372c17_fixed.java
+index 511ea30..7af73b5 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4de52b9b-b469-4a07-ac8d-38a9f842709e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d64b2271-df16-4b32-b083-674430372c17_fixed.java
+@@ -1,28 +1,7 @@
+-    public double solve(double min, double max) throws MaxIterationsExceededException, 
+-        FunctionEvaluationException {
+-        
+-        clearResult();
+-        verifyInterval(min, max);
+-        
+-        double ret = Double.NaN;
+-        
+-        double yMin = f.value(min);
+-        double yMax = f.value(max);
+-        
+-        // Verify bracketing
+-        double sign = yMin * yMax;
+ if (sign >= 0) {
+-            // check if either value is close to a zero
+-                // neither value is close to zero and min and max do not bracket root.
+-                throw new IllegalArgumentException
+-                ("Function values at endpoints do not have different signs." +
++    throw new IllegalArgumentException("Function values at endpoints do not have different signs." +
+             "  Endpoints: [" + min + "," + max + "]" + 
+             "  Values: [" + yMin + "," + yMax + "]");
+ } else {
+-            // solve using only the first endpoint as initial guess
+-            ret = solve(min, yMin, max, yMax, min, yMin);
+-            // either min or max is a root
+-        }
+-
+-        return ret;
++    ret = solve(min, yMin, max, yMax, min, max);
+ }
+\ No newline at end of file

@@ -1,0 +1,77 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/575caf70-705b-44b1-a473-352e9d6ac42b_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/120377f5-bcd6-45b8-9832-b9b5a71a1ebd_fixed.java
+index 2ea7a7c..627200d 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/575caf70-705b-44b1-a473-352e9d6ac42b_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/120377f5-bcd6-45b8-9832-b9b5a71a1ebd_fixed.java
+@@ -1,59 +1,34 @@
+ public CholeskyDecompositionImpl(final RealMatrix matrix,
+                                  final double relativeSymmetryThreshold,
+                                  final double absolutePositivityThreshold)
+     throws NonSquareMatrixException,
+            NotSymmetricMatrixException, NotPositiveDefiniteMatrixException {
+-
+     if (!matrix.isSquare()) {
+         throw new NonSquareMatrixException(matrix.getRowDimension(),
+                                            matrix.getColumnDimension());
+     }
+-
+     final int order = matrix.getRowDimension();
+     lTData   = matrix.getData();
+     cachedL  = null;
+     cachedLT = null;
+-
+-        // check the matrix before transformation
+     for (int i = 0; i < order; ++i) {
+-
+         final double[] lI = lTData[i];
+-
+-            if (lTData[i][i] < absolutePositivityThreshold) {
+-                throw new NotPositiveDefiniteMatrixException();
+-            }
+-            // check off-diagonal elements (and reset them to 0)
+-            for (int j = i + 1; j < order; ++j) {
++        for (int j = 0; j < i; ++j) {
+             final double[] lJ = lTData[j];
+-                final double lIJ = lI[j];
+-                final double lJI = lJ[i];
+-                final double maxDelta =
+-                    relativeSymmetryThreshold * Math.max(Math.abs(lIJ), Math.abs(lJI));
+-                if (Math.abs(lIJ - lJI) > maxDelta) {
+-                    throw new NotSymmetricMatrixException();
++            double sum = 0.0;
++            for (int k = 0; k < j; ++k) {
++                sum += lI[k] * lJ[k];
+             }
+-                lJ[i] = 0;
++            lI[j] = (lI[j] - sum) / lTData[j][j];
+         }
++        double sum = 0.0;
++        for (int k = 0; k < i; ++k) {
++            sum += lI[k] * lI[k];
+         }
+-
+-        // transform the matrix
+-        for (int i = 0; i < order; ++i) {
+-
+-            final double[] ltI = lTData[i];
+-
+-            // check diagonal element
+-
+-            ltI[i] = Math.sqrt(ltI[i]);
+-            final double inverse = 1.0 / ltI[i];
+-
+-            for (int q = order - 1; q > i; --q) {
+-                ltI[q] *= inverse;
+-                final double[] ltQ = lTData[q];
+-                for (int p = q; p < order; ++p) {
+-                    ltQ[p] -= ltI[q] * ltI[p];
++        double d = lI[i] - sum;
++        if (d < absolutePositivityThreshold) {
++            throw new NotPositiveDefiniteMatrixException();
+         }
++        lTData[i][i] = Math.sqrt(d);
+     }
+-
+-        }
+-
+ }
+\ No newline at end of file

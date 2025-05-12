@@ -1,0 +1,28 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/127cf3c8-24da-453f-9c6d-024e3eda5ead_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c6243b88-3bb1-4409-868a-8e32c8fbc3ee_fixed.java
+index dcea789..23f157d 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/127cf3c8-24da-453f-9c6d-024e3eda5ead_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c6243b88-3bb1-4409-868a-8e32c8fbc3ee_fixed.java
+@@ -1,16 +1,14 @@
+ public static byte[] encodeBase64(byte[] binaryData, boolean isChunked, boolean urlSafe, int maxResultSize) {
+     if (binaryData == null || binaryData.length == 0) {
+         return binaryData;
+     }
+-
+-        long len = getEncodeLength(binaryData, MIME_CHUNK_SIZE, CHUNK_SEPARATOR);
+-        if (len > maxResultSize) {
++    int lineLength = isChunked ? 76 : 0;
++    byte[] encodedData = Base64.encodeBase64(binaryData, urlSafe, lineLength);
++    if (encodedData.length > maxResultSize) {
+         throw new IllegalArgumentException("Input array too big, the output array would be bigger (" +
+-                len +
+-                ") than the specified maxium size of " +
++            encodedData.length +
++            ") than the specified maximum size of " +
+             maxResultSize);
+     }
+-                
+-        Base64 b64 = isChunked ? new Base64(urlSafe) : new Base64(0, CHUNK_SEPARATOR, urlSafe);
+-        return b64.encode(binaryData);
++    return encodedData;
+ }
+\ No newline at end of file

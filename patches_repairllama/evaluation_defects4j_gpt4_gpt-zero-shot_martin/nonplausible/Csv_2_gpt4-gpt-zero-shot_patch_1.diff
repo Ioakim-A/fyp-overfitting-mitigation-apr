@@ -1,0 +1,16 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/28d644a8-2cb8-4dbe-bf02-cca84e814ed1_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7b096bc0-f053-497f-a954-bd7b7311baa4_fixed.java
+index 80829e5..03b8693 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/28d644a8-2cb8-4dbe-bf02-cca84e814ed1_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7b096bc0-f053-497f-a954-bd7b7311baa4_fixed.java
+@@ -1,8 +1,9 @@
+     public String get(final String name) {
+         if (mapping == null) {
+             throw new IllegalStateException(
+                     "No header mapping was specified, the record values can't be accessed by name");
+         }
+         final Integer index = mapping.get(name);
+-            return index != null ? values[index.intValue()] : null;
++        // fix: Check if the index is not null and if it's a valid index for the values array
++        return (index != null && index < values.length) ? values[index] : null;
+     }
+\ No newline at end of file
