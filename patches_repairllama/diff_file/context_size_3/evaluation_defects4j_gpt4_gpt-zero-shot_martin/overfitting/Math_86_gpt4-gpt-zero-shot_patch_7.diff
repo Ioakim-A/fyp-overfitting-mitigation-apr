@@ -1,0 +1,77 @@
+diff --git src/java/org/apache/commons/math/linear/CholeskyDecompositionImpl.java src/java/org/apache/commons/math/linear/CholeskyDecompositionImpl.java
+index acd9222..2b7285c 100644
+--- src/java/org/apache/commons/math/linear/CholeskyDecompositionImpl.java
++++ src/java/org/apache/commons/math/linear/CholeskyDecompositionImpl.java
+@@ -95,26 +95,19 @@ public class CholeskyDecompositionImpl implements CholeskyDecomposition {
+                                  final double absolutePositivityThreshold)
+     throws NonSquareMatrixException,
+            NotSymmetricMatrixException, NotPositiveDefiniteMatrixException {
+-
+     if (!matrix.isSquare()) {
+         throw new NonSquareMatrixException(matrix.getRowDimension(),
+                                            matrix.getColumnDimension());
+     }
+-
+     final int order = matrix.getRowDimension();
+     lTData   = matrix.getData();
+     cachedL  = null;
+     cachedLT = null;
+-
+-        // check the matrix before transformation
+     for (int i = 0; i < order; ++i) {
+-
+         final double[] lI = lTData[i];
+-
+         if (lTData[i][i] < absolutePositivityThreshold) {
+             throw new NotPositiveDefiniteMatrixException();
+         }
+-            // check off-diagonal elements (and reset them to 0)
+         for (int j = i + 1; j < order; ++j) {
+             final double[] lJ = lTData[j];
+             final double lIJ = lI[j];
+@@ -127,17 +120,25 @@ public class CholeskyDecompositionImpl implements CholeskyDecomposition {
+             lJ[i] = 0;
+         }
+     }
+-
+-        // transform the matrix
+     for (int i = 0; i < order; ++i) {
+-
+         final double[] ltI = lTData[i];
+-
+-            // check diagonal element
+-
+-            ltI[i] = Math.sqrt(ltI[i]);
++        for (int j = 0; j < i; ++j) {
++            double sum = 0;
++            for (int k = 0; k < j; ++k) {
++                sum += ltI[k] * lTData[j][k];
++            }
++            ltI[j] = (ltI[j] - sum) / lTData[j][j];
++        }
++        double sum = 0;
++        for (int k = 0; k < i; ++k) {
++            sum += ltI[k] * ltI[k];
++        }
++        double d = ltI[i] - sum;
++        if (d < absolutePositivityThreshold) {
++            throw new NotPositiveDefiniteMatrixException();
++        }
++        ltI[i] = Math.sqrt(d);
+         final double inverse = 1.0 / ltI[i];
+-
+         for (int q = order - 1; q > i; --q) {
+             ltI[q] *= inverse;
+             final double[] ltQ = lTData[q];
+@@ -145,11 +146,8 @@ public class CholeskyDecompositionImpl implements CholeskyDecomposition {
+                 ltQ[p] -= ltI[q] * ltI[p];
+             }
+         }
+-
+     }
+-
+ }
+-
+     /** {@inheritDoc} */
+     public RealMatrix getL() {
+         if (cachedL == null) {

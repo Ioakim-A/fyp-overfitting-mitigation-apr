@@ -1,0 +1,43 @@
+diff --git src/com/google/javascript/jscomp/DeadAssignmentsElimination.java src/com/google/javascript/jscomp/DeadAssignmentsElimination.java
+index ef33e4c..6a87b0e 100644
+--- src/com/google/javascript/jscomp/DeadAssignmentsElimination.java
++++ src/com/google/javascript/jscomp/DeadAssignmentsElimination.java
+@@ -322,27 +322,27 @@ class DeadAssignmentsElimination extends AbstractPostOrderCallback implements
+    */
+   private VariableLiveness isVariableReadBeforeKill(
+       Node n, String variable) {
++    VariableLiveness foundState = VariableLiveness.MAYBE_LIVE;
++    
+     if (NodeUtil.isName(n) && variable.equals(n.getString())) {
+       if (NodeUtil.isLhs(n, n.getParent())) {
+-        // The expression to which the assignment is made is evaluated before
+-        // the RHS is evaluated (normal left to right evaluation) but the KILL
+-        // occurs after the RHS is evaluated.
+-        return VariableLiveness.KILL;
++// fixed code
++// 
++        foundState = VariableLiveness.KILL;
+       } else {
+         return VariableLiveness.READ;
+       }
+     }
+-
+-    // Expressions are evaluated left-right, depth first.
+     for (Node child = n.getFirstChild();
+         child != null; child = child.getNext()) {
+-      if (!ControlFlowGraph.isEnteringNewCfgNode(child)) { // Not a FUNCTION
++      if (!ControlFlowGraph.isEnteringNewCfgNode(child)) { 
+         VariableLiveness state = isVariableReadBeforeKill(child, variable);
+-        if (state != VariableLiveness.MAYBE_LIVE) {
++        if (state == VariableLiveness.READ) {
+           return state;
++        } else if (state == VariableLiveness.KILL) {
++          foundState = VariableLiveness.KILL;
+         }
+       }
+     }
+-    return VariableLiveness.MAYBE_LIVE;
+-  }
+-}
++    return foundState;
++  }}
