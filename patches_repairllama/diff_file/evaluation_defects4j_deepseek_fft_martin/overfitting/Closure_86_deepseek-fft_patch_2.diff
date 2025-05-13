@@ -1,0 +1,24 @@
+diff --git src/com/google/javascript/jscomp/NodeUtil.java src/com/google/javascript/jscomp/NodeUtil.java
+index dd78f90..d76d038 100644
+--- src/com/google/javascript/jscomp/NodeUtil.java
++++ src/com/google/javascript/jscomp/NodeUtil.java
+@@ -2462,7 +2462,10 @@ public final class NodeUtil {
+         // TODO(nicksantos): This needs to be changed so that it
+         // returns true iff we're sure the value was never aliased from inside
+         // the constructor (similar to callHasLocalResult)
+-        return true;
++// buggy code
++//        return true;
++        return evaluatesToLocalValue(value.getLastChild(), locals);
++
+       case Token.FUNCTION:
+       case Token.REGEXP:
+       case Token.ARRAYLIT:
+@@ -2481,7 +2484,6 @@ public final class NodeUtil {
+             || isImmutableValue(value)) {
+           return true;
+         }
+-
+         throw new IllegalStateException(
+             "Unexpected expression node" + value +
+             "\n parent:" + value.getParent());

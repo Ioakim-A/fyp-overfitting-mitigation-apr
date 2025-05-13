@@ -1,0 +1,28 @@
+diff --git src/com/google/javascript/jscomp/CommandLineRunner.java src/com/google/javascript/jscomp/CommandLineRunner.java
+index bdf5592..9887957 100644
+--- src/com/google/javascript/jscomp/CommandLineRunner.java
++++ src/com/google/javascript/jscomp/CommandLineRunner.java
+@@ -424,15 +424,19 @@ public class CommandLineRunner extends
+     if (flags.debug) {
+       level.setDebugOptionsForCompilationLevel(options);
+     }
+-
+     WarningLevel wLevel = flags.warning_level;
+     wLevel.setOptionsForWarningLevel(options);
+     for (FormattingOption formattingOption : flags.formatting) {
+       formattingOption.applyToOptions(options);
+     }
+-    if (flags.process_closure_primitives) {
+-      options.closurePass = true;
+-    }
++// buggy code
++//    if (flags.process_closure_primitives) {
++//      options.closurePass = true;
++//    }
++//    else {
++//      options.closurePass = false;
++//    }
++    options.closurePass = flags.process_closure_primitives;
+ 
+     initOptionsFromFlags(options);
+     return options;

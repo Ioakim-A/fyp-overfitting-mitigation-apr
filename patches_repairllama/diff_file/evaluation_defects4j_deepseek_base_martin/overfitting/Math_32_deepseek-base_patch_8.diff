@@ -1,0 +1,49 @@
+diff --git src/main/java/org/apache/commons/math3/geometry/euclidean/twod/PolygonsSet.java src/main/java/org/apache/commons/math3/geometry/euclidean/twod/PolygonsSet.java
+index c6e7cf1..08d6988 100644
+--- src/main/java/org/apache/commons/math3/geometry/euclidean/twod/PolygonsSet.java
++++ src/main/java/org/apache/commons/math3/geometry/euclidean/twod/PolygonsSet.java
+@@ -128,12 +128,11 @@ public class PolygonsSet extends AbstractRegion<Euclidean2D, Euclidean1D> {
+     /** {@inheritDoc} */
+     @Override
+     protected void computeGeometricalProperties() {
+-
+         final Vector2D[][] v = getVertices();
+-
+         if (v.length == 0) {
+             final BSPTree<Euclidean2D> tree = getTree(false);
+-            if ((Boolean) tree.getAttribute()) {
++            if (tree == null) {
++                // the instance is empty
+                 // the instance covers the whole space
+                 setSize(Double.POSITIVE_INFINITY);
+                 setBarycenter(Vector2D.NaN);
+@@ -147,11 +146,9 @@ public class PolygonsSet extends AbstractRegion<Euclidean2D, Euclidean1D> {
+             setBarycenter(Vector2D.NaN);
+         } else {
+             // all loops are closed, we compute some integrals around the shape
+-
+             double sum  = 0;
+             double sumX = 0;
+             double sumY = 0;
+-
+             for (Vector2D[] loop : v) {
+                 double x1 = loop[loop.length - 1].getX();
+                 double y1 = loop[loop.length - 1].getY();
+@@ -166,7 +163,6 @@ public class PolygonsSet extends AbstractRegion<Euclidean2D, Euclidean1D> {
+                     sumY += factor * (y0 + y1);
+                 }
+             }
+-
+             if (sum < 0) {
+                 // the polygon as a finite outside surrounded by an infinite inside
+                 setSize(Double.POSITIVE_INFINITY);
+@@ -175,9 +171,7 @@ public class PolygonsSet extends AbstractRegion<Euclidean2D, Euclidean1D> {
+                 setSize(sum / 2);
+                 setBarycenter(new Vector2D(sumX / (3 * sum), sumY / (3 * sum)));
+             }
+-
+         }
+-
+     }
+ 
+     /** Get the vertices of the polygon.

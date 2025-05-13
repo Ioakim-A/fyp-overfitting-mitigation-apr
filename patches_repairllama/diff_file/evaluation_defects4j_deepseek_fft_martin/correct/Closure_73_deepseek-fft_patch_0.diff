@@ -1,0 +1,27 @@
+diff --git src/com/google/javascript/jscomp/CodeGenerator.java src/com/google/javascript/jscomp/CodeGenerator.java
+index 558e74f..c1143fa 100644
+--- src/com/google/javascript/jscomp/CodeGenerator.java
++++ src/com/google/javascript/jscomp/CodeGenerator.java
+@@ -1014,10 +1014,8 @@ class CodeGenerator {
+         case '<':
+           // Break </script into <\/script
+           final String END_SCRIPT = "/script";
+-
+           // Break <!-- into <\!--
+           final String START_COMMENT = "!--";
+-
+           if (s.regionMatches(true, i + 1, END_SCRIPT, 0,
+                               END_SCRIPT.length())) {
+             sb.append("<\\");
+@@ -1042,7 +1040,10 @@ class CodeGenerator {
+             // No charsetEncoder provided - pass straight latin characters
+             // through, and escape the rest.  Doing the explicit character
+             // check is measurably faster than using the CharsetEncoder.
+-            if (c > 0x1f && c <= 0x7f) {
++// buggy code
++//            if (c > 0x1f && c <= 0x7f) {
++            if (c > 0x1f && c < 0x7f) {
++
+               sb.append(c);
+             } else {
+               // Other characters can be misinterpreted by some js parsers,

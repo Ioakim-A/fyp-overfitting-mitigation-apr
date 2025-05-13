@@ -1,0 +1,22 @@
+diff --git src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationRelationalExpression.java src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationRelationalExpression.java
+index c6e0041..8ef8fe8 100644
+--- src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationRelationalExpression.java
++++ src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationRelationalExpression.java
+@@ -56,7 +56,6 @@ public abstract class CoreOperationRelationalExpression extends CoreOperation {
+     private boolean compute(Object left, Object right) {
+         left = reduce(left);
+         right = reduce(right);
+-
+         if (left instanceof InitialContext) {
+             ((InitialContext) left).reset();
+         }
+@@ -74,6 +73,9 @@ public abstract class CoreOperationRelationalExpression extends CoreOperation {
+         }
+         double ld = InfoSetUtil.doubleValue(left);
+         double rd = InfoSetUtil.doubleValue(right);
++        if (Double.isNaN(ld) || Double.isNaN(rd)) {
++            return false;
++        }
+         return evaluateCompare(ld == rd ? 0 : ld < rd ? -1 : 1);
+     }
+ 

@@ -1,0 +1,25 @@
+diff --git src/com/google/javascript/jscomp/CodeGenerator.java src/com/google/javascript/jscomp/CodeGenerator.java
+index 8cd3ab9..d0180a0 100644
+--- src/com/google/javascript/jscomp/CodeGenerator.java
++++ src/com/google/javascript/jscomp/CodeGenerator.java
+@@ -963,6 +963,9 @@ class CodeGenerator {
+     for (int i = 0; i < s.length(); i++) {
+       char c = s.charAt(i);
+       switch (c) {
++// buggy code
++        case '\u0000': sb.append("\\0"); break;
++
+         case '\n': sb.append("\\n"); break;
+         case '\r': sb.append("\\r"); break;
+         case '\t': sb.append("\\t"); break;
+@@ -981,10 +984,8 @@ class CodeGenerator {
+         case '<':
+           // Break </script into <\/script
+           final String END_SCRIPT = "/script";
+-
+           // Break <!-- into <\!--
+           final String START_COMMENT = "!--";
+-
+           if (s.regionMatches(true, i + 1, END_SCRIPT, 0,
+                               END_SCRIPT.length())) {
+             sb.append("<\\");

@@ -1,0 +1,31 @@
+diff --git src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java
+index 7057c54..b55566e 100644
+--- src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java
++++ src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java
+@@ -722,17 +722,15 @@ nonAnnotatedParamIndex, ctor);
+         JacksonInject.Value injectId = candidate.injection(0);
+         PropertyName paramName = candidate.explicitParamName(0);
+         BeanPropertyDefinition paramDef = candidate.propertyDef(0);
+-
+         // If there's injection or explicit name, should be properties-based
+         boolean useProps = (paramName != null) || (injectId != null);
+         if (!useProps && (paramDef != null)) {
+             // One more thing: if implicit name matches property with a getter
+             // or field, we'll consider it property-based as well
+-
+             // 25-May-2018, tatu: as per [databind#2051], looks like we have to get
+             //    not implicit name, but name with possible strategy-based-rename
+ //            paramName = candidate.findImplicitParamName(0);
+-            paramName = candidate.findImplicitParamName(0);
++            paramName = candidate.paramName(0);
+             useProps = (paramName != null) && paramDef.couldSerialize();
+         }
+         if (useProps) {
+@@ -743,7 +741,6 @@ nonAnnotatedParamIndex, ctor);
+             return;
+         }
+         _handleSingleArgumentCreator(creators, candidate.creator(), true, true);
+-
+         // one more thing: sever link to creator property, to avoid possible later
+         // problems with "unresolved" constructor property
+         if (paramDef != null) {

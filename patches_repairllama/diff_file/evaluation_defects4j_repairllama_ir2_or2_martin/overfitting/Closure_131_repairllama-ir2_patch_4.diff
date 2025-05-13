@@ -1,0 +1,27 @@
+diff --git src/com/google/javascript/rhino/TokenStream.java src/com/google/javascript/rhino/TokenStream.java
+index 144a4ad..7cf8bb9 100644
+--- src/com/google/javascript/rhino/TokenStream.java
++++ src/com/google/javascript/rhino/TokenStream.java
+@@ -189,19 +189,17 @@ public class TokenStream {
+ 
+     public static boolean isJSIdentifier(String s) {
+       int length = s.length();
+-
+       if (length == 0 ||
+-          !Character.isJavaIdentifierStart(s.charAt(0))) {
++         !Character.isJavaIdentifierStart(s.charAt(0)) ||
++          Character.isISOControl(s.charAt(0))) {
+         return false;
+       }
+-
+       for (int i = 1; i < length; i++) {
+-        if (
++        if (Character.isISOControl(s.charAt(i)) ||
+             !Character.isJavaIdentifierPart(s.charAt(i))) {
+           return false;
+         }
+       }
+-
+       return true;
+     }
+ }

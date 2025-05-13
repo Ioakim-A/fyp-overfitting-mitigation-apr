@@ -1,0 +1,83 @@
+diff --git src/main/java/com/fasterxml/jackson/databind/ser/PropertyBuilder.java src/main/java/com/fasterxml/jackson/databind/ser/PropertyBuilder.java
+index 9419871..a32a2bc 100644
+--- src/main/java/com/fasterxml/jackson/databind/ser/PropertyBuilder.java
++++ src/main/java/com/fasterxml/jackson/databind/ser/PropertyBuilder.java
+@@ -73,7 +73,6 @@ public class PropertyBuilder
+     {
+         // do we have annotation that forces type to use (to declared type or its super type)?
+         JavaType serializationType = findSerializationType(am, defaultUseStaticTyping, declaredType);
+-
+         // Container types can have separate type serializers for content (value / element) type
+         if (contentTypeSer != null) {
+             /* 04-Feb-2010, tatu: Let's force static typing for collection, if there is
+@@ -93,19 +92,15 @@ public class PropertyBuilder
+             serializationType = serializationType.withContentTypeHandler(contentTypeSer);
+             ct = serializationType.getContentType();
+         }
+-        
+         Object valueToSuppress = null;
+         boolean suppressNulls = false;
+-
+         JsonInclude.Value inclV = _defaultInclusion.withOverrides(propDef.findInclusion());
+         JsonInclude.Include inclusion = inclV.getValueInclusion();
+         if (inclusion == JsonInclude.Include.USE_DEFAULTS) { // should not occur but...
+             inclusion = JsonInclude.Include.ALWAYS;
+         }
+-
+         // 12-Jul-2016, tatu: [databind#1256] Need to make sure we consider type refinement
+         JavaType actualType = (serializationType == null) ? declaredType : serializationType;
+-        
+         switch (inclusion) {
+         case NON_DEFAULT:
+             // 11-Nov-2015, tatu: This is tricky because semantics differ between cases,
+@@ -125,13 +120,30 @@ public class PropertyBuilder
+                     valueToSuppress = ArrayBuilders.getArrayComparator(valueToSuppress);
+                 }
+             }
+-
+             break;
+         case NON_ABSENT: // new with 2.6, to support Guava/JDK8 Optionals
+             // always suppress nulls
+             suppressNulls = true;
+             // and for referential types, also "empty", which in their case means "absent"
+-            if (declaredType.isReferenceType()) {
++// buggy code
++//            if (declaredType.isReferenceType()) {
++//                valueToSuppress = BeanPropertyWriter.MARKER_FOR_EMPTY;
++//            }
++//            break;
++//        case NON_EMPTY:
++//            // always suppress nulls
++//            suppressNulls = true;
++//            // but possibly also 'empty' values:
++//            valueToSuppress = BeanPropertyWriter.MARKER_FOR_EMPTY;
++//            break;
++//        case NON_NULL:
++//            suppressNulls = true;
++//            // fall through
++//        case ALWAYS: // default
++//        default:
++//            // we may still want to suppress empty collections, as per [JACKSON-254]:
++//            if (declaredType.isContainerType()
++            if (actualType.isReferenceType()) {
+                 valueToSuppress = BeanPropertyWriter.MARKER_FOR_EMPTY;
+             }
+             break;
+@@ -147,7 +159,8 @@ public class PropertyBuilder
+         case ALWAYS: // default
+         default:
+             // we may still want to suppress empty collections, as per [JACKSON-254]:
+-            if (declaredType.isContainerType()
++            if (actualType.isContainerType()
++
+                     && !_config.isEnabled(SerializationFeature.WRITE_EMPTY_JSON_ARRAYS)) {
+                 valueToSuppress = BeanPropertyWriter.MARKER_FOR_EMPTY;
+             }
+@@ -156,7 +169,6 @@ public class PropertyBuilder
+         BeanPropertyWriter bpw = new BeanPropertyWriter(propDef,
+                 am, _beanDesc.getClassAnnotations(), declaredType,
+                 ser, typeSer, serializationType, suppressNulls, valueToSuppress);
+-
+         // How about custom null serializer?
+         Object serDef = _annotationIntrospector.findNullSerializer(am);
+         if (serDef != null) {

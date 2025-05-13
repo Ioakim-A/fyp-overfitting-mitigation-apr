@@ -1,0 +1,59 @@
+diff --git src/java/org/apache/commons/math/complex/ComplexFormat.java src/java/org/apache/commons/math/complex/ComplexFormat.java
+index b404bc4..8626acf 100644
+--- src/java/org/apache/commons/math/complex/ComplexFormat.java
++++ src/java/org/apache/commons/math/complex/ComplexFormat.java
+@@ -319,10 +319,8 @@ public class ComplexFormat extends Format implements Serializable {
+      */
+     public Complex parse(String source, ParsePosition pos) {
+         int initialIndex = pos.getIndex();
+-
+         // parse whitespace
+         parseAndIgnoreWhitespace(source, pos);
+-
+         // parse real
+         Number re = parseNumber(source, getRealFormat(), pos);
+         if (re == null) {
+@@ -332,7 +330,6 @@ public class ComplexFormat extends Format implements Serializable {
+             pos.setIndex(initialIndex);
+             return null;
+         }
+-
+         // parse sign
+         int startIndex = pos.getIndex();
+         char c = parseNextCharacter(source, pos);
+@@ -356,10 +353,8 @@ public class ComplexFormat extends Format implements Serializable {
+             pos.setErrorIndex(startIndex);
+             return null;
+         }
+-
+         // parse whitespace
+         parseAndIgnoreWhitespace(source, pos);
+-
+         // parse imaginary
+         Number im = parseNumber(source, getRealFormat(), pos);
+         if (im == null) {
+@@ -369,12 +364,14 @@ public class ComplexFormat extends Format implements Serializable {
+             pos.setIndex(initialIndex);
+             return null;
+         }
+-
+         // parse imaginary character
+         int n = getImaginaryCharacter().length();
+         startIndex = pos.getIndex();
+         int endIndex = startIndex + n;
+-        if (
++// buggy code
++//        if (
++        if (endIndex > source.length() || 
++
+             source.substring(startIndex, endIndex).compareTo(
+             getImaginaryCharacter()) != 0) {
+             // set index back to initial, error index should be the start index
+@@ -384,7 +381,6 @@ public class ComplexFormat extends Format implements Serializable {
+             return null;
+         }
+         pos.setIndex(endIndex);
+-
+         return new Complex(re.doubleValue(), im.doubleValue() * sign);
+     }
+      

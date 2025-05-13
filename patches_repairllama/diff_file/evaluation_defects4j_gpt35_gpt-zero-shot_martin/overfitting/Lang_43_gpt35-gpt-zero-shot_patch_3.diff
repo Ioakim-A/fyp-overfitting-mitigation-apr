@@ -1,0 +1,21 @@
+diff --git src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java
+index 404be49..61509d9 100644
+--- src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java
++++ src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java
+@@ -419,6 +419,8 @@ public class ExtendedMessageFormat extends MessageFormat {
+         int start = pos.getIndex();
+         char[] c = pattern.toCharArray();
+         if (escapingOn && c[start] == QUOTE) {
++            // Fix: Increment the index of ParsePosition by 1 to skip the quote character
++            pos.setIndex(pos.getIndex() + 1);
+             return appendTo == null ? null : appendTo.append(QUOTE);
+         }
+         int lastHold = start;
+@@ -442,7 +444,6 @@ public class ExtendedMessageFormat extends MessageFormat {
+         throw new IllegalArgumentException(
+                 "Unterminated quoted string at position " + start);
+     }
+-
+     /**
+      * Consume quoted string only
+      * 

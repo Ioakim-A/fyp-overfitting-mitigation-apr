@@ -1,0 +1,21 @@
+diff --git src/main/java/org/jsoup/parser/TokeniserState.java src/main/java/org/jsoup/parser/TokeniserState.java
+index e530264..d1977b6 100644
+--- src/main/java/org/jsoup/parser/TokeniserState.java
++++ src/main/java/org/jsoup/parser/TokeniserState.java
+@@ -555,10 +555,14 @@ enum TokeniserState {
+                 String name = r.consumeLetterSequence();
+                 t.tagPending.appendTagName(name.toLowerCase());
+                 t.dataBuffer.append(name);
+-                r.advance();
+                 return;
+             }
+-
++            if (r.matchesDigit()) {
++                String name = r.consumeDigitSequence();
++                t.tagPending.appendTagName(name);
++                t.dataBuffer.append(name);
++                return;
++            }
+             if (t.isAppropriateEndTagToken() && !r.isEmpty()) {
+                 char c = r.consume();
+                 switch (c) {

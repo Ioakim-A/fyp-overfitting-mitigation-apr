@@ -1,0 +1,84 @@
+diff --git src/com/google/javascript/jscomp/LiveVariablesAnalysis.java src/com/google/javascript/jscomp/LiveVariablesAnalysis.java
+index 7999db4..6b4ba94 100644
+--- src/com/google/javascript/jscomp/LiveVariablesAnalysis.java
++++ src/com/google/javascript/jscomp/LiveVariablesAnalysis.java
+@@ -177,38 +177,33 @@ class LiveVariablesAnalysis extends
+    */
+   private void computeGenKill(Node n, BitSet gen, BitSet kill,
+       boolean conditional) {
+-
+     switch (n.getType()) {
+       case Token.SCRIPT:
+       case Token.BLOCK:
+       case Token.FUNCTION:
+         return;
+-
+       case Token.WHILE:
+       case Token.DO:
+       case Token.IF:
+         computeGenKill(NodeUtil.getConditionExpression(n), gen, kill,
+             conditional);
+         return;
+-
+       case Token.FOR:
+         if (!NodeUtil.isForIn(n)) {
+           computeGenKill(NodeUtil.getConditionExpression(n), gen, kill,
+               conditional);
+         } else {
+-          // for(x in y) {...}
+           Node lhs = n.getFirstChild();
+           Node rhs = lhs.getNext();
+           if (NodeUtil.isVar(lhs)) {
+-            // for(var x in y) {...}
+             lhs = lhs.getLastChild();
+           }
+-            addToSetIfLocal(lhs, kill);
+-            addToSetIfLocal(lhs, gen);
++         if (lhs != null) {
++            computeGenKill(lhs, gen, kill, false);
++          }
+           computeGenKill(rhs, gen, kill, conditional);
+         }
+         return;
+-
+       case Token.VAR:
+         for (Node c = n.getFirstChild(); c != null; c = c.getNext()) {
+           if (c.hasChildren()) {
+@@ -219,21 +214,16 @@ class LiveVariablesAnalysis extends
+           }
+         }
+         return;
+-
+       case Token.AND:
+       case Token.OR:
+         computeGenKill(n.getFirstChild(), gen, kill, conditional);
+-        // May short circuit.
+         computeGenKill(n.getLastChild(), gen, kill, true);
+         return;
+-
+       case Token.HOOK:
+         computeGenKill(n.getFirstChild(), gen, kill, conditional);
+-        // Assume both sides are conditional.
+         computeGenKill(n.getFirstChild().getNext(), gen, kill, true);
+         computeGenKill(n.getLastChild(), gen, kill, true);
+         return;
+-
+       case Token.NAME:
+         if (isArgumentsName(n)) {
+           markAllParametersEscaped();
+@@ -241,7 +231,6 @@ class LiveVariablesAnalysis extends
+           addToSetIfLocal(n, gen);
+         }
+         return;
+-
+       default:
+         if (NodeUtil.isAssignmentOp(n) && NodeUtil.isName(n.getFirstChild())) {
+           Node lhs = n.getFirstChild();
+@@ -249,7 +238,6 @@ class LiveVariablesAnalysis extends
+             addToSetIfLocal(lhs, kill);
+           }
+           if (!NodeUtil.isAssign(n)) {
+-            // assignments such as a += 1 reads a.
+             addToSetIfLocal(lhs, gen);
+           }
+           computeGenKill(lhs.getNext(), gen, kill, conditional);

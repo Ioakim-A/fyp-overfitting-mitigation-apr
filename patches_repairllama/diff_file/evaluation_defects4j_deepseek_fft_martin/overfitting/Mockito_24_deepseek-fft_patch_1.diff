@@ -1,0 +1,18 @@
+diff --git src/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java src/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
+index 4c00f50..a209696 100644
+--- src/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
++++ src/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
+@@ -73,9 +73,11 @@ public class ReturnsEmptyValues implements Answer<Object>, Serializable {
+             //see issue 184.
+             //mocks by default should return 0 if references are the same, otherwise some other value because they are not the same. Hence we return 1 (anything but 0 is good).
+             //Only for compareTo() method by the Comparable interface
+-            return 1;
+-        }
++// buggy code
++//            return 1;
++            return invocation.getArguments()[0] == invocation.getMock() ? 0 : 1;
+ 
++        }
+         Class<?> returnType = invocation.getMethod().getReturnType();
+         return returnValueFor(returnType);
+     }

@@ -1,0 +1,131 @@
+diff --git src/java/org/apache/commons/lang/NumberUtils.java src/java/org/apache/commons/lang/NumberUtils.java
+index 18a05ef..4e7e8d5 100644
+--- src/java/org/apache/commons/lang/NumberUtils.java
++++ src/java/org/apache/commons/lang/NumberUtils.java
+@@ -141,12 +141,12 @@ public final class NumberUtils {
+         }
+         if (val.length() == 0) {
+             throw new NumberFormatException("\"\" is not a valid number.");
++// buggy code
++       } else if (val.length() == 1) {
++            return createInteger(val);
++
+         }
+         if (val.startsWith("--")) {
+-            // this is protection for poorness in java.lang.BigDecimal.
+-            // it accepts this as a legal value, but it does not appear 
+-            // to be in specification of class. OS X Java parses it to 
+-            // a wrong value.
+             return null;
+         }
+         if (val.startsWith("0x") || val.startsWith("-0x")) {
+@@ -158,9 +158,7 @@ public final class NumberUtils {
+         String exp;
+         int decPos = val.indexOf('.');
+         int expPos = val.indexOf('e') + val.indexOf('E') + 1;
+-
+         if (decPos > -1) {
+-
+             if (expPos > -1) {
+                 if (expPos < decPos) {
+                     throw new NumberFormatException(val + " is not a valid number.");
+@@ -184,7 +182,6 @@ public final class NumberUtils {
+             } else {
+                 exp = null;
+             }
+-            //Requesting a specific type..
+             String numeric = val.substring(0, val.length() - 1);
+             boolean allZeros = isAllZeros(mant) && isAllZeros(exp);
+             switch (lastChar) {
+@@ -196,10 +193,8 @@ public final class NumberUtils {
+                         try {
+                             return createLong(numeric);
+                         } catch (NumberFormatException nfe) {
+-                            //Too big for a long
+                         }
+                         return createBigInteger(numeric);
+-
+                     }
+                     throw new NumberFormatException(val + " is not a valid number.");
+                 case 'f' :
+@@ -207,15 +202,10 @@ public final class NumberUtils {
+                     try {
+                         Float f = NumberUtils.createFloat(numeric);
+                         if (!(f.isInfinite() || (f.floatValue() == 0.0F && !allZeros))) {
+-                            //If it's too big for a float or the float value = 0 and the string
+-                            //has non-zeros in it, then float does not have the precision we want
+                             return f;
+                         }
+-
+                     } catch (NumberFormatException e) {
+-                        // ignore the bad number
+                     }
+-                    //Fall through
+                 case 'd' :
+                 case 'D' :
+                     try {
+@@ -224,42 +214,31 @@ public final class NumberUtils {
+                             return d;
+                         }
+                     } catch (NumberFormatException nfe) {
+-                        // empty catch
+                     }
+                     try {
+                         return createBigDecimal(numeric);
+                     } catch (NumberFormatException e) {
+-                        // empty catch
+                     }
+-                    //Fall through
+                 default :
+                     throw new NumberFormatException(val + " is not a valid number.");
+-
+             }
+         } else {
+-            //User doesn't have a preference on the return type, so let's start
+-            //small and go from there...
+             if (expPos > -1 && expPos < val.length() - 1) {
+                 exp = val.substring(expPos + 1, val.length());
+             } else {
+                 exp = null;
+             }
+             if (dec == null && exp == null) {
+-                //Must be an int,long,bigint
+                 try {
+                     return createInteger(val);
+                 } catch (NumberFormatException nfe) {
+-                    // empty catch
+                 }
+                 try {
+                     return createLong(val);
+                 } catch (NumberFormatException nfe) {
+-                    // empty catch
+                 }
+                 return createBigInteger(val);
+-
+             } else {
+-                //Must be a float,double,BigDec
+                 boolean allZeros = isAllZeros(mant) && isAllZeros(exp);
+                 try {
+                     Float f = createFloat(val);
+@@ -267,7 +246,6 @@ public final class NumberUtils {
+                         return f;
+                     }
+                 } catch (NumberFormatException nfe) {
+-                    // empty catch
+                 }
+                 try {
+                     Double d = createDouble(val);
+@@ -275,13 +253,9 @@ public final class NumberUtils {
+                         return d;
+                     }
+                 } catch (NumberFormatException nfe) {
+-                    // empty catch
+                 }
+-
+                 return createBigDecimal(val);
+-
+             }
+-
+         }
+     }
+ 

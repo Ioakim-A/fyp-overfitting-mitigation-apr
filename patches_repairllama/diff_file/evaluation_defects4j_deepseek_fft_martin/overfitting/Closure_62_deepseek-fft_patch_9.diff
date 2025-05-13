@@ -1,0 +1,39 @@
+diff --git src/com/google/javascript/jscomp/LightweightMessageFormatter.java src/com/google/javascript/jscomp/LightweightMessageFormatter.java
+index 5a4f884..eaf8ba4 100644
+--- src/com/google/javascript/jscomp/LightweightMessageFormatter.java
++++ src/com/google/javascript/jscomp/LightweightMessageFormatter.java
+@@ -69,7 +69,6 @@ public class LightweightMessageFormatter extends AbstractMessageFormatter {
+     String sourceExcerpt = source == null ? null :
+         excerpt.get(
+             source, error.sourceName, error.lineNumber, excerptFormatter);
+-
+     // formatting the message
+     StringBuilder b = new StringBuilder();
+     if (error.sourceName != null) {
+@@ -80,22 +79,22 @@ public class LightweightMessageFormatter extends AbstractMessageFormatter {
+       }
+       b.append(": ");
+     }
+-
+     b.append(getLevelName(warning ? CheckLevel.WARNING : CheckLevel.ERROR));
+     b.append(" - ");
+-
+     b.append(error.description);
+     b.append('\n');
+     if (sourceExcerpt != null) {
+       b.append(sourceExcerpt);
+       b.append('\n');
+       int charno = error.getCharno();
+-
+       // padding equal to the excerpt and arrow at the end
+       // charno == sourceExpert.length() means something is missing
+       // at the end of the line
+       if (excerpt.equals(LINE)
+-          && 0 <= charno && charno < sourceExcerpt.length()) {
++// buggy code
++//          && 0 <= charno && charno < sourceExcerpt.length()) {
++          && 0 <= charno) {
++
+         for (int i = 0; i < charno; i++) {
+           char c = sourceExcerpt.charAt(i);
+           if (Character.isWhitespace(c)) {

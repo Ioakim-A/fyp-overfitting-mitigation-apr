@@ -1,0 +1,35 @@
+diff --git src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java
+index fc7961d..c25e471 100644
+--- src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java
++++ src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java
+@@ -777,10 +777,8 @@ public class BeanDeserializer
+         final ExternalTypeHandler ext = _externalTypeIdHandler.start();
+         final PropertyBasedCreator creator = _propertyBasedCreator;
+         PropertyValueBuffer buffer = creator.startBuilding(p, ctxt, _objectIdReader);
+-
+         TokenBuffer tokens = new TokenBuffer(p);
+         tokens.writeStartObject();
+-
+         JsonToken t = p.getCurrentToken();
+         for (; t == JsonToken.FIELD_NAME; t = p.nextToken()) {
+             String propName = p.getCurrentName();
+@@ -791,7 +789,10 @@ public class BeanDeserializer
+                 // first: let's check to see if this might be part of value with external type id:
+                 // 11-Sep-2015, tatu: Important; do NOT pass buffer as last arg, but null,
+                 //   since it is not the bean
+-                if (ext.handlePropertyValue(p, ctxt, propName, buffer)) {
++// buggy code
++//                if (ext.handlePropertyValue(p, ctxt, propName, buffer)) {
++                if (ext.handlePropertyValue(p, ctxt, propName, (PropertyValueBuffer) null)) {
++
+                     ;
+                 } else {
+                     // Last creator property to set?
+@@ -846,7 +847,6 @@ public class BeanDeserializer
+                 buffer.bufferAnyProperty(_anySetter, propName, _anySetter.deserialize(p, ctxt));
+             }
+         }
+-
+         // We hit END_OBJECT; resolve the pieces:
+         try {
+             return ext.complete(p, ctxt, buffer, creator);
