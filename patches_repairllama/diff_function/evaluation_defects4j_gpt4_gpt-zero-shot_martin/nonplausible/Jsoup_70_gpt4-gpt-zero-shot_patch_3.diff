@@ -1,0 +1,23 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/be2601da-5e08-4295-b43e-c5904f446579_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e99ff586-ce20-4a50-9abe-f11c4797f136_fixed.java
+index 6c87721..5762c09 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/be2601da-5e08-4295-b43e-c5904f446579_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e99ff586-ce20-4a50-9abe-f11c4797f136_fixed.java
+@@ -1,11 +1,13 @@
+     static boolean preserveWhitespace(Node node) {
+-        // looks only at this element and five levels up, to prevent recursion & needless stack searches
+         if (node != null && node instanceof Element) {
+             Element el = (Element) node;
+-                if (el.tag.preserveWhitespace())
++
++            // fixed code
++            if ("pre".equals(el.tagName()) || "textarea".equals(el.tagName())) {
+                 return true;
+-                else
+-                    return el.parent() != null && el.parent().tag.preserveWhitespace();
++            } else if (el.parent() != null) {
++                return "pre".equals(el.parent().tagName()) || "textarea".equals(el.parent().tagName());
++            }
+         }
+         return false;
+     }
+\ No newline at end of file

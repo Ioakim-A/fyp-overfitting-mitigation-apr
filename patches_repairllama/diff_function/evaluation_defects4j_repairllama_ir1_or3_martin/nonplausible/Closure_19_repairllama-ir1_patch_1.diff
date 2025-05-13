@@ -1,0 +1,28 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ca0c088f-99cc-4e1d-8f64-448a63e48ba1_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d7fbc305-e8f8-46d1-8496-74df6942669f_fixed.java
+index 42b7715..8ac820d 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ca0c088f-99cc-4e1d-8f64-448a63e48ba1_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d7fbc305-e8f8-46d1-8496-74df6942669f_fixed.java
+@@ -1,22 +1,17 @@
+   protected void declareNameInScope(FlowScope scope, Node node, JSType type) {
+     switch (node.getType()) {
+       case Token.NAME:
+-        scope.inferSlotType(node.getString(), type);
++        scope = scope.inferSlotType(node.getString(), type);
+         break;
+-
+       case Token.GETPROP:
+         String qualifiedName = node.getQualifiedName();
+         Preconditions.checkNotNull(qualifiedName);
+-
+         JSType origType = node.getJSType();
+         origType = origType == null ? getNativeType(UNKNOWN_TYPE) : origType;
+         scope.inferQualifiedSlot(node, qualifiedName, origType, type);
+         break;
+-
+-        // "this" references aren't currently modeled in the CFG.
+-
+       default:
+         throw new IllegalArgumentException("Node cannot be refined. \n" +
+             node.toStringTree());
+     }
+   }

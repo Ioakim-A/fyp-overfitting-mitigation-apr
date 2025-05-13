@@ -1,0 +1,33 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/94aba014-001b-421f-8a4a-5e7e92831e0e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a923f304-d07d-4d6a-a532-a3a110039831_fixed.java
+index 4f21a3a..8af12c9 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/94aba014-001b-421f-8a4a-5e7e92831e0e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a923f304-d07d-4d6a-a532-a3a110039831_fixed.java
+@@ -1,14 +1,23 @@
+     /**
+      * Helper method used by standard deserializer.
+      * 
+      * @since 2.3
+      */
+     public TokenBuffer deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException
+     {
+-            copyCurrentStructure(jp);
+-        /* 28-Oct-2014, tatu: As per #592, need to support a special case of starting from
+-         *    FIELD_NAME, which is taken to mean that we are missing START_OBJECT, but need
+-         *    to assume one did exist.
+-         */
++        JsonToken t = jp.getCurrentToken();
++        if (t == JsonToken.VALUE_NULL) {
++            return null;
++        }
++        if (t != JsonToken.START_ARRAY) {
++            throw ctxt.wrongTokenException(jp, JsonToken.START_ARRAY, "Expected array or null");
++        }
++        TokenBuffer result = new TokenBuffer();
++        while ((t = jp.nextToken()) != null) {
++            if (t == JsonToken.END_ARRAY) {
++                break;
++            }
++            result.append(t, jp.getText());
++        }
+         return this;
+     }

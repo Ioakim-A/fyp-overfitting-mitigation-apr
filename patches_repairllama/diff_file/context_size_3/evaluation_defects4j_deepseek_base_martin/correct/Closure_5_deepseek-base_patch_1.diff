@@ -1,0 +1,69 @@
+diff --git src/com/google/javascript/jscomp/InlineObjectLiterals.java src/com/google/javascript/jscomp/InlineObjectLiterals.java
+index 2b85d84..28e11aa 100644
+--- src/com/google/javascript/jscomp/InlineObjectLiterals.java
++++ src/com/google/javascript/jscomp/InlineObjectLiterals.java
+@@ -159,7 +159,6 @@ class InlineObjectLiterals implements CompilerPass {
+         Node name = ref.getNode();
+         Node parent = ref.getParent();
+         Node gramps = ref.getGrandparent();
+-
+         // Ignore most indirect references, like x.y (but not x.y(),
+         // since the function referenced by y might reference 'this').
+         //
+@@ -170,10 +169,11 @@ class InlineObjectLiterals implements CompilerPass {
+               && gramps.getFirstChild() == parent) {
+             return false;
+           }
+-
+           // Deleting a property has different semantics from deleting
+           // a variable, so deleted properties should not be inlined.
+-
++          if (gramps.isDelProp()) {
++            return false;
++          }
+           // NOTE(nicksantos): This pass's object-splitting algorithm has
+           // a blind spot. It assumes that if a property isn't defined on an
+           // object, then the value is undefined. This is not true, because
+@@ -192,23 +192,19 @@ class InlineObjectLiterals implements CompilerPass {
+           }
+           continue;
+         }
+-
+         // Only rewrite VAR declarations or simple assignment statements
+         if (!isVarOrAssignExprLhs(name)) {
+            return false;
+         }
+-
+         Node val = ref.getAssignedValue();
+         if (val == null) {
+           // A var with no assignment.
+           continue;
+         }
+-
+         // We're looking for object literal assignments only.
+         if (!val.isObjectLit()) {
+           return false;
+         }
+-
+         // Make sure that the value is not self-referential. IOW,
+         // disallow things like x = {b: x.a}.
+         //
+@@ -224,9 +220,7 @@ class InlineObjectLiterals implements CompilerPass {
+             // ES5 get/set not supported.
+             return false;
+           }
+-
+           validProperties.add(child.getString());
+-
+           Node childVal = child.getFirstChild();
+           // Check if childVal is the parent of any of the passed in
+           // references, as that is how self-referential assignments
+@@ -242,8 +236,6 @@ class InlineObjectLiterals implements CompilerPass {
+             }
+           }
+         }
+-
+-
+         // We have found an acceptable object literal assignment. As
+         // long as there are no other assignments that mess things up,
+         // we can inline.

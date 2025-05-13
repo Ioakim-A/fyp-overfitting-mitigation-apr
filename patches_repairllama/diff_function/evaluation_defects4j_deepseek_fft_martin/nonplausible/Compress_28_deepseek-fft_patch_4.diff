@@ -1,0 +1,51 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3618aa7c-a73b-4601-9dc9-770ebebca194_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bc5b30b3-5a43-49d6-ad33-e3290524f214_fixed.java
+index 0f439b3..a0a0eaa 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3618aa7c-a73b-4601-9dc9-770ebebca194_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bc5b30b3-5a43-49d6-ad33-e3290524f214_fixed.java
+@@ -1,38 +1,38 @@
+     /**
+      * Reads bytes from the current tar archive entry.
+      *
+      * This method is aware of the boundaries of the current
+      * entry in the archive and will deal with them as if they
+      * were this stream's start and EOF.
+      *
+      * @param buf The buffer into which to place bytes read.
+      * @param offset The offset at which to place bytes read.
+      * @param numToRead The number of bytes to read.
+      * @return The number of bytes read, or -1 at EOF.
+      * @throws IOException on error
+      */
+     @Override
+     public int read(byte[] buf, int offset, int numToRead) throws IOException {
+     	int totalRead = 0;
+-
+         if (hasHitEOF || entryOffset >= entrySize) {
+             return -1;
+         }
+-
+         if (currEntry == null) {
+             throw new IllegalStateException("No current tar entry");
+         }
+-
+         numToRead = Math.min(numToRead, available());
+-        
+         totalRead = is.read(buf, offset, numToRead);
++// buggy code
++//        count(totalRead);
++//        if (totalRead == -1) {
++//            hasHitEOF = true;
++//        } else {
++        if (totalRead != -1) {
+             count(totalRead);
+-        
+-        if (totalRead == -1) {
+-            hasHitEOF = true;
+         } else {
++            hasHitEOF = true;
++
+             entryOffset += totalRead;
+         }
+-
+         return totalRead;
+     }

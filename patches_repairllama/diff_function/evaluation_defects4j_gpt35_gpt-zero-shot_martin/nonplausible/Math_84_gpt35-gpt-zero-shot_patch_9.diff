@@ -1,0 +1,48 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4d0f8ccc-2efb-4c3b-8d3f-fae2395cb3c1_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/34f9651e-8b1f-430e-8013-927fb7f3d317_fixed.java
+index 50cbfb2..3f3bc6b 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4d0f8ccc-2efb-4c3b-8d3f-fae2395cb3c1_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/34f9651e-8b1f-430e-8013-927fb7f3d317_fixed.java
+@@ -1,39 +1,24 @@
+     protected void iterateSimplex(final Comparator<RealPointValuePair> comparator)
+         throws FunctionEvaluationException, OptimizationException, IllegalArgumentException {
+-
+         while (true) {
+-
+             incrementIterationsCounter();
+-
+-            // save the original vertex
+             final RealPointValuePair[] original = simplex;
+             final RealPointValuePair best = original[0];
+-
+-            // perform a reflection step
+             final RealPointValuePair reflected = evaluateNewSimplex(original, 1.0, comparator);
+             if (comparator.compare(reflected, best) < 0) {
+-
+-                // compute the expanded simplex
+                 final RealPointValuePair[] reflectedSimplex = simplex;
+                 final RealPointValuePair expanded = evaluateNewSimplex(original, khi, comparator);
+                 if (comparator.compare(reflected, expanded) <= 0) {
+-                    // accept the reflected simplex
+                     simplex = reflectedSimplex;
++                } else {
++                    simplex = original;
+                 }
+-
+                 return;
+-
+             }
+-
+-            // compute the contracted simplex
+             final RealPointValuePair contracted = evaluateNewSimplex(original, gamma, comparator);
+             if (comparator.compare(contracted, best) < 0) {
+-                // accept the contracted simplex
+-
+-            // check convergence
++                simplex = original;
+                 return;
+             }
+-
+         }
+-
+     }
+\ No newline at end of file

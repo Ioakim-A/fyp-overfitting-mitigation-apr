@@ -1,0 +1,19 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6ba1bf25-f57e-42d2-be2a-ea5a2255b756_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a00ab879-871f-439b-b225-b6931e3e7cc5_fixed.java
+index 7b18d3c..ef58f5c 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6ba1bf25-f57e-42d2-be2a-ea5a2255b756_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a00ab879-871f-439b-b225-b6931e3e7cc5_fixed.java
+@@ -1,3 +1,13 @@
+    public Iterator<Chromosome> iterator() {
+-        return chromosomes.iterator();
++        return new Iterator<Chromosome>() {
++            private int index = 0;
++            public boolean hasNext() {
++                return index < chromosomes.size();
++            }
++            public Chromosome next() {
++                return chromosomes.get(index++);
++            }
++            public void remove() {
++            }
++        };
+     }

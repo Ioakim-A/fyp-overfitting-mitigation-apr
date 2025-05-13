@@ -1,0 +1,88 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d02b31af-220c-43cd-a2b4-6e637e56aaaa_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d7224759-b16b-431a-a5ac-cc9e071a7a8d_fixed.java
+index bf9c086..2d44113 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d02b31af-220c-43cd-a2b4-6e637e56aaaa_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d7224759-b16b-431a-a5ac-cc9e071a7a8d_fixed.java
+@@ -1,54 +1,76 @@
+   /**
+    * Visits a CALL node.
+    *
+    * @param t The node traversal object that supplies context, such as the
+    * scope chain to use in name lookups as well as error reporting.
+    * @param n The node being visited.
+    */
+   private void visitCall(NodeTraversal t, Node n) {
+     Node child = n.getFirstChild();
+     JSType childType = getJSType(child).restrictByNotNullOrUndefined();
+-
+     if (!childType.canBeCalled()) {
+       report(t, n, NOT_CALLABLE, childType.toString());
+       ensureTyped(t, n);
+       return;
+     }
+-
+     // A couple of types can be called as if they were functions.
+     // If it is a function type, then validate parameters.
+     if (childType instanceof FunctionType) {
+       FunctionType functionType = (FunctionType) childType;
+-
+       boolean isExtern = false;
+       JSDocInfo functionJSDocInfo = functionType.getJSDocInfo();
+       if(functionJSDocInfo != null) {
+         String sourceName = functionJSDocInfo.getSourceName();
+         CompilerInput functionSource = compiler.getInput(sourceName);
+         isExtern = functionSource.isExtern();
+       }
+-
+       // Non-native constructors should not be called directly
+       // unless they specify a return type and are defined
+       // in an extern.
+       if (functionType.isConstructor() &&
+           !functionType.isNativeObjectType() &&
+           (functionType.getReturnType().isUnknownType() ||
+            functionType.getReturnType().isVoidType() ||
+            !isExtern)) {
+         report(t, n, CONSTRUCTOR_NOT_CALLABLE, childType.toString());
+       }
+-
+       // Functions with explcit 'this' types must be called in a GETPROP
+       // or GETELEM.
+-
++// buggy code
++      if (functionType.getThisType() != null &&
++          !functionType.getThisType().isUnknownType() &&
++          !functionType.getThisType().isVoidType() &&
++          !functionType.getThisType().isUndefinedType() &&
++          !functionType.getThisType().isNullType() &&
++          !functionType.getThisType().isStringType() &&
++          !functionType.getThisType().isBooleanType() &&
++          !functionType.getThisType().isNumberType() &&
++          !functionType.getThisType().isObjectType() &&
++          !functionType.getThisType().isFunctionType() &&
++          !functionType.getThisType().isArrayType() &&
++          !functionType.getThisType().isRegExpType() &&
++          !functionType.getThisType().isDateType() &&
++          !functionType.getThisType().isMathType() &&
++          !functionType.getThisType().isErrorType() &&
++          !functionType.getThisType().isDocumentType() &&
++          !functionType.getThisType().isElementType() &&
++          !functionType.getThisType().isNodeType() &&
++          !functionType.getThisType().isXMLDocumentType() &&
++          !functionType.getThisType().isXMLElementType() &&
++          !functionType.getThisType().isXMLAttributeType() &&
++          !functionType.getThisType().isXMLNodeType() &&
++          !functionType.getThisType().isXMLTextType() &&
++          !functionType.getThisType().isXMLCommentType() &&
++          !functionType.getThisType().isXMLCDATASectionType() &&
++          !functionType.getThisType().isXMLDocumentFragmentType() &&
++          !functionType.getThisType().isXMLNotationType() &&
++          !functionType.getThisType
+       visitParameterList(t, n, functionType);
+       ensureTyped(t, n, functionType.getReturnType());
+     } else {
+       ensureTyped(t, n);
+     }
+-
+     // TODO: Add something to check for calls of RegExp objects, which is not
+     // supported by IE.  Either say something about the return type or warn
+     // about the non-portability of the call or both.
+   }

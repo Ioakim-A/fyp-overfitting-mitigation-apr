@@ -1,0 +1,35 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1f5b265e-3a98-40eb-87ef-f2c6f80b4f49_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5e3f056b-e7a4-4417-a59d-a61b8ee166e2_fixed.java
+index b36b2a9..b711e2a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1f5b265e-3a98-40eb-87ef-f2c6f80b4f49_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5e3f056b-e7a4-4417-a59d-a61b8ee166e2_fixed.java
+@@ -1,26 +1,28 @@
+   JSType meet(JSType that) {
+     UnionTypeBuilder builder = new UnionTypeBuilder(registry);
+     for (JSType alternate : alternates) {
+       if (alternate.isSubtype(that)) {
+         builder.addAlternate(alternate);
+       }
+     }
+-
+     if (that instanceof UnionType) {
+       for (JSType otherAlternate : ((UnionType) that).alternates) {
+         if (otherAlternate.isSubtype(this)) {
+           builder.addAlternate(otherAlternate);
+         }
+       }
+     } else if (that.isSubtype(this)) {
+       builder.addAlternate(that);
+     }
+     JSType result = builder.build();
+-    if (result != null) {
++// buggy code
++//    if (result != null) {
++     if (result != null && !result.isUnknownType()) {
++
+       return result;
+     } else if (this.isObject() && that.isObject()) {
+       return getNativeType(JSTypeNative.NO_OBJECT_TYPE);
+     } else {
+       return getNativeType(JSTypeNative.NO_TYPE);
+     }
+   }

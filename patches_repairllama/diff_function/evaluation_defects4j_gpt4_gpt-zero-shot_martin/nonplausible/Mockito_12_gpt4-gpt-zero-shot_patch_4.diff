@@ -1,0 +1,20 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/63a9bd63-1cb0-4be5-b9a4-456f7b63796c_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/60319b2f-8d7c-4772-b45e-c4a4c9ec25c4_fixed.java
+index 23bdbff..3867345 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/63a9bd63-1cb0-4be5-b9a4-456f7b63796c_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/60319b2f-8d7c-4772-b45e-c4a4c9ec25c4_fixed.java
+@@ -1,10 +1,10 @@
+-    public Class getGenericType(Field field) {        
++public Class<?> getGenericType(Field field) {        
+     Type generic = field.getGenericType();
+     if (generic != null && generic instanceof ParameterizedType) {
+         Type actual = ((ParameterizedType) generic).getActualTypeArguments()[0];
+-                return (Class) actual;
+-                //in case of nested generics we don't go deep
++        if (actual instanceof Class) {
++            return (Class<?>) actual;
++        }
+     }
+-        
+     return Object.class;
+ }
+\ No newline at end of file

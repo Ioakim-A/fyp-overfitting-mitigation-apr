@@ -1,0 +1,27 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f2562f27-d6dc-4beb-b335-9d5e5ab213e3_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8e73b64b-1bf6-44e4-bbf9-4df975c77787_fixed.java
+index 0a68230..08a904d 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f2562f27-d6dc-4beb-b335-9d5e5ab213e3_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8e73b64b-1bf6-44e4-bbf9-4df975c77787_fixed.java
+@@ -1,6 +1,16 @@
+-  static Type getSupertype(Type context, Class<?> contextRawType, Class<?> supertype) {
+-      // wildcards are useless for resolving supertypes. As the upper bound has the same raw type, use it instead
+-    checkArgument(supertype.isAssignableFrom(contextRawType));
+-    return resolve(context, contextRawType,
+-        $Gson$Types.getGenericSupertype(context, contextRawType, supertype));
++    if (context instanceof ParameterizedType) {
++      ParameterizedType parameterizedType = (ParameterizedType) context;
++      Class<?> rawType = (Class<?>) parameterizedType.getRawType();
++      if (supertype.isAssignableFrom(rawType)) {
++        Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
++        for (int i = 0; i < actualTypeArguments.length; i++) {
++          Type actualTypeArgument = actualTypeArguments[i];
++          if (actualTypeArgument instanceof TypeVariable) {
++            TypeVariable<?> typeVariable = (TypeVariable<?>) actualTypeArgument;
++            actualTypeArguments[i] = resolve(context, contextRawType, typeVariable);
++          }
++        }
++        return $Gson$Types.newParameterizedTypeWithOwner(
++            parameterizedType.getOwnerType(), rawType, actualTypeArguments);
++      }
+     }
+\ No newline at end of file

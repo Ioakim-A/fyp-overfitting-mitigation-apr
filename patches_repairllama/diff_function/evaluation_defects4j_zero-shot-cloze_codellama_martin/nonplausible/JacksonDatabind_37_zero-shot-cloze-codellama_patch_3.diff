@@ -1,0 +1,25 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/764d5426-33b8-4b2b-8065-bfdbebc08e49_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/73fda11e-58d7-4292-ae95-b501384d7f0d_fixed.java
+index 48d62dd..0304ff5 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/764d5426-33b8-4b2b-8065-bfdbebc08e49_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/73fda11e-58d7-4292-ae95-b501384d7f0d_fixed.java
+@@ -1,18 +1,11 @@
+     protected JavaType _narrow(Class<?> subclass)
+     {
+         if (_class == subclass) {
+             return this;
+         }
+-        // Should we check that there is a sub-class relationship?
+-        // 15-Jan-2016, tatu: Almost yes, but there are some complications with
+-        //    placeholder values, so no.
+-        /*
+        if (!_class.isAssignableFrom(subclass)) {
+-            throw new IllegalArgumentException("Class "+subclass.getName()+" not sub-type of "
+-                    +_class.getName());
++            throw new IllegalArgumentException("Class " + subclass.getName() + " is not a subclass of " + _class.getName());
+         }
+-        */
+-        // 15-Jan-2015, tatu: Not correct; should really re-resolve...
+-        return new SimpleType(subclass, _bindings, _superClass, _superInterfaces,
++        return new SimpleType(subclass, _idType, _baseType, _containedTypeName, _containedType,
+                 _valueHandler, _typeHandler, _asStatic);
+     }

@@ -1,0 +1,38 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cff5c67f-eb5b-40c0-a1e4-090c9258e5bb_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/519b9add-8aeb-44be-bec1-a22492ee166e_fixed.java
+index 7ceca72..96eeae9 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cff5c67f-eb5b-40c0-a1e4-090c9258e5bb_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/519b9add-8aeb-44be-bec1-a22492ee166e_fixed.java
+@@ -1,9 +1,28 @@
+     public TokenBuffer deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException
+     {
+-            copyCurrentStructure(jp);
+-        /* 28-Oct-2014, tatu: As per #592, need to support a special case of starting from
+-         *    FIELD_NAME, which is taken to mean that we are missing START_OBJECT, but need
+-         *    to assume one did exist.
+-         */
++       JsonToken t = jp.getCurrentToken();
++        if (t == JsonToken.START_ARRAY) {
++            jp.nextToken();
++            t = jp.getCurrentToken();
++        }
++        if (t == JsonToken.START_OBJECT) {
++            jp.nextToken();
++            t = jp.getCurrentToken();
++        }
++        if (t == JsonToken.FIELD_NAME) {
++            jp.nextToken();
++            t = jp.getCurrentToken();
++        }
++        if (t == JsonToken.START_ARRAY) {
++            jp.nextToken();
++            t = jp.getCurrentToken();
++        }
++        if (t == JsonToken.VALUE_STRING) {
++            jp.nextToken();
++            t = jp.getCurrentToken();
++        }
++        if (t == JsonToken.END_ARRAY) {
++            jp.nextToken();
++        }
+         return this;
+     }

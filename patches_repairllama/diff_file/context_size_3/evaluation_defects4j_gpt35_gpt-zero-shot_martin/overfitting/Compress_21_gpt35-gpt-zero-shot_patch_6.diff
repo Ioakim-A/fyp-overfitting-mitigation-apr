@@ -1,0 +1,26 @@
+diff --git src/main/java/org/apache/commons/compress/archivers/sevenz/SevenZOutputFile.java src/main/java/org/apache/commons/compress/archivers/sevenz/SevenZOutputFile.java
+index 05912b9..39aff0a 100644
+--- src/main/java/org/apache/commons/compress/archivers/sevenz/SevenZOutputFile.java
++++ src/main/java/org/apache/commons/compress/archivers/sevenz/SevenZOutputFile.java
+@@ -636,18 +636,17 @@ public class SevenZOutputFile {
+     int shift = 7;
+     for (int i = 0; i < length; i++) {
+         cache |= ((bits.get(i) ? 1 : 0) << shift);
+-            --shift;
+-            if (shift == 0) {
++        shift--;
++        if (shift < 0) {
+             header.write(cache);
+             shift = 7;
+             cache = 0;
+         }
+     }
+-        if (length > 0 && shift > 0) {
++    if (shift < 7 && length > 0) {
+         header.write(cache);
+     }
+ }
+-
+     private class OutputStreamWrapper extends OutputStream {
+         @Override
+         public void write(final int b) throws IOException {

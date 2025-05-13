@@ -1,0 +1,35 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/eddacd21-2546-4ee3-88c3-7424f136e38f_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/05c7dde8-5fc6-4136-a0b7-35f721f5c857_fixed.java
+index c6b65da..b5cfc6b 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/eddacd21-2546-4ee3-88c3-7424f136e38f_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/05c7dde8-5fc6-4136-a0b7-35f721f5c857_fixed.java
+@@ -1,25 +1,26 @@
+     /**
+      * Returns the options with a long name starting with the name specified.
+      * 
+      * @param opt the partial name of the option
+      * @return the options matching the partial name specified, or an empty list if none matches
+      * @since 1.3
+      */
+     public List<String> getMatchingOptions(String opt)
+     {
+         opt = Util.stripLeadingHyphens(opt);
+-        
+         List<String> matchingOpts = new ArrayList<String>();
+-
+         // for a perfect match return the single option only
+-
++        if (hasLongOpt(opt))
++        {
++            matchingOpts.add(opt);
++            return matchingOpts;
++        }
+         for (String longOpt : longOpts.keySet())
+         {
+             if (longOpt.startsWith(opt))
+             {
+                 matchingOpts.add(longOpt);
+             }
+         }
+-        
+         return matchingOpts;
+     }

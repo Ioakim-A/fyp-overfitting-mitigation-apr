@@ -1,0 +1,32 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/19b5620c-08fd-4e5d-aae0-1e32cecf1b7b_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0a628953-f52b-4147-b1ba-1fb015a25f1a_fixed.java
+index 8afddc6..a90bef5 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/19b5620c-08fd-4e5d-aae0-1e32cecf1b7b_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0a628953-f52b-4147-b1ba-1fb015a25f1a_fixed.java
+@@ -1,22 +1,25 @@
+   @Override
+   protected CompilerOptions createOptions() {
+     CompilerOptions options = new CompilerOptions();
+     options.setCodingConvention(new ClosureCodingConvention());
+     CompilationLevel level = flags.compilation_level;
+     level.setOptionsForCompilationLevel(options);
+     if (flags.debug) {
+       level.setDebugOptionsForCompilationLevel(options);
+     }
+-
+     WarningLevel wLevel = flags.warning_level;
+     wLevel.setOptionsForWarningLevel(options);
+     for (FormattingOption formattingOption : flags.formatting) {
+       formattingOption.applyToOptions(options);
+     }
+-    if (flags.process_closure_primitives) {
++// buggy code
++//    if (flags.process_closure_primitives) {
++//      options.closurePass = true;
++//    }
++    if (!flags.process_closure_primitives) {
+       options.closurePass = true;
+     }
+ 
+     initOptionsFromFlags(options);
+     return options;
+   }

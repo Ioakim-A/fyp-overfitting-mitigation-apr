@@ -1,0 +1,19 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3e62f79e-85c9-4485-a08d-f5bbdb9c346a_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a88b455f-a60e-4571-bf6a-b2205f30ef7b_fixed.java
+index fa6828a..c2ccbbe 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3e62f79e-85c9-4485-a08d-f5bbdb9c346a_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a88b455f-a60e-4571-bf6a-b2205f30ef7b_fixed.java
+@@ -1,5 +1,13 @@
+     private void injectMockCandidate(Class<?> awaitingInjectionClazz, Set<Object> mocks, Object fieldInstance) {
+         for(Field field : orderedInstanceFieldsFrom(awaitingInjectionClazz)) {
+-            mockCandidateFilter.filterCandidate(mocks, field, fieldInstance).thenInject();
++           if(field.getType().isAssignableFrom(fieldInstance.getClass())) {
++                field.setAccessible(true);
++                try {
++                    field.set(fieldInstance, mocks.iterator().next());
++                } catch (IllegalAccessException e) {
++                    throw new RuntimeException(e);
++                }
++                break;
++            }
+         }
+     }

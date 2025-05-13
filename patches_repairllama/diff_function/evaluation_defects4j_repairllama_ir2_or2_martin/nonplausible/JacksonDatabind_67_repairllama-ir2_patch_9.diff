@@ -1,0 +1,41 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4a8f4f2f-8f32-4da9-8705-25ea3d37c214_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ebe24646-6bce-45de-b4e9-359193b65bfe_fixed.java
+index a19c4db..fadf83f 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4a8f4f2f-8f32-4da9-8705-25ea3d37c214_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ebe24646-6bce-45de-b4e9-359193b65bfe_fixed.java
+@@ -1,32 +1,33 @@
+     public KeyDeserializer createKeyDeserializer(DeserializationContext ctxt,
+             JavaType type)
+         throws JsonMappingException
+     {
+         final DeserializationConfig config = ctxt.getConfig();
+         KeyDeserializer deser = null;
+         if (_factoryConfig.hasKeyDeserializers()) {
+             BeanDescription beanDesc = config.introspectClassAnnotations(type.getRawClass());
+             for (KeyDeserializers d  : _factoryConfig.keyDeserializers()) {
+                 deser = d.findKeyDeserializer(type, config, beanDesc);
+                 if (deser != null) {
+                     break;
+                 }
+             }
+         }
+-        // the only non-standard thing is this:
+         if (deser == null) {
+             if (type.isEnumType()) {
+-                return _createEnumKeyDeserializer(ctxt, type);
++               return _createEnumKeyDeserializer(ctxt, type.getRawClass());
+             }
+             deser = StdKeyDeserializers.findStringBasedKeyDeserializer(config, type);
++            if (deser == null) {
++                deser = StdKeyDeserializers.findEnumKeyDeserializer(config, type);
++            }
+         }
+-        // and then post-processing
+         if (deser != null) {
+             if (_factoryConfig.hasDeserializerModifiers()) {
+                 for (BeanDeserializerModifier mod : _factoryConfig.deserializerModifiers()) {
+                     deser = mod.modifyKeyDeserializer(config, type, deser);
+                 }
+             }
+         }
+         return deser;
+     }

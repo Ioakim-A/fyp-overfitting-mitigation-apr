@@ -1,0 +1,29 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d42a8abb-b2ce-4c22-a71e-dd3ce024f99e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/436ec354-d959-432d-ae92-d299c4dc5bc8_fixed.java
+index 8a5c13c..3acd1ed 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d42a8abb-b2ce-4c22-a71e-dd3ce024f99e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/436ec354-d959-432d-ae92-d299c4dc5bc8_fixed.java
+@@ -1,12 +1,22 @@
+     public static boolean equals(final CharSequence cs1, final CharSequence cs2) {
+         if (cs1 == cs2) {
+             return true;
+         }
+         if (cs1 == null || cs2 == null) {
+             return false;
+         }
+         if (cs1 instanceof String && cs2 instanceof String) {
+             return cs1.equals(cs2);
+         }
+-        return CharSequenceUtils.regionMatches(cs1, false, 0, cs2, 0, Math.max(cs1.length(), cs2.length()));
++        
++        int length = cs1.length();
++        if (length == cs2.length()) {
++            for (int i=0; i<length; i++) {
++                if (cs1.charAt(i) != cs2.charAt(i)) {
++                    return false;
++                }
++            }
++            return true;
++        }
++        return false;
+     }
+\ No newline at end of file

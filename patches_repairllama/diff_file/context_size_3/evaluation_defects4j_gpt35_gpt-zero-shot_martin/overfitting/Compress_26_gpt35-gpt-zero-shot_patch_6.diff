@@ -1,0 +1,24 @@
+diff --git src/main/java/org/apache/commons/compress/utils/IOUtils.java src/main/java/org/apache/commons/compress/utils/IOUtils.java
+index 686d75a..a99cc67 100644
+--- src/main/java/org/apache/commons/compress/utils/IOUtils.java
++++ src/main/java/org/apache/commons/compress/utils/IOUtils.java
+@@ -95,15 +95,16 @@ public final class IOUtils {
+         long available = numToSkip;
+         while (numToSkip > 0) {
+             long skipped = input.skip(numToSkip);
+-            if (skipped == 0) {
++            if (skipped <= 0) {
+                 break;
+             }
+             numToSkip -= skipped;
+         }
+-            
++        while (numToSkip > 0 && input.read() != -1) {
++            numToSkip--;
++        }
+         return available - numToSkip;
+     }
+-
+     /**
+      * Reads as much from input as possible to fill the given array.
+      *

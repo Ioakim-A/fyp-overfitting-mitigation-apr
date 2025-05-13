@@ -1,0 +1,37 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1634a1ba-acad-4109-9db2-4b6a81c33810_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/447d01e5-b802-45b4-844d-144b7d14a028_fixed.java
+index f04064f..bdd7e8a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1634a1ba-acad-4109-9db2-4b6a81c33810_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/447d01e5-b802-45b4-844d-144b7d14a028_fixed.java
+@@ -1,19 +1,17 @@
+     public static Option create(String opt) throws IllegalArgumentException
+     {
+-            // create the option
+-        Option option = new Option(opt, description);
+-
+-            // set the option properties
+-            option.setLongOpt(longopt);
+-            option.setRequired(required);
+-            option.setOptionalArg(optionalArg);
+-            option.setArgs(numberOfArgs);
+-            option.setType(type);
+-            option.setValueSeparator(valuesep);
+-            option.setArgName(argName);
+-            // reset the OptionBuilder properties
+-            OptionBuilder.reset();
+-
+-        // return the Option instance
++       Option option;
++        if (opt.startsWith("--"))
++        {
++            option = new LongOption(opt.substring(2));
++        }
++        else if (opt.startsWith("-"))
++        {
++            option = new ShortOption(opt.charAt(1));
++        }
++        else
++        {
++            throw new IllegalArgumentException("Invalid option: " + opt);
++        }
+         return option;
+     }

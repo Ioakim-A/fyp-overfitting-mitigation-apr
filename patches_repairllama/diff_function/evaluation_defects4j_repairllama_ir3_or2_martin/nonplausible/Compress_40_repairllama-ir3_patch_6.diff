@@ -1,0 +1,46 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6a24dfb1-b81e-4a97-881f-ecc6ff22152f_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2831b0d3-d46c-47a0-aa98-a8b18c1ffe02_fixed.java
+index 5aa01c2..123a2d6 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6a24dfb1-b81e-4a97-881f-ecc6ff22152f_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2831b0d3-d46c-47a0-aa98-a8b18c1ffe02_fixed.java
+@@ -1,29 +1,21 @@
+     public long readBits(final int count) throws IOException {
+         if (count < 0 || count > MAXIMUM_CACHE_SIZE) {
+             throw new IllegalArgumentException("count must not be negative or greater than " + MAXIMUM_CACHE_SIZE);
+         }
+-        while (bitsCachedSize < count) {
+-            final long nextByte = in.read();
+-            if (nextByte < 0) {
+-                return nextByte;
++       if (count == 0) {
++            return 0;
+         }
+-            if (byteOrder == ByteOrder.LITTLE_ENDIAN) {
+-                bitsCached |= (nextByte << bitsCachedSize);
+-            } else {
+-                bitsCached <<= 8;
+-                bitsCached |= nextByte;
++        long bitsOut = 0;
++        int bitsIn = 0;
++        do {
++            if (bitsIn == 0) {
++                bitsIn = in.read();
++                if (bitsIn < 0) {
++                    throw new EOFException();
+                 }
+-            bitsCachedSize += 8;
+             }
+-            // bitsCachedSize >= 57 and left-shifting it 8 bits would cause an overflow
+-        
+-        final long bitsOut;
+-            if (byteOrder == ByteOrder.LITTLE_ENDIAN) {
+-                bitsOut = (bitsCached & MASKS[count]);
+-                bitsCached >>>= count;
+-            } else {
+-                bitsOut = (bitsCached >> (bitsCachedSize - count)) & MASKS[count];
+-            }
+-            bitsCachedSize -= count;
++            bitsOut = (bitsOut << 8) | (bitsIn & 0xFF);
++            bitsIn >>>= 8;
++        } while (--count > 0);
+         return bitsOut;
+     }

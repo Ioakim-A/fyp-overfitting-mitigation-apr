@@ -1,0 +1,43 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7704dd9e-581b-4e3f-a52e-d09d5572400f_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/106a91fb-4ff7-4daf-a81a-17d6f2f4b284_fixed.java
+index bcd80aa..833c85f 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7704dd9e-581b-4e3f-a52e-d09d5572400f_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/106a91fb-4ff7-4daf-a81a-17d6f2f4b284_fixed.java
+@@ -1,25 +1,32 @@
+         void processResponseHeaders(Map<String, List<String>> resHeaders) {
+             for (Map.Entry<String, List<String>> entry : resHeaders.entrySet()) {
+                 String name = entry.getKey();
+                 if (name == null)
+-                    continue; // http/1.1 line
+-
++                    continue;
+                 List<String> values = entry.getValue();
++                if(values == null)
++                    continue;
+                 if (name.equalsIgnoreCase("Set-Cookie")) {
+                     for (String value : values) {
+                         if (value == null)
+                             continue;
+                         TokenQueue cd = new TokenQueue(value);
+                         String cookieName = cd.chompTo("=").trim();
+                         String cookieVal = cd.consumeTo(";").trim();
+-                        // ignores path, date, domain, validateTLSCertificates et al. req'd?
+-                        // name not blank, value not null
+                         if (cookieName.length() > 0)
+                             cookie(cookieName, cookieVal);
+                     }
+-                } else { // combine same header names with comma: http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
++                } else { 
+                     if (!values.isEmpty())
+                         header(name, values.get(0));
+                 }
+             }
+         }
++
++        void cookie(String name, String value) {
++            // method implementation here
++        }
++
++        void header(String name, String value) {
++            // method implementation here
++        }
+\ No newline at end of file

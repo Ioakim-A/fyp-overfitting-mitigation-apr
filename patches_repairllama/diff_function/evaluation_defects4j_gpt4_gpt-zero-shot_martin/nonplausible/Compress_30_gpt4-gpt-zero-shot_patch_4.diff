@@ -1,0 +1,40 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/81a3ae87-b224-4a8b-94dd-734b2429840b_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/236f5ff2-6a9e-4442-8f8f-7a1280dda452_fixed.java
+index 20d45d1..6623870 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/81a3ae87-b224-4a8b-94dd-734b2429840b_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/236f5ff2-6a9e-4442-8f8f-7a1280dda452_fixed.java
+@@ -1,27 +1,30 @@
+-    public int read(final byte[] dest, final int offs, final int len)
+-        throws IOException {
++    public int read(final byte[] dest, final int offs, final int len) throws IOException {
+         if (offs < 0) {
+             throw new IndexOutOfBoundsException("offs(" + offs + ") < 0.");
+         }
+         if (len < 0) {
+             throw new IndexOutOfBoundsException("len(" + len + ") < 0.");
+         }
+         if (offs + len > dest.length) {
+             throw new IndexOutOfBoundsException("offs(" + offs + ") + len("
+                                                 + len + ") > dest.length(" + dest.length + ").");
+         }
+         if (this.in == null) {
+             throw new IOException("stream closed");
+         }
+-
++        // replaced <FILL_ME> with read0 function
+         final int hi = offs + len;
+         int destOffs = offs;
+         int b;
+         while (destOffs < hi && ((b = read0()) >= 0)) {
+             dest[destOffs++] = (byte) b;
+             count(1);
+         }
+-
+         int c = (destOffs == offs) ? -1 : (destOffs - offs);
+         return c;
+     }
++
++    // added read0 function 
++    private int read0() throws IOException {
++        return this.in.read();
++    }
+\ No newline at end of file

@@ -1,0 +1,41 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d44bd9d4-39c8-43a5-9ba6-3c3052319580_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/aefa219f-591f-4fd4-bf39-9a9f0ef10537_fixed.java
+index be2af16..a240c74 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d44bd9d4-39c8-43a5-9ba6-3c3052319580_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/aefa219f-591f-4fd4-bf39-9a9f0ef10537_fixed.java
+@@ -1,29 +1,31 @@
+     public long getDateTimeMillis(int year, int monthOfYear, int dayOfMonth,
+                                   int hourOfDay, int minuteOfHour,
+                                   int secondOfMinute, int millisOfSecond)
+         throws IllegalArgumentException
+     {
+         Chronology base;
+         if ((base = getBase()) != null) {
+             return base.getDateTimeMillis
+                 (year, monthOfYear, dayOfMonth,
+                  hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);
+         }
+-
+-        // Assume date is Gregorian.
+         long instant;
+-            instant = iGregorianChronology.getDateTimeMillis
++// buggy code
++//            instant = iGregorianChronology.getDateTimeMillis
++//                (year, monthOfYear, dayOfMonth,
++//                 hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);
++           instant = iJulianChronology.getDateTimeMillis
+                 (year, monthOfYear, dayOfMonth,
+                  hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);
++// end buggy code
++
+         if (instant < iCutoverMillis) {
+-            // Maybe it's Julian.
+             instant = iJulianChronology.getDateTimeMillis
+                 (year, monthOfYear, dayOfMonth,
+                  hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);
+             if (instant >= iCutoverMillis) {
+-                // Okay, it's in the illegal cutover gap.
+                 throw new IllegalArgumentException("Specified date does not exist");
+             }
+         }
+         return instant;
+     }

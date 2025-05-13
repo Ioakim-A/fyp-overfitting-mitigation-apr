@@ -1,0 +1,26 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0bec8bd4-b83b-4b61-ad9a-2ccc37604102_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/14a8f65b-b05b-4df4-b6d8-062aaab84bf2_fixed.java
+index 2078667..6b46d66 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0bec8bd4-b83b-4b61-ad9a-2ccc37604102_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/14a8f65b-b05b-4df4-b6d8-062aaab84bf2_fixed.java
+@@ -1,15 +1,16 @@
+-    public T[] sample(int sampleSize) throws NotStrictlyPositiveException {
++// fixed code
++public T[] sample(int sampleSize) throws NotStrictlyPositiveException, NoSuchElementException {
+     if (sampleSize <= 0) {
+         throw new NotStrictlyPositiveException(LocalizedFormats.NUMBER_OF_SAMPLES,
+                 sampleSize);
+     }
+-
++    if (singletons.isEmpty()) {
++        throw new NoSuchElementException("The list 'singletons' does not contain any elements");
++    }
+     final T[]out = (T[]) java.lang.reflect.Array.newInstance(singletons.get(0).getClass(), sampleSize);
+     
+     for (int i = 0; i < sampleSize; i++) {
+         out[i] = sample();
+     }
+-
+     return out;
+-
+ }
+\ No newline at end of file

@@ -1,0 +1,25 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/548d23e4-f078-4bb2-9d80-3a80eb10d2c0_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3e87ed0c-c3de-4a7d-8f7d-13a71e224c31_fixed.java
+index 44d6cc6..c9b0cf5 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/548d23e4-f078-4bb2-9d80-3a80eb10d2c0_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3e87ed0c-c3de-4a7d-8f7d-13a71e224c31_fixed.java
+@@ -1,16 +1,16 @@
+ public Date read(JsonReader in) throws IOException {
+-    if (in.peek() != JsonToken.STRING) {
+-      throw new JsonParseException("The date should be a string value");
++    // fixed code
++    if (in.peek() == JsonToken.NULL) {
++        throw new JsonParseException("The date should not be a null value");
+     }
+     Date date = deserializeToDate(in.nextString());
+     if (dateType == Date.class) {
+         return date;
+     } else if (dateType == Timestamp.class) {
+         return new Timestamp(date.getTime());
+     } else if (dateType == java.sql.Date.class) {
+         return new java.sql.Date(date.getTime());
+     } else {
+-      // This must never happen: dateType is guarded in the primary constructor
+         throw new AssertionError();
+     }
+ }
+\ No newline at end of file

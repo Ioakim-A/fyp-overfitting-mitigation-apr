@@ -1,0 +1,46 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c17b0779-f28e-4454-9425-907d5f671d8e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/593bebb8-fd82-4b03-b608-fe99ba2062f9_fixed.java
+index 7b4f703..d4a1476 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c17b0779-f28e-4454-9425-907d5f671d8e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/593bebb8-fd82-4b03-b608-fe99ba2062f9_fixed.java
+@@ -1,29 +1,28 @@
+ private static String cacheString(final char[] charBuf, final String[] stringCache, final int start, final int count) {
+-        // limit (no cache):
+     if (count > maxStringCacheLen)
+         return new String(charBuf, start, count);
+ 
+-        // calculate hash:
+     int hash = 0;
+     int offset = start;
+     for (int i = 0; i < count; i++) {
+         hash = 31 * hash + charBuf[offset++];
+     }
+-
+-        // get from cache
+-        final int index = hash & stringCache.length - 1;
++    final int index = hash & (stringCache.length - 1);
+     String cached = stringCache[index];
+-
+-        if (cached == null) { // miss, add
++    if (cached == null || rangeEquals(charBuf, start, count, cached)) {
+         cached = new String(charBuf, start, count);
+         stringCache[index] = cached;
+-        } else { // hashcode hit, check equality
+-            if (rangeEquals(charBuf, start, count, cached)) { // hit
+-                return cached;
+-            } else { // hashcode conflict
++    } else {
++        int newIndex = index;
++        do {
++            newIndex = (newIndex + 1) & (stringCache.length - 1);
++            cached = stringCache[newIndex];
++        } while (cached != null && !rangeEquals(charBuf, start, count, cached));
++
++        if (cached == null) {
+             cached = new String(charBuf, start, count);
+-                stringCache[index] = cached; // update the cache, as recently used strings are more likely to show up again
++            stringCache[newIndex] = cached;
+         }
+     }
+     return cached;
+ }
+\ No newline at end of file

@@ -1,0 +1,21 @@
+diff --git src/main/java/org/apache/commons/compress/archivers/sevenz/Coders.java src/main/java/org/apache/commons/compress/archivers/sevenz/Coders.java
+index 0bc5a1e..cb3c861 100644
+--- src/main/java/org/apache/commons/compress/archivers/sevenz/Coders.java
++++ src/main/java/org/apache/commons/compress/archivers/sevenz/Coders.java
+@@ -109,14 +109,13 @@ class Coders {
+             byte propsByte = coder.properties[0];
+             long dictSize = coder.properties[1];
+             for (int i = 1; i < 4; i++) {
+-                dictSize |= (coder.properties[i + 1] << (8 * i));
++                dictSize |= (coder.properties[i + 1] & 0xFFL) << (8 * i);
+             }
+             if (dictSize > LZMAInputStream.DICT_SIZE_MAX) {
+                 throw new IOException("Dictionary larger than 4GiB maximum size");
+             }
+             return new LZMAInputStream(in, -1, propsByte, (int) dictSize);
+-        }
+-    }
++        }    }
+     
+     static class DeflateDecoder extends CoderBase {
+         @Override

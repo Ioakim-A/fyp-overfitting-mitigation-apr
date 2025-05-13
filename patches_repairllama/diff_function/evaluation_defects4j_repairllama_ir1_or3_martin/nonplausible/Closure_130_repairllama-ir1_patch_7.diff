@@ -1,0 +1,43 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/abc97105-8e96-4117-ac90-d98e252bab0a_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/15eb8ee2-e116-448d-9be4-c6fe0e331031_fixed.java
+index f3bca8d..5d6826c 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/abc97105-8e96-4117-ac90-d98e252bab0a_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/15eb8ee2-e116-448d-9be4-c6fe0e331031_fixed.java
+@@ -1,37 +1,24 @@
+   private void inlineAliases(GlobalNamespace namespace) {
+-    // Invariant: All the names in the worklist meet condition (a).
+     Deque<Name> workList = new ArrayDeque<Name>(namespace.getNameForest());
+     while (!workList.isEmpty()) {
+       Name name = workList.pop();
+-
+-      // Don't attempt to inline a getter or setter property as a variable.
+       if (name.type == Name.Type.GET || name.type == Name.Type.SET) {
+-        continue;
+       }
+-
+       if (name.globalSets == 1 && name.localSets == 0 &&
+           name.aliasingGets > 0) {
+-        // {@code name} meets condition (b). Find all of its local aliases
+-        // and try to inline them.
+         List<Ref> refs = Lists.newArrayList(name.getRefs());
+         for (Ref ref : refs) {
+-          if (ref.type == Type.ALIASING_GET && ref.scope.isLocal()) {
+-            // {@code name} meets condition (c). Try to inline it.
++          if (ref.type == Type.ALIASING_GET) {
+             if (inlineAliasIfPossible(ref, namespace)) {
+               name.removeRef(ref);
+             }
+           }
+         }
+       }
+-
+-      // Check if {@code name} has any aliases left after the
+-      // local-alias-inlining above.
+       if ((name.type == Name.Type.OBJECTLIT ||
+            name.type == Name.Type.FUNCTION) &&
+           name.aliasingGets == 0 && name.props != null) {
+-        // All of {@code name}'s children meet condition (a), so they can be
+-        // added to the worklist.
+         workList.addAll(name.props);
+       }
+     }
+   }

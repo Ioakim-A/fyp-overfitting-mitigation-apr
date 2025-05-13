@@ -1,0 +1,31 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9923b3ce-0ffa-4e22-bae8-6b06d7aaedab_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bb31ab00-27f6-4cf4-acff-961d2678e5b8_fixed.java
+index 4e76e23..8d9b828 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9923b3ce-0ffa-4e22-bae8-6b06d7aaedab_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bb31ab00-27f6-4cf4-acff-961d2678e5b8_fixed.java
+@@ -1,19 +1,12 @@
+ protected JavaType _narrow(Class<?> subclass)
+ {
+     if (_class == subclass) {
+         return this;
+     }
+-        // Should we check that there is a sub-class relationship?
+-        // 15-Jan-2016, tatu: Almost yes, but there are some complications with
+-        //    placeholder values (`Void`, `NoClass`), so can not quite do yet.
+-        // TODO: fix in 2.8
+-            /*
+-            throw new IllegalArgumentException("Class "+subclass.getName()+" not sub-type of "
+-                    +_class.getName());
+-                    */
+-            return new SimpleType(subclass, _bindings, this, _superInterfaces,
+-                    _valueHandler, _typeHandler, _asStatic);
+-        // Otherwise, stitch together the hierarchy. First, super-class
+-        // if not found, try a super-interface
+-        // should not get here but...
++    if(subclass != null && _bindings != null && this != null && _superInterfaces != null && _valueHandler != null && _typeHandler != null && _asStatic != null){
++        return new SimpleType(subclass, _bindings, this, _superInterfaces, _valueHandler, _typeHandler, _asStatic);
++    } else {
++        // handle null values appropriately, maybe throw an exception or return a default value
++        throw new IllegalArgumentException("Null value detected!");
++    }
+ }
+\ No newline at end of file

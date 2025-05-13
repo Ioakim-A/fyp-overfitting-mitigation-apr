@@ -1,0 +1,102 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3d43090a-e4bc-403b-b9b6-a25e89721018_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/79e45f50-8860-4e17-818c-e16e50f99d82_fixed.java
+index dfceb86..b3fe41c 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3d43090a-e4bc-403b-b9b6-a25e89721018_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/79e45f50-8860-4e17-818c-e16e50f99d82_fixed.java
+@@ -1,54 +1,65 @@
+   String getReadableJSTypeName(Node n, boolean dereference) {
+-
+-    // The best type name is the actual type name.
+-
+-    // If we're analyzing a GETPROP, the property may be inherited by the
+-    // prototype chain. So climb the prototype chain and find out where
+-    // the property was originally defined.
+-    if (n.isGetProp()) {
+-      ObjectType objectType = getJSType(n.getFirstChild()).dereference();
+-      if (objectType != null) {
+-        String propName = n.getLastChild().getString();
+-        if (objectType.getConstructor() != null &&
+-            objectType.getConstructor().isInterface()) {
+-          objectType = FunctionType.getTopDefiningInterface(
+-              objectType, propName);
+-        } else {
+-          // classes
+-          while (objectType != null && !objectType.hasOwnProperty(propName)) {
+-            objectType = objectType.getImplicitPrototype();
+-          }
+-        }
+-
+-        // Don't show complex function names or anonymous types.
+-        // Instead, try to get a human-readable type name.
+-        if (objectType != null &&
+-            (objectType.getConstructor() != null ||
+-             objectType.isFunctionPrototypeType())) {
+-          return objectType.toString() + "." + propName;
+-        }
+-      }
+-    }
+-
++// buggy code
++//    if (n.isGetProp()) {
++//      ObjectType objectType = getJSType(n.getFirstChild()).dereference();
++//      if (objectType != null) {
++//        String propName = n.getLastChild().getString();
++//        if (objectType.getConstructor() != null &&
++//            objectType.getConstructor().isInterface()) {
++//          objectType = FunctionType.getTopDefiningInterface(
++//              objectType, propName);
++//        } else {
++//          while (objectType != null && !objectType.hasOwnProperty(propName)) {
++//            objectType = objectType.getImplicitPrototype();
++//          }
++//        }
++//        if (objectType != null &&
++//            (objectType.getConstructor() != null ||
++//             objectType.isFunctionPrototypeType())) {
++//          return objectType.toString() + "." + propName;
++//        }
++//      }
++//    }
++//    JSType type = getJSType(n);
++//    if (dereference) {
++//      ObjectType dereferenced = type.dereference();
++//      if (dereferenced != null) {
++//        type = dereferenced;
++//      }
++//    }
++//    if (type.isFunctionPrototypeType() ||
++//        (type.toObjectType() != null &&
++//         type.toObjectType().getConstructor() != null)) {
++//      return type.toString();
++//    }
++   if (!n.isGetProp()) {
+       JSType type = getJSType(n);
+       if (dereference) {
+         ObjectType dereferenced = type.dereference();
+         if (dereferenced != null) {
+           type = dereferenced;
+         }
+       }
+       if (type.isFunctionPrototypeType() ||
+           (type.toObjectType() != null &&
+            type.toObjectType().getConstructor() != null)) {
+         return type.toString();
+       }
++    }
++    JSType type = getJSType(n.getFirstChild());
++    if (dereference) {
++      ObjectType dereferenced = type.dereference();
++      if (dereferenced != null) {
++        type = dereferenced;
++      }
++    }
++
+     String qualifiedName = n.getQualifiedName();
+     if (qualifiedName != null) {
+       return qualifiedName;
+     } else if (type.isFunctionType()) {
+-      // Don't show complex function names.
+       return "function";
+     } else {
+       return type.toString();
+     }
+   }

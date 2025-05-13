@@ -1,0 +1,49 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/983291d8-9bbb-42ce-b298-4d2920cc4dc1_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6552af8e-e6e4-4873-a78b-43da28b268a6_fixed.java
+index f6c07b1..1866a9e 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/983291d8-9bbb-42ce-b298-4d2920cc4dc1_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6552af8e-e6e4-4873-a78b-43da28b268a6_fixed.java
+@@ -1,39 +1,37 @@
+     public TimeSeries createCopy(RegularTimePeriod start, RegularTimePeriod end)
+         throws CloneNotSupportedException {
+-
+         if (start == null) {
+             throw new IllegalArgumentException("Null 'start' argument.");
+         }
+         if (end == null) {
+             throw new IllegalArgumentException("Null 'end' argument.");
+         }
+         if (start.compareTo(end) > 0) {
+             throw new IllegalArgumentException(
+                     "Requires start on or before end.");
+         }
+         boolean emptyRange = false;
+         int startIndex = getIndex(start);
+         if (startIndex < 0) {
+             startIndex = -(startIndex + 1);
+             if (startIndex == this.data.size()) {
+-                emptyRange = true;  // start is after last data item
++                emptyRange = true;  
+             }
+         }
+         int endIndex = getIndex(end);
+-        if (endIndex < 0) {             // end period is not in original series
+-            endIndex = -(endIndex + 1); // this is first item AFTER end period
+-            endIndex = endIndex - 1;    // so this is last item BEFORE end
+-        }
+         if (endIndex < 0) {             
++            endIndex = -(endIndex + 1); 
++            endIndex = endIndex - 1;    
++        }
++       if (startIndex >= this.data.size() || endIndex < 0) {
+             emptyRange = true;
+         }
+         if (emptyRange) {
+             TimeSeries copy = (TimeSeries) super.clone();
+             copy.data = new java.util.ArrayList();
+             return copy;
+         }
+         else {
+             return createCopy(startIndex, endIndex);
+         }
+-
+     }

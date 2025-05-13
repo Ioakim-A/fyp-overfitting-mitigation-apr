@@ -1,0 +1,57 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a099d6be-16cb-4691-bab9-bd89952c3619_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c384a198-dcee-424a-873b-f9434086e7a4_fixed.java
+index 710fcc0..1b2d8c2 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a099d6be-16cb-4691-bab9-bd89952c3619_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c384a198-dcee-424a-873b-f9434086e7a4_fixed.java
+@@ -1,37 +1,34 @@
+ Object returnValueFor(Class<?> type) {
+     if (Primitives.isPrimitiveOrWrapper(type)) {
+         return Primitives.defaultValueForPrimitiveOrWrapper(type);
+-            //new instances are used instead of Collections.emptyList(), etc.
+-            //to avoid UnsupportedOperationException if code under test modifies returned collection
+-        } else if (type == Collection.class) {
++    } else if (type.isAssignableFrom(Collection.class)) {
+         return new LinkedList<Object>();
+-        } else if (type == Set.class) {
++    } else if (type.isAssignableFrom(Set.class)) {
+         return new HashSet<Object>();
+-        } else if (type == HashSet.class) {
++    } else if (type.isAssignableFrom(HashSet.class)) {
+         return new HashSet<Object>();
+-        } else if (type == SortedSet.class) {
++    } else if (type.isAssignableFrom(SortedSet.class)) {
+         return new TreeSet<Object>();
+-        } else if (type == TreeSet.class) {
++    } else if (type.isAssignableFrom(TreeSet.class)) {
+         return new TreeSet<Object>();
+-        } else if (type == LinkedHashSet.class) {
++    } else if (type.isAssignableFrom(LinkedHashSet.class)) {
+         return new LinkedHashSet<Object>();
+-        } else if (type == List.class) {
++    } else if (type.isAssignableFrom(List.class)) {
+         return new LinkedList<Object>();
+-        } else if (type == LinkedList.class) {
++    } else if (type.isAssignableFrom(LinkedList.class)) {
+         return new LinkedList<Object>();
+-        } else if (type == ArrayList.class) {
++    } else if (type.isAssignableFrom(ArrayList.class)) {
+         return new ArrayList<Object>();
+-        } else if (type == Map.class) {
++    } else if (type.isAssignableFrom(Map.class)) {
+         return new HashMap<Object, Object>();
+-        } else if (type == HashMap.class) {
++    } else if (type.isAssignableFrom(HashMap.class)) {
+         return new HashMap<Object, Object>();
+-        } else if (type == SortedMap.class) {
++    } else if (type.isAssignableFrom(SortedMap.class)) {
+         return new TreeMap<Object, Object>();
+-        } else if (type == TreeMap.class) {
++    } else if (type.isAssignableFrom(TreeMap.class)) {
+         return new TreeMap<Object, Object>();
+-        } else if (type == LinkedHashMap.class) {
++    } else if (type.isAssignableFrom(LinkedHashMap.class)) {
+         return new LinkedHashMap<Object, Object>();
+     }
+-        //Let's not care about the rest of collections.
+     return null;
+ }
+\ No newline at end of file

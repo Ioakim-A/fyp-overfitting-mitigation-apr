@@ -1,0 +1,32 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/364432d6-6db1-4ae4-99ee-1cbd1e6a0c7e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4daf837d-9ea6-46cd-86b5-93d407c676fe_fixed.java
+index 70ac830..0e9f08c 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/364432d6-6db1-4ae4-99ee-1cbd1e6a0c7e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4daf837d-9ea6-46cd-86b5-93d407c676fe_fixed.java
+@@ -1,19 +1,16 @@
+   public void matchConstraint(JSType constraint) {
+-    // We only want to match constraints on anonymous types.
+     if (hasReferenceName()) {
+       return;
+     }
+-
+-    // Handle the case where the constraint object is a record type.
+-    //
+-    // param constraint {{prop: (number|undefined)}}
+-    // function f(constraint) {}
+-    // f({});
+-    //
+-    // We want to modify the object literal to match the constraint, by
+-    // taking any each property on the record and trying to match
+-    // properties on this object.
++    if (constraint.isRecordType()) {
++      matchRecordTypeConstraint(constraint.toObjectType());
++    }
++  }
++  public void matchConstraint(JSType constraint) {
++    if (hasReferenceName()) {
++      return;
++    }
+     if (constraint.isRecordType()) {
+       matchRecordTypeConstraint(constraint.toObjectType());
+     }
+   }

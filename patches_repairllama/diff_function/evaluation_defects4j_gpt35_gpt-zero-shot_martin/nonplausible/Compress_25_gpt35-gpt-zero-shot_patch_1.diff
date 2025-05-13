@@ -1,0 +1,23 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2e0cc08f-0489-4b1d-b6df-bf69830e12e4_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/08272c04-9dcf-4c38-9330-ad9fb5c4c464_fixed.java
+index 638669b..844c6ea 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2e0cc08f-0489-4b1d-b6df-bf69830e12e4_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/08272c04-9dcf-4c38-9330-ad9fb5c4c464_fixed.java
+@@ -1,11 +1,16 @@
+     public ZipArchiveInputStream(InputStream inputStream,
+                                  String encoding,
+                                  boolean useUnicodeExtraFields,
+                                  boolean allowStoredEntriesWithDataDescriptor) {
+         zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
+         this.useUnicodeExtraFields = useUnicodeExtraFields;
+         in = new PushbackInputStream(inputStream, buf.capacity());
+         this.allowStoredEntriesWithDataDescriptor =
+             allowStoredEntriesWithDataDescriptor;
+-        // haven't read anything so far
++            
++        this.countEntries = true; // Fixed code
++        
++        if (countEntries) {
++            countArchiveEntries();
++        }
+     }
+\ No newline at end of file

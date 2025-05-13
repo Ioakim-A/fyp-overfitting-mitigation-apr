@@ -1,0 +1,46 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/92f83a56-426a-4767-ab3f-25c58ebd217e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5417c235-4942-4406-b0c7-5f65ef2f964d_fixed.java
+index b6b11b6..518a04e 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/92f83a56-426a-4767-ab3f-25c58ebd217e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5417c235-4942-4406-b0c7-5f65ef2f964d_fixed.java
+@@ -1,38 +1,41 @@
+     /**
+      * Consume a quoted string, adding it to <code>appendTo</code> if
+      * specified.
+      * 
+      * @param pattern pattern to parse
+      * @param pos current parse position
+      * @param appendTo optional StringBuffer to append
+      * @param escapingOn whether to process escaped quotes
+      * @return <code>appendTo</code>
+      */
+     private StringBuffer appendQuotedString(String pattern, ParsePosition pos,
+             StringBuffer appendTo, boolean escapingOn) {
+         int start = pos.getIndex();
+         char[] c = pattern.toCharArray();
+         if (escapingOn && c[start] == QUOTE) {
++// buggy code
++            pos.setIndex(pos.getIndex() + 1);
++
+             return appendTo == null ? null : appendTo.append(QUOTE);
+         }
+         int lastHold = start;
+         for (int i = pos.getIndex(); i < pattern.length(); i++) {
+             if (escapingOn && pattern.substring(i).startsWith(ESCAPED_QUOTE)) {
+                 appendTo.append(c, lastHold, pos.getIndex() - lastHold).append(
+                         QUOTE);
+                 pos.setIndex(i + ESCAPED_QUOTE.length());
+                 lastHold = pos.getIndex();
+                 continue;
+             }
+             switch (c[pos.getIndex()]) {
+             case QUOTE:
+                 next(pos);
+                 return appendTo == null ? null : appendTo.append(c, lastHold,
+                         pos.getIndex() - lastHold);
+             default:
+                 next(pos);
+             }
+         }
+         throw new IllegalArgumentException(
+                 "Unterminated quoted string at position " + start);
+     }

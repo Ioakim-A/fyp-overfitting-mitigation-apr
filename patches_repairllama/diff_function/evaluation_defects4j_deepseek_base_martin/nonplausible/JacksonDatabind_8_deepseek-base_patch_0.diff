@@ -1,0 +1,40 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fb8e68a5-1ab2-4433-9237-bb03886d7627_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0b2f8afa-6e6f-4ddb-b4c1-ff796ea0be02_fixed.java
+index c9da1b7..40970df 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fb8e68a5-1ab2-4433-9237-bb03886d7627_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0b2f8afa-6e6f-4ddb-b4c1-ff796ea0be02_fixed.java
+@@ -1,33 +1,17 @@
+     protected void verifyNonDup(AnnotatedWithParams newOne, int typeIndex, boolean explicit)
+     {
+         final int mask = (1 << typeIndex);
+         _hasNonDefaultCreator = true;
+         AnnotatedWithParams oldOne = _creators[typeIndex];
+         // already had an explicitly marked one?
+         if (oldOne != null) {
+-
+-            if ((_explicitCreators & mask) != 0) { // already had explicitly annotated, leave as-is
+-                // but skip, if new one not annotated
+-                if (!explicit) {
+-                    return;
+-                }
+-                // both explicit: verify
+-                // otherwise only verify if neither explicitly annotated.
+-            }
+-
+-            // one more thing: ok to override in sub-class
+-            if (oldOne.getClass() == newOne.getClass()) {
+-                // [databind#667]: avoid one particular class of bogus problems
+-
+-                    throw new IllegalArgumentException("Conflicting "+TYPE_DESCS[typeIndex]
+-                            +" creators: already had explicitly marked "+oldOne+", encountered "+newOne);
+-                // otherwise, which one to choose?
+-                    // new type more generic, use old
++            if (oldOne.isMoreSpecific(newOne)) {
++                _creators[typeIndex] = newOne;
+                 // new type more specific, use it
+             }
+         }
+         if (explicit) {
+             _explicitCreators |= mask;
+         }
+         _creators[typeIndex] = _fixAccess(newOne);
+     }

@@ -1,0 +1,34 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e651d339-539a-4c7a-a945-aefa0ca424ce_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5e297553-5b74-49f8-86ac-645250f9e9d1_fixed.java
+index c9b29e3..1bbe2f6 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e651d339-539a-4c7a-a945-aefa0ca424ce_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5e297553-5b74-49f8-86ac-645250f9e9d1_fixed.java
+@@ -1,15 +1,20 @@
+     public double cumulativeProbability(double x) throws MathException {
+         final double dev = x - mean;
+-        try {
+-        return 0.5 * (1.0 + Erf.erf((dev) /
+-                    (standardDeviation * FastMath.sqrt(2.0))));
+-        } catch (MaxIterationsExceededException ex) {
+-            if (x < (mean - 20 * standardDeviation)) { // JDK 1.5 blows at 38
++// buggy code
++//        try {
++//        return 0.5 * (1.0 + Erf.erf((dev) /
++//                    (standardDeviation * FastMath.sqrt(2.0))));
++//        } catch (MaxIterationsExceededException ex) {
++//            if (x < (mean - 20 * standardDeviation)) { 
++//                return 0;
++//            } else if (x > (mean + 20 * standardDeviation)) {
++//                return 1;
++//            } else {
++//                throw ex;
++//            }
++//        }
++       if (x < (mean - 20 * standardDeviation)) { 
+             return 0;
+         } else if (x > (mean + 20 * standardDeviation)) {
+             return 1;
+-            } else {
+-                throw ex;
+-            }
+-        }
+     }

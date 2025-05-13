@@ -1,0 +1,26 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3e22e69e-b69c-4114-b3ac-980f762b3434_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cb1404a3-a5e8-46bc-bc6b-b84b68a56403_fixed.java
+index 57f69c5..311848e 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3e22e69e-b69c-4114-b3ac-980f762b3434_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cb1404a3-a5e8-46bc-bc6b-b84b68a56403_fixed.java
+@@ -1,12 +1,20 @@
+   /**
+    * @return Whether the Node is a DO or FUNCTION (with or without
+    * labels).
+    */
+   private boolean isOneExactlyFunctionOrDo(Node n) {
++// buggy code
++//        // For labels with block children, we need to ensure that a
++//        // labeled FUNCTION or DO isn't generated when extraneous BLOCKs 
++//        // are skipped. 
++//          // Either a empty statement or an block with more than one child,
++//          // way it isn't a FUNCTION or DO.
++//      return (n.getType() == Token.FUNCTION || n.getType() == Token.DO);
+     // For labels with block children, we need to ensure that a
+     // labeled FUNCTION or DO isn't generated when extraneous BLOCKs 
+     // are skipped. 
+       // Either a empty statement or an block with more than one child,
+       // way it isn't a FUNCTION or DO.
+-      return (n.getType() == Token.FUNCTION || n.getType() == Token.DO);
++    return (n.getType() == Token.FUNCTION || n.getType() == Token.DO || (n.getType() == Token.BLOCK && n.getNumChildren() > 1));
++
+   }

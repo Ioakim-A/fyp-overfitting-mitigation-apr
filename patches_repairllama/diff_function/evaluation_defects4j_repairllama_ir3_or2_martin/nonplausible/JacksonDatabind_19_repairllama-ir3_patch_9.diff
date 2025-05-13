@@ -1,0 +1,22 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/44a2ea6d-c4c3-4c3c-a6d9-50f74913f3b1_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3f2827a8-752c-4930-bf21-6311b00a7542_fixed.java
+index 1bec4d6..ee69cd5 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/44a2ea6d-c4c3-4c3c-a6d9-50f74913f3b1_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3f2827a8-752c-4930-bf21-6311b00a7542_fixed.java
+@@ -1,14 +1,14 @@
+     private JavaType _mapType(Class<?> rawClass)
+     {
+-        // 28-May-2015, tatu: Properties are special, as per [databind#810]
++       if (!Map.class.isAssignableFrom(rawClass)) {
++            throw new IllegalArgumentException("Not a Map type: "+rawClass.getName());
++        }
+         JavaType[] typeParams = findTypeParameters(rawClass, Map.class);
+-        // ok to have no types ("raw")
+         if (typeParams == null) {
+             return MapType.construct(rawClass, _unknownType(), _unknownType());
+         }
+-        // but exactly 2 types if any found
+         if (typeParams.length != 2) {
+             throw new IllegalArgumentException("Strange Map type "+rawClass.getName()+": can not determine type parameters");
+         }
+         return MapType.construct(rawClass, typeParams[0], typeParams[1]);
+     }

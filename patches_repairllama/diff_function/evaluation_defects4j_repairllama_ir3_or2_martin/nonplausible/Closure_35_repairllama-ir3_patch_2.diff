@@ -1,0 +1,44 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/23b76844-108b-465e-b086-494918e89665_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1ce1723d-15a6-4d30-84fa-6484ec8e9fa9_fixed.java
+index b108107..da74f66 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/23b76844-108b-465e-b086-494918e89665_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1ce1723d-15a6-4d30-84fa-6484ec8e9fa9_fixed.java
+@@ -1,25 +1,27 @@
+   private void inferPropertyTypesToMatchConstraint(
+       JSType type, JSType constraint) {
+     if (type == null || constraint == null) {
+       return;
+     }
+-
+     ObjectType constraintObj =
+         ObjectType.cast(constraint.restrictByNotNullOrUndefined());
+-    if (constraintObj != null && constraintObj.isRecordType()) {
+-      ObjectType objType = ObjectType.cast(type.restrictByNotNullOrUndefined());
+-      if (objType != null) {
+-        for (String prop : constraintObj.getOwnPropertyNames()) {
+-          JSType propType = constraintObj.getPropertyType(prop);
+-          if (!objType.isPropertyTypeDeclared(prop)) {
+-            JSType typeToInfer = propType;
+-            if (!objType.hasProperty(prop)) {
+-              typeToInfer =
+-                  getNativeType(VOID_TYPE).getLeastSupertype(propType);
++   if (constraintObj == null) {
++      return;
+     }
+-            objType.defineInferredProperty(prop, typeToInfer, null);
++    ObjectType typeObj = ObjectType.cast(type.restrictByNotNullOrUndefined());
++    if (typeObj == null) {
++      return;
+     }
++    for (String propName : constraintObj.getOwnPropertyNames()) {
++      JSType propType = constraintObj.getPropertyType(propName);
++      if (propType == null) {
++        continue;
+       }
++      JSType existingPropType = typeObj.getPropertyType(propName);
++      if (existingPropType == null) {
++        typeObj.defineInferredProperty(propName, propType);
++      } else {
++        inferPropertyTypesToMatchConstraint(existingPropType, propType);
+       }
+     }
+   }

@@ -1,0 +1,27 @@
+diff --git src/org/mockito/internal/util/reflection/GenericMaster.java src/org/mockito/internal/util/reflection/GenericMaster.java
+index 102fd13..bada58d 100644
+--- src/org/mockito/internal/util/reflection/GenericMaster.java
++++ src/org/mockito/internal/util/reflection/GenericMaster.java
+@@ -14,13 +14,19 @@ public class GenericMaster {
+      * @return
+      */
+     public Class getGenericType(Field field) {  
++        try {      
+             Type generic = field.getGenericType();
+             if (generic != null && generic instanceof ParameterizedType) {
+                 Type actual = ((ParameterizedType) generic).getActualTypeArguments()[0];
++                if (actual instanceof Class) { 
+                     return (Class) actual; 
+-                //in case of nested generics we don't go deep
++                } else if (actual instanceof ParameterizedType) { 
++                    return (Class)((ParameterizedType) actual).getRawType(); 
++                }
+             }
+-        
+             return Object.class;
++        } catch(ClassCastException e) {
++            e.printStackTrace();
++            return null;
+         }
+-}
++    }}

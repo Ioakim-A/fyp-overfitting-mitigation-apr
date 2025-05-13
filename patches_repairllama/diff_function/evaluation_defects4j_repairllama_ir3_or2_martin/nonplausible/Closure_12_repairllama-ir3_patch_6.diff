@@ -1,0 +1,16 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3b7261c3-8a92-4474-b321-acb7d1fca291_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/122a7c2b-1f1a-4e5e-9740-62090894339f_fixed.java
+index 22640dd..59edbc2 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3b7261c3-8a92-4474-b321-acb7d1fca291_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/122a7c2b-1f1a-4e5e-9740-62090894339f_fixed.java
+@@ -1,3 +1,11 @@
+   private boolean hasExceptionHandler(Node cfgNode) {
++   if (cfgNode == null) {
++      return false;
++    }
++    for (Node n = cfgNode.getFirstChild(); n != null; n = n.getNext()) {
++      if (n.getType() == Token.CATCH || n.getType() == Token.FINALLY) {
++        return true;
++      }
++    }
+     return false;
+   }

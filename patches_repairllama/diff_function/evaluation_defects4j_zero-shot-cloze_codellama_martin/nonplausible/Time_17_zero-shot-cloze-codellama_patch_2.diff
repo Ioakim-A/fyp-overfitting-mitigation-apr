@@ -1,0 +1,30 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ef3afc06-a0b3-422a-87e4-e72809de9c54_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f9823cfd-dc60-4e69-b35e-39c1de92c9c0_fixed.java
+index 810d6e1..c9df2fb 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ef3afc06-a0b3-422a-87e4-e72809de9c54_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f9823cfd-dc60-4e69-b35e-39c1de92c9c0_fixed.java
+@@ -1,18 +1,10 @@
+     public long adjustOffset(long instant, boolean earlierOrLater) {
+-        // a bit messy, but will work in all non-pathological cases
+-        
+-        // evaluate 3 hours before and after to work out if anything is happening
+-        long instantBefore = convertUTCToLocal(instant - 3 * DateTimeConstants.MILLIS_PER_HOUR);
+-        long instantAfter = convertUTCToLocal(instant + 3 * DateTimeConstants.MILLIS_PER_HOUR);
+-        if (instantBefore == instantAfter) {
+-            return instant;  // not an overlap (less than is a gap, equal is normal case)
++       Calendar cal = Calendar.getInstance();
++        cal.setTimeInMillis(instant);
++        if (earlierOrLater) {
++            cal.add(Calendar.DAY_OF_MONTH, -1);
++        } else {
++            cal.add(Calendar.DAY_OF_MONTH, 1);
+         }
+-        
+-        // work out range of instants that have duplicate local times
+-        long local = convertUTCToLocal(instant);
+-        return convertLocalToUTC(local, false, earlierOrLater ? instantAfter : instantBefore);
+-        
+-        // calculate result
+-          // currently in later offset
+-          // currently in earlier offset
++        return cal.getTimeInMillis();
+     }

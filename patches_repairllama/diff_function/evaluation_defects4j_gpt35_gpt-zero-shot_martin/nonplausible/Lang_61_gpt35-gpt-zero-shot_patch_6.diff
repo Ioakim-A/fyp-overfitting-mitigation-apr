@@ -1,0 +1,35 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e3a34dc9-9619-43ff-be2d-c80063dbfc0e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1be878a6-af12-45d0-a893-f0eff0c937d7_fixed.java
+index 8d4d7a7..c832d7b 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e3a34dc9-9619-43ff-be2d-c80063dbfc0e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1be878a6-af12-45d0-a893-f0eff0c937d7_fixed.java
+@@ -1,28 +1,28 @@
+ public int indexOf(String str, int startIndex) {
+         startIndex = (startIndex < 0 ? 0 : startIndex);
+         if (str == null || startIndex >= size) {
+             return -1;
+         }
+         int strLen = str.length();
+         if (strLen == 1) {
+             return indexOf(str.charAt(0), startIndex);
+         }
+         if (strLen == 0) {
+             return startIndex;
+         }
+         if (strLen > size) {
+             return -1;
+         }
+         char[] thisBuf = buffer;
+-        int len = thisBuf.length - strLen;
++        int len = thisBuf.length - strLen + 1; // fix for the buggy code
+         outer:
+         for (int i = startIndex; i < len; i++) {
+             for (int j = 0; j < strLen; j++) {
+                 if (str.charAt(j) != thisBuf[i + j]) {
+                     continue outer;
+                 }
+             }
+             return i;
+         }
+         return -1;
+     }
+\ No newline at end of file

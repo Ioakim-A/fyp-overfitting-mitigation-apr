@@ -1,0 +1,25 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6a42b4d2-51a7-4553-9399-f97f8bd2c2bd_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a3c96a65-da72-44b3-b431-3db5f0838103_fixed.java
+index 72583b5..d6a924b 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6a42b4d2-51a7-4553-9399-f97f8bd2c2bd_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a3c96a65-da72-44b3-b431-3db5f0838103_fixed.java
+@@ -1,9 +1,11 @@
+-    Node processForInLoop(ForInLoop loopNode) {
+-
+-        // Return the bare minimum to put the AST in a valid state.
+-      return newNode(
+-          Token.FOR,
+-          transform(loopNode.getIterator()),
+-          transform(loopNode.getIteratedObject()),
+-          transformBlock(loopNode.getBody()));
++VariableDeclaration loopVariable = loopNode.getVariable();
++Node initializer;
++if (loopVariable != null) {
++    initializer = new VariableDeclaration(
++        loopVariable.getJSDocInfo(),
++        loopVariable.getScope(), 
++        loopVariable.getDeclarations().get(0).getLhs(),
++        loopVariable.getDeclarations().get(0).getRhs());
++} else {
++    initializer = null;
+ }
+\ No newline at end of file

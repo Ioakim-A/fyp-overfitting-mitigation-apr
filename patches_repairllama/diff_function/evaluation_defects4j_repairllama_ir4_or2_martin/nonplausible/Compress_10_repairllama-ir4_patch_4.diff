@@ -1,0 +1,84 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6775e8d0-835c-415b-8170-f261e8e99a29_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6da9a444-d871-48a6-ae9d-46dddb3d3ccb_fixed.java
+index 7c5d0b7..60ed05e 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6775e8d0-835c-415b-8170-f261e8e99a29_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6da9a444-d871-48a6-ae9d-46dddb3d3ccb_fixed.java
+@@ -1,43 +1,59 @@
+     private void resolveLocalFileHeaderData(Map<ZipArchiveEntry, NameAndComment>
+                                             entriesWithoutUTF8Flag)
+         throws IOException {
+-        // changing the name of a ZipArchiveEntry is going to change
+-        // the hashcode - see COMPRESS-164
+-        // Map needs to be reconstructed in order to keep central
+-        // directory order
++// buggy code
++//         for (ZipArchiveEntry ze : entries.keySet()) {
++//             OffsetEntry offsetEntry = entries.get(ze);
++//             long offset = offsetEntry.headerOffset;
++//             archive.seek(offset + LFH_OFFSET_FOR_FILENAME_LENGTH);
++//             byte[] b = new byte[SHORT];
++//             archive.readFully(b);
++//             int fileNameLen = ZipShort.getValue(b);
++//             archive.readFully(b);
++//             int extraFieldLen = ZipShort.getValue(b);
++//             int lenToSkip = fileNameLen;
++//             while (lenToSkip > 0) {
++//                 int skipped = archive.skipBytes(lenToSkip);
++//                 if (skipped <= 0) {
++//                     throw new RuntimeException("failed to skip file name in"
++//                                                + " local file header");
++//                 }
++//                 lenToSkip -= skipped;
++//             }
++//             byte[] localExtraData = new byte[extraFieldLen];
++//             archive.readFully(localExtraData);
++//             ze.setExtra(localExtraData);
++//             offsetEntry.dataOffset = offset + LFH_OFFSET_FOR_FILENAME_LENGTH
++//                 + SHORT + SHORT + fileNameLen + extraFieldLen;
++//             if (entriesWithoutUTF8Flag.containsKey(ze)) {
++//                 String orig = ze.getName();
++//                 NameAndComment nc = entriesWithoutUTF8Flag.get(ze);
++//                 ZipUtil.setNameAndCommentFromExtraFields(ze, nc.name,
++//                                                          nc.comment);
++//                 if (!orig.equals(ze.getName())) {
++//                     nameMap.remove(orig);
++//                     nameMap.put(ze.getName(), ze);
++//                 }
++//             }
++       if (entries != null) {
+             for (ZipArchiveEntry ze : entries.keySet()) {
+                 OffsetEntry offsetEntry = entries.get(ze);
+                 long offset = offsetEntry.headerOffset;
+                 archive.seek(offset + LFH_OFFSET_FOR_FILENAME_LENGTH);
+                 byte[] b = new byte[SHORT];
+                 archive.readFully(b);
+                 int fileNameLen = ZipShort.getValue(b);
+                 archive.readFully(b);
+                 int extraFieldLen = ZipShort.getValue(b);
+                 int lenToSkip = fileNameLen;
+                 while (lenToSkip > 0) {
+                     int skipped = archive.skipBytes(lenToSkip);
+                     if (skipped <= 0) {
+                         throw new RuntimeException("failed to skip file name in"
+                                                    + " local file header");
+                     }
+                     lenToSkip -= skipped;
+                 }
+                 byte[] localExtraData = new byte[extraFieldLen];
+-            archive.readFully(localExtraData);
+-            ze.setExtra(localExtraData);
+-            offsetEntry.dataOffset = offset + LFH_OFFSET_FOR_FILENAME_LENGTH
+-                + SHORT + SHORT + fileNameLen + extraFieldLen;
+-
+-            if (entriesWithoutUTF8Flag.containsKey(ze)) {
+-                String orig = ze.getName();
+-                NameAndComment nc = entriesWithoutUTF8Flag.get(ze);
+-                ZipUtil.setNameAndCommentFromExtraFields(ze, nc.name,
+-                                                         nc.comment);
+-                if (!orig.equals(ze.getName())) {
+-                    nameMap.remove(orig);
+-                    nameMap.put(ze.getName(), ze);
+-                }
+-            }
+-        }
++                archive.readFully(        }
+     }

@@ -1,0 +1,56 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/02f1f0a7-7615-4d23-bbfc-2a013486deca_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b97bc01f-6a42-47fd-93c2-4077a9a30362_fixed.java
+index d6a560a..a66d0f3 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/02f1f0a7-7615-4d23-bbfc-2a013486deca_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b97bc01f-6a42-47fd-93c2-4077a9a30362_fixed.java
+@@ -1,33 +1,38 @@
+   /**
+    * Resolve the referenced type within the enclosing scope.
+    */
+   @Override
+   JSType resolveInternal(ErrorReporter t, StaticScope<JSType> enclosing) {
+     // TODO(user): Investigate whether it is really necessary to keep two
+     // different mechanisms for resolving named types, and if so, which order
+     // makes more sense. Now, resolution via registry is first in order to
+     // avoid triggering the warnings built into the resolution via properties.
+     boolean resolved = resolveViaRegistry(t, enclosing);
+-    if (detectImplicitPrototypeCycle()) {
+-      handleTypeCycle(t);
+-    }
+-
+-    if (resolved) {
+-      super.resolveInternal(t, enclosing);
+-      finishPropertyContinuations();
+-      return registry.isLastGeneration() ?
+-          getReferencedType() : this;
+-    }
+-
++// buggy code
++//    if (detectImplicitPrototypeCycle()) {
++//      handleTypeCycle(t);
++//    }
++//    if (resolved) {
++//      super.resolveInternal(t, enclosing);
++//      finishPropertyContinuations();
++//      return registry.isLastGeneration() ?
++//          getReferencedType() : this;
++//    }
++//    resolveViaProperties(t, enclosing);
++//    if (detectImplicitPrototypeCycle()) {
++//      handleTypeCycle(t);
++//    }
++    if (!resolved) {
+       resolveViaProperties(t, enclosing);
++    }
+     if (detectImplicitPrototypeCycle()) {
+-      handleTypeCycle(t);
+-    }
+ 
++      handleTypeCycle(t);
++    }
+     super.resolveInternal(t, enclosing);
+     if (isResolved()) {
+       finishPropertyContinuations();
+     }
+     return registry.isLastGeneration() ?
+         getReferencedType() : this;
+   }

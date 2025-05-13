@@ -1,0 +1,45 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/976c663b-6dd1-436c-818b-8a2d6918ca84_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3bf3a910-85e3-412f-835a-f0986af8a853_fixed.java
+index b2d53db..aee3a96 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/976c663b-6dd1-436c-818b-8a2d6918ca84_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3bf3a910-85e3-412f-835a-f0986af8a853_fixed.java
+@@ -1,34 +1,38 @@
+         void read(Tokeniser t, CharacterReader r) {
+             if (r.matchesLetter()) {
+                 String name = r.consumeLetterSequence();
+                 t.tagPending.appendTagName(name.toLowerCase());
+                 t.dataBuffer.append(name);
+-                r.advance();
++                anythingElse(t, r);
++                return;
++            }
++            if (r.matchesDigit()) {
++                t.dataBuffer.append(r.consumeDigitSequence());
++                anythingElse(t, r);
+                 return;
+             }
+-
+             if (t.isAppropriateEndTagToken() && !r.isEmpty()) {
+                 char c = r.consume();
+                 switch (c) {
+                     case '\t':
+                     case '\n':
+                     case '\f':
+                     case ' ':
+                         t.transition(BeforeAttributeName);
+                         break;
+                     case '/':
+                         t.transition(SelfClosingStartTag);
+                         break;
+                     case '>':
+                         t.emitTagPending();
+                         t.transition(Data);
+                         break;
+                     default:
+                         t.dataBuffer.append(c);
+                         anythingElse(t, r);
+                         break;
+                 }
+             } else {
+                 anythingElse(t, r);
+             }
+         }

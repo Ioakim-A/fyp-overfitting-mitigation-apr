@@ -1,0 +1,47 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/002013c2-ebb4-4628-b733-477e275166e1_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3a420a11-f5e4-498f-aa7b-799b2d28e145_fixed.java
+index 63b85d1..63279d3 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/002013c2-ebb4-4628-b733-477e275166e1_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3a420a11-f5e4-498f-aa7b-799b2d28e145_fixed.java
+@@ -1,32 +1,35 @@
+   private void visitParameterList(NodeTraversal t, Node call,
+       FunctionType functionType) {
+     Iterator<Node> arguments = call.children().iterator();
+-    arguments.next(); // skip the function name
+-
++    arguments.next(); 
+     Iterator<Node> parameters = functionType.getParameters().iterator();
+     int ordinal = 0;
+     Node parameter = null;
+     Node argument = null;
+     while (arguments.hasNext() &&
+-           parameters.hasNext()) {
+-      // If there are no parameters left in the list, then the while loop
+-      // above implies that this must be a var_args function.
++// buggy code
++//           parameters.hasNext()) {
++//        parameter = parameters.next();
+        parameter = parameters.next();
+         argument = arguments.next();
+         ordinal++;
+-
+         validator.expectArgumentMatchesParameter(t, argument,
+             getJSType(argument), getJSType(parameter), call, ordinal);
+       }
+-
++    while (parameters.hasNext()) {
++      argument = arguments.next();
++      ordinal++;
++      validator.expectArgumentMatchesParameter(t, argument,
++          getJSType(argument), getJSType(parameter), call, ordinal);
++    }
+     int numArgs = call.getChildCount() - 1;
+     int minArgs = functionType.getMinArguments();
+     int maxArgs = functionType.getMaxArguments();
+     if (minArgs > numArgs || maxArgs < numArgs) {
+       report(t, call, WRONG_ARGUMENT_COUNT,
+               validator.getReadableJSTypeName(call.getFirstChild(), false),
+               String.valueOf(numArgs), String.valueOf(minArgs),
+               maxArgs != Integer.MAX_VALUE ?
+               " and no more than " + maxArgs + " argument(s)" : "");
+     }
+   }

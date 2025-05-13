@@ -1,0 +1,53 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9ab9badd-872b-4fee-b8e4-2b362af10177_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dce47894-037a-420c-bba7-99e0174d7f9e_fixed.java
+index 544303b..28d9127 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9ab9badd-872b-4fee-b8e4-2b362af10177_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dce47894-037a-420c-bba7-99e0174d7f9e_fixed.java
+@@ -1,29 +1,46 @@
+     /**
+      * Get the current solution.
+      * <p>
+      * {@link #solve} should be called first for this to be the optimal solution.
+      * </p>
+      * @return current solution
+      */
+     protected RealPointValuePair getSolution() {
+         double[] coefficients = new double[getOriginalNumDecisionVariables()];
+         Integer basicRow =
+             getBasicRow(getNumObjectiveFunctions() + getOriginalNumDecisionVariables());
+         double mostNegative = basicRow == null ? 0 : getEntry(basicRow, getRhsOffset());
+-        for (int i = 0; i < coefficients.length; i++) {
++// buggy code
++//        for (int i = 0; i < coefficients.length; i++) {
++//            basicRow = getBasicRow(getNumObjectiveFunctions() + i);
++//                // if multiple variables can take a given value 
++//                // then we choose the first and set the rest equal to 0
++//                coefficients[i] =
++//                    (basicRow == null ? 0 : getEntry(basicRow, getRhsOffset())) -
++//                    (restrictToNonNegative ? 0 : mostNegative);
++//            if (basicRow != null) {
++//                for (int j = getNumObjectiveFunctions(); j < getNumObjectiveFunctions() + i; j++) {
++//                    if (tableau.getEntry(basicRow, j) == 1) {
++//                         coefficients[i] = 0;
++//                    }
++//                }
++//            }
++//        }
++        for (int i = coefficients.length - 1; i >= 0; i--) {
+             basicRow = getBasicRow(getNumObjectiveFunctions() + i);
+                 // if multiple variables can take a given value 
+                 // then we choose the first and set the rest equal to 0
+                 coefficients[i] =
+                     (basicRow == null ? 0 : getEntry(basicRow, getRhsOffset())) -
+                     (restrictToNonNegative ? 0 : mostNegative);
+             if (basicRow != null) {
+-                for (int j = getNumObjectiveFunctions(); j < getNumObjectiveFunctions() + i; j++) {
++                for (int j = getNumObjectiveFunctions() + i + 1; j < coefficients.length; j++) {
+                     if (tableau.getEntry(basicRow, j) == 1) {
+                          coefficients[i] = 0;
+                     }
+                 }
++
+             }
+         }
+         return new RealPointValuePair(coefficients, f.getValue(coefficients));
+     }

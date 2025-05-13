@@ -1,0 +1,37 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a33b6021-e3d2-4256-966f-8a2a1b696e8e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/80cb5fc8-ce79-41a2-8a84-10cfbd0f0c5e_fixed.java
+index f04064f..c0675ff 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a33b6021-e3d2-4256-966f-8a2a1b696e8e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/80cb5fc8-ce79-41a2-8a84-10cfbd0f0c5e_fixed.java
+@@ -1,19 +1,17 @@
+     public static Option create(String opt) throws IllegalArgumentException
+     {
+-            // create the option
+-        Option option = new Option(opt, description);
+-
+-            // set the option properties
+-            option.setLongOpt(longopt);
+-            option.setRequired(required);
+-            option.setOptionalArg(optionalArg);
+-            option.setArgs(numberOfArgs);
+-            option.setType(type);
+-            option.setValueSeparator(valuesep);
+-            option.setArgName(argName);
+-            // reset the OptionBuilder properties
+-            OptionBuilder.reset();
+-
+-        // return the Option instance
++       Option option = null;
++        for (int i = 0; i < OPTIONS.length; i++)
++        {
++            if (opt.equalsIgnoreCase(OPTIONS[i]))
++            {
++                option = OPTIONS[i];
++                break;
++            }
++        }
++        if (option == null)
++        {
++            throw new IllegalArgumentException("Unknown option: " + opt);
++        }
+         return option;
+     }

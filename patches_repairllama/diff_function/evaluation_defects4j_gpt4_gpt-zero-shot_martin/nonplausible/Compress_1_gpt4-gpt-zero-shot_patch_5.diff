@@ -1,0 +1,20 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/23381181-16c8-4482-b2c6-7c4b2550a6f3_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f14ec904-254b-47fb-b5e8-b900561e9aaa_fixed.java
+index d0b1824..0802e10 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/23381181-16c8-4482-b2c6-7c4b2550a6f3_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f14ec904-254b-47fb-b5e8-b900561e9aaa_fixed.java
+@@ -1,6 +1,14 @@
++    public class MyCustomClass extends SomeStreamClass { // Assuming it's extending a class that has close() method
++        private boolean closed = false;
++        private InputStream inputStream; // Assuming an InputStream needs to be closed
++
+         public void close() throws IOException {
+             if (!this.closed) {
++                if (inputStream != null) {
++                    inputStream.close();
++                }
+                 super.close();
+                 this.closed = true;
+             }
+         }
++    }
+\ No newline at end of file

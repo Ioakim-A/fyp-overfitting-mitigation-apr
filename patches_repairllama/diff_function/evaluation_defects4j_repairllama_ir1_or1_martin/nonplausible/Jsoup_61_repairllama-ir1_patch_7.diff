@@ -1,0 +1,51 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6c40816d-c91e-4a43-aebc-4af49cb5ab51_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0d362fce-8abb-4f60-be77-395624ad02c6_fixed.java
+index e6a5296..e3e3cc1 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6c40816d-c91e-4a43-aebc-4af49cb5ab51_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0d362fce-8abb-4f60-be77-395624ad02c6_fixed.java
+@@ -1,42 +1,29 @@
+    public boolean hasClass(String className) {
+         final String classAttr = attributes.get("class");
+         final int len = classAttr.length();
+         final int wantLen = className.length();
+-
+         if (len == 0 || len < wantLen) {
+             return false;
+         }
+-
+-        // if both lengths are equal, only need compare the className with the attribute
+         if (len == wantLen) {
+             return className.equalsIgnoreCase(classAttr);
+         }
+-
+-        // otherwise, scan for whitespace and compare regions (with no string or arraylist allocations)
+         boolean inClass = false;
+         int start = 0;
+         for (int i = 0; i < len; i++) {
+-            if (Character.isWhitespace(classAttr.charAt(i))) {
++            final char c = classAttr.charAt(i);
++            if (Character.isWhitespace(c)) {
+                 if (inClass) {
+-                    // white space ends a class name, compare it with the requested one, ignore case
+                     if (i - start == wantLen && classAttr.regionMatches(true, start, className, 0, wantLen)) {
+                         return true;
+                     }
+                     inClass = false;
+                 }
+             } else {
+                 if (!inClass) {
+-                    // we're in a class name : keep the start of the substring
+                     inClass = true;
+                     start = i;
+                 }
+             }
+         }
+-
+-        // check the last entry
+-        if (inClass && len - start == wantLen) {
+-            return classAttr.regionMatches(true, start, className, 0, wantLen);
+-        }
+-
+-        return false;
+-    }
++        if (
+\ No newline at end of file

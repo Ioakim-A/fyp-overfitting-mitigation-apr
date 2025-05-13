@@ -1,0 +1,28 @@
+diff --git src/main/java/org/jsoup/helper/HttpConnection.java src/main/java/org/jsoup/helper/HttpConnection.java
+index f8fd9dd..261b88b 100644
+--- src/main/java/org/jsoup/helper/HttpConnection.java
++++ src/main/java/org/jsoup/helper/HttpConnection.java
+@@ -755,7 +755,6 @@ public class HttpConnection implements Connection {
+                 String name = entry.getKey();
+                 if (name == null)
+                     continue; // http/1.1 line
+-
+                 List<String> values = entry.getValue();
+                 if (name.equalsIgnoreCase("Set-Cookie")) {
+                     for (String value : values) {
+@@ -770,8 +769,13 @@ public class HttpConnection implements Connection {
+                             cookie(cookieName, cookieVal);
+                     }
+                 } else { // combine same header names with comma: http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
+-                    if (!values.isEmpty())
+-                        header(name, values.get(0));
++                    StringBuilder sb = new StringBuilder();
++                    for (String value : values) {
++                        if (sb.length() > 0)
++                            sb.append(", ");
++                        sb.append(value);
++                    }
++                    headers.put(name, sb.toString());
+                 }
+             }
+         }

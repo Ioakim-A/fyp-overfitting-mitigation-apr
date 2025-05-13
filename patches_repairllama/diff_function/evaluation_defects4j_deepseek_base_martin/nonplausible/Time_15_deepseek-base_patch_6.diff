@@ -1,0 +1,45 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/78ab9af3-e096-4ab9-9ab6-0c58ccb71b56_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a27799ee-4e55-4046-9ef2-2a6b6b58077e_fixed.java
+index a9a5e27..0f3395d 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/78ab9af3-e096-4ab9-9ab6-0c58ccb71b56_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a27799ee-4e55-4046-9ef2-2a6b6b58077e_fixed.java
+@@ -1,24 +1,40 @@
+     /**
+      * Multiply two values throwing an exception if overflow occurs.
+      * 
+      * @param val1  the first value
+      * @param val2  the second value
+      * @return the new total
+      * @throws ArithmeticException if the value is too big or too small
+      * @since 1.2
+      */
+     public static long safeMultiply(long val1, int val2) {
+         switch (val2) {
+             case -1:
+                 return -val1;
+             case 0:
+                 return 0L;
+             case 1:
+                 return val1;
+         }
+         long total = val1 * val2;
+         if (total / val2 != val1) {
+           throw new ArithmeticException("Multiplication overflows a long: " + val1 + " * " + val2);
+         }
+         return total;
+     }
++    
++    public static long safeMultiply(long val1, long val2) {
++        switch (val2) {
++            case -1:
++                return -val1;
++            case 0:
++                return 0L;
++            case 1:
++                return val1;
++        }
++        long total = val1 * val2;
++        if (total / val2 != val1) {
++          throw new ArithmeticException("Multiplication overflows a long: " + val1 + " * " + val2);
++        }
++        return total;
++    }

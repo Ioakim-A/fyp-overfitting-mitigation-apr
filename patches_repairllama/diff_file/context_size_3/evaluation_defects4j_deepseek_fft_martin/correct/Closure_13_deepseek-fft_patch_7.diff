@@ -1,0 +1,33 @@
+diff --git src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java
+index b51c088..836f32f 100644
+--- src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java
++++ src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java
+@@ -118,22 +118,23 @@ class PeepholeOptimizationsPass
+     if (!shouldVisit(node)) {
+       return;
+     }
+-
+     int visits = 0;
+     do {
+       Node c = node.getFirstChild();
+       while(c != null) {
+-        traverse(c);
++// buggy code
++//        traverse(c);
++//        Node next = c.getNext();
++
+         Node next = c.getNext();
++        traverse(c);
++
+         c = next;
+       }
+-
+       visit(node);
+       visits++;
+-
+       Preconditions.checkState(visits < 10000, "too many interations");
+     } while (shouldRetraverse(node));
+-
+     exitNode(node);
+   }
+ 

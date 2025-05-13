@@ -1,0 +1,38 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d6fdd590-7862-4e38-851b-57353b933315_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/66556a45-38ac-466c-b3b1-37f68e12dfc3_fixed.java
+index bcd80aa..4851489 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d6fdd590-7862-4e38-851b-57353b933315_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/66556a45-38ac-466c-b3b1-37f68e12dfc3_fixed.java
+@@ -1,25 +1,31 @@
+         void processResponseHeaders(Map<String, List<String>> resHeaders) {
+             for (Map.Entry<String, List<String>> entry : resHeaders.entrySet()) {
+                 String name = entry.getKey();
+                 if (name == null)
+                     continue; // http/1.1 line
+-
+                 List<String> values = entry.getValue();
+                 if (name.equalsIgnoreCase("Set-Cookie")) {
+                     for (String value : values) {
+                         if (value == null)
+                             continue;
+                         TokenQueue cd = new TokenQueue(value);
+                         String cookieName = cd.chompTo("=").trim();
+                         String cookieVal = cd.consumeTo(";").trim();
+                         // ignores path, date, domain, validateTLSCertificates et al. req'd?
+                         // name not blank, value not null
+                         if (cookieName.length() > 0)
+                             cookie(cookieName, cookieVal);
+                     }
+                 } else { // combine same header names with comma: http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
+-                    if (!values.isEmpty())
++// buggy code
++//                    if (!values.isEmpty())
++//                        header(name, values.get(0));
++                    if (!values.isEmpty()) {
+                         header(name, values.get(0));
++                        for (int i = 1; i < values.size(); i++)
++                            header(name, values.get(i));
++                    }
++
+                 }
+             }
+         }

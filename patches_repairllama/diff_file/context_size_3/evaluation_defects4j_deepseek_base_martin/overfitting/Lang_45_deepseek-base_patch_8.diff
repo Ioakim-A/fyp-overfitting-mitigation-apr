@@ -1,0 +1,25 @@
+diff --git src/java/org/apache/commons/lang/WordUtils.java src/java/org/apache/commons/lang/WordUtils.java
+index 42bd883..3eea136 100644
+--- src/java/org/apache/commons/lang/WordUtils.java
++++ src/java/org/apache/commons/lang/WordUtils.java
+@@ -610,9 +610,11 @@ public class WordUtils {
+         if (str.length() == 0) {
+             return StringUtils.EMPTY;
+         }
+-
+         // if the lower value is greater than the length of the string,
+         // set to the length of the string
++        if (lower >= str.length()) {
++            return str;
++        }
+         // if the upper value is -1 (i.e. no limit) or is greater
+         // than the length of the string, set to the length of the string
+         if (upper == -1 || upper > str.length()) {
+@@ -622,7 +624,6 @@ public class WordUtils {
+         if (upper < lower) {
+             upper = lower;
+         }
+-
+         StringBuffer result = new StringBuffer();
+         int index = StringUtils.indexOf(str, " ", lower);
+         if (index == -1) {

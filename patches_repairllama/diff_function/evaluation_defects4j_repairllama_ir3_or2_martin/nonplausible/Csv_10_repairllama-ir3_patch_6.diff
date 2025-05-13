@@ -1,0 +1,16 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/95c527f2-9696-4b01-9b32-6f07b339746f_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/defbc8fc-0940-4736-8a9c-a79611760b0c_fixed.java
+index ceaab68..a2a64ef 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/95c527f2-9696-4b01-9b32-6f07b339746f_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/defbc8fc-0940-4736-8a9c-a79611760b0c_fixed.java
+@@ -1,10 +1,8 @@
+     public CSVPrinter(final Appendable out, final CSVFormat format) throws IOException {
+         Assertions.notNull(out, "out");
+         Assertions.notNull(format, "format");
+-
+         this.out = out;
+         this.format = format;
+         this.format.validate();
+-        // TODO: Is it a good idea to do this here instead of on the first call to a print method?
+-        // It seems a pain to have to track whether the header has already been printed or not.
++       this.writer = new CSVWriter(out, format.getDelimiter(), format.getQuoteChar(), format.getEscapeChar());
+     }

@@ -1,0 +1,20 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c5ef6fba-4698-47df-ac5f-c9898f14684e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0976b34e-bb6e-471f-a66b-93f5067dfcaf_fixed.java
+index e28d8ce..ed750a8 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c5ef6fba-4698-47df-ac5f-c9898f14684e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0976b34e-bb6e-471f-a66b-93f5067dfcaf_fixed.java
+@@ -1,11 +1,13 @@
+ public void process(Node externs, Node root) {
+     NodeTraversal.traverse(compiler, root, this);
++    
+     if (MAKE_LOCAL_NAMES_UNIQUE) {
+         MakeDeclaredNamesUnique renamer = new MakeDeclaredNamesUnique();
+         NodeTraversal t = new NodeTraversal(compiler, renamer);
+         t.traverseRoots(externs, root);
+-    }
+         removeDuplicateDeclarations(root);
++    }
++    
+     new PropogateConstantAnnotations(compiler, assertOnChange)
+         .process(externs, root);
+ }
+\ No newline at end of file

@@ -1,0 +1,57 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d4f3d1b8-4240-4a5d-8beb-3b5da9e915e2_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/70aa7048-1080-4b76-afae-7a392ce1d7ab_fixed.java
+index 5aa01c2..ba5eff0 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d4f3d1b8-4240-4a5d-8beb-3b5da9e915e2_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/70aa7048-1080-4b76-afae-7a392ce1d7ab_fixed.java
+@@ -1,29 +1,49 @@
+     public long readBits(final int count) throws IOException {
+         if (count < 0 || count > MAXIMUM_CACHE_SIZE) {
+             throw new IllegalArgumentException("count must not be negative or greater than " + MAXIMUM_CACHE_SIZE);
+         }
++// buggy code
++//         while (bitsCachedSize < count) {
++//             final long nextByte = in.read();
++//             if (nextByte < 0) {
++//                 return nextByte;
++//             }
++//             if (byteOrder == ByteOrder.LITTLE_ENDIAN) {
++//                 bitsCached |= (nextByte << bitsCachedSize);
++//             } else {
++//                 bitsCached <<= 8;
++//                 bitsCached |= nextByte;
++//             }
++//             bitsCachedSize += 8;
++//         }
++//         final long bitsOut;
++//             if (byteOrder == ByteOrder.LITTLE_ENDIAN) {
++//                 bitsOut = (bitsCached & MASKS[count]);
++//                 bitsCached >>>= count;
++//             } else {
++//                 bitsOut = (bitsCached >> (bitsCachedSize - count)) & MASKS[count];
++//             }
++//             bitsCachedSize -= count;
++       final long bitsOut;
+         while (bitsCachedSize < count) {
+             final long nextByte = in.read();
+             if (nextByte < 0) {
+                 return nextByte;
+             }
+             if (byteOrder == ByteOrder.LITTLE_ENDIAN) {
+                 bitsCached |= (nextByte << bitsCachedSize);
+             } else {
+                 bitsCached <<= 8;
+                 bitsCached |= nextByte;
+             }
+             bitsCachedSize += 8;
+         }
+-            // bitsCachedSize >= 57 and left-shifting it 8 bits would cause an overflow
+-        
+-        final long bitsOut;
+         if (byteOrder == ByteOrder.LITTLE_ENDIAN) {
+             bitsOut = (bitsCached & MASKS[count]);
+             bitsCached >>>= count;
+         } else {
+             bitsOut = (bitsCached >> (bitsCachedSize - count)) & MASKS[count];
+         }
+         bitsCachedSize -= count;
+         return bitsOut;
+     }

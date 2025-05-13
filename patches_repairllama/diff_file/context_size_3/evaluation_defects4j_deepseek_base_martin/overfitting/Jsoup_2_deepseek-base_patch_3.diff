@@ -1,0 +1,50 @@
+diff --git src/main/java/org/jsoup/parser/Parser.java src/main/java/org/jsoup/parser/Parser.java
+index da4bdce..768b837 100644
+--- src/main/java/org/jsoup/parser/Parser.java
++++ src/main/java/org/jsoup/parser/Parser.java
+@@ -116,23 +116,19 @@ public class Parser {
+     private void parseStartTag() {
+         tq.consume("<");
+         String tagName = tq.consumeWord();
+-
+         if (tagName.length() == 0) { // doesn't look like a start tag after all; put < back on stack and handle as text
+             tq.addFirst("&lt;");
+             parseTextNode();
+             return;
+         }
+-
+         Attributes attributes = new Attributes();
+         while (!tq.matchesAny("<", "/>", ">") && !tq.isEmpty()) {
+             Attribute attribute = parseAttribute();
+             if (attribute != null)
+                 attributes.put(attribute);
+         }
+-
+         Tag tag = Tag.valueOf(tagName);
+         Element child = new Element(tag, baseUri, attributes);
+-
+         boolean isEmptyElement = tag.isEmpty(); // empty element if empty tag (e.g. img) or self-closed el (<div/>
+         if (tq.matchChomp("/>")) { // close empty element or tag
+             isEmptyElement = true;
+@@ -140,12 +136,11 @@ public class Parser {
+             tq.matchChomp(">");
+         }
+         addChildToParent(child, isEmptyElement);
+-
+         // pc data only tags (textarea, script): chomp to end tag, add content as text node
+         if (tag.isData()) {
+             String data = tq.chompTo("</" + tagName);
+             tq.chompTo(">");
+-            
++            tq.addFirst("</" + tagName + ">");
+             Node dataNode;
+             if (tag.equals(titleTag) || tag.equals(textareaTag)) // want to show as text, but not contain inside tags (so not a data tag?)
+                 dataNode = TextNode.createFromEncoded(data, baseUri);
+@@ -153,7 +148,6 @@ public class Parser {
+                 dataNode = new DataNode(data, baseUri); // data not encoded but raw (for " in script)
+             child.appendChild(dataNode);   
+         }
+-
+         // <base href>: update the base uri
+         if (child.tagName().equals("base")) {
+             String href = child.absUrl("href");

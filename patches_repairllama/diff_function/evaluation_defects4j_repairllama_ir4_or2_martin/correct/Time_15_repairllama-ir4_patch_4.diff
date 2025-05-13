@@ -1,0 +1,25 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/394c30aa-80cf-4e3a-8751-f4803b3b1e1a_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6550d97c-abd0-4062-a4d7-97a9e65c7623_fixed.java
+index 7a55f0b..cd8abed 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/394c30aa-80cf-4e3a-8751-f4803b3b1e1a_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6550d97c-abd0-4062-a4d7-97a9e65c7623_fixed.java
+@@ -1,15 +1,20 @@
+     public static long safeMultiply(long val1, int val2) {
+         switch (val2) {
+             case -1:
++// buggy code
++// 
++               if (val1 == Long.MIN_VALUE) {
++                    throw new ArithmeticException("Integer overflow");
++                }
+                 return -val1;
+             case 0:
+                 return 0L;
+             case 1:
+                 return val1;
+         }
+         long total = val1 * val2;
+         if (total / val2 != val1) {
+           throw new ArithmeticException("Multiplication overflows a long: " + val1 + " * " + val2);
+         }
+         return total;
+     }

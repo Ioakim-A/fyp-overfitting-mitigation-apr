@@ -1,0 +1,36 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/28d31a99-acaa-42ec-aac6-0c36860baa10_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f117d17c-7040-4ef1-8c1d-af112cc57a98_fixed.java
+index 97f28e5..0b812c5 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/28d31a99-acaa-42ec-aac6-0c36860baa10_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f117d17c-7040-4ef1-8c1d-af112cc57a98_fixed.java
+@@ -1,26 +1,30 @@
+     /**
+      * Creates a printer that will print values to the given stream following the CSVFormat.
+      * <p>
+      * Currently, only a pure encapsulation format or a pure escaping format is supported. Hybrid formats (encapsulation
+      * and escaping with a different character) are not supported.
+      * </p>
+      * 
+      * @param out
+      *        stream to which to print. Must not be null.
+      * @param format
+      *        the CSV format. Must not be null.
+      * @throws IOException
+      *         thrown if the optional header cannot be printed.
+      * @throws IllegalArgumentException
+      *         thrown if the parameters of the format are inconsistent or if either out or format are null.
+      */
+     public CSVPrinter(final Appendable out, final CSVFormat format) throws IOException {
+         Assertions.notNull(out, "out");
+         Assertions.notNull(format, "format");
+-
+         this.out = out;
+         this.format = format;
+         this.format.validate();
+         // TODO: Is it a good idea to do this here instead of on the first call to a print method?
+         // It seems a pain to have to track whether the header has already been printed or not.
++// buggy code
++        if (format.getHeader() != null) {
++            print(format.getHeader());
++        }
++
+     }

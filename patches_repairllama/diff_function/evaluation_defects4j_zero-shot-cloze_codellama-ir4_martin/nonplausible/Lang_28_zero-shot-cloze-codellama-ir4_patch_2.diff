@@ -1,0 +1,41 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/76cd2685-92ca-41fb-b332-10c52fefcc48_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/79e59c21-b7c2-442a-8d95-795c65b09f14_fixed.java
+index 4cc2d2f..dc40671 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/76cd2685-92ca-41fb-b332-10c52fefcc48_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/79e59c21-b7c2-442a-8d95-795c65b09f14_fixed.java
+@@ -1,33 +1,30 @@
+     public int translate(CharSequence input, int index, Writer out) throws IOException {
+-        // TODO: Protect from ArrayIndexOutOfBounds
+         if(input.charAt(index) == '&' && input.charAt(index + 1) == '#') {
+             int start = index + 2;
+             boolean isHex = false;
+-
+             char firstChar = input.charAt(start);
+             if(firstChar == 'x' || firstChar == 'X') {
+                 start++;
+                 isHex = true;
+             }
+-
+             int end = start;
+             while(input.charAt(end) != ';') {
+                 end++;
+             }
+-
+             int entityValue;
+             try {
+                 if(isHex) {
+                     entityValue = Integer.parseInt(input.subSequence(start, end).toString(), 16);
+                 } else {
+                     entityValue = Integer.parseInt(input.subSequence(start, end).toString(), 10);
+                 }
+             } catch(NumberFormatException nfe) {
+                 return 0;
+             }
+-
+-                out.write(entityValue);
++// buggy code
++//                out.write(entityValue);
++           out.write((char) entityValue);
+             return 2 + (end - start) + (isHex ? 1 : 0) + 1;
+         }
+         return 0;
+     }

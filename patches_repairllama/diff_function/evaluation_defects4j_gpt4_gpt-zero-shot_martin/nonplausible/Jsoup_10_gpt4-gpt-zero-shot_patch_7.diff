@@ -1,0 +1,34 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/922e5ced-2bb7-4924-97ae-9201f6a3be48_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9ebc8768-9fcf-4d2d-ba74-e2e8f4f2bc20_fixed.java
+index f8677d4..b557d69 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/922e5ced-2bb7-4924-97ae-9201f6a3be48_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9ebc8768-9fcf-4d2d-ba74-e2e8f4f2bc20_fixed.java
+@@ -1,24 +1,23 @@
+-    public String absUrl(String attributeKey) {
++    public String absUrl(String attributeKey, String baseUri) {
+         Validate.notEmpty(attributeKey);
+-
+         String relUrl = attr(attributeKey);
+         if (!hasAttr(attributeKey)) {
+-            return ""; // nothing to make absolute with
++            return ""; 
+         } else {
+             URL base;
+             try {
+                 try {
+                     base = new URL(baseUri);
+                 } catch (MalformedURLException e) {
+-                    // the base is unsuitable, but the attribute may be abs on its own, so try that
+                     URL abs = new URL(relUrl);
+                     return abs.toExternalForm();
+                 }
+-                // workaround: java resolves '//path/file + ?foo' to '//path/?foo', not '//path/file?foo' as desired
++// fixed code
++// 
+                 URL abs = new URL(base, relUrl);
+                 return abs.toExternalForm();
+             } catch (MalformedURLException e) {
+                 return "";
+             }
+         }
+     }
+\ No newline at end of file

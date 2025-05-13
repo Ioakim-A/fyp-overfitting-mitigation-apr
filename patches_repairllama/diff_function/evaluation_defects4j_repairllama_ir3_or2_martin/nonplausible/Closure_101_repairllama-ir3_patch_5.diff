@@ -1,0 +1,27 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e6950eec-85a4-42f8-b437-a136d1a17c9c_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/422d4f61-2b39-4c98-89b7-a40554174520_fixed.java
+index a1e21c4..b628f44 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e6950eec-85a4-42f8-b437-a136d1a17c9c_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/422d4f61-2b39-4c98-89b7-a40554174520_fixed.java
+@@ -1,21 +1,17 @@
+   protected CompilerOptions createOptions() {
+     CompilerOptions options = new CompilerOptions();
+     options.setCodingConvention(new ClosureCodingConvention());
+     CompilationLevel level = flags.compilation_level;
+     level.setOptionsForCompilationLevel(options);
+     if (flags.debug) {
+       level.setDebugOptionsForCompilationLevel(options);
+     }
+-
+     WarningLevel wLevel = flags.warning_level;
+     wLevel.setOptionsForWarningLevel(options);
+     for (FormattingOption formattingOption : flags.formatting) {
+       formattingOption.applyToOptions(options);
+     }
+-    if (flags.process_closure_primitives) {
+-      options.closurePass = true;
+-    }
+-
++   options.setManageClosureDependencies(true);
+     initOptionsFromFlags(options);
+     return options;
+   }

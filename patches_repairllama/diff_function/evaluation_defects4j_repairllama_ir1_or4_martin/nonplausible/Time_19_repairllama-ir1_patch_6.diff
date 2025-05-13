@@ -1,0 +1,41 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2a4b6490-13ce-4649-89e1-8752f80a2856_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/98b4a5f7-244d-4159-8a32-1b31a1e4d8b8_fixed.java
+index 201a38f..a141b6d 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2a4b6490-13ce-4649-89e1-8752f80a2856_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/98b4a5f7-244d-4159-8a32-1b31a1e4d8b8_fixed.java
+@@ -1,32 +1,20 @@
+-    public int getOffsetFromLocal(long instantLocal) {
+-        // get the offset at instantLocal (first estimate)
++    public int getOffset(long instantLocal) {
+         final int offsetLocal = getOffset(instantLocal);
+-        // adjust instantLocal using the estimate and recalc the offset
+-        final long instantAdjusted = instantLocal - offsetLocal;
+-        final int offsetAdjusted = getOffset(instantAdjusted);
+-        // if the offsets differ, we must be near a DST boundary
++        long instantAdjusted = instantLocal - offsetLocal;
++        int offsetAdjusted = getOffset(instantAdjusted);
+         if (offsetLocal != offsetAdjusted) {
+-            // we need to ensure that time is always after the DST gap
+-            // this happens naturally for positive offsets, but not for negative
+             if ((offsetLocal - offsetAdjusted) < 0) {
+-                // if we just return offsetAdjusted then the time is pushed
+-                // back before the transition, whereas it should be
+-                // on or after the transition
+-                long nextLocal = nextTransition(instantAdjusted);
+-                long nextAdjusted = nextTransition(instantLocal - offsetAdjusted);
+-                if (nextLocal != nextAdjusted) {
+-                    return offsetLocal;
+-                }
++                long nextLocal =                }
+             }
+         } else if (offsetLocal > 0) {
+             long prev = previousTransition(instantAdjusted);
+             if (prev < instantAdjusted) {
+                 int offsetPrev = getOffset(prev);
+                 int diff = offsetPrev - offsetLocal;
+                 if (instantAdjusted - prev <= diff) {
+                     return offsetPrev;
+                 }
+             }
+         }
+         return offsetAdjusted;
+     }

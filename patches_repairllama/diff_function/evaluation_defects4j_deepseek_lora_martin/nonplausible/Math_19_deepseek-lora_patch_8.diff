@@ -1,0 +1,73 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/29a74cf7-edbc-40d9-b0ab-44d2d8f8be98_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ffe61848-014a-4d4e-9284-e83632d19e37_fixed.java
+index d80b7d0..11f1ba1 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/29a74cf7-edbc-40d9-b0ab-44d2d8f8be98_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ffe61848-014a-4d4e-9284-e83632d19e37_fixed.java
+@@ -1,61 +1,64 @@
+     /**
+      * Checks dimensions and values of boundaries and inputSigma if defined.
+      */
+     private void checkParameters() {
+         final double[] init = getStartPoint();
+         final double[] lB = getLowerBound();
+         final double[] uB = getUpperBound();
+-
+         // Checks whether there is at least one finite bound value.
+         boolean hasFiniteBounds = false;
+         for (int i = 0; i < lB.length; i++) {
+             if (!Double.isInfinite(lB[i]) ||
+                 !Double.isInfinite(uB[i])) {
+                 hasFiniteBounds = true;
+                 break;
+             }
+         }
+         // Checks whether there is at least one infinite bound value.
+         boolean hasInfiniteBounds = false;
+         if (hasFiniteBounds) {
+             for (int i = 0; i < lB.length; i++) {
+                 if (Double.isInfinite(lB[i]) ||
+                     Double.isInfinite(uB[i])) {
+                     hasInfiniteBounds = true;
+                     break;
+                 }
+             }
+-
+             if (hasInfiniteBounds) {
+                 // If there is at least one finite bound, none can be infinite,
+                 // because mixed cases are not supported by the current code.
+                 throw new MathUnsupportedOperationException();
+             } else {
+                 // Convert API to internal handling of boundaries.
+                 boundaries = new double[2][];
+                 boundaries[0] = lB;
+                 boundaries[1] = uB;
+-
+                 // Abort early if the normalization will overflow (cf. "encode" method).
++// buggy code
++                for (int i = 0; i < lB.length; i++) {
++                    if (Double.isNaN(lB[i]) || Double.isNaN(uB[i])) {
++                        throw new MathIllegalArgumentException();
++                    }
++                }
++
+             }
+         } else {
+             // Convert API to internal handling of boundaries.
+             boundaries = null;
+         }
+-
+         if (inputSigma != null) {
+             if (inputSigma.length != init.length) {
+                 throw new DimensionMismatchException(inputSigma.length, init.length);
+             }
+             for (int i = 0; i < init.length; i++) {
+                 if (inputSigma[i] < 0) {
+                     throw new NotPositiveException(inputSigma[i]);
+                 }
+                 if (boundaries != null) {
+                     if (inputSigma[i] > boundaries[1][i] - boundaries[0][i]) {
+                         throw new OutOfRangeException(inputSigma[i], 0, boundaries[1][i] - boundaries[0][i]);
+                     }
+                 }
+             }
+         }
+     }

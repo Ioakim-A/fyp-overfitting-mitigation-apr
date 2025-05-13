@@ -1,0 +1,22 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9e1f7a63-5fc8-48ae-9966-161ae55c3dd9_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/af056175-ae55-4718-a6e4-1c757047b0aa_fixed.java
+index d2feff5..5429141 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9e1f7a63-5fc8-48ae-9966-161ae55c3dd9_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/af056175-ae55-4718-a6e4-1c757047b0aa_fixed.java
+@@ -1,8 +1,14 @@
+     public Document clean(Document dirtyDocument) {
+         Validate.notNull(dirtyDocument);
+-
+         Document clean = Document.createShell(dirtyDocument.baseUri());
+-            copySafeNodes(dirtyDocument.body(), clean.body());
++
++        // iterate over all nodes in the dirty document
++        for (Node node : dirtyDocument.getAllElements()) {
++            // if node is safe, copy it to the clean document
++            if (isSafe(node)) {
++                copySafeNodes(node, clean.body());
++            }
++        }
+         
+         return clean;
+     }
+\ No newline at end of file

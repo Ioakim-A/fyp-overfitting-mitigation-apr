@@ -1,0 +1,22 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4653da87-b546-49d9-afdf-f28014eaa8dd_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/df31b681-ab2b-47c2-a2ce-6bb78892463d_fixed.java
+index f6c765a..5b3ed18 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4653da87-b546-49d9-afdf-f28014eaa8dd_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/df31b681-ab2b-47c2-a2ce-6bb78892463d_fixed.java
+@@ -1,14 +1,12 @@
+     private boolean isShortOption(String token)
+     {
+-        // short options (-S, -SV, -S=V, -SV1=V2, -S1S2)
+         if (!token.startsWith("-") || token.length() == 1)
+         {
+             return false;
+         }
+-
+-        // remove leading "-" and "=value"
+         int pos = token.indexOf("=");
+         String optName = pos == -1 ? token.substring(1) : token.substring(1, pos);
+-        return options.hasShortOption(optName);
+-        // check for several concatenated short options
++// buggy code
++//         return options.hasShortOption(optName);
++       return optName.length() == 1 && options.hasShortOption(optName);
+     }

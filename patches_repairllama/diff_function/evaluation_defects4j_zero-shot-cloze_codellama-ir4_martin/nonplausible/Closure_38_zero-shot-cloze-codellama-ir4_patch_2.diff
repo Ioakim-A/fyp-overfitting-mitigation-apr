@@ -1,0 +1,38 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3d6a6643-baad-4e70-a3c0-2602718b8079_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3a4485d0-ae1d-40ae-99d4-a0a81f44fb01_fixed.java
+index a7d4ff8..22742bb 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3d6a6643-baad-4e70-a3c0-2602718b8079_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3a4485d0-ae1d-40ae-99d4-a0a81f44fb01_fixed.java
+@@ -1,28 +1,29 @@
+   void addNumber(double x) {
+-    // This is not pretty printing. This is to prevent misparsing of x- -4 as
+-    // x--4 (which is a syntax error).
+     char prev = getLastChar();
+     boolean negativeZero = isNegativeZero(x);
+-    if (x < 0 && prev == '-') {
++// buggy code
++//    if (x < 0 && prev == '-') {
++//      removeLastChar();
++//    } else if (x > 0 && prev == '+') {
++//      removeLastChar();
+       add(" ");
+     }
+-
+     if ((long) x == x && !negativeZero) {
+       long value = (long) x;
+       long mantissa = value;
+       int exp = 0;
+       if (Math.abs(x) >= 100) {
+         while (mantissa / 10 * Math.pow(10, exp + 1) == value) {
+           mantissa /= 10;
+           exp++;
+         }
+       }
+       if (exp > 2) {
+         add(Long.toString(mantissa) + "E" + Integer.toString(exp));
+       } else {
+         add(Long.toString(value));
+       }
+     } else {
+       add(String.valueOf(x));
+     }
+   }

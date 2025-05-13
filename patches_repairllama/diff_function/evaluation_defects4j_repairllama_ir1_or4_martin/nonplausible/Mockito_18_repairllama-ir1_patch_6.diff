@@ -1,0 +1,44 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/15a9af06-f633-4c0c-b4db-0ddff3560d3c_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e2bba639-e93b-488f-b84d-d0ad2343379f_fixed.java
+index 710fcc0..5343184 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/15a9af06-f633-4c0c-b4db-0ddff3560d3c_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e2bba639-e93b-488f-b84d-d0ad2343379f_fixed.java
+@@ -1,37 +1,34 @@
+-    Object returnValueFor(Class<?> type) {
++    <T> T returnValueFor(Class<T> type) {
+         if (Primitives.isPrimitiveOrWrapper(type)) {
+-            return Primitives.defaultValueForPrimitiveOrWrapper(type);
+-            //new instances are used instead of Collections.emptyList(), etc.
+-            //to avoid UnsupportedOperationException if code under test modifies returned collection
++            return type.cast(Primitives.defaultValueForPrimitiveOrWrapper(type));
+         } else if (type == Collection.class) {
+             return new LinkedList<Object>();
+         } else if (type == Set.class) {
+             return new HashSet<Object>();
+         } else if (type == HashSet.class) {
+             return new HashSet<Object>();
+         } else if (type == SortedSet.class) {
+             return new TreeSet<Object>();
+         } else if (type == TreeSet.class) {
+             return new TreeSet<Object>();
+         } else if (type == LinkedHashSet.class) {
+             return new LinkedHashSet<Object>();
+         } else if (type == List.class) {
+             return new LinkedList<Object>();
+         } else if (type == LinkedList.class) {
+             return new LinkedList<Object>();
+         } else if (type == ArrayList.class) {
+             return new ArrayList<Object>();
+         } else if (type == Map.class) {
+             return new HashMap<Object, Object>();
+         } else if (type == HashMap.class) {
+             return new HashMap<Object, Object>();
+         } else if (type == SortedMap.class) {
+             return new TreeMap<Object, Object>();
+         } else if (type == TreeMap.class) {
+             return new TreeMap<Object, Object>();
+         } else if (type == LinkedHashMap.class) {
+             return new LinkedHashMap<Object, Object>();
+         }
+-        //Let's not care about the rest of collections.
+         return null;
+     }

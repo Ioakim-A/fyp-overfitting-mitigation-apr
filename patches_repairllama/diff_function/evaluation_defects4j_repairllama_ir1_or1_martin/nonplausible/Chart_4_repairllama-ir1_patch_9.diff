@@ -1,0 +1,105 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e5ba0af4-5890-4bde-bc11-67f4aee3a5b7_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9ecde205-e18e-486d-bfa5-7d4b86d2a4d1_fixed.java
+index 69635d8..0bb2cb2 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e5ba0af4-5890-4bde-bc11-67f4aee3a5b7_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9ecde205-e18e-486d-bfa5-7d4b86d2a4d1_fixed.java
+@@ -1,95 +1,25 @@
+    public Range getDataRange(ValueAxis axis) {
+-
+         Range result = null;
+         List mappedDatasets = new ArrayList();
+         List includedAnnotations = new ArrayList();
+         boolean isDomainAxis = true;
+-
+-        // is it a domain axis?
+         int domainIndex = getDomainAxisIndex(axis);
+         if (domainIndex >= 0) {
+             isDomainAxis = true;
+             mappedDatasets.addAll(getDatasetsMappedToDomainAxis(
+                     new Integer(domainIndex)));
+             if (domainIndex == 0) {
+-                // grab the plot's annotations
+                 Iterator iterator = this.annotations.iterator();
+                 while (iterator.hasNext()) {
+                     XYAnnotation annotation = (XYAnnotation) iterator.next();
+                     if (annotation instanceof XYAnnotationBoundsInfo) {
+-                        includedAnnotations.add(annotation);
+-                    }
+-                }
+-            }
+-        }
+-
+-        // or is it a range axis?
+-        int rangeIndex = getRangeAxisIndex(axis);
+-        if (rangeIndex >= 0) {
+-            isDomainAxis = false;
+-            mappedDatasets.addAll(getDatasetsMappedToRangeAxis(
+-                    new Integer(rangeIndex)));
+-            if (rangeIndex == 0) {
+-                Iterator iterator = this.annotations.iterator();
+-                while (iterator.hasNext()) {
+-                    XYAnnotation annotation = (XYAnnotation) iterator.next();
+-                    if (annotation instanceof XYAnnotationBoundsInfo) {
+-                        includedAnnotations.add(annotation);
+-                    }
+-                }
+-            }
+-        }
+-
+-        // iterate through the datasets that map to the axis and get the union
+-        // of the ranges.
+-        Iterator iterator = mappedDatasets.iterator();
+-        while (iterator.hasNext()) {
+-            XYDataset d = (XYDataset) iterator.next();
+-            if (d != null) {
+-                XYItemRenderer r = getRendererForDataset(d);
+-                if (isDomainAxis) {
+-                    if (r != null) {
+-                        result = Range.combine(result, r.findDomainBounds(d));
+-                    }
+-                    else {
+-                        result = Range.combine(result,
+-                                DatasetUtilities.findDomainBounds(d));
+-                    }
+-                }
+-                else {
+-                    if (r != null) {
+-                        result = Range.combine(result, r.findRangeBounds(d));
+-                    }
+-                    else {
+-                        result = Range.combine(result,
+-                                DatasetUtilities.findRangeBounds(d));
+-                    }
+-                }
+-                
+-                    Collection c = r.getAnnotations();
+-                    Iterator i = c.iterator();
+-                    while (i.hasNext()) {
+-                        XYAnnotation a = (XYAnnotation) i.next();
+-                        if (a instanceof XYAnnotationBoundsInfo) {
+-                            includedAnnotations.add(a);
+-                        }
+-                    }
+-            }
+-        }
+-
+-        Iterator it = includedAnnotations.iterator();
+-        while (it.hasNext()) {
+-            XYAnnotationBoundsInfo xyabi = (XYAnnotationBoundsInfo) it.next();
++                        XYAnnotationBoundsInfo xyabi = (XYAnnotationBoundsInfo) annotation;
+                         if (xyabi.getIncludeInDataBounds()) {
+-                if (isDomainAxis) {
+-                    result = Range.combine(result, xyabi.getXRange());
++                            includedAnnotations.add(annotation);
+                         }
+-                else {
+-                    result = Range.combine(result, xyabi.getYRange());
+                     }
+                 }
+             }
+-
+-        return result;
+-
+         }
++        int rangeIndex = getRangeAxisIndex(axis);
++        if (
+\ No newline at end of file

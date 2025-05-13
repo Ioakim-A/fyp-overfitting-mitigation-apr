@@ -1,0 +1,55 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8c4f45f4-94c5-438e-b626-5d7585b6a65d_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bdb624cb-b5cb-4860-85e4-d5592cda762d_fixed.java
+index 904dba7..e51cc9e 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8c4f45f4-94c5-438e-b626-5d7585b6a65d_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bdb624cb-b5cb-4860-85e4-d5592cda762d_fixed.java
+@@ -1,46 +1,45 @@
+   private String format(JSError error, boolean warning) {
+     // extract source excerpt
+     SourceExcerptProvider source = getSource();
+     String sourceExcerpt = source == null ? null :
+         excerpt.get(
+             source, error.sourceName, error.lineNumber, excerptFormatter);
+-
+     // formatting the message
+     StringBuilder b = new StringBuilder();
+     if (error.sourceName != null) {
+       b.append(error.sourceName);
+       if (error.lineNumber > 0) {
+         b.append(':');
+         b.append(error.lineNumber);
+       }
+       b.append(": ");
+     }
+-
+     b.append(getLevelName(warning ? CheckLevel.WARNING : CheckLevel.ERROR));
+     b.append(" - ");
+-
+     b.append(error.description);
+     b.append('\n');
+     if (sourceExcerpt != null) {
+       b.append(sourceExcerpt);
+       b.append('\n');
+       int charno = error.getCharno();
+-
+       // padding equal to the excerpt and arrow at the end
+       // charno == sourceExpert.length() means something is missing
+       // at the end of the line
+       if (excerpt.equals(LINE)
+-          && 0 <= charno && charno < sourceExcerpt.length()) {
++          && charno == sourceExcerpt.length()) {
++        charno--;
++      }
++      if (charno > 0) {
+         for (int i = 0; i < charno; i++) {
+           char c = sourceExcerpt.charAt(i);
+           if (Character.isWhitespace(c)) {
+             b.append(c);
+           } else {
+             b.append(' ');
+           }
+         }
+         b.append("^\n");
+       }
+     }
+     return b.toString();
+   }

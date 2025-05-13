@@ -1,0 +1,30 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2940a04a-f3c0-4599-8696-48a89660fe3f_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c349670b-35fd-41c7-bc90-77d7cbfc37a6_fixed.java
+index 98d89dc..a8c74db 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2940a04a-f3c0-4599-8696-48a89660fe3f_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c349670b-35fd-41c7-bc90-77d7cbfc37a6_fixed.java
+@@ -1,23 +1,22 @@
+ private boolean compute(Object left, Object right) {
+         left = reduce(left);
+         right = reduce(right);
+-
+         if (left instanceof InitialContext) {
+             ((InitialContext) left).reset();
+         }
+         if (right instanceof InitialContext) {
+             ((InitialContext) right).reset();
+         }
+         if (left instanceof Iterator && right instanceof Iterator) {
+             return findMatch((Iterator) left, (Iterator) right);
+         }
+         if (left instanceof Iterator) {
+             return containsMatch((Iterator) left, right);
+         }
+         if (right instanceof Iterator) {
+             return containsMatch((Iterator) right, left);
+         }
+         double ld = InfoSetUtil.doubleValue(left);
+-        double rd = InfoSetUtil.doubleValue(right);
++        double rd = InfoSetUtil.doubleValue(right); // Fixed code
+         return evaluateCompare(ld == rd ? 0 : ld < rd ? -1 : 1);
+     }
+\ No newline at end of file

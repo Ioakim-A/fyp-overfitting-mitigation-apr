@@ -1,0 +1,56 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/aafe81fd-91cb-43f8-82ad-0e279804cc5a_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7e04421f-0f07-4c3e-8761-75c7bfb0aaa0_fixed.java
+index 18c915f..ee33e12 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/aafe81fd-91cb-43f8-82ad-0e279804cc5a_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7e04421f-0f07-4c3e-8761-75c7bfb0aaa0_fixed.java
+@@ -1,45 +1,41 @@
+     protected void processProperties(Properties properties)
+     {
+         if (properties == null)
+         {
+             return;
+         }
+-
+         for (Enumeration e = properties.propertyNames(); e.hasMoreElements();)
+         {
+             String option = e.nextElement().toString();
+-
+             if (!cmd.hasOption(option))
+             {
+                 Option opt = getOptions().getOption(option);
+-
+-                // get the value from the properties instance
+                 String value = properties.getProperty(option);
+-
+                 if (opt.hasArg())
+                 {
+                     if (opt.getValues() == null || opt.getValues().length == 0)
+                     {
+                         try
+                         {
+                             opt.addValueForProcessing(value);
+                         }
+                         catch (RuntimeException exp)
+                         {
+-                            // if we cannot add the value don't worry about it
+                         }
+                     }
+                 }
+                 else if (!("yes".equalsIgnoreCase(value)
+                         || "true".equalsIgnoreCase(value)
+                         || "1".equalsIgnoreCase(value)))
+                 {
+-                    // if the value is not yes, true or 1 then don't add the
+-                    // option to the CommandLine
+-                    break;
++// buggy code
++//                    break;
++               }
++                else
++                {
++                    cmd.addOption(opt);
+                 }
+-
+                 cmd.addOption(opt);
+             }
+         }
+     }

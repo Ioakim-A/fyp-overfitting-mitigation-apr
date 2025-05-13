@@ -1,0 +1,38 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/11f820d8-4ef0-4205-b4bd-c035742034a3_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/591fbb86-6d07-41c3-b446-2fdba6550799_fixed.java
+index a19c4db..b2e7847 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/11f820d8-4ef0-4205-b4bd-c035742034a3_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/591fbb86-6d07-41c3-b446-2fdba6550799_fixed.java
+@@ -1,32 +1,30 @@
+     public KeyDeserializer createKeyDeserializer(DeserializationContext ctxt,
+             JavaType type)
+         throws JsonMappingException
+     {
+         final DeserializationConfig config = ctxt.getConfig();
+         KeyDeserializer deser = null;
+         if (_factoryConfig.hasKeyDeserializers()) {
+             BeanDescription beanDesc = config.introspectClassAnnotations(type.getRawClass());
+             for (KeyDeserializers d  : _factoryConfig.keyDeserializers()) {
+-                deser = d.findKeyDeserializer(type, config, beanDesc);
++                deser = d.findKeyDeserializer(config, type, beanDesc);
+                 if (deser != null) {
+                     break;
+                 }
+             }
+         }
+-        // the only non-standard thing is this:
+         if (deser == null) {
+             if (type.isEnumType()) {
+                 return _createEnumKeyDeserializer(ctxt, type);
+             }
+             deser = StdKeyDeserializers.findStringBasedKeyDeserializer(config, type);
+         }
+-        // and then post-processing
+         if (deser != null) {
+             if (_factoryConfig.hasDeserializerModifiers()) {
+                 for (BeanDeserializerModifier mod : _factoryConfig.deserializerModifiers()) {
+                     deser = mod.modifyKeyDeserializer(config, type, deser);
+                 }
+             }
+         }
+         return deser;
+     }

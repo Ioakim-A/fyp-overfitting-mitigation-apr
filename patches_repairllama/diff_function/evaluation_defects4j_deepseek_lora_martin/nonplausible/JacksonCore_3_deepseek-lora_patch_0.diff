@@ -1,0 +1,26 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4c097761-6add-4055-a444-ef53a807c50b_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cd636915-a797-4f53-a6be-66c5cdb09de9_fixed.java
+index bd45b8e..07b581f 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4c097761-6add-4055-a444-ef53a807c50b_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cd636915-a797-4f53-a6be-66c5cdb09de9_fixed.java
+@@ -1,15 +1,20 @@
+     public UTF8StreamJsonParser(IOContext ctxt, int features, InputStream in,
+             ObjectCodec codec, BytesToNameCanonicalizer sym,
+             byte[] inputBuffer, int start, int end,
+             boolean bufferRecyclable)
+     {
+         super(ctxt, features);
+         _inputStream = in;
+         _objectCodec = codec;
+         _symbols = sym;
+         _inputBuffer = inputBuffer;
+         _inputPtr = start;
+         _inputEnd = end;
+-        // If we have offset, need to omit that from byte offset, so:
++// buggy code
++//        // If we have offset, need to omit that from byte offset, so:
++        if (_inputBuffer != null) {
++            _inputPtr -= _inputBuffer.length;
++        }
++
+         _bufferRecyclable = bufferRecyclable;
+     }

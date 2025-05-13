@@ -1,0 +1,18 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3ba11a0c-7028-400f-91f5-6aa0dee2b6bc_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ec3aa094-7404-4f20-837b-ee89668f80eb_fixed.java
+index 0d48aab..64a5615 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3ba11a0c-7028-400f-91f5-6aa0dee2b6bc_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ec3aa094-7404-4f20-837b-ee89668f80eb_fixed.java
+@@ -1,12 +1,10 @@
+    public final void serialize(JsonGenerator gen, SerializerProvider ctxt) throws IOException
+     {
+         if (_value == null) {
+             ctxt.defaultSerializeNull(gen);
+         } else if (_value instanceof JsonSerializable) {
+-            ((JsonSerializable) _value).serialize(gen, ctxt);
++            gen.writeObject(((JsonSerializable) _value).serialize(ctxt));
+         } else {
+-            // 25-May-2018, tatu: [databind#1991] do not call via generator but through context;
+-            //    this to preserve contextual information
+             gen.writeObject(_value);
+         }
+     }

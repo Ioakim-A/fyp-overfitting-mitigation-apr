@@ -1,0 +1,55 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/07f25be1-ddd1-431c-a876-66c61ff46a5c_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b123a2cf-7bd9-498a-8d95-efb8faed6184_fixed.java
+index 6a2c422..7437739 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/07f25be1-ddd1-431c-a876-66c61ff46a5c_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b123a2cf-7bd9-498a-8d95-efb8faed6184_fixed.java
+@@ -1,37 +1,30 @@
+     protected StringBuffer renderWrappedText(StringBuffer sb, int width, 
+                                              int nextLineTabStop, String text)
+     {
+         int pos = findWrapPos(text, width, 0);
+-
+         if (pos == -1)
+         {
+             sb.append(rtrim(text));
+-
+             return sb;
+         }
+         sb.append(rtrim(text.substring(0, pos))).append(defaultNewLine);
+-
+-        // all following lines must be padded with nextLineTabStop space 
+-        // characters
+         final String padding = createPadding(nextLineTabStop);
+-
+         while (true)
+         {
+-            int lastPos = pos;
+-            text = padding + text.substring(pos).trim();
+-            pos = findWrapPos(text, width, 0);
+-
+-            if (pos == -1)
+-            {
+-                sb.append(text);
+-
+-                return sb;
+-            } else
+-            if (pos == lastPos)
+-            {
+-                throw new RuntimeException("Text too long for line - throwing exception to avoid infinite loop [CLI-162]: " + text);
++// buggy code
++//            int lastPos = pos;
++//            text = padding + text.substring(pos).trim();
++//            pos = findWrapPos(text, width, 0);
++//            if (pos == -1)
++//            {
++//                sb.append(text);
++//                return sb;
++//            } else
++//            if (pos == lastPos)
++//            {
++//                throw new RuntimeException("Text too long for line - throwing exception to avoid infinite loop [CLI-162]: " + text);
++//            }
+             }
+-
+             sb.append(rtrim(text.substring(0, pos))).append(defaultNewLine);
+         }
+     }

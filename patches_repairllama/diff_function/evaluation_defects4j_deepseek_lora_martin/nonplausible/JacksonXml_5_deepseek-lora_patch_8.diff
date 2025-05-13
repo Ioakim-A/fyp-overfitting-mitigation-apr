@@ -1,0 +1,18 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/41183d2e-a58c-4bcd-b632-9c3754d1652e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e9424fdc-8c41-4556-88da-037ac16dbe33_fixed.java
+index 1ed78d0..405411e 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/41183d2e-a58c-4bcd-b632-9c3754d1652e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e9424fdc-8c41-4556-88da-037ac16dbe33_fixed.java
+@@ -1,9 +1,12 @@
+     /**
+      * @since 2.8.9
+      */
+     protected XmlSerializerProvider(XmlSerializerProvider src) {
+         super(src);
+         // 21-May-2018, tatu: As per [dataformat-xml#282], should NOT really copy
+         //    root name lookup as that may link back to diff version, configuration
+-        _rootNameLookup = src._rootNameLookup;
++// buggy code
++//        _rootNameLookup = src._rootNameLookup;
++        _rootNameLookup = src._rootNameLookup == null ? null : src._rootNameLookup.copy();
++
+     }

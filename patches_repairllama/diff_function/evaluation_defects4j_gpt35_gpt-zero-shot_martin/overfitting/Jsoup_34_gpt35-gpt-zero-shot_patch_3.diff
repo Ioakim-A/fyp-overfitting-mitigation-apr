@@ -1,0 +1,25 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9688776f-a75d-4310-912d-984dd8dce0eb_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/156cfce8-f0fe-4fa5-a7a8-3c6405ec424b_fixed.java
+index 3ea5b43..f2cc93c 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9688776f-a75d-4310-912d-984dd8dce0eb_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/156cfce8-f0fe-4fa5-a7a8-3c6405ec424b_fixed.java
+@@ -1,17 +1,15 @@
+     int nextIndexOf(CharSequence seq) {
+-        // doesn't handle scanning for surrogates
+         char startChar = seq.charAt(0);
+         for (int offset = pos; offset < length; offset++) {
+-            // scan to first instance of startchar:
+             if (startChar != input[offset])
+                 while(++offset < length && startChar != input[offset]);
+             int i = offset + 1;
+             int last = i + seq.length()-1;
+-            if (offset < length) {
++            if (last <= length) { // Change the condition to check if last is within the bounds of the input array
+                 for (int j = 1; i < last && seq.charAt(j) == input[i]; i++, j++);
+-                if (i == last) // found full sequence
++                if (i == last) 
+                     return offset - pos;
+             }
+         }
+         return -1;
+     }
+\ No newline at end of file

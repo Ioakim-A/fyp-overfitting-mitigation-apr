@@ -1,0 +1,28 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3de44a84-69e6-45cc-b025-371ec21e01cc_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c3ebb64a-31b1-450d-afa3-b4a17e287fab_fixed.java
+index 70ac830..0b04c9a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3de44a84-69e6-45cc-b025-371ec21e01cc_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c3ebb64a-31b1-450d-afa3-b4a17e287fab_fixed.java
+@@ -1,19 +1,11 @@
+ public void matchConstraint(JSType constraint) {
+-    // We only want to match constraints on anonymous types.
+     if (hasReferenceName()) {
+       return;
+     }
+-
+-    // Handle the case where the constraint object is a record type.
+-    //
+-    // param constraint {{prop: (number|undefined)}}
+-    // function f(constraint) {}
+-    // f({});
+-    //
+-    // We want to modify the object literal to match the constraint, by
+-    // taking any each property on the record and trying to match
+-    // properties on this object.
+     if (constraint.isRecordType()) {
+       matchRecordTypeConstraint(constraint.toObjectType());
++    } else {
++      // Handle the case when constraint is not a record type
++      handleNonRecordTypeConstraint(constraint);
+     }
+ }
+\ No newline at end of file

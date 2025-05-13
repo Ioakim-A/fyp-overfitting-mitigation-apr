@@ -1,0 +1,37 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8a9be03b-5db0-4969-8373-b89f2828fe5e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/66f840f0-0539-4f8b-9f3b-99bfbdf77774_fixed.java
+index 5a3dced..5584e99 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8a9be03b-5db0-4969-8373-b89f2828fe5e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/66f840f0-0539-4f8b-9f3b-99bfbdf77774_fixed.java
+@@ -1,28 +1,29 @@
+     public int parseInto(ReadWritableInstant instant, String text, int position) {
+         DateTimeParser parser = requireParser();
+         if (instant == null) {
+             throw new IllegalArgumentException("Instant must not be null");
+         }
+-        
+         long instantMillis = instant.getMillis();
+         Chronology chrono = instant.getChronology();
+         long instantLocal = instantMillis + chrono.getZone().getOffset(instantMillis);
+         chrono = selectChronology(chrono);
+-        
+         DateTimeParserBucket bucket = new DateTimeParserBucket(
+-            instantLocal, chrono, iLocale, iPivotYear, iDefaultYear);
++// buggy code
++//            instantLocal, chrono, iLocale, iPivotYear, iDefaultYear);
++           instantMillis, chrono, iLocale, iPivotYear, iDefaultYear);
++
+         int newPos = parser.parseInto(bucket, text, position);
+         instant.setMillis(bucket.computeMillis(false, text));
+         if (iOffsetParsed && bucket.getOffsetInteger() != null) {
+             int parsedOffset = bucket.getOffsetInteger();
+             DateTimeZone parsedZone = DateTimeZone.forOffsetMillis(parsedOffset);
+             chrono = chrono.withZone(parsedZone);
+         } else if (bucket.getZone() != null) {
+             chrono = chrono.withZone(bucket.getZone());
+         }
+         instant.setChronology(chrono);
+         if (iZone != null) {
+             instant.setZone(iZone);
+         }
+         return newPos;
+     }

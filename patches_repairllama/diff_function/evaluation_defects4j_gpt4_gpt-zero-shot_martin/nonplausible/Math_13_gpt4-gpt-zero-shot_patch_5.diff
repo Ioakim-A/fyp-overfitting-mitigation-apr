@@ -1,0 +1,16 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c40b2f52-50f3-4a36-b644-0a38e2c246da_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/45278b24-1051-471c-be84-e45287c90494_fixed.java
+index 7559ebf..a52ade8 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c40b2f52-50f3-4a36-b644-0a38e2c246da_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/45278b24-1051-471c-be84-e45287c90494_fixed.java
+@@ -1,4 +1,8 @@
+     private RealMatrix squareRoot(RealMatrix m) {
+-            final EigenDecomposition dec = new EigenDecomposition(m);
+-            return dec.getSquareRoot();
++        EigenDecomposition dec = new EigenDecomposition(m);
++        RealMatrix D = dec.getD();
++        RealMatrix V = dec.getV();
++        RealMatrix sqrtD = D.scalarMultiply(0.5);
++        RealMatrix result = V.multiply(sqrtD).multiply(V.transpose());
++        return result;
+     }
+\ No newline at end of file

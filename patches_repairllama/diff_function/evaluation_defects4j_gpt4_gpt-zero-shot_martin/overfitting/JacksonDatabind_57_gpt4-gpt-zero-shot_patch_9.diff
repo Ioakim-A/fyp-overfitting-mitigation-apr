@@ -1,0 +1,17 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/466ad331-284f-4830-9f6a-96de20c348a6_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9ab8061d-99f0-42b7-b0d7-557e364f6d47_fixed.java
+index 2e75e15..35f4f50 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/466ad331-284f-4830-9f6a-96de20c348a6_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9ab8061d-99f0-42b7-b0d7-557e364f6d47_fixed.java
+@@ -1,9 +1,10 @@
+ public <T> MappingIterator<T> readValues(byte[] src, int offset, int length)
+     throws IOException, JsonProcessingException
+ {
+     if (_dataFormatReaders != null) {
+         return _detectBindAndReadValues(_dataFormatReaders.findFormat(src, offset, length), false);
+     }
+-        return _bindAndReadValues(_considerFilter(_parserFactory.createParser(src),
++    // fixed code
++    return _bindAndReadValues(_considerFilter(_parserFactory.createParser(new ByteArrayInputStream(src, offset, length)),
+             true));
+ }
+\ No newline at end of file

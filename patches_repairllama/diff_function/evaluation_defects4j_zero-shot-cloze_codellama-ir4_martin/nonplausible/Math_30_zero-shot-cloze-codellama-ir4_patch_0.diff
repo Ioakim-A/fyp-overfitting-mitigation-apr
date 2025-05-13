@@ -1,0 +1,29 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f38d76c3-7d34-49f9-b2b2-4ffb287212c2_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/71cf80c0-d504-4a31-9797-764e1e3b90c8_fixed.java
+index 1e5a2da..c7a242f 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f38d76c3-7d34-49f9-b2b2-4ffb287212c2_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/71cf80c0-d504-4a31-9797-764e1e3b90c8_fixed.java
+@@ -1,17 +1,18 @@
+     private double calculateAsymptoticPValue(final double Umin,
+                                              final int n1,
+                                              final int n2)
+         throws ConvergenceException, MaxCountExceededException {
+-
++// buggy code
++//        final int n1n2prod = n1 * n2;
++//        final double EU = n1n2prod / 2.0;
++//        final double VarU = n1n2prod * (n1 + n2 + 1) / 12.0;
++//        final double z = (Umin - EU) / FastMath.sqrt(VarU);
++//        final NormalDistribution standardNormal = new NormalDistribution(0, 1);
++//        return 2 * standardNormal.cumulativeProbability(z);
+         final int n1n2prod = n1 * n2;
+-
+-        // http://en.wikipedia.org/wiki/Mann%E2%80%93Whitney_U#Normal_approximation
+         final double EU = n1n2prod / 2.0;
+         final double VarU = n1n2prod * (n1 + n2 + 1) / 12.0;
+-
+         final double z = (Umin - EU) / FastMath.sqrt(VarU);
+-
+         final NormalDistribution standardNormal = new NormalDistribution(0, 1);
+-
+         return 2 * standardNormal.cumulativeProbability(z);
+     }

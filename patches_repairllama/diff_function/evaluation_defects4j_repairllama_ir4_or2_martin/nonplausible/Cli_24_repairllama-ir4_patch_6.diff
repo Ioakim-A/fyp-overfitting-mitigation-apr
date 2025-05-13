@@ -1,0 +1,54 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b4b995fd-31e4-41f5-a1bd-066e4b1403f2_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/194aa60b-a0cb-4958-8f53-0690f541ac08_fixed.java
+index a66e5f8..7c6477e 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b4b995fd-31e4-41f5-a1bd-066e4b1403f2_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/194aa60b-a0cb-4958-8f53-0690f541ac08_fixed.java
+@@ -1,44 +1,35 @@
+     protected StringBuffer renderWrappedText(StringBuffer sb, int width, 
+                                              int nextLineTabStop, String text)
+     {
+         int pos = findWrapPos(text, width, 0);
+-
+         if (pos == -1)
+         {
+             sb.append(rtrim(text));
+-
+             return sb;
+         }
+         sb.append(rtrim(text.substring(0, pos))).append(defaultNewLine);
+-
+         if (nextLineTabStop >= width)
+         {
+-            // stops infinite loop happening
+-            throw new IllegalStateException("Total width is less than the width of the argument and indent " +
+-                                            "- no room for the description");
++// buggy code
++//             throw new IllegalStateException("Total width is less than the width of the argument and indent " +
++//                                             "- no room for the description");
++           throw new IllegalStateException("Total width is less than the width of the argument " +
++                                            "and indent - no room for the description");
+         }
+-
+-        // all following lines must be padded with nextLineTabStop space 
+-        // characters
+         final String padding = createPadding(nextLineTabStop);
+-
+         while (true)
+         {
+             text = padding + text.substring(pos).trim();
+             pos = findWrapPos(text, width, 0);
+-
+             if (pos == -1)
+             {
+                 sb.append(text);
+-
+                 return sb;
+             }
+-            
+             if ( (text.length() > width) && (pos == nextLineTabStop - 1) ) 
+             {
+                 pos = width;
+             }
+-
+             sb.append(rtrim(text.substring(0, pos))).append(defaultNewLine);
+         }
+     }

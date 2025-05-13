@@ -1,0 +1,57 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/090cb5b5-8596-4f14-bf28-8a65658eb4c9_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/60b4d042-f69a-4395-92ab-7b2549f1e68b_fixed.java
+index 904dba7..2559149 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/090cb5b5-8596-4f14-bf28-8a65658eb4c9_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/60b4d042-f69a-4395-92ab-7b2549f1e68b_fixed.java
+@@ -1,46 +1,41 @@
+   private String format(JSError error, boolean warning) {
+-    // extract source excerpt
+     SourceExcerptProvider source = getSource();
+-    String sourceExcerpt = source == null ? null :
+-        excerpt.get(
++    String sourceExcerpt;
++    if (source != null) {
++      sourceExcerpt = excerpt.get(
+           source, error.sourceName, error.lineNumber, excerptFormatter);
+-
+-    // formatting the message
++    } else {
++      sourceExcerpt = null;
++    }
+     StringBuilder b = new StringBuilder();
+     if (error.sourceName != null) {
+       b.append(error.sourceName);
+       if (error.lineNumber > 0) {
+         b.append(':');
+         b.append(error.lineNumber);
+       }
+       b.append(": ");
+     }
+-
+     b.append(getLevelName(warning ? CheckLevel.WARNING : CheckLevel.ERROR));
+     b.append(" - ");
+-
+     b.append(error.description);
+     b.append('\n');
+     if (sourceExcerpt != null) {
+       b.append(sourceExcerpt);
+       b.append('\n');
+       int charno = error.getCharno();
+-
+-      // padding equal to the excerpt and arrow at the end
+-      // charno == sourceExpert.length() means something is missing
+-      // at the end of the line
+       if (excerpt.equals(LINE)
+           && 0 <= charno && charno < sourceExcerpt.length()) {
+         for (int i = 0; i < charno; i++) {
+           char c = sourceExcerpt.charAt(i);
+           if (Character.isWhitespace(c)) {
+             b.append(c);
+           } else {
+             b.append(' ');
+           }
+         }
+         b.append("^\n");
+       }
+     }
+     return b.toString();
+   }

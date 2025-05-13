@@ -1,0 +1,36 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/041d2bf4-25d3-429c-8590-114b83dd1359_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2e624847-8c8d-4883-8d91-e97ee3cda083_fixed.java
+index 5aa01c2..c912fc0 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/041d2bf4-25d3-429c-8590-114b83dd1359_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2e624847-8c8d-4883-8d91-e97ee3cda083_fixed.java
+@@ -1,29 +1,29 @@
+     public long readBits(final int count) throws IOException {
+         if (count < 0 || count > MAXIMUM_CACHE_SIZE) {
+             throw new IllegalArgumentException("count must not be negative or greater than " + MAXIMUM_CACHE_SIZE);
+         }
++       if (bitsCachedSize < count) {
+             while (bitsCachedSize < count) {
+                 final long nextByte = in.read();
+                 if (nextByte < 0) {
+                     return nextByte;
+                 }
+                 if (byteOrder == ByteOrder.LITTLE_ENDIAN) {
+                     bitsCached |= (nextByte << bitsCachedSize);
+                 } else {
+                     bitsCached <<= 8;
+                     bitsCached |= nextByte;
+                 }
+                 bitsCachedSize += 8;
+             }
+-            // bitsCachedSize >= 57 and left-shifting it 8 bits would cause an overflow
+-        
++        }
+         final long bitsOut;
+         if (byteOrder == ByteOrder.LITTLE_ENDIAN) {
+             bitsOut = (bitsCached & MASKS[count]);
+             bitsCached >>>= count;
+         } else {
+             bitsOut = (bitsCached >> (bitsCachedSize - count)) & MASKS[count];
+         }
+         bitsCachedSize -= count;
+         return bitsOut;
+     }

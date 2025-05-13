@@ -1,0 +1,26 @@
+diff --git src/main/java/com/fasterxml/jackson/core/util/TextBuffer.java src/main/java/com/fasterxml/jackson/core/util/TextBuffer.java
+index e6f1cbc..731c48d 100644
+--- src/main/java/com/fasterxml/jackson/core/util/TextBuffer.java
++++ src/main/java/com/fasterxml/jackson/core/util/TextBuffer.java
+@@ -297,15 +297,17 @@ public final class TextBuffer
+     
+     public char[] getTextBuffer()
+     {
+-        // Are we just using shared input buffer?
+         if (_inputStart >= 0) return _inputBuffer;
+         if (_resultArray != null)  return _resultArray;
+         if (_resultString != null) {
+             return (_resultArray = _resultString.toCharArray());
+         }
+-        // Nope; but does it fit in just one segment?
+-        if (!_hasSegments)  return _currentSegment;
+-        // Nope, need to have/create a non-segmented array and return it
++// buggy code
++//        if (!_hasSegments)  return _currentSegment;
++//        StringBuilder sb = new StringBuilder();
++//        for (int i = 0; i < _segmentCount; i++) {
++//            sb.append(_segments[i]);
++//        }
+         return contentsAsArray();
+     }
+ 

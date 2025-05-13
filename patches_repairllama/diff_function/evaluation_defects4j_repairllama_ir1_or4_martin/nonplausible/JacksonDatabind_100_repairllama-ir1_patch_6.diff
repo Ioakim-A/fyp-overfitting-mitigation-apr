@@ -1,0 +1,28 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1811c881-b4d1-44bf-b40a-3934067d6db8_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/927e0352-f1b7-4353-8a60-d7c34e118049_fixed.java
+index 907c8cb..7a54cf7 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1811c881-b4d1-44bf-b40a-3934067d6db8_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/927e0352-f1b7-4353-8a60-d7c34e118049_fixed.java
+@@ -1,22 +1,18 @@
+-    public byte[] getBinaryValue(Base64Variant b64variant)
++    public byte[] getBinaryValue(Base64Variant base64Variant)
+         throws IOException, JsonParseException
+     {
+-        // Multiple possibilities...
+         JsonNode n = currentNode();
+         if (n != null) {
+-            // [databind#2096]: although `binaryValue()` works for real binary node
+-            // and embedded "POJO" node, coercion from TextNode may require variant, so:
+             byte[] data = n.binaryValue();
+             if (data != null) {
+                 return data;
+             }
+             if (n.isPojo()) {
+                 Object ob = ((POJONode) n).getPojo();
+                 if (ob instanceof byte[]) {
+                     return (byte[]) ob;
+                 }
+             }
+         }
+-        // otherwise return null to mark we have no binary content
+         return null;
+     }

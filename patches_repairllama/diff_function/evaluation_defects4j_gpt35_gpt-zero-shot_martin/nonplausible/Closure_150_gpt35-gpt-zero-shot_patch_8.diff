@@ -1,0 +1,32 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e4076e9a-0925-4608-8145-7a6136ec2cad_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b1bc4270-45dc-4bee-af4b-a1448f838c1a_fixed.java
+index 88f63e7..a0dc488 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e4076e9a-0925-4608-8145-7a6136ec2cad_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b1bc4270-45dc-4bee-af4b-a1448f838c1a_fixed.java
+@@ -1,24 +1,24 @@
+-    @Override public void visit(NodeTraversal t, Node n, Node parent) {
++    @Override 
++    public void visit(NodeTraversal t, Node n, Node parent) {
+       if (n == scope.getRootNode()) return;
+-
+       if (n.getType() == Token.LP && parent == scope.getRootNode()) {
+         handleFunctionInputs(parent);
+         return;
+       }
+       
+       attachLiteralTypes(n);
+       switch (n.getType()) {
+         case Token.FUNCTION:
+           if (parent.getType() == Token.NAME) {
+             return;
+           }
+           defineDeclaredFunction(n, parent);
+           break;
+         case Token.CATCH:
+           defineCatch(n, parent);
+           break;
+         case Token.VAR:
+           defineVar(n, parent);
+           break;
+       }
+     }
+\ No newline at end of file

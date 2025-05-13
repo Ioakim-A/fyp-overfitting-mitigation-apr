@@ -1,0 +1,27 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/29ebb8b0-934d-485a-9a3e-385b77b9c55e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cd98d407-e7e0-49c0-91ad-a5245e4a88eb_fixed.java
+index 7fb120e..788797c 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/29ebb8b0-934d-485a-9a3e-385b77b9c55e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cd98d407-e7e0-49c0-91ad-a5245e4a88eb_fixed.java
+@@ -1,16 +1,20 @@
+     /**
+      * Parse out a charset from a content type header. If the charset is not supported, returns null (so the default
+      * will kick in.)
+      * @param contentType e.g. "text/html; charset=EUC-JP"
+      * @return "EUC-JP", or null if not found. Charset is trimmed and uppercased.
+      */
+     static String getCharsetFromContentType(String contentType) {
+         if (contentType == null) return null;
+         Matcher m = charsetPattern.matcher(contentType);
+         if (m.find()) {
+             String charset = m.group(1).trim();
+-            charset = charset.toUpperCase(Locale.ENGLISH);
+-            return charset;
++// buggy code
++//            charset = charset.toUpperCase(Locale.ENGLISH);
++//            return charset;
++            if (charset.length() == 0) return null;
++            return charset.toUpperCase(Locale.ENGLISH);
++
+         }
+         return null;
+     }

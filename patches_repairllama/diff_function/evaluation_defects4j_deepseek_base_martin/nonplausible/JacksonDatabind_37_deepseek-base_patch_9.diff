@@ -1,0 +1,330 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c2f0f23a-8468-4163-b2c6-f8d1be0e5b7b_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d45c1a74-435f-4406-a97c-51df9d32a281_fixed.java
+index e5ad041..594b665 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c2f0f23a-8468-4163-b2c6-f8d1be0e5b7b_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d45c1a74-435f-4406-a97c-51df9d32a281_fixed.java
+@@ -1,19 +1,324 @@
+     @Override
+     protected JavaType _narrow(Class<?> subclass)
+     {
+         if (_class == subclass) {
+             return this;
+         }
+         // Should we check that there is a sub-class relationship?
+         // 15-Jan-2016, tatu: Almost yes, but there are some complications with
+         //    placeholder values, so no.
+         /*
+         if (!_class.isAssignableFrom(subclass)) {
+             throw new IllegalArgumentException("Class "+subclass.getName()+" not sub-type of "
+                     +_class.getName());
+         }
+         */
+         // 15-Jan-2015, tatu: Not correct; should really re-resolve...
+-        return new SimpleType(subclass, _bindings, _superClass, _superInterfaces,
++        return new SimpleJavaType(subclass, _valueHandler, _typeHandler, _asStatic);
++    }
++
++    @Override
++    protected JavaType _widen(Class<?> supertype)
++    {
++        if (_class == supertype) {
++            return this;
++        }
++        // Should we check that there is a sub-class relationship?
++        // 15-Jan-2016, tatu: Almost yes, but there are some complications with
++        //    placeholder values, so no.
++        /*
++        if (!supertype.isAssignableFrom(_class)) {
++            throw new IllegalArgumentException("Class "+_class.getName()+" not super-type of "
++                    +supertype.getName());
++        }
++        */
++        // 15-Jan-2015, tatu: Not correct; should really re-resolve...
++        return new SimpleJavaType(supertype, _valueHandler, _typeHandler, _asStatic);
++    }
++
++    @Override
++    protected JavaType _changeBaseType(JavaType newBaseType)
++    {
++        return new SimpleJavaType(_class, newBaseType, _valueHandler, _typeHandler, _asStatic);
++    }
++
++    @Override
++    protected JavaType _changeValueHandler(ValueHandler newValueHandler)
++    {
++        return new SimpleJavaType(_class, _baseType, newValueHandler, _typeHandler, _asStatic);
++    }
++
++    @Override
++    protected JavaType _changeTypeHandler(TypeHandler newTypeHandler)
++    {
++        return new SimpleJavaType(_class, _baseType, _valueHandler, newTypeHandler, _asStatic);
++    }
++
++    @Override
++    protected JavaType _changeAsStatic()
++    {
++        return new SimpleJavaType(_class, _baseType, _valueHandler, _typeHandler, !_asStatic);
++    }
++
++    @Override
++    public boolean equals(Object o)
++    {
++        if (o == this) {
++            return true;
++        }
++        if (o == null) {
++            return false;
++        }
++        if (o.getClass() != getClass()) {
++            return false;
++        }
++        SimpleJavaType other = (SimpleJavaType) o;
++        if (_class != other._class) {
++            return false;
++        }
++        if (_baseType != other._baseType) {
++            return false;
++        }
++        if (_valueHandler != other._valueHandler) {
++            return false;
++        }
++        if (_typeHandler != other._typeHandler) {
++            return false;
++        }
++        if (_asStatic != other._asStatic) {
++            return false;
++        }
++        return true;
++    }
++
++    @Override
++    public int hashCode()
++    {
++        int code = _class.hashCode();
++        code = code * 31 + _baseType.hashCode();
++        code = code * 31 + _valueHandler.hashCode();
++        code = code * 31 + _typeHandler.hashCode();
++        code = code * 31 + (_asStatic ? 1 : 0);
++        return code;
++    }
++
++    @Override
++    public String toString()
++    {
++        StringBuilder sb = new StringBuilder();
++        if (_asStatic) {
++            sb.append("static ");
++        }
++        sb.append(_class.getName());
++        if (_baseType != null) {
++            sb.append("<");
++            sb.append(_baseType.toString());
++            sb.append(">");
++        }
++        return sb.toString();
++    }
++}
++
++//src/main/java/com/fasterxml/jackson/databind/type/SimpleType.java
++package com.fasterxml.jackson.databind.type;
++
++import com.fasterxml.jackson.databind.JavaType;
++import com.fasterxml.jackson.databind.JsonMappingException;
++import com.fasterxml.jackson.databind.JsonNode;
++import com.fasterxml.jackson.databind.JsonSerializable;
++import com.fasterxml.jackson.databind.SerializerProvider;
++import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper;
++import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonValueFormat;
++import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonValueFormatVisitor;
++import com.fasterxml.jackson.databind.util.ClassUtil;
++import com.fasterxml.jackson.databind.util.RawValue;
++import com.fasterxml.jackson.databind.util.StdConverter;
++import com.fasterxml.jackson.databind.util.StdTypeResolverBuilder;
++import com.fasterxml.jackson.databind.util.StdValueInstantiator;
++import com.fasterxml.jackson.databind.util.TokenBuffer;
++import com.fasterxml.jackson.databind.util.TypeKey;
++import com.fasterxml.jackson.databind.util.TypeResolutionContext;
++import com.fasterxml.jackson.databind.util.TypeResolverBuilder;
++import com.fasterxml.jackson.databind.util.ValueInstantiator;
++import com.fasterxml.jackson.databind.util.ValueMatcher;
++import com.fasterxml.jackson.databind.util.ValueMatcherGenerator;
++import com.fasterxml.jackson.databind.util.ValueReader;
++import com.fasterxml.jackson.databind.util.ValueReaderGenerator;
++import com.fasterxml.jackson.databind.util.ValueWriter;
++import com.fasterxml.jackson.databind.util.ValueWriterGenerator;
++import com.fasterxml.jackson.databind.util.ViewMatcher;
++import com.fasterxml.jackson.databind.util.ViewMatcherGenerator;
++
++import java.io.IOException;
++import java.io.Serializable;
++import java.lang.reflect.Array;
++import java.lang.reflect.Constructor;
++import java.lang.reflect.Field;
++import java.lang.reflect.Method;
++import java.lang.reflect.Modifier;
++import java.lang.reflect.ParameterizedType;
++import java.lang.reflect.Type;
++import java.lang.reflect.TypeVariable;
++import java.lang.reflect.WildcardType;
++import java.util.ArrayList;
++import java.util.Arrays;
++import java.util.Collection;
++import java.util.Collections;
++import java.util.Comparator;
++import java.util.HashMap;
++import java.util.HashSet;
++import java.util.IdentityHashMap;
++import java.util.Iterator;
++import java.util.LinkedHashMap;
++import java.util.LinkedHashSet;
++import java.util.LinkedList;
++import java.util.List;
++import java.util.Map;
++import java.util.Set;
++import java.util.SortedMap;
++import java.util.SortedSet;
++import java.util.TreeMap;
++import java.util.TreeSet;
++import java.util.concurrent.ConcurrentHashMap;
++import java.util.concurrent.ConcurrentSkipListMap;
++import java.util.concurrent.ConcurrentSkipListSet;
++import java.util.concurrent.CopyOnWriteArrayList;
++import java.util.concurrent.CopyOnWriteArraySet;
++import java.util.concurrent.atomic.AtomicBoolean;
++import java.util.concurrent.atomic.AtomicInteger;
++import java.util.concurrent.atomic.AtomicIntegerArray;
++import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
++import java.util.concurrent.atomic.AtomicLong;
++import java.util.concurrent.atomic.AtomicLongArray;
++import java.util.concurrent.atomic.AtomicLongFieldUpdater;
++import java.util.concurrent.atomic.AtomicMarkableReference;
++import java.util.concurrent.atomic.AtomicReference;
++import java.util.concurrent.atomic.AtomicReferenceArray;
++import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
++import java.util.concurrent.atomic.AtomicStampedReference;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.atomic.LongBinaryOperator;
++import java.util.concurrent.atomic.LongAdder;
++import java.util.concurrent.atomic.LongAccumulator;
++import java.util.concurrent.locks.Condition;
++import
+                 _valueHandler, _typeHandler, _asStatic);
+     }

@@ -1,0 +1,45 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/244f81cb-9f96-4dba-a5b1-ef86854f9b50_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/600d5174-a98d-4527-aae4-125d6ada5178_fixed.java
+index 711e87d..aec9e97 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/244f81cb-9f96-4dba-a5b1-ef86854f9b50_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/600d5174-a98d-4527-aae4-125d6ada5178_fixed.java
+@@ -1,38 +1,27 @@
+     private void applyPaxHeadersToCurrentEntry(Map<String, String> headers) {
+-        /*
+-         * The following headers are defined for Pax.
+-         * atime, ctime, charset: cannot use these without changing TarArchiveEntry fields
+-         * mtime
+-         * comment
+-         * gid, gname
+-         * linkpath
+-         * size
+-         * uid,uname
+-         * SCHILY.devminor, SCHILY.devmajor: don't have setters/getters for those
+-         */
+         for (Entry<String, String> ent : headers.entrySet()){
+             String key = ent.getKey();
+             String val = ent.getValue();
+             if ("path".equals(key)){
+                 currEntry.setName(val);
+             } else if ("linkpath".equals(key)){
+                 currEntry.setLinkName(val);
+             } else if ("gid".equals(key)){
+-                currEntry.setGroupId(Integer.parseInt(val));
++               currEntry.setGroupId(Integer.parseInt(val, 10));
+             } else if ("gname".equals(key)){
+                 currEntry.setGroupName(val);
+             } else if ("uid".equals(key)){
+-                currEntry.setUserId(Integer.parseInt(val));
++                currEntry.setUserId(Integer.parseInt(val, 10));
+             } else if ("uname".equals(key)){
+                 currEntry.setUserName(val);
+             } else if ("size".equals(key)){
+                 currEntry.setSize(Long.parseLong(val));
+             } else if ("mtime".equals(key)){
+                 currEntry.setModTime((long) (Double.parseDouble(val) * 1000));
+             } else if ("SCHILY.devminor".equals(key)){
+                 currEntry.setDevMinor(Integer.parseInt(val));
+             } else if ("SCHILY.devmajor".equals(key)){
+                 currEntry.setDevMajor(Integer.parseInt(val));
+             }
+         }
+     }

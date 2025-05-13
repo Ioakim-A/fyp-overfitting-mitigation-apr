@@ -1,0 +1,26 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/21a289ae-d012-4e71-8ef5-f68512e81193_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d8c2ee38-4ba1-4dfd-ad34-bf0a00649641_fixed.java
+index 1ea204a..c3067ac 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/21a289ae-d012-4e71-8ef5-f68512e81193_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d8c2ee38-4ba1-4dfd-ad34-bf0a00649641_fixed.java
+@@ -1,17 +1,20 @@
+   private static String extractClassNameIfGoog(Node node, Node parent,
+       String functionName){
+     String className = null;
+     if (NodeUtil.isExprCall(parent)) {
+       Node callee = node.getFirstChild();
+       if (callee != null && callee.getType() == Token.GETPROP) {
+         String qualifiedName = callee.getQualifiedName();
+         if (functionName.equals(qualifiedName)) {
+           Node target = callee.getNext();
+-          if (target != null) {
++// buggy code
++//          if (target != null) {
++          if (target != null && target.getType() == Token.STR) {
++
+             className = target.getString();
+           }
+         }
+       }
+     }
+     return className;
+   }

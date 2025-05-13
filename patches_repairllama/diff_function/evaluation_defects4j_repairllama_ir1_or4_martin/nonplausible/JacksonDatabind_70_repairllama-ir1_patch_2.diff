@@ -1,0 +1,34 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ba6549c0-626d-4eed-ac7a-e667e573eec7_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/486ea827-10e3-4f2a-a621-60102796fde4_fixed.java
+index 3041bd5..30a0a6b 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ba6549c0-626d-4eed-ac7a-e667e573eec7_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/486ea827-10e3-4f2a-a621-60102796fde4_fixed.java
+@@ -1,28 +1,24 @@
+-    public void remove(SettableBeanProperty propToRm)
++    public void removeProperty(SettableBeanProperty propToRm)
+     {
+         ArrayList<SettableBeanProperty> props = new ArrayList<SettableBeanProperty>(_size);
+         String key = getPropertyName(propToRm);
+         boolean found = false;
+-
+         for (int i = 1, end = _hashArea.length; i < end; i += 2) {
+             SettableBeanProperty prop = (SettableBeanProperty) _hashArea[i];
+             if (prop == null) {
+                 continue;
+             }
+             if (!found) {
+-                // 09-Jan-2017, tatu: Important: must check name slot and NOT property name,
+-                //   as only former is lower-case in case-insensitive case
+                 found = key.equals(prop.getName());
+                 if (found) {
+-                    // need to leave a hole here
+                     _propsInOrder[_findFromOrdered(prop)] = null;
+                     continue;
+                 }
+             }
+             props.add(prop);
+         }
+         if (!found) {
+             throw new NoSuchElementException("No entry '"+propToRm.getName()+"' found, can't remove");
+         }
+         init(props);
+     }

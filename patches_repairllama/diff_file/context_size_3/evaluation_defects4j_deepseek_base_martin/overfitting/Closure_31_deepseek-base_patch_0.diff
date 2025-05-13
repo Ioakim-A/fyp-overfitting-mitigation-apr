@@ -1,0 +1,148 @@
+diff --git src/com/google/javascript/jscomp/Compiler.java src/com/google/javascript/jscomp/Compiler.java
+index b76bbb5..7d076f8 100644
+--- src/com/google/javascript/jscomp/Compiler.java
++++ src/com/google/javascript/jscomp/Compiler.java
+@@ -1235,7 +1235,6 @@ public class Compiler extends AbstractCompiler {
+    */
+   Node parseInputs() {
+     boolean devMode = options.devMode != DevMode.OFF;
+-
+     // If old roots exist (we are parsing a second time), detach each of the
+     // individual file parse trees.
+     if (externsRoot != null) {
+@@ -1244,24 +1243,18 @@ public class Compiler extends AbstractCompiler {
+     if (jsRoot != null) {
+       jsRoot.detachChildren();
+     }
+-
+     // Parse main js sources.
+     jsRoot = IR.block();
+     jsRoot.setIsSyntheticBlock(true);
+-
+     externsRoot = IR.block();
+     externsRoot.setIsSyntheticBlock(true);
+-
+     externAndJsRoot = IR.block(externsRoot, jsRoot);
+     externAndJsRoot.setIsSyntheticBlock(true);
+-
+     if (options.tracer.isOn()) {
+       tracker = new PerformanceTracker(jsRoot, options.tracer);
+       addChangeHandler(tracker.getCodeChangeHandler());
+     }
+-
+     Tracer tracer = newTracer("parseInputs");
+-
+     try {
+       // Parse externs sources.
+       for (CompilerInput input : externs) {
+@@ -1271,18 +1264,16 @@ public class Compiler extends AbstractCompiler {
+         }
+         externsRoot.addChildToBack(n);
+       }
+-
+       // Modules inferred in ProcessCommonJS pass.
+       if (options.transformAMDToCJSModules || options.processCommonJSModules) {
+         processAMDAndCommonJSModules();
+       }
+-
+       // Check if inputs need to be rebuilt from modules.
+       boolean staleInputs = false;
+-
+       // Check if the sources need to be re-ordered.
+       if (options.dependencyOptions.needsManagement() &&
+-          !options.skipAllPasses &&
++          options.transformAMDToCJSModules ||
++          options.processCommonJSModules ||
+           options.closurePass) {
+         for (CompilerInput input : inputs) {
+           // Forward-declare all the provided types, so that they
+@@ -1291,7 +1282,6 @@ public class Compiler extends AbstractCompiler {
+             getTypeRegistry().forwardDeclareType(provide);
+           }
+         }
+-
+         try {
+           inputs =
+               (moduleGraph == null ? new JSModuleGraph(modules) : moduleGraph)
+@@ -1300,7 +1290,6 @@ public class Compiler extends AbstractCompiler {
+         } catch (CircularDependencyException e) {
+           report(JSError.make(
+               JSModule.CIRCULAR_DEPENDENCY_ERROR, e.getMessage()));
+-
+           // If in IDE mode, we ignore the error and keep going.
+           if (hasErrors()) {
+             return null;
+@@ -1308,22 +1297,18 @@ public class Compiler extends AbstractCompiler {
+         } catch (MissingProvideException e) {
+           report(JSError.make(
+               MISSING_ENTRY_ERROR, e.getMessage()));
+-
+           // If in IDE mode, we ignore the error and keep going.
+           if (hasErrors()) {
+             return null;
+           }
+         }
+       }
+-
+       for (CompilerInput input : inputs) {
+         Node n = input.getAstRoot(this);
+-
+         // Inputs can have a null AST during initial parse.
+         if (n == null) {
+           continue;
+         }
+-
+         if (n.getJSDocInfo() != null) {
+           JSDocInfo info = n.getJSDocInfo();
+           if (info.isExterns()) {
+@@ -1332,9 +1317,7 @@ public class Compiler extends AbstractCompiler {
+             // the externs pile anyways.
+             externsRoot.addChildToBack(n);
+             input.setIsExtern(true);
+-
+             input.getModule().remove(input);
+-
+             externs.add(input);
+             staleInputs = true;
+           } else if (info.isNoCompile()) {
+@@ -1343,29 +1326,24 @@ public class Compiler extends AbstractCompiler {
+           }
+         }
+       }
+-
+       if (staleInputs) {
+         fillEmptyModules(modules);
+         rebuildInputsFromModules();
+       }
+-
+       // Build the AST.
+       for (CompilerInput input : inputs) {
+         Node n = input.getAstRoot(this);
+         if (n == null) {
+           continue;
+         }
+-
+         if (devMode) {
+           runSanityCheck();
+           if (hasErrors()) {
+             return null;
+           }
+         }
+-
+         if (options.sourceMapOutputPath != null ||
+             options.nameReferenceReportPath != null) {
+-
+           // Annotate the nodes in the tree with information from the
+           // input file. This information is used to construct the SourceMap.
+           SourceInformationAnnotator sia =
+@@ -1373,10 +1351,8 @@ public class Compiler extends AbstractCompiler {
+                   input.getName(), options.devMode != DevMode.OFF);
+           NodeTraversal.traverse(this, n, sia);
+         }
+-
+         jsRoot.addChildToBack(n);
+       }
+-
+       if (hasErrors()) {
+         return null;
+       }

@@ -1,0 +1,24 @@
+diff --git gson/src/main/java/com/google/gson/internal/bind/TypeAdapters.java gson/src/main/java/com/google/gson/internal/bind/TypeAdapters.java
+index 6a51c64..c2f0032 100644
+--- gson/src/main/java/com/google/gson/internal/bind/TypeAdapters.java
++++ gson/src/main/java/com/google/gson/internal/bind/TypeAdapters.java
+@@ -369,11 +369,17 @@ public final class TypeAdapters {
+       return null;
+     case NUMBER:
+       return new LazilyParsedNumber(in.nextString());
++    case STRING:
++      String stringValue = in.nextString();
++      try {
++        return Double.parseDouble(stringValue);
++      } catch (NumberFormatException e) {
++        throw new JsonSyntaxException("Expecting number, got: " + stringValue);
++      }
+     default:
+       throw new JsonSyntaxException("Expecting number, got: " + jsonToken);
+   }
+-    }
+-    @Override
++}    @Override
+     public void write(JsonWriter out, Number value) throws IOException {
+       out.value(value);
+     }

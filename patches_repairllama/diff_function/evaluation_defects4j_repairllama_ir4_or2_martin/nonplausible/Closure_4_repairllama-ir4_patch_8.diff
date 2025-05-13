@@ -1,0 +1,49 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cd5a0403-f500-4f20-aa4a-4c007af58032_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/38ce43b8-ec82-4d2f-87dd-353af74d24a0_fixed.java
+index 3840a76..a0cf724 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cd5a0403-f500-4f20-aa4a-4c007af58032_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/38ce43b8-ec82-4d2f-87dd-353af74d24a0_fixed.java
+@@ -1,29 +1,30 @@
+   JSType resolveInternal(ErrorReporter t, StaticScope<JSType> enclosing) {
+-    // TODO(user): Investigate whether it is really necessary to keep two
+-    // different mechanisms for resolving named types, and if so, which order
+-    // makes more sense. Now, resolution via registry is first in order to
+-    // avoid triggering the warnings built into the resolution via properties.
+     boolean resolved = resolveViaRegistry(t, enclosing);
++// buggy code
++//     if (detectImplicitPrototypeCycle()) {
++//       handleTypeCycle(t);
++//     }
++//     if (resolved) {
++//       super.resolveInternal(t, enclosing);
++//       finishPropertyContinuations();
++//       return registry.isLastGeneration() ?
++//           getReferencedType() : this;
++//     }
++//     resolveViaProperties(t, enclosing);
++//     if (detectImplicitPrototypeCycle()) {
++   if (!resolved) {
+       if (detectImplicitPrototypeCycle()) {
+         handleTypeCycle(t);
+       }
+-
+-    if (resolved) {
+-      super.resolveInternal(t, enclosing);
+-      finishPropertyContinuations();
+-      return registry.isLastGeneration() ?
+-          getReferencedType() : this;
+-    }
+-
+       resolveViaProperties(t, enclosing);
+-    if (detectImplicitPrototypeCycle()) {
++    }
++    if (!resolved && detectImplicitPrototypeCycle()) {
+       handleTypeCycle(t);
+     }
+-
+     super.resolveInternal(t, enclosing);
+     if (isResolved()) {
+       finishPropertyContinuations();
+     }
+     return registry.isLastGeneration() ?
+         getReferencedType() : this;
+   }

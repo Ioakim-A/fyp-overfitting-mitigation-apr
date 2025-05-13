@@ -1,0 +1,60 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cf520da7-cc7f-4d4e-ba60-f1972bf2939f_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/52c3e04b-b581-4bc8-aff3-11e2eea59a68_fixed.java
+index dfceb86..3773b38 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cf520da7-cc7f-4d4e-ba60-f1972bf2939f_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/52c3e04b-b581-4bc8-aff3-11e2eea59a68_fixed.java
+@@ -1,54 +1,24 @@
+-  String getReadableJSTypeName(Node n, boolean dereference) {
+-
+-    // The best type name is the actual type name.
+-
+-    // If we're analyzing a GETPROP, the property may be inherited by the
+-    // prototype chain. So climb the prototype chain and find out where
+-    // the property was originally defined.
+-    if (n.isGetProp()) {
+-      ObjectType objectType = getJSType(n.getFirstChild()).dereference();
+-      if (objectType != null) {
+-        String propName = n.getLastChild().getString();
+-        if (objectType.getConstructor() != null &&
+-            objectType.getConstructor().isInterface()) {
+-          objectType = FunctionType.getTopDefiningInterface(
+-              objectType, propName);
+-        } else {
+-          // classes
+-          while (objectType != null && !objectType.hasOwnProperty(propName)) {
+-            objectType = objectType.getImplicitPrototype();
++  public String getReadableJSTypeName(Node n, boolean dereference) {        }
+       }
+     }
+-
+-        // Don't show complex function names or anonymous types.
+-        // Instead, try to get a human-readable type name.
+-        if (objectType != null &&
+-            (objectType.getConstructor() != null ||
+-             objectType.isFunctionPrototypeType())) {
+-          return objectType.toString() + "." + propName;
+-        }
+-      }
+-    }
+-
+     JSType type = getJSType(n);
+     if (dereference) {
+       ObjectType dereferenced = type.dereference();
+       if (dereferenced != null) {
+         type = dereferenced;
+       }
+     }
+     if (type.isFunctionPrototypeType() ||
+         (type.toObjectType() != null &&
+          type.toObjectType().getConstructor() != null)) {
+       return type.toString();
+     }
+     String qualifiedName = n.getQualifiedName();
+     if (qualifiedName != null) {
+       return qualifiedName;
+     } else if (type.isFunctionType()) {
+-      // Don't show complex function names.
+       return "function";
+     } else {
+       return type.toString();
+     }
+   }

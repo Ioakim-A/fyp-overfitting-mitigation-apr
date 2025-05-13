@@ -1,0 +1,26 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/69254429-f0e2-4288-bc7f-b86a6ecdb16b_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/63f703d9-12c7-43b2-940d-44558ddc25e7_fixed.java
+index a4d475d..33cd56e 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/69254429-f0e2-4288-bc7f-b86a6ecdb16b_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/63f703d9-12c7-43b2-940d-44558ddc25e7_fixed.java
+@@ -1,19 +1,14 @@
+   private void visitGetProp(NodeTraversal t, Node n, Node parent) {
+-    // obj.prop or obj.method()
+-    // Lots of types can appear on the left, a call to a void function can
+-    // never be on the left. getPropertyType will decide what is acceptable
+-    // and what isn't.
+     Node property = n.getLastChild();
+     Node objNode = n.getFirstChild();
+     JSType childType = getJSType(objNode);
+-
+     if (childType.isDict()) {
+       report(t, property, TypeValidator.ILLEGAL_PROPERTY_ACCESS, "'.'", "dict");
+-    } else if (n.getJSType() != null && parent.isAssign()) {
+-      return;
++   } else if (childType.isFunctionPrototypeType()) {
++      report(t, property, TypeValidator.ILLEGAL_PROPERTY_ACCESS, "'.'", "prototype");
+     } else if (validator.expectNotNullOrUndefined(t, n, childType,
+         "No properties on this expression", getNativeType(OBJECT_TYPE))) {
+       checkPropertyAccess(childType, property.getString(), t, n);
+     }
+     ensureTyped(t, n);
+   }

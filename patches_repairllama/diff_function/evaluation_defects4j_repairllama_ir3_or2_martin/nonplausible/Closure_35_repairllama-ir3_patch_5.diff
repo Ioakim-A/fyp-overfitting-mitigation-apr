@@ -1,0 +1,45 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/502c2eb6-e96d-49e6-9a0c-7255f11d7090_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9947bca3-0927-4414-9f78-7b12054c1d4c_fixed.java
+index b108107..81f862b 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/502c2eb6-e96d-49e6-9a0c-7255f11d7090_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9947bca3-0927-4414-9f78-7b12054c1d4c_fixed.java
+@@ -1,25 +1,28 @@
+   private void inferPropertyTypesToMatchConstraint(
+       JSType type, JSType constraint) {
+     if (type == null || constraint == null) {
+       return;
+     }
+-
+     ObjectType constraintObj =
+         ObjectType.cast(constraint.restrictByNotNullOrUndefined());
+-    if (constraintObj != null && constraintObj.isRecordType()) {
+-      ObjectType objType = ObjectType.cast(type.restrictByNotNullOrUndefined());
+-      if (objType != null) {
+-        for (String prop : constraintObj.getOwnPropertyNames()) {
+-          JSType propType = constraintObj.getPropertyType(prop);
+-          if (!objType.isPropertyTypeDeclared(prop)) {
+-            JSType typeToInfer = propType;
+-            if (!objType.hasProperty(prop)) {
+-              typeToInfer =
+-                  getNativeType(VOID_TYPE).getLeastSupertype(propType);
++   if (constraintObj == null) {
++      return;
+     }
+-            objType.defineInferredProperty(prop, typeToInfer, null);
++    ObjectType typeObj = ObjectType.cast(type.restrictByNotNullOrUndefined());
++    if (typeObj == null) {
++      return;
+     }
++    for (String propertyName : constraintObj.getOwnPropertyNames()) {
++      JSType propertyType = constraintObj.getPropertyType(propertyName);
++      if (propertyType == null) {
++        continue;
+       }
++      JSType existingType = typeObj.getPropertyType(propertyName);
++      if (existingType == null) {
++        typeObj.defineInferredProperty(propertyName, propertyType);
++      } else {
++        inferPropertyTypesToMatchConstraint(
++            existingType, propertyType);
+       }
+     }
+   }

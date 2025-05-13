@@ -1,0 +1,46 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cb3d06bc-33ef-4225-a595-3cc85fd61edb_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3e7cfa99-74e1-4534-a782-d197a32f5bb5_fixed.java
+index b108107..d084e95 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cb3d06bc-33ef-4225-a595-3cc85fd61edb_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3e7cfa99-74e1-4534-a782-d197a32f5bb5_fixed.java
+@@ -1,25 +1,29 @@
+   private void inferPropertyTypesToMatchConstraint(
+       JSType type, JSType constraint) {
+     if (type == null || constraint == null) {
+       return;
+     }
+-
+     ObjectType constraintObj =
+         ObjectType.cast(constraint.restrictByNotNullOrUndefined());
+-    if (constraintObj != null && constraintObj.isRecordType()) {
+-      ObjectType objType = ObjectType.cast(type.restrictByNotNullOrUndefined());
+-      if (objType != null) {
+-        for (String prop : constraintObj.getOwnPropertyNames()) {
+-          JSType propType = constraintObj.getPropertyType(prop);
+-          if (!objType.isPropertyTypeDeclared(prop)) {
+-            JSType typeToInfer = propType;
+-            if (!objType.hasProperty(prop)) {
+-              typeToInfer =
+-                  getNativeType(VOID_TYPE).getLeastSupertype(propType);
++   if (constraintObj == null) {
++      return;
+     }
+-            objType.defineInferredProperty(prop, typeToInfer, null);
++    ObjectType typeObj = ObjectType.cast(type.restrictByNotNullOrUndefined());
++    if (typeObj == null) {
++      return;
+     }
++    for (String propertyName : constraintObj.getOwnPropertyNames()) {
++      JSType propertyType = constraintObj.getPropertyType(propertyName);
++      if (propertyType == null) {
++        continue;
+       }
++      JSType existingType = typeObj.getPropertyType(propertyName);
++      if (existingType == null) {
++        typeObj.defineInferredProperty(propertyName, propertyType);
++      } else if (existingType.isSubtype(propertyType)) {
++        continue;
++      } else if (propertyType.isSubtype(existingType)) {
++        typeObj.defineInferredProperty(propertyName, existingType);
+       }
+     }
+   }

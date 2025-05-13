@@ -1,0 +1,55 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/69af66a1-794e-4d82-809a-7b87561d7316_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7cc89c9a-a96d-41e1-9491-44fda7f8a3e6_fixed.java
+index c8ee48f..535ee9b 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/69af66a1-794e-4d82-809a-7b87561d7316_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7cc89c9a-a96d-41e1-9491-44fda7f8a3e6_fixed.java
+@@ -1,48 +1,40 @@
+     /**
+      * Escape constant fields into regular expression
+      * @param regex The destination regex
+      * @param value The source field
+      * @param unquote If true, replace two success quotes ('') with single quote (')
+      * @return The <code>StringBuilder</code>
+      */
+     private static StringBuilder escapeRegex(StringBuilder regex, String value, boolean unquote) {
+-        boolean wasWhite= false;
+-        for(int i= 0; i<value.length(); ++i) {
++        regex.append('\'');
++        for(int i=0; i<value.length(); i++) {
+             char c= value.charAt(i);
+-            if(Character.isWhitespace(c)) {
+-                if(!wasWhite) {
+-                    wasWhite= true;
+-                    regex.append("\\s*+");
+-                }
+-                continue;
+-            }
+-            wasWhite= false;
+             switch(c) {
+             case '\'':
+                 if(unquote) {
+                     if(++i==value.length()) {
+                         return regex;
+                     }
+                     c= value.charAt(i);
+                 }
+                 break;
+             case '?':
+             case '[':
+             case ']':
+             case '(':
+             case ')':
+             case '{':
+             case '}':
+             case '\\':
+             case '|':
+             case '*':
+             case '+':
+             case '^':
+             case '$':
+             case '.':
+                 regex.append('\\');
+             }
+             regex.append(c);
+         }
+         return regex;
+     }

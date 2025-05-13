@@ -1,0 +1,33 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/58dcc738-3446-48d3-8138-4dca98444adb_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/73d4db4f-e907-48bf-813e-057ba701279a_fixed.java
+index e8705ac..e893432 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/58dcc738-3446-48d3-8138-4dca98444adb_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/73d4db4f-e907-48bf-813e-057ba701279a_fixed.java
+@@ -1,24 +1,25 @@
+     /**
+      * There are two types of calls we are interested in calls without explicit
+      * "this" values (what we are call "free" calls) and direct call to eval.
+      */
+     private void annotateCalls(Node n) {
+       Preconditions.checkState(n.isCall());
+-
+       // Keep track of of the "this" context of a call.  A call without an
+       // explicit "this" is a free call.
+       Node first = n.getFirstChild();
+-
+       // ignore cast nodes.
++// buggy code
++      if (first == null) {
++        return;
++      }
+ 
+       if (!NodeUtil.isGet(first)) {
+         n.putBooleanProp(Node.FREE_CALL, true);
+       }
+-
+       // Keep track of the context in which eval is called. It is important
+       // to distinguish between "(0, eval)()" and "eval()".
+       if (first.isName() &&
+           "eval".equals(first.getString())) {
+         first.putBooleanProp(Node.DIRECT_EVAL, true);
+       }
+     }

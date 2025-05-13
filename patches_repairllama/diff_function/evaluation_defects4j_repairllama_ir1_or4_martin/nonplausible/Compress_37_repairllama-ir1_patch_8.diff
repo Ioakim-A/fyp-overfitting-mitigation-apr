@@ -1,0 +1,62 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6d2d85bf-f4e7-4b28-b194-d34793f83550_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2e981d9c-9842-46f5-8cdb-a6d763fb3cac_fixed.java
+index 17814ec..3e22671 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6d2d85bf-f4e7-4b28-b194-d34793f83550_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2e981d9c-9842-46f5-8cdb-a6d763fb3cac_fixed.java
+@@ -1,51 +1,47 @@
+-    Map<String, String> parsePaxHeaders(final InputStream i)
++    Map<String, String> parsePaxHeaders(final InputStream i) throws IOException {
+         throws IOException {
+         final Map<String, String> headers = new HashMap<String, String>(globalPaxHeaders);
+-        // Format is "length keyword=value\n";
+-        while(true){ // get length
++        while((ch = i.read()) != -1){ 
+             int ch;
+             int len = 0;
+             int read = 0;
+             while((ch = i.read()) != -1) {
+                 read++;
+                 if (ch == ' '){
+-                    // Get keyword
+                     final ByteArrayOutputStream coll = new ByteArrayOutputStream();
+                     while((ch = i.read()) != -1) {
+                         read++;
+-                        if (ch == '='){ // end of keyword
++                        if (ch == '='){ 
+                             final String keyword = coll.toString(CharsetNames.UTF_8);
+-                            // Get rest of entry
+                             final int restLen = len - read;
+-                            if (restLen == 1) { // only NL
++                            if (restLen == 1) { 
+                                 headers.remove(keyword);
+                             } else {
+                                 final byte[] rest = new byte[restLen];
+                                 final int got = IOUtils.readFully(i, rest);
+                                 if (got != restLen) {
+                                     throw new IOException("Failed to read "
+                                                           + "Paxheader. Expected "
+                                                           + restLen
+                                                           + " bytes, read "
+                                                           + got);
+                                 }
+-                                // Drop trailing NL
+                                 final String value = new String(rest, 0,
+                                                           restLen - 1, CharsetNames.UTF_8);
+                                 headers.put(keyword, value);
+                             }
+                             break;
+                         }
+                         coll.write((byte) ch);
+                     }
+-                    break; // Processed single header
++                    break; 
+                 }
+                 len *= 10;
+                 len += ch - '0';
+             }
+-            if (ch == -1){ // EOF
++            if (ch == -1){ 
+                 break;
+             }
+         }
+         return headers;
+     }

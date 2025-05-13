@@ -1,0 +1,40 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ede3ffc8-0a58-4c7a-8853-6b0410e83cb4_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2476c7d9-b465-492d-87b9-09db60708c08_fixed.java
+index b450ee6..1f20916 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ede3ffc8-0a58-4c7a-8853-6b0410e83cb4_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2476c7d9-b465-492d-87b9-09db60708c08_fixed.java
+@@ -1,32 +1,21 @@
+    public JsonSerializer<?> createContextual(SerializerProvider serializers,
+             BeanProperty property) throws JsonMappingException
+     {
+         if (property != null) {
+             JsonFormat.Value format = serializers.getAnnotationIntrospector().findFormat((Annotated)property.getMember());
+             if (format != null) {
+-
+-            	// Simple case first: serialize as numeric timestamp?
+                 JsonFormat.Shape shape = format.getShape();
+                 if (shape.isNumeric()) {
+-                    return withFormat(Boolean.TRUE, null);
++                    return this;
+                 }
+-
+                 if (format.getShape() == JsonFormat.Shape.STRING) {
+                     TimeZone tz = format.getTimeZone();
+                     final String pattern = format.hasPattern()
+                                     ? format.getPattern()
+                                     : StdDateFormat.DATE_FORMAT_STR_ISO8601;
+                     final Locale loc = format.hasLocale()
+                                     ? format.getLocale()
+                                     : serializers.getLocale();
+                     SimpleDateFormat df = new SimpleDateFormat(pattern, loc);
+                     if (tz == null) {
+-                        tz = serializers.getTimeZone();
+-                    }
+-                    df.setTimeZone(tz);
+-                    return withFormat(Boolean.FALSE, df);
+-                }
+-            }
+-        }
+-        return this;
+-    }
++                        tz = serializers
+\ No newline at end of file

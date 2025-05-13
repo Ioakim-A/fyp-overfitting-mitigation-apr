@@ -1,0 +1,87 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/35240c31-8151-4d58-b5d2-8cbd3880a1de_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/297bc147-cab1-4708-979d-384b442d8b44_fixed.java
+index be3dcc8..008827d 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/35240c31-8151-4d58-b5d2-8cbd3880a1de_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/297bc147-cab1-4708-979d-384b442d8b44_fixed.java
+@@ -1,41 +1,75 @@
+     private static StringBuilder escapeRegex(StringBuilder regex, String value, boolean unquote) {
++// buggy code
++//        boolean wasWhite= false;
++//        for(int i= 0; i<value.length(); ++i) {
++//            char c= value.charAt(i);
++//            if(Character.isWhitespace(c)) {
++//                if(!wasWhite) {
++//                    wasWhite= true;
++//                    regex.append("\\s*+");
++//                }
++//                continue;
++//            }
++//            wasWhite= false;
++//            switch(c) {
++//            case '\'':
++//                if(unquote) {
++//                    if(++i==value.length()) {
++//                        return regex;
++//                    }
++//                    c= value.charAt(i);
++//                }
++//                break;
++//            case '?':
++//            case '[':
++//            case ']':
++//            case '(':
++//            case ')':
++//            case '{':
++//            case '}':
++//            case '\\':
++//            case '|':
++//            case '*':
++//            case '+':
++//            case '^':
++//            case '$':
++//            case '.':
++//                regex.append('\\');
++//            }
++//            regex.append(c);
++//        }
++//        return regex;
+         boolean wasWhite= false;
+         for(int i= 0; i<value.length(); ++i) {
+             char c= value.charAt(i);
+             if(Character.isWhitespace(c)) {
+-                if(!wasWhite) {
+-                    wasWhite= true;
+-                    regex.append("\\s*+");
+-                }
+-                continue;
+-            }
+-            wasWhite= false;
++                if(!was
+             switch(c) {
+             case '\'':
+                 if(unquote) {
+                     if(++i==value.length()) {
+                         return regex;
+                     }
+                     c= value.charAt(i);
+                 }
+                 break;
+             case '?':
+             case '[':
+             case ']':
+             case '(':
+             case ')':
+             case '{':
+             case '}':
+             case '\\':
+             case '|':
+             case '*':
+             case '+':
+             case '^':
+             case '$':
+             case '.':
+                 regex.append('\\');
+             }
+             regex.append(c);
+         }
+         return regex;
+     }

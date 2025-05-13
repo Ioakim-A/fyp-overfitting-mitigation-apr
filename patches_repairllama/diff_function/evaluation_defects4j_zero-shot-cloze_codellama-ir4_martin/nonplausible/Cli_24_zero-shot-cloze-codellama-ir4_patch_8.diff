@@ -1,0 +1,52 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bba89dc9-7f8e-4a71-b794-cab9209cad64_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6c6793f8-c453-45e9-be53-9e9ce9515b41_fixed.java
+index a66e5f8..a723e1c 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bba89dc9-7f8e-4a71-b794-cab9209cad64_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6c6793f8-c453-45e9-be53-9e9ce9515b41_fixed.java
+@@ -1,44 +1,35 @@
+     protected StringBuffer renderWrappedText(StringBuffer sb, int width, 
+                                              int nextLineTabStop, String text)
+     {
+         int pos = findWrapPos(text, width, 0);
+-
+         if (pos == -1)
+         {
+             sb.append(rtrim(text));
+-
+             return sb;
+         }
+         sb.append(rtrim(text.substring(0, pos))).append(defaultNewLine);
+-
+         if (nextLineTabStop >= width)
+         {
+-            // stops infinite loop happening
++// buggy code
++//            throw new IllegalStateException("Total width is less than the width of the argument and indent " +
++//                                            "- no room for the description");
+            throw new IllegalStateException("Total width is less than the width of the argument and indent " +
+                                             "- no room for the description");
+         }
+-
+-        // all following lines must be padded with nextLineTabStop space 
+-        // characters
+         final String padding = createPadding(nextLineTabStop);
+-
+         while (true)
+         {
+             text = padding + text.substring(pos).trim();
+             pos = findWrapPos(text, width, 0);
+-
+             if (pos == -1)
+             {
+                 sb.append(text);
+-
+                 return sb;
+             }
+-            
+             if ( (text.length() > width) && (pos == nextLineTabStop - 1) ) 
+             {
+                 pos = width;
+             }
+-
+             sb.append(rtrim(text.substring(0, pos))).append(defaultNewLine);
+         }
+     }

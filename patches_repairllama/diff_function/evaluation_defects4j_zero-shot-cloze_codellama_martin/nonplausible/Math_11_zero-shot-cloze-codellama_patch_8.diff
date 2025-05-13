@@ -1,0 +1,25 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e63a70c3-76d9-482b-a9b8-799da3d134cd_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d245e535-ae09-462e-9423-aaebc6c76e70_fixed.java
+index 73ac894..ca206dc 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e63a70c3-76d9-482b-a9b8-799da3d134cd_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d245e535-ae09-462e-9423-aaebc6c76e70_fixed.java
+@@ -1,10 +1,19 @@
+     public double density(final double[] vals) throws DimensionMismatchException {
+         final int dim = getDimension();
+         if (vals.length != dim) {
+             throw new DimensionMismatchException(vals.length, dim);
+         }
++       return
++            FastMath.pow(covarianceMatrixDeterminant, -0.5) *
++            getExponentTerm(vals);
++    }
+ 
+-        return FastMath.pow(2 * FastMath.PI, -dim / 2) *
++    public double density(final double[][] vals) throws DimensionMismatchException {
++        final int dim = getDimension();
++        if (vals.length != dim || vals[0].length != dim) {
++            throw new DimensionMismatchException(vals.length, dim);
++        }
++        return
+             FastMath.pow(covarianceMatrixDeterminant, -0.5) *
+             getExponentTerm(vals);
+     }

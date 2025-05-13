@@ -1,0 +1,51 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b02dee8f-8474-4740-bb4f-910b7d4e3f8d_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4b2b3f75-18eb-4dc3-b900-44ff9999dc87_fixed.java
+index 81cea7b..acd65b2 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b02dee8f-8474-4740-bb4f-910b7d4e3f8d_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4b2b3f75-18eb-4dc3-b900-44ff9999dc87_fixed.java
+@@ -1,39 +1,37 @@
+     protected boolean equal(
+         EvalContext context,
+         Expression left,
+         Expression right) 
+     {
+         Object l = left.compute(context);
+         Object r = right.compute(context);
+-
+-//        System.err.println("COMPARING: " +
+-//            (l == null ? "null" : l.getClass().getName()) + " " +
+-//            (r == null ? "null" : r.getClass().getName()));
+-
++// buggy code
++//        if (l instanceof InitialContext || l instanceof SelfContext) {
++//            l = ((EvalContext) l).getSingleNodePointer();
++//        }
++//        if (r instanceof InitialContext || r instanceof SelfContext) {
++//            r = ((EvalContext) r).getSingleNodePointer();
++//        }
+         if (l instanceof InitialContext || l instanceof SelfContext) {
+             l = ((EvalContext) l).getSingleNodePointer();
+         }
+-
+         if (r instanceof InitialContext || r instanceof SelfContext) {
+             r = ((EvalContext) r).getSingleNodePointer();
+         }
+-
+         if (l instanceof Collection) {
+             l = ((Collection) l).iterator();
+         }
+-
+         if (r instanceof Collection) {
+             r = ((Collection) r).iterator();
+         }
+-
+         if ((l instanceof Iterator) && !(r instanceof Iterator)) {
+             return contains((Iterator) l, r);
+         }
+         if (!(l instanceof Iterator) && (r instanceof Iterator)) {
+             return contains((Iterator) r, l);
+         }
+         if (l instanceof Iterator && r instanceof Iterator) {
+             return findMatch((Iterator) l, (Iterator) r);
+         }
+         return equal(l, r);
+     }

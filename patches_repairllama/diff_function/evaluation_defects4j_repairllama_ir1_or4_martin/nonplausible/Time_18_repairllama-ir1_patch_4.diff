@@ -1,0 +1,36 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/251d95a2-9dbf-433d-ac7f-25a60e9f484a_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/621c92b5-eb5e-4e6d-a2ad-ae5ff577c46c_fixed.java
+index be2af16..6f6f5e6 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/251d95a2-9dbf-433d-ac7f-25a60e9f484a_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/621c92b5-eb5e-4e6d-a2ad-ae5ff577c46c_fixed.java
+@@ -1,29 +1,26 @@
+-    public long getDateTimeMillis(int year, int monthOfYear, int dayOfMonth,
++    public long getDateTimeMillis
++        (int year, int monthOfYear, int dayOfMonth,
+          int hourOfDay, int minuteOfHour,
+          int secondOfMinute, int millisOfSecond)
+         throws IllegalArgumentException
+     {
+         Chronology base;
+         if ((base = getBase()) != null) {
+             return base.getDateTimeMillis
+                 (year, monthOfYear, dayOfMonth,
+                  hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);
+         }
+-
+-        // Assume date is Gregorian.
+         long instant;
+             instant = iGregorianChronology.getDateTimeMillis
+                 (year, monthOfYear, dayOfMonth,
+                  hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);
+         if (instant < iCutoverMillis) {
+-            // Maybe it's Julian.
+             instant = iJulianChronology.getDateTimeMillis
+                 (year, monthOfYear, dayOfMonth,
+                  hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);
+             if (instant >= iCutoverMillis) {
+-                // Okay, it's in the illegal cutover gap.
+                 throw new IllegalArgumentException("Specified date does not exist");
+             }
+         }
+         return instant;
+     }

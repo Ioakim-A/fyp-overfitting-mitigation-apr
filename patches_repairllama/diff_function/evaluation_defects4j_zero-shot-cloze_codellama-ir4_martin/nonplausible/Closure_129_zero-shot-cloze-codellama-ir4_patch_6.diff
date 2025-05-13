@@ -1,0 +1,29 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cd08f1cf-995e-46b6-8e25-6353c2204ae2_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/49050c2d-a58a-41c7-91f9-798477b3927c_fixed.java
+index 9f14d90..677afc3 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cd08f1cf-995e-46b6-8e25-6353c2204ae2_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/49050c2d-a58a-41c7-91f9-798477b3927c_fixed.java
+@@ -1,20 +1,15 @@
+     private void annotateCalls(Node n) {
+       Preconditions.checkState(n.isCall());
+-
+-      // Keep track of of the "this" context of a call.  A call without an
+-      // explicit "this" is a free call.
+       Node first = n.getFirstChild();
+-
+-      // ignore cast nodes.
+-
++// buggy code
++     if (NodeUtil.isGet(first)) {
++        n.putBooleanProp(Node.FREE_CALL, false);
++      }
+       if (!NodeUtil.isGet(first)) {
+         n.putBooleanProp(Node.FREE_CALL, true);
+       }
+-
+-      // Keep track of the context in which eval is called. It is important
+-      // to distinguish between "(0, eval)()" and "eval()".
+       if (first.isName() &&
+           "eval".equals(first.getString())) {
+         first.putBooleanProp(Node.DIRECT_EVAL, true);
+       }
+     }

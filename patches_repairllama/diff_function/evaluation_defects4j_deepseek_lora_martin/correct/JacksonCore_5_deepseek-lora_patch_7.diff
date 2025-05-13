@@ -1,0 +1,30 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fab5a920-e52f-403b-8ec5-e1a1cda82237_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c3c0c057-dbb5-4380-9601-a1c4867f2117_fixed.java
+index 39c4220..d489ad8 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fab5a920-e52f-403b-8ec5-e1a1cda82237_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c3c0c057-dbb5-4380-9601-a1c4867f2117_fixed.java
+@@ -1,21 +1,24 @@
+     private final static int _parseIndex(String str) {
+         final int len = str.length();
+         // [Issue#133]: beware of super long indexes; assume we never
+         // have arrays over 2 billion entries so ints are fine.
+         if (len == 0 || len > 10) {
+             return -1;
+         }
+         for (int i = 0; i < len; ++i) {
+-            char c = str.charAt(i++);
++// buggy code
++//            char c = str.charAt(i++);
++            char c = str.charAt(i); 
++
+             if (c > '9' || c < '0') {
+                 return -1;
+             }
+         }
+         if (len == 10) {
+             long l = NumberInput.parseLong(str);
+             if (l > Integer.MAX_VALUE) {
+                 return -1;
+             }
+         }
+         return NumberInput.parseInt(str);
+     }

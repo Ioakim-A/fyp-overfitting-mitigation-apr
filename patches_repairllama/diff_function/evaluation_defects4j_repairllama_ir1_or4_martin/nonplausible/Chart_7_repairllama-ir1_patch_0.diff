@@ -1,0 +1,85 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/115d12b8-5677-4156-b4e7-a5d57c2da5c1_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/971c75fb-9d55-4638-95c6-020e2aa725cd_fixed.java
+index e21a28f..bdc2ff8 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/115d12b8-5677-4156-b4e7-a5d57c2da5c1_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/971c75fb-9d55-4638-95c6-020e2aa725cd_fixed.java
+@@ -1,79 +1,71 @@
+-    private void updateBounds(TimePeriod period, int index) {
+-        
++    private synchronized void updateBounds(TimePeriod period, int index) {
+         long start = period.getStart().getTime();
+         long end = period.getEnd().getTime();
+         long middle = start + ((end - start) / 2);
+-
+         if (this.minStartIndex >= 0) {
+             long minStart = getDataItem(this.minStartIndex).getPeriod()
+                 .getStart().getTime();
+             if (start < minStart) {
+                 this.minStartIndex = index;           
+             }
+         }
+         else {
+             this.minStartIndex = index;
+         }
+-        
+         if (this.maxStartIndex >= 0) {
+             long maxStart = getDataItem(this.maxStartIndex).getPeriod()
+                 .getStart().getTime();
+             if (start > maxStart) {
+                 this.maxStartIndex = index;           
+             }
+         }
+         else {
+             this.maxStartIndex = index;
+         }
+-        
+         if (this.minMiddleIndex >= 0) {
+             long s = getDataItem(this.minMiddleIndex).getPeriod().getStart()
+                 .getTime();
+             long e = getDataItem(this.minMiddleIndex).getPeriod().getEnd()
+                 .getTime();
+             long minMiddle = s + (e - s) / 2;
+             if (middle < minMiddle) {
+                 this.minMiddleIndex = index;           
+             }
+         }
+         else {
+             this.minMiddleIndex = index;
+         }
+-        
+         if (this.maxMiddleIndex >= 0) {
+             long s = getDataItem(this.minMiddleIndex).getPeriod().getStart()
+                 .getTime();
+             long e = getDataItem(this.minMiddleIndex).getPeriod().getEnd()
+                 .getTime();
+             long maxMiddle = s + (e - s) / 2;
+             if (middle > maxMiddle) {
+                 this.maxMiddleIndex = index;           
+             }
+         }
+         else {
+             this.maxMiddleIndex = index;
+         }
+-        
+         if (this.minEndIndex >= 0) {
+             long minEnd = getDataItem(this.minEndIndex).getPeriod().getEnd()
+                 .getTime();
+             if (end < minEnd) {
+                 this.minEndIndex = index;           
+             }
+         }
+         else {
+             this.minEndIndex = index;
+         }
+-       
+         if (this.maxEndIndex >= 0) {
+             long maxEnd = getDataItem(this.maxEndIndex).getPeriod().getEnd()
+                 .getTime();
+             if (end > maxEnd) {
+                 this.maxEndIndex = index;           
+             }
+         }
+         else {
+             this.maxEndIndex = index;
+         }
+-        
+     }

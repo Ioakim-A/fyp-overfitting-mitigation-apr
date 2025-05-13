@@ -1,0 +1,45 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ba69b974-41c1-4b37-ab7c-91ab68893478_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4e66076c-0d97-41b8-9ed6-0ff4d0a923fe_fixed.java
+index 351a97a..22e4236 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ba69b974-41c1-4b37-ab7c-91ab68893478_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4e66076c-0d97-41b8-9ed6-0ff4d0a923fe_fixed.java
+@@ -1,18 +1,38 @@
+     /**
+      * Tests the list for equality with another object (typically also a list).
+      *
+      * @param obj  the other object (<code>null</code> permitted).
+      *
+      * @return A boolean.
+      */
+     public boolean equals(Object obj) {
+-
+         if (obj == this) {
+             return true;
+         }
+         if (!(obj instanceof ShapeList)) {
+             return false;
+         }
+-        return super.equals(obj);
++        ShapeList other = (ShapeList) obj;
++        if (other.size() != size()) {
++            return false;
++        }
++        for (int i = 0; i < size(); i++) {
++            if (!get(i).equals(other.get(i))) {
++                return false;
++            }
++        }
++        return true;
++    }
+ 
++    /**
++     * Returns a hash code value for the object.
++     *
++     * @return A hash code value for this object.
++     */
++    public int hashCode() {
++        int hash = 0;
++        for (int i = 0; i < size(); i++) {
++            hash += get(i).hashCode();
++        }
++        return hash;
+     }

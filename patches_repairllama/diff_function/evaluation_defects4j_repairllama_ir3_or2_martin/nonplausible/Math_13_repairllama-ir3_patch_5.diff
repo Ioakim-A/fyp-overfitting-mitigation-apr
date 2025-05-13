@@ -1,0 +1,26 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ceeda346-f09d-4bae-9adb-a15452ac4510_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8f8ca60d-3c64-41d3-98f5-6b1a51a3da72_fixed.java
+index 7559ebf..4111118 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ceeda346-f09d-4bae-9adb-a15452ac4510_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8f8ca60d-3c64-41d3-98f5-6b1a51a3da72_fixed.java
+@@ -1,4 +1,19 @@
+     private RealMatrix squareRoot(RealMatrix m) {
+-            final EigenDecomposition dec = new EigenDecomposition(m);
+-            return dec.getSquareRoot();
++       if (m.getRowDimension() != m.getColumnDimension()) {
++            throw new MathIllegalArgumentException(LocalizedCoreFormats.DIMENSIONS_MISMATCH,
++                    m.getRowDimension(), m.getColumnDimension());
++        }
++        if (m.getRowDimension() == 0) {
++            return new Array2DRowRealMatrix(0, 0);
++        }
++        if (m.getRowDimension() == 1) {
++            return new Array2DRowRealMatrix(1, 1, Math.sqrt(m.getEntry(0, 0)));
++        }
++        if (m.getRowDimension() == 2) {
++            final double a = m.getEntry(0, 0);
++            final double b = m.getEntry(0, 1);
++            final double c = m.getEntry(1, 0);
++            final double d = m.getEntry(1, 1);
++            final double det = a * d - b * c;
++            if (det == 0) {
+                    }

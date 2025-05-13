@@ -1,0 +1,47 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d95477f9-6666-4a3c-8fd9-f7b704c89693_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7f26d902-62d4-4f02-9140-d8b51bde4117_fixed.java
+index 7dc89ed..fa88395 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d95477f9-6666-4a3c-8fd9-f7b704c89693_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7f26d902-62d4-4f02-9140-d8b51bde4117_fixed.java
+@@ -1,20 +1,42 @@
+         boolean anyOtherEndTag(Token t, HtmlTreeBuilder tb) {
++// buggy code
++//            String name = t.asEndTag().normalName();
++//            ArrayList<Element> stack = tb.getStack();
++//            for (int pos = stack.size() -1; pos >= 0; pos--) {
++//                Element node = stack.get(pos);
++//                if (node.nodeName().equals(name)) {
++//                    tb.generateImpliedEndTags(name);
++//                    if (!name.equals(tb.currentElement().nodeName()))
++//                        tb.error(this);
++//                    tb.popStackToClose(name);
++//                    break;
++//                } else {
++//                    if (tb.isSpecial(node)) {
++//                        tb.error(this);
++//                        return false;
++//                    }
++//                }
++//            }
++//            return true;
++        }
++
++        boolean anyOtherEndTag(Token t, HtmlTreeBuilder tb) {
+             String name = t.asEndTag().normalName();
+             ArrayList<Element> stack = tb.getStack();
+             for (int pos = stack.size() -1; pos >= 0; pos--) {
+                 Element node = stack.get(pos);
+                 if (node.nodeName().equals(name)) {
+                     tb.generateImpliedEndTags(name);
+                     if (!name.equals(tb.currentElement().nodeName()))
+                         tb.error(this);
+                     tb.popStackToClose(name);
+                     break;
+                 } else {
+                     if (tb.isSpecial(node)) {
+                         tb.error(this);
+                         return false;
+                     }
+                 }
+             }
+             return true;
+         }

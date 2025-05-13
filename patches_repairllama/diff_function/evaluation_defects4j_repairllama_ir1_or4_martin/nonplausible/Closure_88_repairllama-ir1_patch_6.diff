@@ -1,0 +1,48 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/426e6622-90ba-4595-9068-7ab19cfcd29f_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7cb10a6c-fca9-412d-9ded-dd61d2778084_fixed.java
+index ca2992e..82a8b4b 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/426e6622-90ba-4595-9068-7ab19cfcd29f_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7cb10a6c-fca9-412d-9ded-dd61d2778084_fixed.java
+@@ -1,25 +1,37 @@
+   private VariableLiveness isVariableReadBeforeKill(
+       Node n, String variable) {
+     if (NodeUtil.isName(n) && variable.equals(n.getString())) {
+       if (NodeUtil.isLhs(n, n.getParent())) {
+-        // The expression to which the assignment is made is evaluated before
+-        // the RHS is evaluated (normal left to right evaluation) but the KILL
+-        // occurs after the RHS is evaluated.
+         return VariableLiveness.KILL;
+       } else {
+         return VariableLiveness.READ;
+       }
+     }
+-
+-    // Expressions are evaluated left-right, depth first.
+     for (Node child = n.getFirstChild();
+         child != null; child = child.getNext()) {
+-      if (!ControlFlowGraph.isEnteringNewCfgNode(child)) { // Not a FUNCTION
++      VariableLiveness state = isVariableReadBeforeKill(child, variable);
++      if (state != VariableLiveness.MAYBE_LIVE) {
++        return state;
++      }
++    }
++    return VariableLiveness.MAYBE_LIVE;
++  private VariableLiveness isVariableReadBeforeKill(
++      Node n, String variable) {
++    if (NodeUtil.isName(n) && variable.equals(n.getString())) {
++      if (NodeUtil.isLhs(n, n.getParent())) {
++        return VariableLiveness.KILL;
++      } else {
++        return VariableLiveness.READ;
++      }
++    }
++    for (Node child = n.getFirstChild();
++        child != null; child = child.getNext()) {
++      if (!ControlFlowGraph.isEnteringNewCfgNode(child)) { 
+         VariableLiveness state = isVariableReadBeforeKill(child, variable);
+         if (state != VariableLiveness.MAYBE_LIVE) {
+           return state;
+         }
+       }
+     }
+     return VariableLiveness.MAYBE_LIVE;
+   }

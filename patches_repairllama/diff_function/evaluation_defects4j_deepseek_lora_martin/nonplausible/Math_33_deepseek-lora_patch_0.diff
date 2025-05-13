@@ -1,0 +1,54 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e268d09e-43ef-409a-91df-86cc3d051ea4_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2502b81c-f26b-4ca7-9214-f0f38f756913_fixed.java
+index 56b2d66..25e1021 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e268d09e-43ef-409a-91df-86cc3d051ea4_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2502b81c-f26b-4ca7-9214-f0f38f756913_fixed.java
+@@ -1,45 +1,42 @@
+     /**
+      * Removes the phase 1 objective function, positive cost non-artificial variables,
+      * and the non-basic artificial variables from this tableau.
+      */
+     protected void dropPhase1Objective() {
+         if (getNumObjectiveFunctions() == 1) {
+             return;
+         }
+-
+         List<Integer> columnsToDrop = new ArrayList<Integer>();
+         columnsToDrop.add(0);
+-
+         // positive cost non-artificial variables
+         for (int i = getNumObjectiveFunctions(); i < getArtificialVariableOffset(); i++) {
+             final double entry = tableau.getEntry(0, i);
+-            if (Precision.compareTo(entry, 0d, maxUlps) > 0) {
++// buggy code
++//            if (Precision.compareTo(entry, 0d, maxUlps) > 0) {
++            if (Precision.compareTo(entry, 0d) > 0) {
++
+                 columnsToDrop.add(i);
+             }
+         }
+-
+         // non-basic artificial variables
+         for (int i = 0; i < getNumArtificialVariables(); i++) {
+           int col = i + getArtificialVariableOffset();
+           if (getBasicRow(col) == null) {
+             columnsToDrop.add(col);
+           }
+         }
+-
+         double[][] matrix = new double[getHeight() - 1][getWidth() - columnsToDrop.size()];
+         for (int i = 1; i < getHeight(); i++) {
+           int col = 0;
+           for (int j = 0; j < getWidth(); j++) {
+             if (!columnsToDrop.contains(j)) {
+               matrix[i - 1][col++] = tableau.getEntry(i, j);
+             }
+           }
+         }
+-
+         for (int i = columnsToDrop.size() - 1; i >= 0; i--) {
+           columnLabels.remove((int) columnsToDrop.get(i));
+         }
+-
+         this.tableau = new Array2DRowRealMatrix(matrix);
+         this.numArtificialVariables = 0;
+     }

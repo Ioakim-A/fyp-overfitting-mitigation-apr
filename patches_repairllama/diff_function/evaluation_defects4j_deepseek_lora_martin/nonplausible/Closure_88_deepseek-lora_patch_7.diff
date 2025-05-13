@@ -1,0 +1,41 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6879fe8d-73d2-4d72-b4c7-b9b5c14c8db0_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/62a1e133-caab-4f08-9099-7f380683a611_fixed.java
+index 9353941..848b99f 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6879fe8d-73d2-4d72-b4c7-b9b5c14c8db0_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/62a1e133-caab-4f08-9099-7f380683a611_fixed.java
+@@ -1,30 +1,32 @@
+   /**
+    * Give an expression and a variable. It returns READ, if the first
+    * reference of that variable is a read. It returns KILL, if the first
+    * reference of that variable is an assignment. It returns MAY_LIVE otherwise.
+    */
+   private VariableLiveness isVariableReadBeforeKill(
+       Node n, String variable) {
+     if (NodeUtil.isName(n) && variable.equals(n.getString())) {
+       if (NodeUtil.isLhs(n, n.getParent())) {
+-        // The expression to which the assignment is made is evaluated before
+-        // the RHS is evaluated (normal left to right evaluation) but the KILL
+-        // occurs after the RHS is evaluated.
++// buggy code
++//        // The expression to which the assignment is made is evaluated before
++//        // the RHS is evaluated (normal left to right evaluation) but the KILL
++//        // occurs after the RHS is evaluated.
++        return VariableLiveness.MAY_LIVE;
++
+         return VariableLiveness.KILL;
+       } else {
+         return VariableLiveness.READ;
+       }
+     }
+-
+     // Expressions are evaluated left-right, depth first.
+     for (Node child = n.getFirstChild();
+         child != null; child = child.getNext()) {
+       if (!ControlFlowGraph.isEnteringNewCfgNode(child)) { // Not a FUNCTION
+         VariableLiveness state = isVariableReadBeforeKill(child, variable);
+         if (state != VariableLiveness.MAYBE_LIVE) {
+           return state;
+         }
+       }
+     }
+     return VariableLiveness.MAYBE_LIVE;
+   }

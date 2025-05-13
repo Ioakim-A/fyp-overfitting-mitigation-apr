@@ -1,0 +1,45 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cdd474f4-dbbe-45d3-b539-aaf03da82179_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3eefac0b-f304-4734-acaa-19d6c54e08d8_fixed.java
+index 511ea30..ea7da24 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cdd474f4-dbbe-45d3-b539-aaf03da82179_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3eefac0b-f304-4734-acaa-19d6c54e08d8_fixed.java
+@@ -1,28 +1,24 @@
+     public double solve(double min, double max) throws MaxIterationsExceededException, 
+         FunctionEvaluationException {
+-        
+         clearResult();
+         verifyInterval(min, max);
+-        
+         double ret = Double.NaN;
+-        
+         double yMin = f.value(min);
+         double yMax = f.value(max);
+-        
+-        // Verify bracketing
+         double sign = yMin * yMax;
+-        if (sign >= 0) {
+-            // check if either value is close to a zero
+-                // neither value is close to zero and min and max do not bracket root.
+-                throw new IllegalArgumentException
+-                ("Function values at endpoints do not have different signs." +
+-                        "  Endpoints: [" + min + "," + max + "]" + 
+-                        "  Values: [" + yMin + "," + yMax + "]");
+-        } else {
+-            // solve using only the first endpoint as initial guess
++// buggy code
++//        if (sign >= 0) {
++//                throw new IllegalArgumentException
++//                ("Function values at endpoints do not have different signs." +
++//                        "  Endpoints: [" + min + "," + max + "]" + 
++//                        "  Values: [" + yMin + "," + yMax + "]");
++//        } else {
++//            ret = solve(min, yMin, max, yMax, min, yMin);
++//        }
++        if (sign > 0) {
+             ret = solve(min, yMin, max, yMax, min, yMin);
+-            // either min or max is a root
++        } else {
++            ret = solve(min, yMin, max, yMax, max, yMax);
+         }
+-
+         return ret;
+     }

@@ -1,0 +1,29 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3fafdcf7-4a59-4140-b964-54167e7345b5_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/52075fb4-09c4-468f-9b90-5de00e4db543_fixed.java
+index 4f21a3a..edabcc3 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3fafdcf7-4a59-4140-b964-54167e7345b5_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/52075fb4-09c4-468f-9b90-5de00e4db543_fixed.java
+@@ -1,14 +1,20 @@
+     /**
+      * Helper method used by standard deserializer.
+      * 
+      * @since 2.3
+      */
+     public TokenBuffer deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException
+     {
++// buggy code
++//            copyCurrentStructure(jp);
++//        /* 28-Oct-2014, tatu: As per #592, need to support a special case of starting from
++//         *    FIELD_NAME, which is taken to mean that we are missing START_OBJECT, but need
++//         *    to assume one did exist.
++//         */
++            if (jp.getCurrentToken() == JsonToken.FIELD_NAME) {
++                jp.nextToken();
++            }
+             copyCurrentStructure(jp);
+-        /* 28-Oct-2014, tatu: As per #592, need to support a special case of starting from
+-         *    FIELD_NAME, which is taken to mean that we are missing START_OBJECT, but need
+-         *    to assume one did exist.
+-         */
++
+         return this;
+     }

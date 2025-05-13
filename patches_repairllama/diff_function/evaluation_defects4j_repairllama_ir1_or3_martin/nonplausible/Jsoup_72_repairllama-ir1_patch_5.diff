@@ -1,0 +1,41 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/41a28b64-cf60-457c-bad2-355c09a66e10_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8b5c0428-1520-4321-82e3-4f1cbfacda8a_fixed.java
+index 7b4f703..ebec94c 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/41a28b64-cf60-457c-bad2-355c09a66e10_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8b5c0428-1520-4321-82e3-4f1cbfacda8a_fixed.java
+@@ -1,29 +1,24 @@
+     private static String cacheString(final char[] charBuf, final String[] stringCache, final int start, final int count) {
+-        // limit (no cache):
+-        if (count > maxStringCacheLen)
++        if (count > maxStringCacheLen) {
+             return new String(charBuf, start, count);
+-
+-        // calculate hash:
++        }
+         int hash = 0;
+         int offset = start;
+         for (int i = 0; i < count; i++) {
+             hash = 31 * hash + charBuf[offset++];
+         }
+-
+-        // get from cache
+         final int index = hash & stringCache.length - 1;
+         String cached = stringCache[index];
+-
+-        if (cached == null) { // miss, add
++        if (cached == null) { 
+             cached = new String(charBuf, start, count);
+             stringCache[index] = cached;
+-        } else { // hashcode hit, check equality
+-            if (rangeEquals(charBuf, start, count, cached)) { // hit
++        } else { 
++            if (rangeEquals(charBuf, start, count, cached)) { 
+                 return cached;
+-            } else { // hashcode conflict
++            } else { 
+                 cached = new String(charBuf, start, count);
+-                stringCache[index] = cached; // update the cache, as recently used strings are more likely to show up again
++                stringCache[index] = cached; 
+             }
+         }
+         return cached;
+     }

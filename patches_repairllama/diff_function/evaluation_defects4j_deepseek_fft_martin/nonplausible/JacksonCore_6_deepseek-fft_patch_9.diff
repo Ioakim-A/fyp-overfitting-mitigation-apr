@@ -1,0 +1,31 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4fdb429f-0710-4e68-b15e-15319bfb0b2e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/eae70048-c27f-47fc-ac0f-2829ee7aa463_fixed.java
+index c3c1a6f..043bfef 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4fdb429f-0710-4e68-b15e-15319bfb0b2e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/eae70048-c27f-47fc-ac0f-2829ee7aa463_fixed.java
+@@ -1,22 +1,26 @@
+     private final static int _parseIndex(String str) {
+         final int len = str.length();
+         // [core#133]: beware of super long indexes; assume we never
+         // have arrays over 2 billion entries so ints are fine.
+         if (len == 0 || len > 10) {
+             return -1;
+         }
+         // [core#176]: no leading zeroes allowed
++// buggy code
++//        for (int i = 0; i < len; ++i) {
++//            char c = str.charAt(i);
+         for (int i = 0; i < len; ++i) {
+             char c = str.charAt(i);
++
+             if (c > '9' || c < '0') {
+                 return -1;
+             }
+         }
+         if (len == 10) {
+             long l = NumberInput.parseLong(str);
+             if (l > Integer.MAX_VALUE) {
+                 return -1;
+             }
+         }
+         return NumberInput.parseInt(str);
+     }

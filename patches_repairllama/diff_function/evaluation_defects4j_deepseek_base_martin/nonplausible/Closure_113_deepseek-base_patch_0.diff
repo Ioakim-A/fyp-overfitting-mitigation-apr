@@ -1,0 +1,81 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/418af455-86f7-4587-9a77-8dd82bf51c1a_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4cb6a78b-cb03-44ce-bb8d-33a291447942_fixed.java
+index 29a9d2f..af594f1 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/418af455-86f7-4587-9a77-8dd82bf51c1a_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4cb6a78b-cb03-44ce-bb8d-33a291447942_fixed.java
+@@ -1,43 +1,71 @@
+   /**
+    * Handles a goog.require call.
+    */
+   private void processRequireCall(NodeTraversal t, Node n, Node parent) {
+     Node left = n.getFirstChild();
+     Node arg = left.getNext();
+     if (verifyLastArgumentIsString(t, left, arg)) {
+       String ns = arg.getString();
+       ProvidedName provided = providedNames.get(ns);
+       if (provided == null || !provided.isExplicitlyProvided()) {
+         unrecognizedRequires.add(
+             new UnrecognizedRequire(n, ns, t.getSourceName()));
+       } else {
+         JSModule providedModule = provided.explicitModule;
+-
+         // This must be non-null, because there was an explicit provide.
+         Preconditions.checkNotNull(providedModule);
+-
+         JSModule module = t.getModule();
+         if (moduleGraph != null &&
+             module != providedModule &&
+             !moduleGraph.dependsOn(module, providedModule)) {
+           compiler.report(
+               t.makeError(n, XMODULE_REQUIRE_ERROR, ns,
+                   providedModule.getName(),
+                   module.getName()));
+         }
+       }
+-
+       maybeAddToSymbolTable(left);
+       maybeAddStringNodeToSymbolTable(arg);
+-
+       // Requires should be removed before further processing.
+       // Some clients run closure pass multiple times, first with
+       // the checks for broken requires turned off. In these cases, we
+       // allow broken requires to be preserved by the first run to
+       // let them be caught in the subsequent run.
+-      if (provided != null) {
++    }
++  }
++
++  /**
++   * Handles a goog.provide call.
++   */
++  private void processProvideCall(NodeTraversal t, Node n, Node parent) {
++    Node left = n.getFirstChild();
++    Node arg = left.getNext();
++    if (verifyLastArgumentIsString(t, left, arg)) {
++      String ns = arg.getString();
++      ProvidedName provided = providedNames.get(ns);
++      if (provided == null || !provided.isExplicitlyProvided()) {
++        unrecognizedProvides.add(
++            new UnrecognizedProvide(n, ns, t.getSourceName()));
++      } else {
++        JSModule providedModule = provided.explicitModule;
++        // This must be non-null, because there was an explicit provide.
++        Preconditions.checkNotNull(providedModule);
++        JSModule module = t.getModule();
++        if (moduleGraph != null &&
++            module != providedModule &&
++            !moduleGraph.dependsOn(module, providedModule)) {
++          compiler.report(
++              t.makeError(n, XMODULE_PROVIDE_ERROR, ns,
++                  providedModule.getName(),
++                  module.getName()));
++        }
++      }
++      maybeAddToSymbolTable(left);
++      maybeAddStringNodeToSymbolTable(arg);
++      // Provides should be removed before further processing.
++      if (parent != null) {
+         parent.detachFromParent();
+         compiler.reportCodeChange();
+       }
+     }
+   }

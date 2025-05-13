@@ -1,0 +1,38 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ae1ec407-7a20-4428-bdd1-fbd84588c29d_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/36c6c556-65f1-44f9-a961-cae396a31f59_fixed.java
+index d7800f4..65b9897 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ae1ec407-7a20-4428-bdd1-fbd84588c29d_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/36c6c556-65f1-44f9-a961-cae396a31f59_fixed.java
+@@ -1,31 +1,19 @@
+  JSType resolveInternal(ErrorReporter t, StaticScope<JSType> scope) {
+     setResolvedTypeInternal(this);
+-
+     call = (ArrowType) safeResolve(call, t, scope);
+     prototype = (FunctionPrototypeType) safeResolve(prototype, t, scope);
+-
+-    // Warning about typeOfThis if it doesn't resolve to an ObjectType
+-    // is handled further upstream.
+-    // TODO(nicksantos): Handle this correctly if we have a UnionType.
+     typeOfThis = (ObjectType) safeResolve(typeOfThis, t, scope);
+-
+     boolean changed = false;
+     ImmutableList.Builder<ObjectType> resolvedInterfaces =
+         ImmutableList.builder();
+     for (ObjectType iface : implementedInterfaces) {
+       ObjectType resolvedIface = (ObjectType) iface.resolve(t, scope);
+       resolvedInterfaces.add(resolvedIface);
+       changed |= (resolvedIface != iface);
+     }
+     if (changed) {
+       implementedInterfaces = resolvedInterfaces.build();
+     }
+-
+     if (subTypes != null) {
+       for (int i = 0; i < subTypes.size(); i++) {
+-        subTypes.set(i, (FunctionType) subTypes.get(i).resolve(t, scope));
+-      }
+-    }
+-
+-    return super.resolveInternal(t, scope);
+-  }
++        subTypes.set(i, (FunctionType) safeResol
+\ No newline at end of file

@@ -1,0 +1,50 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/80018650-df36-4cd2-8a49-6aa6bc4ea8ad_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f424c0ce-e29a-4f22-9986-5b31d95fbb92_fixed.java
+index 6a2c422..4ce0c42 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/80018650-df36-4cd2-8a49-6aa6bc4ea8ad_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f424c0ce-e29a-4f22-9986-5b31d95fbb92_fixed.java
+@@ -1,37 +1,28 @@
+ protected StringBuffer renderWrappedText(StringBuffer sb, int width, 
+                                          int nextLineTabStop, String text)
+     {
+         int pos = findWrapPos(text, width, 0);
+-
+         if (pos == -1)
+         {
+             sb.append(rtrim(text));
+-
+             return sb;
+         }
+         sb.append(rtrim(text.substring(0, pos))).append(defaultNewLine);
+-
+-        // all following lines must be padded with nextLineTabStop space 
+-        // characters
+         final String padding = createPadding(nextLineTabStop);
+-
+-        while (true)
++        while (text.length() > 0)
+         {
+-            int lastPos = pos;
+-            text = padding + text.substring(pos).trim();
++            text = text.substring(pos).trim();
+             pos = findWrapPos(text, width, 0);
+-
+             if (pos == -1)
+             {
+-                sb.append(text);
+-
++                sb.append(padding).append(text);
+                 return sb;
+-            } else
+-            if (pos == lastPos)
++            }
++            sb.append(padding).append(rtrim(text.substring(0, pos))).append(defaultNewLine);
++            if (pos == 0)
+             {
+                 throw new RuntimeException("Text too long for line - throwing exception to avoid infinite loop [CLI-162]: " + text);
+             }
+-
+-            sb.append(rtrim(text.substring(0, pos))).append(defaultNewLine);
+         }
++        return sb;
+     }
+\ No newline at end of file

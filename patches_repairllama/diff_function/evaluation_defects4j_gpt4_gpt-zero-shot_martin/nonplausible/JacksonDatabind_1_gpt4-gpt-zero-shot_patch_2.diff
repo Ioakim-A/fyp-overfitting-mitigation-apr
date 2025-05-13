@@ -1,0 +1,53 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bbb67bb6-4d80-46a7-b040-0559747a986f_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/60ec2ae9-53f6-4e52-96b8-f1372fc3d3b8_fixed.java
+index d8ae7a4..3f074bb 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bbb67bb6-4d80-46a7-b040-0559747a986f_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/60ec2ae9-53f6-4e52-96b8-f1372fc3d3b8_fixed.java
+@@ -1,43 +1,40 @@
+     public void serializeAsColumn(Object bean, JsonGenerator jgen, SerializerProvider prov)
+         throws Exception
+     {
+         Object value = get(bean);
+-        if (value == null) { // nulls need specialized handling
++        if (value == null) { 
+             if (_nullSerializer != null) {
+                 _nullSerializer.serialize(null, jgen, prov);
+-            } else { // can NOT suppress entries in tabular output
++            } else { 
+                 jgen.writeNull();
+             }
+         }
+-        // otherwise find serializer to use
+         JsonSerializer<Object> ser = _serializer;
+         if (ser == null) {
+             Class<?> cls = value.getClass();
+             PropertySerializerMap map = _dynamicSerializers;
+             ser = map.serializerFor(cls);
+             if (ser == null) {
+                 ser = _findAndAddDynamic(map, cls, prov);
+             }
+         }
+-        // and then see if we must suppress certain values (default, empty)
+         if (_suppressableValue != null) {
+             if (MARKER_FOR_EMPTY == _suppressableValue) {
+-                if (ser.isEmpty(value)) { // can NOT suppress entries in tabular output
++                if (ser.isEmpty(value)) { 
+                     serializeAsPlaceholder(bean, jgen, prov);
+                     return;
+                 }
+-            } else if (_suppressableValue.equals(value)) { // can NOT suppress entries in tabular output
++            } else if (_suppressableValue.equals(value)) { 
+                 serializeAsPlaceholder(bean, jgen, prov);
+                 return;
+             }
+         }
+-        // For non-nulls: simple check for direct cycles
+         if (value == bean) {
+             _handleSelfReference(bean, ser);
+         }
+         if (_typeSerializer == null) {
+             ser.serialize(value, jgen, prov);
+         } else {
+             ser.serializeWithType(value, jgen, prov, _typeSerializer);
+         }
+     }
+\ No newline at end of file

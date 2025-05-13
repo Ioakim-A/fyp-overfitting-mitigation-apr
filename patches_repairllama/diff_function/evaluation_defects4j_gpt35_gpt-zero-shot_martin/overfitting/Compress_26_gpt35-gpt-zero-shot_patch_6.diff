@@ -1,0 +1,22 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5f3a87b0-4580-4310-b67a-ac6046a1014e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8715f232-2ab4-4086-8e5c-8ca4df616ce5_fixed.java
+index c6795f6..d3b96d3 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5f3a87b0-4580-4310-b67a-ac6046a1014e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8715f232-2ab4-4086-8e5c-8ca4df616ce5_fixed.java
+@@ -1,12 +1,14 @@
+     public static long skip(InputStream input, long numToSkip) throws IOException {
+         long available = numToSkip;
+         while (numToSkip > 0) {
+             long skipped = input.skip(numToSkip);
+-            if (skipped == 0) {
++            if (skipped <= 0) {
+                 break;
+             }
+             numToSkip -= skipped;
+         }
+-            
++        while (numToSkip > 0 && input.read() != -1) {
++            numToSkip--;
++        }
+         return available - numToSkip;
+     }
+\ No newline at end of file

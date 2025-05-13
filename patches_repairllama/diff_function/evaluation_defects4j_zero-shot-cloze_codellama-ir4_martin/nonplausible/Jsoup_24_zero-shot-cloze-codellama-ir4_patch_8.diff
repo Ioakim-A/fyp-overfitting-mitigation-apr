@@ -1,0 +1,49 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0cf022e8-7158-4071-9e98-3fc372a968e0_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5dca8cf2-7fde-439b-b56c-16d2aa61cff1_fixed.java
+index b2d53db..33ca5d3 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0cf022e8-7158-4071-9e98-3fc372a968e0_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5dca8cf2-7fde-439b-b56c-16d2aa61cff1_fixed.java
+@@ -1,34 +1,42 @@
+         void read(Tokeniser t, CharacterReader r) {
+             if (r.matchesLetter()) {
+                 String name = r.consumeLetterSequence();
+                 t.tagPending.appendTagName(name.toLowerCase());
+                 t.dataBuffer.append(name);
+-                r.advance();
++// buggy code
++//                r.advance();
++               if (r.matchesLetter()) {
++                    name = r.consumeLetterSequence();
++                    t.tagPending.appendTagName(name.toLowerCase());
++                    t.dataBuffer.append(name);
++// buggy code
++//                    r.advance();
++                }
++                t.transition(BeforeAttributeName);
+                 return;
+             }
+-
+             if (t.isAppropriateEndTagToken() && !r.isEmpty()) {
+                 char c = r.consume();
+                 switch (c) {
+                     case '\t':
+                     case '\n':
+                     case '\f':
+                     case ' ':
+                         t.transition(BeforeAttributeName);
+                         break;
+                     case '/':
+                         t.transition(SelfClosingStartTag);
+                         break;
+                     case '>':
+                         t.emitTagPending();
+                         t.transition(Data);
+                         break;
+                     default:
+                         t.dataBuffer.append(c);
+                         anythingElse(t, r);
+                         break;
+                 }
+             } else {
+                 anythingElse(t, r);
+             }
+         }

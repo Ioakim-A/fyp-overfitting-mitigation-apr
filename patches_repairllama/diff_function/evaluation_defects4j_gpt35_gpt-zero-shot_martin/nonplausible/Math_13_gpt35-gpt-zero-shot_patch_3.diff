@@ -1,0 +1,18 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0f66a2a3-dada-472c-8ac0-fc6c1f1ab879_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e565c828-54fd-420e-81c9-ca7929063454_fixed.java
+index 7559ebf..d9d5559 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0f66a2a3-dada-472c-8ac0-fc6c1f1ab879_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e565c828-54fd-420e-81c9-ca7929063454_fixed.java
+@@ -1,4 +1,10 @@
+-    private RealMatrix squareRoot(RealMatrix m) {
++        RealMatrix squareRoot = MatrixUtils.createRealMatrix(m.getRowDimension(), m.getColumnDimension());
+         final EigenDecomposition dec = new EigenDecomposition(m);
+-            return dec.getSquareRoot();
++        RealMatrix d = dec.getD();
++        for (int i = 0; i < d.getRowDimension(); i++) {
++            double sqrt = Math.sqrt(d.getEntry(i, i));
++            for (int j = 0; j < d.getColumnDimension(); j++) {
++                squareRoot.setEntry(i, j, sqrt * dec.getV().getEntry(j, i));
+             }
++        }
++        return squareRoot;
+\ No newline at end of file

@@ -1,0 +1,32 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ead401ad-4bfd-42a1-8a2d-fa49275ac85f_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b16fd15e-1f9b-4b62-a839-4ea2405cb3c4_fixed.java
+index a0eee42..8ab9992 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ead401ad-4bfd-42a1-8a2d-fa49275ac85f_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b16fd15e-1f9b-4b62-a839-4ea2405cb3c4_fixed.java
+@@ -1,25 +1,16 @@
+     private void getNumUseInUseCfgNode(final Node cfgNode) {
+-
+       numUsesWithinCfgNode = 0;
+       AbstractCfgNodeTraversalCallback gatherCb =
+           new AbstractCfgNodeTraversalCallback() {
+-
+         @Override
+         public void visit(NodeTraversal t, Node n, Node parent) {
++// fixed code
+            if (n.isName() && n.getString().equals(varName) &&
+-            // We make a special exception when the entire cfgNode is a chain
+-            // of assignments, since in that case the assignment statements
+-            // will happen after the inlining of the right hand side.
+-            // TODO(blickly): Make the SIDE_EFFECT_PREDICATE check more exact
+-            //   and remove this special case.
+                !(parent.isAssign() &&
+                 (parent.getFirstChild() == n))) {
+-              // Don't count lhs of top-level assignment chain
+                numUsesWithinCfgNode++;
+            }
+         }
+-
+       };
+-
+       NodeTraversal.traverse(compiler, cfgNode, gatherCb);
+     }
+\ No newline at end of file

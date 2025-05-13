@@ -1,0 +1,41 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a597c70c-15d9-42d2-ac0d-04994fac435c_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e634a8a3-599b-463b-819a-09bfac0a32c8_fixed.java
+index d6a560a..bdf1e18 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a597c70c-15d9-42d2-ac0d-04994fac435c_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e634a8a3-599b-463b-819a-09bfac0a32c8_fixed.java
+@@ -1,33 +1,23 @@
+   /**
+    * Resolve the referenced type within the enclosing scope.
+    */
+   @Override
+   JSType resolveInternal(ErrorReporter t, StaticScope<JSType> enclosing) {
+     // TODO(user): Investigate whether it is really necessary to keep two
+     // different mechanisms for resolving named types, and if so, which order
+     // makes more sense. Now, resolution via registry is first in order to
+     // avoid triggering the warnings built into the resolution via properties.
+     boolean resolved = resolveViaRegistry(t, enclosing);
+-    if (detectImplicitPrototypeCycle()) {
+-      handleTypeCycle(t);
+-    }
+-
+-    if (resolved) {
+-      super.resolveInternal(t, enclosing);
+-      finishPropertyContinuations();
+-      return registry.isLastGeneration() ?
+-          getReferencedType() : this;
++    if (!resolved) {
++      resolved = resolveViaProperties(t, enclosing);
+     }
+-
+-    resolveViaProperties(t, enclosing);
+-    if (detectImplicitPrototypeCycle()) {
++    if (!resolved) {
+       handleTypeCycle(t);
+     }
+-
+     super.resolveInternal(t, enclosing);
+     if (isResolved()) {
+       finishPropertyContinuations();
+     }
+     return registry.isLastGeneration() ?
+         getReferencedType() : this;
+   }

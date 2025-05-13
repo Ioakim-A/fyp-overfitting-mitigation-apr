@@ -1,0 +1,57 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1fd69e6d-fc5a-4cff-98a4-c7c68953678f_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dba6f4bb-6f06-4a2a-878f-041b9e82e32d_fixed.java
+index ef76662..39b22b0 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1fd69e6d-fc5a-4cff-98a4-c7c68953678f_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dba6f4bb-6f06-4a2a-878f-041b9e82e32d_fixed.java
+@@ -1,17 +1,52 @@
+         void read(Tokeniser t, CharacterReader r) {
+             char c = r.consume();
+             switch (c) {
+                 case '>':
+                     t.tagPending.selfClosing = true;
+                     t.emitTagPending();
+                     t.transition(Data);
+                     break;
++                case eof:
++                    t.eofError(this);
++                    t.transition(Data);
++                    break;
++                default:
++                    t.error(this);
++                    t.transition(Data);
++                    break;
++            }
++        }
++
++        @Override
++        void read(Tokeniser t, CharacterReader r) {
++            char c = r.consume();
++            switch (c) {
++                case '>':
++                    t.tagPending.selfClosing = true;
++                    t.emitTagPending();
++                    t.transition(Data);
++                    break;
++                case eof:
++                    t.eofError(this);
++                    t.transition(Data);
++                    break;
++                default:
++                    t.error(this);
++                    t.transition(Data);
++                    break;
++            }
++        }
++
++        @Override
++        void read(Tokeniser t, CharacterReader r) {
++            char c = r.consume();
++            switch (c) {
+                 case eof:
+                     t.eofError(this);
+                     t.transition(Data);
+                     break;
+                 default:
+                     t.error(this);
+                     t.transition(BeforeAttributeName);
+             }
+         }

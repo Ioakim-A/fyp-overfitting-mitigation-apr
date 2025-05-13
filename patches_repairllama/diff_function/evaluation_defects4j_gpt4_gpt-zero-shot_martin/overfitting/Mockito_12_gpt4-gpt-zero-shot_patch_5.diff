@@ -1,0 +1,25 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4ca2ea2b-2588-4acc-a1fa-86587b1849b0_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d2633380-4e4a-4050-9efc-1ca92ebd5f2d_fixed.java
+index 23bdbff..2e2578b 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4ca2ea2b-2588-4acc-a1fa-86587b1849b0_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d2633380-4e4a-4050-9efc-1ca92ebd5f2d_fixed.java
+@@ -1,10 +1,17 @@
+     public Class getGenericType(Field field) {  
++        try {      
+             Type generic = field.getGenericType();
+             if (generic != null && generic instanceof ParameterizedType) {
+                 Type actual = ((ParameterizedType) generic).getActualTypeArguments()[0];
++                if (actual instanceof Class) { 
+                     return (Class) actual; 
+-                //in case of nested generics we don't go deep
++                } else if (actual instanceof ParameterizedType) { 
++                    return (Class)((ParameterizedType) actual).getRawType(); 
++                }
+             }
+-        
+             return Object.class;
++        } catch(ClassCastException e) {
++            e.printStackTrace();
++            return null;
++        }
+     }
+\ No newline at end of file

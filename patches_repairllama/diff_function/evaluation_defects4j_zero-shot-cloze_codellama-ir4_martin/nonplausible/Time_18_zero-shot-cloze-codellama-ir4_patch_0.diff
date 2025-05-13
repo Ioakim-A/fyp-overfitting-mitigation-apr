@@ -1,0 +1,42 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c5877af0-2ae9-453d-bc6b-8cd5f0e61809_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3a42849e-1020-4253-92a5-80f401315dc2_fixed.java
+index be2af16..3d80c2a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c5877af0-2ae9-453d-bc6b-8cd5f0e61809_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3a42849e-1020-4253-92a5-80f401315dc2_fixed.java
+@@ -1,29 +1,32 @@
+     public long getDateTimeMillis(int year, int monthOfYear, int dayOfMonth,
+                                   int hourOfDay, int minuteOfHour,
+                                   int secondOfMinute, int millisOfSecond)
+         throws IllegalArgumentException
+     {
+         Chronology base;
+         if ((base = getBase()) != null) {
+             return base.getDateTimeMillis
+                 (year, monthOfYear, dayOfMonth,
+                  hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);
+         }
+-
+-        // Assume date is Gregorian.
+         long instant;
+-            instant = iGregorianChronology.getDateTimeMillis
++// buggy code
++//            instant = iGregorianChronology.getDateTimeMillis
++//                (year, monthOfYear, dayOfMonth,
++//                 hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);
++       instant = iJulianChronology.getDateTimeMillis
+             (year, monthOfYear, dayOfMonth,
+              hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);
++        if (instant >= iCutoverMillis) {
++            throw new IllegalArgumentException("Specified date does not exist");
++        }
+         if (instant < iCutoverMillis) {
+-            // Maybe it's Julian.
+             instant = iJulianChronology.getDateTimeMillis
+                 (year, monthOfYear, dayOfMonth,
+                  hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);
+             if (instant >= iCutoverMillis) {
+-                // Okay, it's in the illegal cutover gap.
+                 throw new IllegalArgumentException("Specified date does not exist");
+             }
+         }
+         return instant;
+     }

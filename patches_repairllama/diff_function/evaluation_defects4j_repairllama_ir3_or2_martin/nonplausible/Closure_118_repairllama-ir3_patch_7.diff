@@ -1,0 +1,32 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6ad264d5-4b5b-4858-be3d-7371769da084_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c0173130-1033-410a-9218-066617981023_fixed.java
+index d5fd081..8f86549 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6ad264d5-4b5b-4858-be3d-7371769da084_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c0173130-1033-410a-9218-066617981023_fixed.java
+@@ -1,24 +1,21 @@
+     private void handleObjectLit(NodeTraversal t, Node n) {
+       for (Node child = n.getFirstChild();
+           child != null;
+           child = child.getNext()) {
+-        // Maybe STRING, GET, SET
+-
+-        // We should never see a mix of numbers and strings.
++       if (child.getType() != Token.GETTER_DEF) {
++          continue;
++        }
+         String name = child.getString();
+         T type = typeSystem.getType(getScope(), n, name);
+-
+         Property prop = getProperty(name);
+         if (!prop.scheduleRenaming(child,
+                                    processProperty(t, prop, type, null))) {
+-          // TODO(user): It doesn't look like the user can do much in this
+-          // case right now.
+           if (propertiesToErrorFor.containsKey(name)) {
+             compiler.report(JSError.make(
+                 t.getSourceName(), child, propertiesToErrorFor.get(name),
+                 Warnings.INVALIDATION, name,
+                 (type == null ? "null" : type.toString()), n.toString(), ""));
+           }
+         }
+       }
+     }

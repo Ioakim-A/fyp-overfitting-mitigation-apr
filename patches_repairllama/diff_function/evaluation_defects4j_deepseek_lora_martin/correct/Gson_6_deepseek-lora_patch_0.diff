@@ -1,0 +1,30 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3447529a-13af-457c-9ccd-eee30ca63919_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6882da20-33cc-45b1-9b1a-5e5bf03bb6d9_fixed.java
+index 1c53d31..5e26c1e 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3447529a-13af-457c-9ccd-eee30ca63919_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6882da20-33cc-45b1-9b1a-5e5bf03bb6d9_fixed.java
+@@ -1,20 +1,25 @@
+   @SuppressWarnings("unchecked") // Casts guarded by conditionals.
+   static TypeAdapter<?> getTypeAdapter(ConstructorConstructor constructorConstructor, Gson gson,
+       TypeToken<?> fieldType, JsonAdapter annotation) {
+     Class<?> value = annotation.value();
+     TypeAdapter<?> typeAdapter;
+     if (TypeAdapter.class.isAssignableFrom(value)) {
+       Class<TypeAdapter<?>> typeAdapterClass = (Class<TypeAdapter<?>>) value;
+       typeAdapter = constructorConstructor.get(TypeToken.get(typeAdapterClass)).construct();
+     } else if (TypeAdapterFactory.class.isAssignableFrom(value)) {
+       Class<TypeAdapterFactory> typeAdapterFactory = (Class<TypeAdapterFactory>) value;
+       typeAdapter = constructorConstructor.get(TypeToken.get(typeAdapterFactory))
+           .construct()
+           .create(gson, fieldType);
+     } else {
+       throw new IllegalArgumentException(
+           "@JsonAdapter value must be TypeAdapter or TypeAdapterFactory reference.");
+     }
++// buggy code
++//      typeAdapter = typeAdapter.nullSafe();
++    if (typeAdapter != null) {
+       typeAdapter = typeAdapter.nullSafe();
++    }
++
+     return typeAdapter;
+   }

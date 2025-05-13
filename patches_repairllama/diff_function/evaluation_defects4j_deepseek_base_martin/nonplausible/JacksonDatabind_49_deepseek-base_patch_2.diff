@@ -1,0 +1,16 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1df0f274-dca6-400b-8d62-31db9cd345af_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/702f48a6-6ecc-4117-ad59-8434b25acfc5_fixed.java
+index c222270..7dc3573 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1df0f274-dca6-400b-8d62-31db9cd345af_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/702f48a6-6ecc-4117-ad59-8434b25acfc5_fixed.java
+@@ -1,7 +1,10 @@
+     public Object generateId(Object forPojo) {
+         // 04-Jun-2016, tatu: As per [databind#1255], need to consider possibility of
+         //    id being generated for "alwaysAsId", but not being written as POJO; regardless,
+         //    need to use existing id if there is one:
+-            id = generator.generateId(forPojo);
++        //    https://github.com/FasterXML/jackson-databind/issues/1255
++        if (forPojo == null && id == null) {
++            return null;
++        }
+         return id;
+     }

@@ -1,0 +1,33 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/362679e7-ea33-4abe-b1d1-19e754586bd3_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ed98f767-87bb-4b28-a109-1650f691e377_fixed.java
+index e0802db..2c5c0ee 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/362679e7-ea33-4abe-b1d1-19e754586bd3_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ed98f767-87bb-4b28-a109-1650f691e377_fixed.java
+@@ -1,25 +1,24 @@
+     public String chompBalanced(char open, char close) {
+         int start = -1;
+         int end = -1;
+         int depth = 0;
+         char last = 0;
+-
++       char escape = ESC;
+         do {
+             if (isEmpty()) break;
+             Character c = consume();
+-            if (last == 0 || last != ESC) {
++            if (last == 0 || last != escape) {
+                 if (c.equals(open)) {
+                     depth++;
+                     if (start == -1)
+                         start = pos;
+                 }
+                 else if (c.equals(close))
+                     depth--;
+             }
+-
+             if (depth > 0 && last != 0)
+-                end = pos; // don't include the outer match pair in the return
++                end = pos; 
+             last = c;
+         } while (depth > 0);
+         return (end >= 0) ? queue.substring(start, end) : "";
+     }

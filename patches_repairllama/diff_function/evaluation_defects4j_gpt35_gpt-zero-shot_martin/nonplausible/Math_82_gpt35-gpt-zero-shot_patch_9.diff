@@ -1,0 +1,26 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5a13643e-6a77-42b9-94c8-404e75ad2178_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/51b34c0e-c435-4ebb-9da1-fe88c01ae329_fixed.java
+index d290cbe..1b951fa 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5a13643e-6a77-42b9-94c8-404e75ad2178_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/51b34c0e-c435-4ebb-9da1-fe88c01ae329_fixed.java
+@@ -1,16 +1,19 @@
+ private Integer getPivotRow(final int col, final SimplexTableau tableau) {
+     double minRatio = Double.MAX_VALUE;
+     Integer minRatioPos = null;
++    final double epsilon = 1e-10; // Set the value of epsilon
++
+     for (int i = tableau.getNumObjectiveFunctions(); i < tableau.getHeight(); i++) {
+         final double rhs = tableau.getEntry(i, tableau.getWidth() - 1);
+         final double entry = tableau.getEntry(i, col);
+-            if (MathUtils.compareTo(entry, 0, epsilon) >= 0) {
++
++        if (Math.abs(entry) > epsilon) { // Use Math.abs() instead of MathUtils.compareTo()
+             final double ratio = rhs / entry;
+             if (ratio < minRatio) {
+                 minRatio = ratio;
+                 minRatioPos = i; 
+             }
+         }
+     }
+     return minRatioPos;
+ }
+\ No newline at end of file

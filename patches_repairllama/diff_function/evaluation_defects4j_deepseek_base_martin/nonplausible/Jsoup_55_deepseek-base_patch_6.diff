@@ -1,0 +1,23 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0a77adb6-be2f-4dcd-bb57-97e48eeb4064_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/94cbc15c-5194-4050-9955-7ad882324a3a_fixed.java
+index ef76662..e49960b 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0a77adb6-be2f-4dcd-bb57-97e48eeb4064_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/94cbc15c-5194-4050-9955-7ad882324a3a_fixed.java
+@@ -1,17 +1,18 @@
+         void read(Tokeniser t, CharacterReader r) {
+             char c = r.consume();
+             switch (c) {
+                 case '>':
+                     t.tagPending.selfClosing = true;
+                     t.emitTagPending();
+                     t.transition(Data);
+                     break;
+                 case eof:
+                     t.eofError(this);
+                     t.transition(Data);
+                     break;
+                 default:
+                     t.error(this);
++                    t.reconsume();
+                     t.transition(BeforeAttributeName);
+             }
+         }

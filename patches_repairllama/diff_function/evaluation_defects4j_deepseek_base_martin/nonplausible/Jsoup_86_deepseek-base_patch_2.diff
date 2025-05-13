@@ -1,0 +1,21 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3d43a86f-90c4-4db2-ab57-b4698d3d6e58_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6a626e6d-a628-440c-81f5-f26131ac9821_fixed.java
+index b8e7fdb..a165cdc 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3d43a86f-90c4-4db2-ab57-b4698d3d6e58_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6a626e6d-a628-440c-81f5-f26131ac9821_fixed.java
+@@ -1,15 +1,15 @@
+     /**
+      * Attempt to cast this comment to an XML Declaration note.
+      * @return an XML declaration if it could be parsed as one, null otherwise.
+      */
+     public XmlDeclaration asXmlDeclaration() {
+         String data = getData();
+         Document doc = Jsoup.parse("<" + data.substring(1, data.length() -1) + ">", baseUri(), Parser.xmlParser());
+         XmlDeclaration decl = null;
+-        if (doc.childNodeSize() > 0) {
++        if (doc.childNodeSize() == 1) {
+             Element el = doc.child(0);
+             decl = new XmlDeclaration(NodeUtils.parser(doc).settings().normalizeTag(el.tagName()), data.startsWith("!"));
+             decl.attributes().addAll(el.attributes());
+         }
+         return decl;
+     }

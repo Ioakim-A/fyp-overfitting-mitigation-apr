@@ -1,0 +1,50 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/35b9a21f-b48f-4970-a47f-a4352a22f37a_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dc94b659-5967-4fea-a271-1310b2ae7fa3_fixed.java
+index fa15a1c..10892b5 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/35b9a21f-b48f-4970-a47f-a4352a22f37a_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dc94b659-5967-4fea-a271-1310b2ae7fa3_fixed.java
+@@ -1,5 +1,43 @@
+     public void writeEmbeddedObject(Object object) throws IOException {
+-        // 01-Sep-2016, tatu: As per [core#318], handle small number of cases
+-        throw new JsonGenerationException("No native support for writing embedded objects",
++       if (object == null) {
++            writeNull();
++            return;
++        }
++        if (object instanceof String) {
++            writeString((String) object);
++            return;
++        }
++        if (object instanceof Boolean) {
++            writeBoolean((Boolean) object);
++            return;
++        }
++        if (object instanceof Integer) {
++            writeInt((Integer) object);
++            return;
++        }
++        if (object instanceof Long) {
++            writeLong((Long) object);
++            return;
++        }
++        if (object instanceof Float) {
++            writeFloat((Float) object);
++            return;
++        }
++        if (object instanceof Double) {
++            writeDouble((Double) object);
++            return;
++        }
++        if (object instanceof BigInteger) {
++            writeBigInteger((BigInteger) object);
++            return;
++        }
++        if (object instanceof BigDecimal) {
++            writeBigDecimal((BigDecimal) object);
++            return;
++        }
++        if (object instanceof UUID) {
++            writeUUID((UUID) object);
++            return;
++        }
+                        this);
+     }

@@ -1,0 +1,24 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1bf44280-fe87-4e3f-b21a-7dba95db8ac5_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/12ba8d43-085e-405c-99c4-300c6db4bef2_fixed.java
+index c6cb157..a905cb6 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1bf44280-fe87-4e3f-b21a-7dba95db8ac5_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/12ba8d43-085e-405c-99c4-300c6db4bef2_fixed.java
+@@ -1,14 +1,17 @@
+     /**
+      * Method called to expand size of the current segment, to
+      * accommodate for more contiguous content. Usually only
+      * used when parsing tokens like names if even then.
+      */
+     public char[] expandCurrentSegment()
+     {
+         final char[] curr = _currentSegment;
+         // Let's grow by 50% by default
+         final int len = curr.length;
+-        // but above intended maximum, slow to increase by 25%
+-        int newLen = (len == MAX_SEGMENT_LEN) ? (MAX_SEGMENT_LEN+1) : Math.min(MAX_SEGMENT_LEN, len + (len >> 1));
++// buggy code
++//        // but above intended maximum, slow to increase by 25%
++//        int newLen = (len == MAX_SEGMENT_LEN) ? (MAX_SEGMENT_LEN+1) : Math.min(MAX_SEGMENT_LEN, len + (len >> 1));
++        int newLen = Math.min(len + (len >> 1), MAX_SEGMENT_LEN);
++
+         return (_currentSegment = Arrays.copyOf(curr, newLen));
+     }

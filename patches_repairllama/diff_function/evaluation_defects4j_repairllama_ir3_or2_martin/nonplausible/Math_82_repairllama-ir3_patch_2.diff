@@ -1,0 +1,22 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d6bfa5f9-ead1-4502-aef3-9e083122e683_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bfca009c-5ccf-4e5d-bc52-6b768bce08bb_fixed.java
+index d290cbe..b45ccbc 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d6bfa5f9-ead1-4502-aef3-9e083122e683_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bfca009c-5ccf-4e5d-bc52-6b768bce08bb_fixed.java
+@@ -1,16 +1,16 @@
+     private Integer getPivotRow(final int col, final SimplexTableau tableau) {
+         double minRatio = Double.MAX_VALUE;
+         Integer minRatioPos = null;
+         for (int i = tableau.getNumObjectiveFunctions(); i < tableau.getHeight(); i++) {
+             final double rhs = tableau.getEntry(i, tableau.getWidth() - 1);
+             final double entry = tableau.getEntry(i, col);
+-            if (MathUtils.compareTo(entry, 0, epsilon) >= 0) {
++           if (entry != 0 && rhs != 0) {
+                 final double ratio = rhs / entry;
+                 if (ratio < minRatio) {
+                     minRatio = ratio;
+                     minRatioPos = i; 
+                 }
+             }
+         }
+         return minRatioPos;
+     }

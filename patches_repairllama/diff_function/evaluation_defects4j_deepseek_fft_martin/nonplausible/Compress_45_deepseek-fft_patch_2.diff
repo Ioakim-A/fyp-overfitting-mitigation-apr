@@ -1,0 +1,45 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/740a713b-38b2-4226-88c2-716870481497_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3d002da2-e91f-48e2-8d2d-35307f8e31b8_fixed.java
+index 1bbc082..8eef668 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/740a713b-38b2-4226-88c2-716870481497_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3d002da2-e91f-48e2-8d2d-35307f8e31b8_fixed.java
+@@ -1,36 +1,36 @@
+     /**
+      * Write an long integer into a buffer as an octal string if this
+      * will fit, or as a binary number otherwise.
+      * 
+      * Uses {@link #formatUnsignedOctalString} to format
+      * the value as an octal string with leading zeros.
+      * The converted number is followed by a space.
+      * 
+      * @param value The value to write into the buffer.
+      * @param buf The destination buffer.
+      * @param offset The starting offset into the buffer.
+      * @param length The length of the buffer.
+      * @return The updated offset.
+      * @throws IllegalArgumentException if the value (and trailer)
+      * will not fit in the buffer.
+      * @since 1.4
+      */
+     public static int formatLongOctalOrBinaryBytes(
+         final long value, final byte[] buf, final int offset, final int length) {
+-
+         // Check whether we are dealing with UID/GID or SIZE field
+         final long maxAsOctalChar = length == TarConstants.UIDLEN ? TarConstants.MAXID : TarConstants.MAXSIZE;
+-
+         final boolean negative = value < 0;
+         if (!negative && value <= maxAsOctalChar) { // OK to store as octal chars
+             return formatLongOctalBytes(value, buf, offset, length);
+         }
+-
+         if (length < 9) {
+             formatLongBinary(value, buf, offset, length, negative);
++// buggy code
++//        }
++//        formatBigIntegerBinary(value, buf, offset, length, negative);
+         }
+-        formatBigIntegerBinary(value, buf, offset, length, negative);
++        return formatBigIntegerBinary(value, buf, offset, length, negative);
+ 
+         buf[offset] = (byte) (negative ? 0xff : 0x80);
+         return offset + length;
+     }

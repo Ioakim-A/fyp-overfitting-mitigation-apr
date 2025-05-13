@@ -1,0 +1,15 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5cfad9e4-4e5e-41a6-8cc5-91edd9406898_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ee5a8eb7-f801-4d84-ad1b-2714d2b1a51f_fixed.java
+index fa6828a..0ae52dd 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5cfad9e4-4e5e-41a6-8cc5-91edd9406898_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ee5a8eb7-f801-4d84-ad1b-2714d2b1a51f_fixed.java
+@@ -1,5 +1,9 @@
+     private void injectMockCandidate(Class<?> awaitingInjectionClazz, Set<Object> mocks, Object fieldInstance) {
+         for(Field field : orderedInstanceFieldsFrom(awaitingInjectionClazz)) {
+-            mockCandidateFilter.filterCandidate(mocks, field, fieldInstance).thenInject();
++            Object mockCandidate = mockCandidateFilter.filterCandidate(mocks, field, fieldInstance);
++            if(mockCandidate != null) {
++                field.setAccessible(true);
++                field.set(fieldInstance, mockCandidate);
++            }
+         }
+     }

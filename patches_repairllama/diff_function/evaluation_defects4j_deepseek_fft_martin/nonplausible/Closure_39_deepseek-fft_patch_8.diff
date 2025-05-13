@@ -1,0 +1,65 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/12cd062e-9daf-4c01-8d2b-3462f73ad834_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1a3e20ca-ffed-4857-9b00-71a86ae8c083_fixed.java
+index e4d90e7..bbf626f 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/12cd062e-9daf-4c01-8d2b-3462f73ad834_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1a3e20ca-ffed-4857-9b00-71a86ae8c083_fixed.java
+@@ -1,45 +1,47 @@
+   @Override
+   String toStringHelper(boolean forAnnotations) {
+     if (hasReferenceName()) {
+       return getReferenceName();
+     } else if (prettyPrint) {
+       // Don't pretty print recursively.
+       prettyPrint = false;
+-
+       // Use a tree set so that the properties are sorted.
+       Set<String> propertyNames = Sets.newTreeSet();
+       for (ObjectType current = this;
+            current != null && !current.isNativeObjectType() &&
+                propertyNames.size() <= MAX_PRETTY_PRINTED_PROPERTIES;
+            current = current.getImplicitPrototype()) {
+         propertyNames.addAll(current.getOwnPropertyNames());
+       }
+-
+       StringBuilder sb = new StringBuilder();
+       sb.append("{");
+-
+       int i = 0;
+       for (String property : propertyNames) {
+         if (i > 0) {
+           sb.append(", ");
+         }
+-
+         sb.append(property);
+         sb.append(": ");
+-        sb.append(getPropertyType(property).toString());
+-
+-        ++i;
+-        if (i == MAX_PRETTY_PRINTED_PROPERTIES) {
+-          sb.append(", ...");
+-          break;
++// buggy code
++//        sb.append(getPropertyType(property).toString());
++//        ++i;
++//        if (i == MAX_PRETTY_PRINTED_PROPERTIES) {
++//          sb.append(", ...");
++//          break;
++//        }
++//      }
++//      sb.append("}");
++//      prettyPrint = true;
++//      return sb.toString();
++//    } else {
++//      return "{...}";
+       }
+-      }
+-
+       sb.append("}");
+-
+       prettyPrint = true;
+       return sb.toString();
+     } else {
+       return "{...}";
+     }
++
++    }
+   }

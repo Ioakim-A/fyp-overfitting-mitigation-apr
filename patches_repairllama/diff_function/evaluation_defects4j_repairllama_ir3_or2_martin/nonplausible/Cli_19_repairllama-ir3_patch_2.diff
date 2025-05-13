@@ -1,0 +1,23 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/276bcdaf-53fc-4aa9-8afe-f1568d73df86_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/55c451db-dc89-4c15-8889-71409517dac2_fixed.java
+index 37e6f48..ade86c9 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/276bcdaf-53fc-4aa9-8afe-f1568d73df86_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/55c451db-dc89-4c15-8889-71409517dac2_fixed.java
+@@ -1,13 +1,15 @@
+     private void processOptionToken(String token, boolean stopAtNonOption)
+     {
+         if (options.hasOption(token))
+         {
+             currentOption = options.getOption(token);
+-            tokens.add(token);
++           if (stopAtNonOption && !currentOption.hasArg())
++            {
++                currentOption = null;
++            }
+         }
+         else if (stopAtNonOption)
+         {
+-            eatTheRest = true;
+-            tokens.add(token);
++            currentOption = null;
+         }
+     }

@@ -1,0 +1,25 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d7d5db53-acb4-4801-b11e-51b8e914213d_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cc5e3c87-8e57-4595-a1b0-7f6a8d7fb045_fixed.java
+index f0ee9ab..5284369 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d7d5db53-acb4-4801-b11e-51b8e914213d_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cc5e3c87-8e57-4595-a1b0-7f6a8d7fb045_fixed.java
+@@ -1,18 +1,15 @@
+ boolean isAssignedOnceInLifetime() {
+   Reference ref = getOneAndOnlyAssignment();
+   if (ref == null) {
+     return false;
+   }
+-
+-      // Make sure this assignment is not in a loop.
+   for (BasicBlock block = ref.getBasicBlock();
+        block != null; block = block.getParent()) {
+     if (block.isFunction) {
+-          break;
++      return true;
+     } else if (block.isLoop) {
+       return false;
+     }
+   }
+-
+   return true;
+ }
+\ No newline at end of file

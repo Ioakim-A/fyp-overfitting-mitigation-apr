@@ -1,0 +1,47 @@
+diff --git src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java
+index 8cdccde..5bf233a 100644
+--- src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java
++++ src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java
+@@ -739,13 +739,10 @@ public class BeanDeserializer
+         // 01-Dec-2016, tatu: Note: This IS legal to call, but only when unwrapped
+         //    value itself is NOT passed via `CreatorProperty` (which isn't supported).
+         //    Ok however to pass via setter or field.
+-        
+         final PropertyBasedCreator creator = _propertyBasedCreator;
+         PropertyValueBuffer buffer = creator.startBuilding(p, ctxt, _objectIdReader);
+-
+         TokenBuffer tokens = new TokenBuffer(p, ctxt);
+         tokens.writeStartObject();
+-
+         JsonToken t = p.getCurrentToken();
+         for (; t == JsonToken.FIELD_NAME; t = p.nextToken()) {
+             String propName = p.getCurrentName();
+@@ -768,12 +765,19 @@ public class BeanDeserializer
+                     // if so, need to copy all remaining tokens into buffer
+                     while (t == JsonToken.FIELD_NAME) {
+                         // NOTE: do NOT skip name as it needs to be copied; `copyCurrentStructure` does that
+-                        p.nextToken();
++// buggy code
++//                        p.nextToken();
++//                        tokens.copyCurrentStructure(p);
++//                        t = p.nextToken();
++//                    }
++//                    // 28-Aug-2018, tatu: Let's add sanity check here, easier to catch off-by-some
++//                    //    problems if we maintain invariants
+                         tokens.copyCurrentStructure(p);
+                         t = p.nextToken();
+                     }
+                     // 28-Aug-2018, tatu: Let's add sanity check here, easier to catch off-by-some
+                     //    problems if we maintain invariants
++
+                     tokens.writeEndObject();
+                     if (bean.getClass() != _beanType.getRawClass()) {
+                         // !!! 08-Jul-2011, tatu: Could probably support; but for now
+@@ -823,7 +827,6 @@ public class BeanDeserializer
+                 continue;
+             }
+         }
+-
+         // We hit END_OBJECT, so:
+         Object bean;
+         try {

@@ -1,0 +1,68 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d55b8901-9f79-4d5f-bdb7-10018366e0ee_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5c592d48-d6e4-4071-9502-3daafd4a252b_fixed.java
+index 4433921..4c59a0b 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d55b8901-9f79-4d5f-bdb7-10018366e0ee_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5c592d48-d6e4-4071-9502-3daafd4a252b_fixed.java
+@@ -1,60 +1,56 @@
+     void encode(byte[] in, int inPos, int inAvail) {
+         if (eof) {
+             return;
+         }
+-        // inAvail < 0 is how we're informed of EOF in the underlying data we're
+-        // encoding.
+         if (inAvail < 0) {
+             eof = true;
+             if (buf == null || buf.length - pos < encodeSize) {
+                 resizeBuf();
+             }
+             switch (modulus) {
+                 case 1:
+                     buf[pos++] = encodeTable[(x >> 2) & MASK_6BITS];
+                     buf[pos++] = encodeTable[(x << 4) & MASK_6BITS];
+-                    // URL-SAFE skips the padding to further reduce size.
+                     if (encodeTable == STANDARD_ENCODE_TABLE) {
+                         buf[pos++] = PAD;
+                         buf[pos++] = PAD;
+                     }
+                     break;
+-
+                 case 2:
+                     buf[pos++] = encodeTable[(x >> 10) & MASK_6BITS];
+                     buf[pos++] = encodeTable[(x >> 4) & MASK_6BITS];
+                     buf[pos++] = encodeTable[(x << 2) & MASK_6BITS];
+-                    // URL-SAFE skips the padding to further reduce size.
+                     if (encodeTable == STANDARD_ENCODE_TABLE) {
+                         buf[pos++] = PAD;
+                     }
+                     break;
+             }
+-            if (lineLength > 0) {
++            // fixed code
++            if (lineLength > 0 && lineLength <= currentLinePos) {
+                 System.arraycopy(lineSeparator, 0, buf, pos, lineSeparator.length);
+                 pos += lineSeparator.length;
+             }
+         } else {
+             for (int i = 0; i < inAvail; i++) {
+                 if (buf == null || buf.length - pos < encodeSize) {
+                     resizeBuf();
+                 }
+                 modulus = (++modulus) % 3;
+                 int b = in[inPos++];
+                 if (b < 0) { b += 256; }
+                 x = (x << 8) + b;
+                 if (0 == modulus) {
+                     buf[pos++] = encodeTable[(x >> 18) & MASK_6BITS];
+                     buf[pos++] = encodeTable[(x >> 12) & MASK_6BITS];
+                     buf[pos++] = encodeTable[(x >> 6) & MASK_6BITS];
+                     buf[pos++] = encodeTable[x & MASK_6BITS];
+                     currentLinePos += 4;
+                     if (lineLength > 0 && lineLength <= currentLinePos) {
+                         System.arraycopy(lineSeparator, 0, buf, pos, lineSeparator.length);
+                         pos += lineSeparator.length;
+                         currentLinePos = 0;
+                     }
+                 }
+             }
+         }
+     }
+\ No newline at end of file

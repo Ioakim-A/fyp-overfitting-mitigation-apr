@@ -1,0 +1,23 @@
+diff --git src/java/org/apache/commons/cli/TypeHandler.java src/java/org/apache/commons/cli/TypeHandler.java
+index addf90b..65d4f85 100644
+--- src/java/org/apache/commons/cli/TypeHandler.java
++++ src/java/org/apache/commons/cli/TypeHandler.java
+@@ -158,13 +158,16 @@ public class TypeHandler {
+     {
+         try
+         {
+-            return org.apache.commons.lang.math.NumberUtils.createNumber(str);
++            if (str.indexOf('.') != -1)
++                return new Double(str);
++            else
++                return new Long(str);
++
+         }
+         catch (NumberFormatException nfe)
+         {
+             System.err.println(nfe.getMessage());
+         }
+-
+         return null;
+     }
+ 

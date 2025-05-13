@@ -1,0 +1,32 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3f2b2c0a-46c1-463f-8baf-5b1df144ade0_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2db26931-0f77-4235-b096-19085216844b_fixed.java
+index 70cafe0..117b598 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3f2b2c0a-46c1-463f-8baf-5b1df144ade0_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2db26931-0f77-4235-b096-19085216844b_fixed.java
+@@ -1,18 +1,26 @@
+     /**
+      * Checks whether the given column is basic.
+      * @param col index of the column to check
+      * @return the row that the variable is basic in.  null if the column is not basic
+      */
+     private Integer getBasicRow(final int col) {
+         Integer row = null;
+         for (int i = getNumObjectiveFunctions(); i < getHeight(); i++) {
+-            if (!MathUtils.equals(getEntry(i, col), 0.0, epsilon)) {
++// buggy code
++//            if (!MathUtils.equals(getEntry(i, col), 0.0, epsilon)) {
++//                if (row == null) {
++//                row = i;
++//                } else {
++//                return null;
++//                }
++            if (getEntry(i, col) != 0.0) {
+                 if (row == null) {
+                     row = i;
+                 } else {
+                     return null;
+                 }
++
+             }
+         }
+         return row;
+     }

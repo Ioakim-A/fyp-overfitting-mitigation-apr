@@ -1,0 +1,62 @@
+diff --git src/main/java/org/apache/commons/math3/optimization/fitting/HarmonicFitter.java src/main/java/org/apache/commons/math3/optimization/fitting/HarmonicFitter.java
+index 1da2c45..dde2ae6 100644
+--- src/main/java/org/apache/commons/math3/optimization/fitting/HarmonicFitter.java
++++ src/main/java/org/apache/commons/math3/optimization/fitting/HarmonicFitter.java
+@@ -261,7 +261,6 @@ public class HarmonicFitter extends CurveFitter<HarmonicOscillator.Parametric> {
+             double sxy = 0;
+             double sxz = 0;
+             double syz = 0;
+-
+             double currentX = observations[0].getX();
+             double currentY = observations[0].getY();
+             double f2Integral = 0;
+@@ -273,7 +272,6 @@ public class HarmonicFitter extends CurveFitter<HarmonicOscillator.Parametric> {
+                 final double previousY = currentY;
+                 currentX = observations[i].getX();
+                 currentY = observations[i].getY();
+-
+                 // update the integrals of f<sup>2</sup> and f'<sup>2</sup>
+                 // considering a linear model for f (and therefore constant f')
+                 final double dx = currentX - previousX;
+@@ -281,18 +279,15 @@ public class HarmonicFitter extends CurveFitter<HarmonicOscillator.Parametric> {
+                 final double f2StepIntegral =
+                     dx * (previousY * previousY + previousY * currentY + currentY * currentY) / 3;
+                 final double fPrime2StepIntegral = dy * dy / dx;
+-
+                 final double x = currentX - startX;
+                 f2Integral += f2StepIntegral;
+                 fPrime2Integral += fPrime2StepIntegral;
+-
+                 sx2 += x * x;
+                 sy2 += f2Integral * f2Integral;
+                 sxy += x * f2Integral;
+                 sxz += x * fPrime2Integral;
+                 syz += f2Integral * fPrime2Integral;
+             }
+-
+             // compute the amplitude and pulsation coefficients
+             double c1 = sy2 * sxz - sxy * syz;
+             double c2 = sxy * sxz - sx2 * syz;
+@@ -306,7 +301,6 @@ public class HarmonicFitter extends CurveFitter<HarmonicOscillator.Parametric> {
+                     throw new ZeroException();
+                 }
+                 omega = 2 * Math.PI / xRange;
+-
+                 double yMin = Double.POSITIVE_INFINITY;
+                 double yMax = Double.NEGATIVE_INFINITY;
+                 for (int i = 1; i < observations.length; ++i) {
+@@ -320,8 +314,14 @@ public class HarmonicFitter extends CurveFitter<HarmonicOscillator.Parametric> {
+                 }
+                 a = 0.5 * (yMax - yMin);
+             } else {
++// buggy code
++//                    // In some ill-conditioned cases (cf. MATH-844), the guesser
++//                    // procedure cannot produce sensible results.
+                 // In some ill-conditioned cases (cf. MATH-844), the guesser
+                 // procedure cannot produce sensible results.
++                if ((c1 == 0) || (c2 == 0)) {
++                    throw new MathIllegalStateException();
++                }
+ 
+                 a = FastMath.sqrt(c1 / c2);
+                 omega = FastMath.sqrt(c2 / c3);

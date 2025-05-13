@@ -1,0 +1,62 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9b72b0f8-776a-4843-a72b-f0732ba908cf_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ef6e5f89-cad9-4286-867a-c687a51dd8bb_fixed.java
+index c6f5eed..28582d2 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9b72b0f8-776a-4843-a72b-f0732ba908cf_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ef6e5f89-cad9-4286-867a-c687a51dd8bb_fixed.java
+@@ -1,48 +1,43 @@
+     public static long parseOctal(final byte[] buffer, final int offset, final int length) {
+         long    result = 0;
+         int     end = offset + length;
+         int     start = offset;
+-
+         if (length < 2){
+             throw new IllegalArgumentException("Length "+length+" must be at least 2");
+         }
+-
+         if (buffer[start] == 0) {
+             return 0L;
+         }
+-
+-        // Skip leading spaces
+         while (start < end){
+             if (buffer[start] == ' '){
+                 start++;
+             } else {
+                 break;
+             }
+         }
+-
+-        // Trim all trailing NULs and spaces.
+-        // The ustar and POSIX tar specs require a trailing NUL or
+-        // space but some implementations use the extra digit for big
+-        // sizes/uids/gids ...
+         byte trailer = buffer[end - 1];
+         while (start < end && (trailer == 0 || trailer == ' ')) {
+             end--;
+             trailer = buffer[end - 1];
+         }
+-
+         for ( ;start < end; start++) {
+             final byte currentByte = buffer[start];
++// buggy code
++//            if (currentByte == 0) {
++//                break;
++//            }
++//            if (currentByte < '0' || currentByte > '7'){
++//                throw new IllegalArgumentException(
++//                        exceptionMessage(buffer, offset, length, start, currentByte));
++//            }
+             if (currentByte == 0) {
+                 break;
+             }
+-            // CheckStyle:MagicNumber OFF
+             if (currentByte < '0' || currentByte > '7'){
+                 throw new IllegalArgumentException(
+                         exceptionMessage(buffer, offset, length, start, currentByte));
+             }
+-            result = (result << 3) + (currentByte - '0'); // convert from ASCII
+-            // CheckStyle:MagicNumber ON
++            result = (result << 3) + (currentByte - '0'); 
+         }
+-
+         return result;
+     }

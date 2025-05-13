@@ -1,0 +1,52 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/80e4f55d-3982-457f-b01d-2fc40297f016_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3e31fa74-7af9-440e-934f-7baf38d76daf_fixed.java
+index 18c915f..7735e14 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/80e4f55d-3982-457f-b01d-2fc40297f016_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3e31fa74-7af9-440e-934f-7baf38d76daf_fixed.java
+@@ -1,45 +1,38 @@
+     protected void processProperties(Properties properties)
+     {
+         if (properties == null)
+         {
+             return;
+         }
+-
+         for (Enumeration e = properties.propertyNames(); e.hasMoreElements();)
+         {
+             String option = e.nextElement().toString();
+-
+             if (!cmd.hasOption(option))
+             {
+                 Option opt = getOptions().getOption(option);
+-
+-                // get the value from the properties instance
+                 String value = properties.getProperty(option);
+-
+                 if (opt.hasArg())
+                 {
+                     if (opt.getValues() == null || opt.getValues().length == 0)
+                     {
+                         try
+                         {
+                             opt.addValueForProcessing(value);
+                         }
+                         catch (RuntimeException exp)
+                         {
+-                            // if we cannot add the value don't worry about it
+                         }
+                     }
+                 }
+                 else if (!("yes".equalsIgnoreCase(value)
+                         || "true".equalsIgnoreCase(value)
+                         || "1".equalsIgnoreCase(value)))
+                 {
+-                    // if the value is not yes, true or 1 then don't add the
+-                    // option to the CommandLine
++// buggy code
++//                     break;
+                    break;
+                 }
+-
+                 cmd.addOption(opt);
+             }
+         }
+     }

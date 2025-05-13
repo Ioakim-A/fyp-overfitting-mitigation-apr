@@ -1,0 +1,30 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e01cac33-7489-4b95-8b42-0d70157b6864_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/be4fe5b6-5b84-4405-9792-5146ed492884_fixed.java
+index 939f49b..30a6a0a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e01cac33-7489-4b95-8b42-0d70157b6864_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/be4fe5b6-5b84-4405-9792-5146ed492884_fixed.java
+@@ -1,21 +1,20 @@
+     private boolean isPrototypePropertyAssign(Node assign) {
+       Node n = assign.getFirstChild();
+       if (n != null && NodeUtil.isVarOrSimpleAssignLhs(n, assign)
+           && n.getType() == Token.GETPROP
+-          ) {
+-        // We want to exclude the assignment itself from the usage list
++// buggy code
++//          ) {
++         && n.getFirstChild().getFirstChild().getType() == Token.THIS
++
+         boolean isChainedProperty =
+             n.getFirstChild().getType() == Token.GETPROP;
+-
+         if (isChainedProperty) {
+           Node child = n.getFirstChild().getFirstChild().getNext();
+-
+           if (child.getType() == Token.STRING &&
+               child.getString().equals("prototype")) {
+             return true;
+           }
+         }
+       }
+-
+       return false;
+     }

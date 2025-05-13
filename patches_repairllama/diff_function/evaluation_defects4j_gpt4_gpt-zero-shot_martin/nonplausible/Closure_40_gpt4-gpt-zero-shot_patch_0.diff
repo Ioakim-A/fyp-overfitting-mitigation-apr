@@ -1,0 +1,55 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/08a8237f-9c3f-4d05-a921-d6cdf44d21bd_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/eaf31719-95b3-4722-9edd-70a88fa49d7f_fixed.java
+index 680d3be..9266c73 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/08a8237f-9c3f-4d05-a921-d6cdf44d21bd_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/eaf31719-95b3-4722-9edd-70a88fa49d7f_fixed.java
+@@ -1,47 +1,44 @@
+     public void visit(NodeTraversal t, Node n, Node parent) {
+-
+-      // Record global variable and function declarations
+       if (t.inGlobalScope()) {
+         if (NodeUtil.isVarDeclaration(n)) {
+           NameInformation ns = createNameInformation(t, n, parent);
+           Preconditions.checkNotNull(ns);
+           recordSet(ns.name, n);
+         } else if (NodeUtil.isFunctionDeclaration(n)) {
+           Node nameNode = n.getFirstChild();
+           NameInformation ns = createNameInformation(t, nameNode, n);
+           if (ns != null) {
+             JsName nameInfo = getName(nameNode.getString(), true);
+             recordSet(nameInfo.name, nameNode);
+           }
+         } else if (NodeUtil.isObjectLitKey(n, parent)) {
+           NameInformation ns = createNameInformation(t, n, parent);
+           if (ns != null) {
+             recordSet(ns.name, n);
+           }
+         }
+       }
+-
+-      // Record assignments and call sites
+       if (n.isAssign()) {
+         Node nameNode = n.getFirstChild();
+-
+         NameInformation ns = createNameInformation(t, nameNode, n);
+         if (ns != null) {
+           if (ns.isPrototype) {
+             recordPrototypeSet(ns.prototypeClass, ns.prototypeProperty, n);
+           } else {
+             recordSet(ns.name, nameNode);
+           }
+         }
+       } else if (n.isCall()) {
+         Node nameNode = n.getFirstChild();
+         NameInformation ns = createNameInformation(t, nameNode, n);
+         if (ns != null && ns.onlyAffectsClassDef) {
+           JsName name = getName(ns.name, false);
+           if (name != null) {
++            if(parent != null && parent.getParent() != null) {
+               refNodes.add(new ClassDefiningFunctionNode(
+                   name, n, parent, parent.getParent()));
+             }
+           }
+         }
+       }
++    }
+\ No newline at end of file

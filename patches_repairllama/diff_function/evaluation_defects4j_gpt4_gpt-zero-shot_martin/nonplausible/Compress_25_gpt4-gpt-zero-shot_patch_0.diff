@@ -1,0 +1,27 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d0e3e1ca-5b11-466b-868e-74f3b5019b21_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/434788ad-c256-45c6-b12b-a595d9a81a33_fixed.java
+index 638669b..c856994 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d0e3e1ca-5b11-466b-868e-74f3b5019b21_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/434788ad-c256-45c6-b12b-a595d9a81a33_fixed.java
+@@ -1,11 +1,20 @@
+     public ZipArchiveInputStream(InputStream inputStream,
+                                  String encoding,
+                                  boolean useUnicodeExtraFields,
+                                  boolean allowStoredEntriesWithDataDescriptor) {
+         zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
+         this.useUnicodeExtraFields = useUnicodeExtraFields;
++        buf = ByteBuffer.allocate(1024); // defining `buf` with a capacity 1024
+         in = new PushbackInputStream(inputStream, buf.capacity());
+         this.allowStoredEntriesWithDataDescriptor =
+             allowStoredEntriesWithDataDescriptor;
+-        // haven't read anything so far
++// fixed code
++// 
++        try {
++            byte[] buffer = new byte[buf.capacity()];
++            int bytesRead = inputStream.read(buffer);
++            in.unread(buffer, 0, bytesRead);
++        } catch (IOException e) {
++            e.printStackTrace();
++        }
+     }
+\ No newline at end of file

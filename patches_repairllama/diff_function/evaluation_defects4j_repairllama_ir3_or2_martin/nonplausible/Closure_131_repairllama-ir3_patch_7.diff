@@ -1,0 +1,25 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/695dede3-66c4-49ea-8131-d354010bd0ea_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/557175a3-8ed4-4c67-b599-8b28d53d0fb8_fixed.java
+index 19fe1b4..a54b6a9 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/695dede3-66c4-49ea-8131-d354010bd0ea_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/557175a3-8ed4-4c67-b599-8b28d53d0fb8_fixed.java
+@@ -1,17 +1,15 @@
+     public static boolean isJSIdentifier(String s) {
+       int length = s.length();
+-
+       if (length == 0 ||
+-          !Character.isJavaIdentifierStart(s.charAt(0))) {
++         !Character.isJavaIdentifierStart(s.charAt(0)) ||
++          !Character.isJavaIdentifierPart(s.charAt(length - 1))) {
+         return false;
+       }
+-
+       for (int i = 1; i < length; i++) {
+-        if (
++        if (!Character.isJavaIdentifierStart(s.charAt(i)) &&
+             !Character.isJavaIdentifierPart(s.charAt(i))) {
+           return false;
+         }
+       }
+-
+       return true;
+     }

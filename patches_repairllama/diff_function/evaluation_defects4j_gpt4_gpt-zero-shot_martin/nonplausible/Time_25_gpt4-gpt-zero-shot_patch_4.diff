@@ -1,0 +1,36 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c3bf2853-78de-4f70-a6b2-81487203d1b4_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f087b93b-e3b6-45cf-892a-920bb8ab3a43_fixed.java
+index 7eae43b..20ad486 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c3bf2853-78de-4f70-a6b2-81487203d1b4_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f087b93b-e3b6-45cf-892a-920bb8ab3a43_fixed.java
+@@ -1,23 +1,21 @@
+     public int getOffsetFromLocal(long instantLocal) {
+-        // get the offset at instantLocal (first estimate)
+         final int offsetLocal = getOffset(instantLocal);
+-        // adjust instantLocal using the estimate and recalc the offset
+         final long instantAdjusted = instantLocal - offsetLocal;
+         final int offsetAdjusted = getOffset(instantAdjusted);
+-        // if the offsets differ, we must be near a DST boundary
+         if (offsetLocal != offsetAdjusted) {
+-            // we need to ensure that time is always after the DST gap
+-            // this happens naturally for positive offsets, but not for negative
+             if ((offsetLocal - offsetAdjusted) < 0) {
+-                // if we just return offsetAdjusted then the time is pushed
+-                // back before the transition, whereas it should be
+-                // on or after the transition
+                 long nextLocal = nextTransition(instantAdjusted);
+-                long nextAdjusted = nextTransition(instantLocal - offsetAdjusted);
++                long nextAdjusted = nextTransition(instantLocal - offsetLocal);
+                 if (nextLocal != nextAdjusted) {
+                     return offsetLocal;
+                 }
++            } else {
++                long prevLocal = previousTransition(instantAdjusted);
++                long prevAdjusted = previousTransition(instantLocal + offsetLocal);
++                if (prevLocal != prevAdjusted) {
++                    return offsetLocal;
++                }
+             }
+         }
+         return offsetAdjusted;
+     }
+\ No newline at end of file

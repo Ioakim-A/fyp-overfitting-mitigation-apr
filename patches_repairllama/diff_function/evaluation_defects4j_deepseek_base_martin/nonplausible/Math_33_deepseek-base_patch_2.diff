@@ -1,0 +1,51 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e2caa8d2-3c98-4426-8c28-7ad94506aece_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ad6225eb-f394-4b65-a111-0baef54fbf07_fixed.java
+index 56b2d66..8a2817a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e2caa8d2-3c98-4426-8c28-7ad94506aece_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ad6225eb-f394-4b65-a111-0baef54fbf07_fixed.java
+@@ -1,45 +1,39 @@
+     /**
+      * Removes the phase 1 objective function, positive cost non-artificial variables,
+      * and the non-basic artificial variables from this tableau.
+      */
+     protected void dropPhase1Objective() {
+         if (getNumObjectiveFunctions() == 1) {
+             return;
+         }
+-
+         List<Integer> columnsToDrop = new ArrayList<Integer>();
+         columnsToDrop.add(0);
+-
+         // positive cost non-artificial variables
+         for (int i = getNumObjectiveFunctions(); i < getArtificialVariableOffset(); i++) {
+             final double entry = tableau.getEntry(0, i);
+-            if (Precision.compareTo(entry, 0d, maxUlps) > 0) {
++            if (Double.compare(entry, 0) > 0) {
+                 columnsToDrop.add(i);
+             }
+         }
+-
+         // non-basic artificial variables
+         for (int i = 0; i < getNumArtificialVariables(); i++) {
+           int col = i + getArtificialVariableOffset();
+           if (getBasicRow(col) == null) {
+             columnsToDrop.add(col);
+           }
+         }
+-
+         double[][] matrix = new double[getHeight() - 1][getWidth() - columnsToDrop.size()];
+         for (int i = 1; i < getHeight(); i++) {
+           int col = 0;
+           for (int j = 0; j < getWidth(); j++) {
+             if (!columnsToDrop.contains(j)) {
+               matrix[i - 1][col++] = tableau.getEntry(i, j);
+             }
+           }
+         }
+-
+         for (int i = columnsToDrop.size() - 1; i >= 0; i--) {
+           columnLabels.remove((int) columnsToDrop.get(i));
+         }
+-
+         this.tableau = new Array2DRowRealMatrix(matrix);
+         this.numArtificialVariables = 0;
+     }

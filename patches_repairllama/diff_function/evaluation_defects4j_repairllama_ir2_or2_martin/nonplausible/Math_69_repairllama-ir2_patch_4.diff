@@ -1,0 +1,23 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/33afc836-3fa7-4015-b3da-e69debad9960_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/37a6556f-46a9-49c9-882e-5aedf2eb4165_fixed.java
+index 6ba6dcc..5d5af75 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/33afc836-3fa7-4015-b3da-e69debad9960_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/37a6556f-46a9-49c9-882e-5aedf2eb4165_fixed.java
+@@ -1,17 +1,17 @@
+     public RealMatrix getCorrelationPValues() throws MathException {
+         TDistribution tDistribution = new TDistributionImpl(nObs - 2);
+         int nVars = correlationMatrix.getColumnDimension();
+         double[][] out = new double[nVars][nVars];
+         for (int i = 0; i < nVars; i++) {
+             for (int j = 0; j < nVars; j++) {
+                 if (i == j) {
+                     out[i][j] = 0d;
+                 } else {
+                     double r = correlationMatrix.getEntry(i, j);
+                     double t = Math.abs(r * Math.sqrt((nObs - 2)/(1 - r * r)));
+-                    out[i][j] = 2 * (1 - tDistribution.cumulativeProbability(t));
++                   out[i][j] = tDistribution.cumulativeProbability(t) * 2;
+                 }
+             }
+         }
+         return new BlockRealMatrix(out);
+     }

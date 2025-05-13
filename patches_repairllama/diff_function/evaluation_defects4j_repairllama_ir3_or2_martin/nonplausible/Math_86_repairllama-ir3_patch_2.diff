@@ -1,0 +1,71 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c398f95d-6f2d-4055-b578-00810c3c535b_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/75e7c8eb-f88f-4b52-ad3a-184fe1750ba5_fixed.java
+index 2ea7a7c..c8d68eb 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c398f95d-6f2d-4055-b578-00810c3c535b_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/75e7c8eb-f88f-4b52-ad3a-184fe1750ba5_fixed.java
+@@ -1,59 +1,39 @@
+     public CholeskyDecompositionImpl(final RealMatrix matrix,
+                                      final double relativeSymmetryThreshold,
+                                      final double absolutePositivityThreshold)
+         throws NonSquareMatrixException,
+                NotSymmetricMatrixException, NotPositiveDefiniteMatrixException {
+-
+         if (!matrix.isSquare()) {
+             throw new NonSquareMatrixException(matrix.getRowDimension(),
+                                                matrix.getColumnDimension());
+         }
+-
+         final int order = matrix.getRowDimension();
+         lTData   = matrix.getData();
+         cachedL  = null;
+         cachedLT = null;
+-
+-        // check the matrix before transformation
+         for (int i = 0; i < order; ++i) {
+-
+             final double[] lI = lTData[i];
+-
+-            if (lTData[i][i] < absolutePositivityThreshold) {
+-                throw new NotPositiveDefiniteMatrixException();
+-            }
+-            // check off-diagonal elements (and reset them to 0)
++           lI[i] = 1.0;
+             for (int j = i + 1; j < order; ++j) {
+-                final double[] lJ = lTData[j];
+-                final double lIJ = lI[j];
+-                final double lJI = lJ[i];
+-                final double maxDelta =
+-                    relativeSymmetryThreshold * Math.max(Math.abs(lIJ), Math.abs(lJI));
+-                if (Math.abs(lIJ - lJI) > maxDelta) {
+-                    throw new NotSymmetricMatrixException();
++                lI[j] = 0.0;
++            }
+         }
+-                lJ[i] = 0;
++        for (int i = 0; i < order; ++i) {
++            final double[] ltI = lTData[i];
++            for (int j = i + 1; j < order; ++j) {
++                ltI[j] /= ltI[i];
+             }
+         }
+-
+-        // transform the matrix
+         for (int i = 0; i < order; ++i) {
+-
+             final double[] ltI = lTData[i];
+-
+-            // check diagonal element
+-
+             ltI[i] = Math.sqrt(ltI[i]);
+             final double inverse = 1.0 / ltI[i];
+-
+             for (int q = order - 1; q > i; --q) {
+                 ltI[q] *= inverse;
+                 final double[] ltQ = lTData[q];
+                 for (int p = q; p < order; ++p) {
+                     ltQ[p] -= ltI[q] * ltI[p];
+                 }
+             }
+-
+         }
+-
+     }

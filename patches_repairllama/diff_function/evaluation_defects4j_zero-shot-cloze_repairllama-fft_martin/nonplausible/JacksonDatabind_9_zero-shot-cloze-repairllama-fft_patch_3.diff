@@ -1,0 +1,28 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a0d55f3b-4193-459c-b4e8-abb6b17d60a7_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1f5e23ae-cfa0-4c35-97f3-68d33304fbe7_fixed.java
+index 38d720d..bcdd513 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a0d55f3b-4193-459c-b4e8-abb6b17d60a7_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1f5e23ae-cfa0-4c35-97f3-68d33304fbe7_fixed.java
+@@ -1,11 +1,20 @@
+     public void serialize(Object value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
+         String str;
+-        
++// buggy code
++//        if (value instanceof Date) {
++//            provider.defaultSerializeDateKey((Date) value, jgen);
++//            return;
++//        } else if (value instanceof Calendar) {
++//            provider.defaultSerializeCalendarKey((Calendar) value, jgen);
++//            return;
++//        }
+         if (value instanceof Date) {
+-            provider.defaultSerializeDateKey((Date) value, jgen);
+-            return;
++            str = provider.defaultSerializeDateKey((Date) value, jgen);
++        } else if (value instanceof Calendar) {
++            str = provider.defaultSerializeCalendarKey((Calendar) value, jgen);
++
+         } else {
+             str = value.toString();
+         }
+         jgen.writeFieldName(str);
+     }

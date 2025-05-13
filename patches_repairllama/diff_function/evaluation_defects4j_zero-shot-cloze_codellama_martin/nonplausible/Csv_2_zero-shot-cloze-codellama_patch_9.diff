@@ -1,0 +1,24 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0fd68b59-ae83-4cb3-968a-0f7d2e7091d5_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/69a71e7b-1e26-4099-9afc-8821b6b83e9a_fixed.java
+index 80829e5..f44724a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0fd68b59-ae83-4cb3-968a-0f7d2e7091d5_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/69a71e7b-1e26-4099-9afc-8821b6b83e9a_fixed.java
+@@ -1,8 +1,18 @@
+     public String get(final String name) {
+         if (mapping == null) {
+             throw new IllegalStateException(
+                     "No header mapping was specified, the record values can't be accessed by name");
+         }
+         final Integer index = mapping.get(name);
+-            return index != null ? values[index.intValue()] : null;
++       if (index == null) {
++            return null;
++        }
++        return get(index);
++    }
++
++    public String get(final int index) {
++        if (index < 0 || index >= values.size()) {
++            return null;
++        }
++        return values.get(index);
+     }

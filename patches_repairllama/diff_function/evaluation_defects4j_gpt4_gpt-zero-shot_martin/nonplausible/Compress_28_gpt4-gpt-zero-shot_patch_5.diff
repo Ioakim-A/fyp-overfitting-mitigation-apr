@@ -1,0 +1,32 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/90d9171a-00dc-416a-b5c6-50fe49af0df5_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d83522d7-5ab4-4d55-a006-62e8f338737b_fixed.java
+index 661ff51..141ce6d 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/90d9171a-00dc-416a-b5c6-50fe49af0df5_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d83522d7-5ab4-4d55-a006-62e8f338737b_fixed.java
+@@ -1,24 +1,20 @@
+     public int read(byte[] buf, int offset, int numToRead) throws IOException {
+ 	    int totalRead = 0;
+-
+         if (hasHitEOF || entryOffset >= entrySize) {
+             return -1;
+         }
+-
+         if (currEntry == null) {
+             throw new IllegalStateException("No current tar entry");
+         }
+-
+         numToRead = Math.min(numToRead, available());
+-        
+         totalRead = is.read(buf, offset, numToRead);
+         count(totalRead);
+-        
+         if (totalRead == -1) {
+             hasHitEOF = true;
+         } else {
++            if(totalRead != -1) {
+                 entryOffset += totalRead;
+             }
+-
++        }
+         return totalRead;
+     }
+\ No newline at end of file

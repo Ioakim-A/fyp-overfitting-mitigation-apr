@@ -1,0 +1,42 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/246363f0-ccb3-47d5-b89f-b3bf332d1df7_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6f512f03-2cfb-4a4e-8579-fbc1fa306d09_fixed.java
+index 3ec8614..ff91612 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/246363f0-ccb3-47d5-b89f-b3bf332d1df7_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6f512f03-2cfb-4a4e-8579-fbc1fa306d09_fixed.java
+@@ -1,20 +1,37 @@
+     public void escape(Writer writer, String str) throws IOException {
+         int len = str.length();
+         for (int i = 0; i < len; i++) {
++// buggy code
++//            char c = str.charAt(i);
++//            String entityName = this.entityName(c);
++//            if (entityName == null) {
++//                if (c > 0x7F) {
++//                    writer.write("&#");
++//                    writer.write(Integer.toString(c, 10));
++//                    writer.write(';');
++//                } else {
++//                    writer.write(c);
++//                }
++//            } else {
++//                writer.write('&');
++//                writer.write(entityName);
++//                writer.write(';');
++//            }
++// fixed code
+             char c = str.charAt(i);
+             String entityName = this.entityName(c);
+             if (entityName == null) {
+                 if (c > 0x7F) {
+                     writer.write("&#");
+                     writer.write(Integer.toString(c, 10));
+                     writer.write(';');
+                 } else {
+                     writer.write(c);
+                 }
+             } else {
+                 writer.write('&');
+                 writer.write(entityName);
+                 writer.write(';');
+             }
+         }
+     }

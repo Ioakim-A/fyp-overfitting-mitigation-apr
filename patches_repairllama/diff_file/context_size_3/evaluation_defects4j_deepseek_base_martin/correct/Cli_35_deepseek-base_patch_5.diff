@@ -1,0 +1,28 @@
+diff --git src/main/java/org/apache/commons/cli/Options.java src/main/java/org/apache/commons/cli/Options.java
+index e9a0aa9..e3e102c 100644
+--- src/main/java/org/apache/commons/cli/Options.java
++++ src/main/java/org/apache/commons/cli/Options.java
+@@ -233,11 +233,12 @@ public class Options implements Serializable
+     public List<String> getMatchingOptions(String opt)
+     {
+         opt = Util.stripLeadingHyphens(opt);
+-        
+         List<String> matchingOpts = new ArrayList<String>();
+-
+         // for a perfect match return the single option only
+-
++        if (longOpts.containsKey(opt))
++        {
++            return Collections.singletonList(opt);
++        }
+         for (String longOpt : longOpts.keySet())
+         {
+             if (longOpt.startsWith(opt))
+@@ -245,7 +246,6 @@ public class Options implements Serializable
+                 matchingOpts.add(longOpt);
+             }
+         }
+-        
+         return matchingOpts;
+     }
+ 

@@ -1,0 +1,38 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d64238d2-312b-47da-bcdc-415f0ff8deda_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a5d91b0c-116a-436f-b4f1-04687dee0c48_fixed.java
+index 800e6e1..06e4825 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d64238d2-312b-47da-bcdc-415f0ff8deda_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a5d91b0c-116a-436f-b4f1-04687dee0c48_fixed.java
+@@ -1,32 +1,16 @@
+     /**
+      * Visit a node in a local scope, and add any local variables or catch
+      * parameters into the local symbol table.
+      *
+      * @param t The node traversal.
+      * @param n The node being visited.
+      * @param parent The parent of n
+      */
+     @Override public void visit(NodeTraversal t, Node n, Node parent) {
+       if (n == scope.getRootNode()) return;
+-
+       if (n.getType() == Token.LP && parent == scope.getRootNode()) {
+         handleFunctionInputs(parent);
+         return;
+       }
+-
+-      attachLiteralTypes(n);
+-      switch (n.getType()) {
+-        case Token.FUNCTION:
+-          if (parent.getType() == Token.NAME) {
+-            return;
+-          }
+-          defineDeclaredFunction(n, parent);
+-          break;
+-        case Token.CATCH:
+-          defineCatch(n, parent);
+-          break;
+-        case Token.VAR:
+-          defineVar(n, parent);
+-          break;
+-      }
++      super.visit(t, n, parent);
+     }

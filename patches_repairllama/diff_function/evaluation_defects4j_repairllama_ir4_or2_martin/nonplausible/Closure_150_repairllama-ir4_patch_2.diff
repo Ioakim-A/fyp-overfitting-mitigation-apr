@@ -1,0 +1,48 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2c317140-7363-40d1-9d9d-56095eeecd1e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4f61a285-9e7e-4d0a-a310-a873bd59482a_fixed.java
+index 88f63e7..2a8cb79 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2c317140-7363-40d1-9d9d-56095eeecd1e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4f61a285-9e7e-4d0a-a310-a873bd59482a_fixed.java
+@@ -1,24 +1,40 @@
+     @Override public void visit(NodeTraversal t, Node n, Node parent) {
+       if (n == scope.getRootNode()) return;
+-
+       if (n.getType() == Token.LP && parent == scope.getRootNode()) {
+         handleFunctionInputs(parent);
+         return;
+       }
+-
+-      attachLiteralTypes(n);
++// buggy code
++//       attachLiteralTypes(n);
++//       switch (n.getType()) {
++//         case Token.FUNCTION:
++//           if (parent.getType() == Token.NAME) {
++//             return;
++//           }
++//           defineDeclaredFunction(n, parent);
++//           break;
++//         case Token.CATCH:
++//           defineCatch(n, parent);
++//           break;
++//         case Token.VAR:
++//           defineVar(n, parent);
++//           break;
++//       }
+      switch (n.getType()) {
+         case Token.FUNCTION:
+           if (parent.getType() == Token.NAME) {
+             return;
+           }
+           defineDeclaredFunction(n, parent);
+           break;
+         case Token.CATCH:
+           defineCatch(n, parent);
+           break;
+         case Token.VAR:
+           defineVar(n, parent);
+           break;
++        default:
++          attachLiteralTypes(n);
++          break;
+       }
+     }

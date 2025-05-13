@@ -1,0 +1,27 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f01ee0e0-098c-465c-8435-13b153e7a847_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5a652d9f-6ae8-48f9-b380-1ba1968fac31_fixed.java
+index aced44d..89c81ae 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f01ee0e0-098c-465c-8435-13b153e7a847_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5a652d9f-6ae8-48f9-b380-1ba1968fac31_fixed.java
+@@ -1,11 +1,19 @@
+     private boolean _hasCustomHandlers(JavaType t) {
+         if (t.isContainerType()) {
+-            // First: value types may have both value and type handlers
+             JavaType ct = t.getContentType();
+             if (ct != null) {
+-                return (ct.getValueHandler() != null) || (ct.getTypeHandler() != null);
+-            // Second: map(-like) types may have value handler for key (but not type; keys are untyped)
++               return _hasCustomHandlers(ct);
++            }
++        } else if (t.isReferenceType()) {
++            JavaType rt = t.getReferenceType();
++            if (rt != null) {
++                return _hasCustomHandlers(rt);
++            }
++        } else if (t.isArrayType()) {
++            JavaType at = t.getContentType();
++            if (at != null) {
++                return _hasCustomHandlers(at);
+             }
+         }
+         return false;
+     }

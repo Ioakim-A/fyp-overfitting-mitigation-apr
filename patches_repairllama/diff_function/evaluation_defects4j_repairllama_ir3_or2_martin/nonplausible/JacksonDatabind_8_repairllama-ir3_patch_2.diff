@@ -1,0 +1,44 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/79a080d2-d061-4895-954b-22390089f359_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fdb4af22-d40b-4b08-a7f0-c40d01dd079d_fixed.java
+index c9da1b7..075d66e 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/79a080d2-d061-4895-954b-22390089f359_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fdb4af22-d40b-4b08-a7f0-c40d01dd079d_fixed.java
+@@ -1,33 +1,21 @@
+     protected void verifyNonDup(AnnotatedWithParams newOne, int typeIndex, boolean explicit)
+     {
+         final int mask = (1 << typeIndex);
+         _hasNonDefaultCreator = true;
+         AnnotatedWithParams oldOne = _creators[typeIndex];
+-        // already had an explicitly marked one?
+         if (oldOne != null) {
+-
+-            if ((_explicitCreators & mask) != 0) { // already had explicitly annotated, leave as-is
+-                // but skip, if new one not annotated
+-                if (!explicit) {
++           Class<?> oldType = oldOne.getRawParameterType(0);
++            Class<?> newType = newOne.getRawParameterType(0);
++            if (oldType.isAssignableFrom(newType)) {
+                 return;
+             }
+-                // both explicit: verify
+-                // otherwise only verify if neither explicitly annotated.
+-            }
+-
+-            // one more thing: ok to override in sub-class
+-            if (oldOne.getClass() == newOne.getClass()) {
+-                // [databind#667]: avoid one particular class of bogus problems
+-
+-                    throw new IllegalArgumentException("Conflicting "+TYPE_DESCS[typeIndex]
+-                            +" creators: already had explicitly marked "+oldOne+", encountered "+newOne);
+-                // otherwise, which one to choose?
+-                    // new type more generic, use old
+-                // new type more specific, use it
++            if (newType.isAssignableFrom(oldType)) {
++                _creators[typeIndex] = _fixAccess(newOne);
++                return;
+             }
+         }
+         if (explicit) {
+             _explicitCreators |= mask;
+         }
+         _creators[typeIndex] = _fixAccess(newOne);
+     }

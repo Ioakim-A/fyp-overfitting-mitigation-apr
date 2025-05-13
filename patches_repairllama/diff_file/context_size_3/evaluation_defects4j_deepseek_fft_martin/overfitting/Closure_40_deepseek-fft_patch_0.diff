@@ -1,0 +1,44 @@
+diff --git src/com/google/javascript/jscomp/NameAnalyzer.java src/com/google/javascript/jscomp/NameAnalyzer.java
+index 088a993..3eec252 100644
+--- src/com/google/javascript/jscomp/NameAnalyzer.java
++++ src/com/google/javascript/jscomp/NameAnalyzer.java
+@@ -594,7 +594,6 @@ final class NameAnalyzer implements CompilerPass {
+ 
+     @Override
+     public void visit(NodeTraversal t, Node n, Node parent) {
+-
+       // Record global variable and function declarations
+       if (t.inGlobalScope()) {
+         if (NodeUtil.isVarDeclaration(n)) {
+@@ -615,11 +614,9 @@ final class NameAnalyzer implements CompilerPass {
+           }
+         }
+       }
+-
+       // Record assignments and call sites
+       if (n.isAssign()) {
+         Node nameNode = n.getFirstChild();
+-
+         NameInformation ns = createNameInformation(t, nameNode, n);
+         if (ns != null) {
+           if (ns.isPrototype) {
+@@ -632,11 +629,18 @@ final class NameAnalyzer implements CompilerPass {
+         Node nameNode = n.getFirstChild();
+         NameInformation ns = createNameInformation(t, nameNode, n);
+         if (ns != null && ns.onlyAffectsClassDef) {
+-          JsName name = getName(ns.name, false);
++// buggy code
++//          JsName name = getName(ns.name, false);
++//          if (name != null) {
++//          refNodes.add(new ClassDefiningFunctionNode(
++//              name, n, parent, parent.getParent()));
++//          }
++          JsName name = getName(ns.name, true);
+           if (name != null) {
+             refNodes.add(new ClassDefiningFunctionNode(
+                 name, n, parent, parent.getParent()));
+           }
++
+         }
+       }
+     }

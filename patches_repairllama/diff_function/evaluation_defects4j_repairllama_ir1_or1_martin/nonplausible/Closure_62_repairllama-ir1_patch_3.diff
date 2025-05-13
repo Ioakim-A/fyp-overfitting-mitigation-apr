@@ -1,0 +1,54 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a43c5ed7-8816-4664-85f4-1c17a391a7ee_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3db7b461-cb47-4553-a438-7fcbe38304f0_fixed.java
+index 904dba7..70d255f 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a43c5ed7-8816-4664-85f4-1c17a391a7ee_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3db7b461-cb47-4553-a438-7fcbe38304f0_fixed.java
+@@ -1,46 +1,24 @@
+ private String format(JSError error, boolean warning) {
+-    // extract source excerpt
+     SourceExcerptProvider source = getSource();
+     String sourceExcerpt = source == null ? null :
+         excerpt.get(
+             source, error.sourceName, error.lineNumber, excerptFormatter);
+-
+-    // formatting the message
+     StringBuilder b = new StringBuilder();
+     if (error.sourceName != null) {
+       b.append(error.sourceName);
+-      if (error.lineNumber > 0) {
++      if (error.lineNumber >= 0) {
+         b.append(':');
+         b.append(error.lineNumber);
+       }
+       b.append(": ");
+     }
+-
+     b.append(getLevelName(warning ? CheckLevel.WARNING : CheckLevel.ERROR));
+     b.append(" - ");
+-
+     b.append(error.description);
+     b.append('\n');
+     if (sourceExcerpt != null) {
+       b.append(sourceExcerpt);
+       b.append('\n');
+       int charno = error.getCharno();
+-
+-      // padding equal to the excerpt and arrow at the end
+-      // charno == sourceExpert.length() means something is missing
+-      // at the end of the line
+       if (excerpt.equals(LINE)
+-          && 0 <= charno && charno < sourceExcerpt.length()) {
+-        for (int i = 0; i < charno; i++) {
+-          char c = sourceExcerpt.charAt(i);
+-          if (Character.isWhitespace(c)) {
+-            b.append(c);
+-          } else {
+-            b.append(' ');
+-          }
+-        }
+-        b.append("^\n");
+-      }
+-    }
+-    return b.toString();
+-  }
++          && 0 <= charno && char
+\ No newline at end of file

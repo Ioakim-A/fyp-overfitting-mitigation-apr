@@ -1,0 +1,39 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1ba61d97-2333-4689-90b7-f773a63b7a04_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0ed71304-98d8-415f-b2d9-0311691e36ba_fixed.java
+index 284dc9c..4fe38f1 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1ba61d97-2333-4689-90b7-f773a63b7a04_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0ed71304-98d8-415f-b2d9-0311691e36ba_fixed.java
+@@ -1,29 +1,32 @@
+     public int parseInto(ReadWritableInstant instant, String text, int position) {
+         DateTimeParser parser = requireParser();
+         if (instant == null) {
+             throw new IllegalArgumentException("Instant must not be null");
+         }
+-        
+         long instantMillis = instant.getMillis();
+         Chronology chrono = instant.getChronology();
+-        long instantLocal = instantMillis + chrono.getZone().getOffset(instantMillis);
++// buggy code
++//        long instantLocal = instantMillis + chrono.getZone().getOffset(instantMillis);
++//        chrono = selectChronology(chrono);
++//        int defaultYear = chrono.year().get(instantLocal);
++       long instantLocal = chrono.getZone().getOffset(instantMillis) + instantMillis;
+         chrono = selectChronology(chrono);
+         int defaultYear = chrono.year().get(instantLocal);
+ 
+         DateTimeParserBucket bucket = new DateTimeParserBucket(
+             instantLocal, chrono, iLocale, iPivotYear, defaultYear);
+         int newPos = parser.parseInto(bucket, text, position);
+         instant.setMillis(bucket.computeMillis(false, text));
+         if (iOffsetParsed && bucket.getOffsetInteger() != null) {
+             int parsedOffset = bucket.getOffsetInteger();
+             DateTimeZone parsedZone = DateTimeZone.forOffsetMillis(parsedOffset);
+             chrono = chrono.withZone(parsedZone);
+         } else if (bucket.getZone() != null) {
+             chrono = chrono.withZone(bucket.getZone());
+         }
+         instant.setChronology(chrono);
+         if (iZone != null) {
+             instant.setZone(iZone);
+         }
+         return newPos;
+     }

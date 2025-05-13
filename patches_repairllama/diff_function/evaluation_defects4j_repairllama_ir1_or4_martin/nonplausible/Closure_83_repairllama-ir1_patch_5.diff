@@ -1,0 +1,42 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b93afbfc-0c07-4321-a4f4-20837c96b420_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b7844f99-5143-4b6d-9bbc-02e64c878b89_fixed.java
+index 8a37ecc..b606335 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b93afbfc-0c07-4321-a4f4-20837c96b420_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b7844f99-5143-4b6d-9bbc-02e64c878b89_fixed.java
+@@ -1,19 +1,36 @@
+       public int parseArguments(Parameters params) throws CmdLineException {
+         String param = params.getParameter(0);
+-
++        if (param == null) {
++          setter.addValue(true);
++          return 0;
++        } else {
++          String lowerParam = param.toLowerCase();
++          if (TRUES.contains(lowerParam)) {
++            setter.addValue(true);
++          } else if (FALSES.contains(lowerParam)) {
++            setter.addValue(false);
++          } else {
++            setter.addValue(true);
++            return 0;
++          }
++          return 1;
++        }
++      }
++      public int parseArguments(Parameters params) throws CmdLineException {
++        String param = params.getParameter(0);
+         if (param == null) {
+           setter.addValue(true);
+           return 0;
+         } else {
+           String lowerParam = param.toLowerCase();
+           if (TRUES.contains(lowerParam)) {
+             setter.addValue(true);
+           } else if (FALSES.contains(lowerParam)) {
+             setter.addValue(false);
+           } else {
+             setter.addValue(true);
+             return 0;
+           }
+           return 1;
+         }
+       }

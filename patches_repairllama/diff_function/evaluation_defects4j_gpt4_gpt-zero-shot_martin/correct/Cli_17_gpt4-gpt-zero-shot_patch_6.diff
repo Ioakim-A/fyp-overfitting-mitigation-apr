@@ -1,0 +1,38 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0d7acc8f-18cf-4a9a-9706-62e49942a1f5_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/47393362-314c-41a5-a90e-d7754109e987_fixed.java
+index 32ebe90..7c7afd7 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0d7acc8f-18cf-4a9a-9706-62e49942a1f5_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/47393362-314c-41a5-a90e-d7754109e987_fixed.java
+@@ -1,29 +1,29 @@
+     protected void burstToken(String token, boolean stopAtNonOption)
+     {
+         for (int i = 1; i < token.length(); i++)
+         {
+             String ch = String.valueOf(token.charAt(i));
+-
+             if (options.hasOption(ch))
+             {
+                 tokens.add("-" + ch);
+                 currentOption = options.getOption(ch);
+-
+                 if (currentOption.hasArg() && (token.length() != (i + 1)))
+                 {
+                     tokens.add(token.substring(i + 1));
+-
+                     break;
+                 }
+             }
+             else if (stopAtNonOption)
+             {
+                 process(token.substring(i));
++
++                // Fixed code
++                break;
+             }
+             else
+             {
+                 tokens.add(token);
+                 break;
+             }
+         }
+     }
+\ No newline at end of file

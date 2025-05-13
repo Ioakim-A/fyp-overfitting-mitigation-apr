@@ -1,0 +1,44 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8f0721df-cb4e-426a-a554-f95d5b37f90a_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0e1ca38d-eb14-4574-833a-93dee10a6da2_fixed.java
+index 0cc5123..fb80918 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8f0721df-cb4e-426a-a554-f95d5b37f90a_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0e1ca38d-eb14-4574-833a-93dee10a6da2_fixed.java
+@@ -1,37 +1,30 @@
+     public XYDataItem addOrUpdate(Number x, Number y) {
+         if (x == null) {
+             throw new IllegalArgumentException("Null 'x' argument.");
+         }
+-
+-        // if we get to here, we know that duplicate X values are not permitted
+        XYDataItem overwritten = null;
+-        int index = indexOf(x);
+-        if (index >= 0 && !this.allowDuplicateXValues) {
++        int index = Collections.binarySearch(this.data, new XYDataItem(x, null));
++        if (index >= 0) {
+             XYDataItem existing = (XYDataItem) this.data.get(index);
+             try {
+                 overwritten = (XYDataItem) existing.clone();
+             }
+             catch (CloneNotSupportedException e) {
+                 throw new SeriesException("Couldn't clone XYDataItem!");
+             }
+             existing.setY(y);
+         }
+         else {
+-            // if the series is sorted, the negative index is a result from
+-            // Collections.binarySearch() and tells us where to insert the
+-            // new item...otherwise it will be just -1 and we should just
+-            // append the value to the list...
+             if (this.autoSort) {
+                 this.data.add(-index - 1, new XYDataItem(x, y));
+             }
+             else {
+                 this.data.add(new XYDataItem(x, y));
+             }
+-            // check if this addition will exceed the maximum item count...
+             if (getItemCount() > this.maximumItemCount) {
+                 this.data.remove(0);
+             }
+         }
+         fireSeriesChanged();
+         return overwritten;
+     }

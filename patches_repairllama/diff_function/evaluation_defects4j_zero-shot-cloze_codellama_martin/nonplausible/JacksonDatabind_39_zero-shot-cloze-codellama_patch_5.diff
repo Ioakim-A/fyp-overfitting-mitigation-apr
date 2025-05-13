@@ -1,0 +1,28 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fa089bd5-8b09-4a90-8e0e-8f977f14b9ff_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6044a76c-e16b-4039-ac44-a0a07244bacb_fixed.java
+index 2c7344b..0a9743a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fa089bd5-8b09-4a90-8e0e-8f977f14b9ff_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6044a76c-e16b-4039-ac44-a0a07244bacb_fixed.java
+@@ -1,7 +1,20 @@
+     public Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException
+     {
+-        // 29-Jan-2016, tatu: Simple skipping for all other tokens, but FIELD_NAME bit
+-        //    special unfortunately
+-            p.skipChildren();
++       JsonToken t = p.getCurrentToken();
++        if (t == JsonToken.VALUE_STRING) {
++            return p.getText();
++        }
++        if (t == JsonToken.VALUE_NUMBER_INT) {
++            return p.getNumberValue();
++        }
++        if (t == JsonToken.VALUE_TRUE) {
++            return Boolean.TRUE;
++        }
++        if (t == JsonToken.VALUE_FALSE) {
++            return Boolean.FALSE;
++        }
++        if (t == JsonToken.VALUE_NULL) {
++            return getNullValue();
++        }
+         return null;
+     }

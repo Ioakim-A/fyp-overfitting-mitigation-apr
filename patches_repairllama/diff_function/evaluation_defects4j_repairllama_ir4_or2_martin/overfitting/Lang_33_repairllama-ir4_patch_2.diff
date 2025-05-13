@@ -1,0 +1,23 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/67dbe9ea-0bc2-41cf-9750-5574cb9f16b5_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e95af18a-7612-4586-ad94-27f3ca3ebf50_fixed.java
+index ec08c93..e9f7a87 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/67dbe9ea-0bc2-41cf-9750-5574cb9f16b5_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e95af18a-7612-4586-ad94-27f3ca3ebf50_fixed.java
+@@ -1,12 +1,17 @@
+     public static Class<?>[] toClass(Object[] array) {
+         if (array == null) {
+             return null;
+         } else if (array.length == 0) {
+             return ArrayUtils.EMPTY_CLASS_ARRAY;
+         }
+         Class<?>[] classes = new Class[array.length];
+         for (int i = 0; i < array.length; i++) {
+-            classes[i] = array[i].getClass();
++// buggy code
++//             classes[i] = array[i].getClass();
++           Object object = array[i];
++            if (object != null) {
++                classes[i] = object.getClass();
++            }
+         }
+         return classes;
+     }

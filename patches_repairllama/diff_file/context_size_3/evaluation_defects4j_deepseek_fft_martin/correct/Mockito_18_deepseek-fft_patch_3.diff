@@ -1,0 +1,15 @@
+diff --git src/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java src/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
+index 06697e5..99ce31a 100644
+--- src/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
++++ src/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
+@@ -84,6 +84,10 @@ public class ReturnsEmptyValues implements Answer<Object>, Serializable {
+             return Primitives.defaultValueForPrimitiveOrWrapper(type);
+             //new instances are used instead of Collections.emptyList(), etc.
+             //to avoid UnsupportedOperationException if code under test modifies returned collection
++// buggy code
++        } else if (type == Iterable.class) {
++            return new ArrayList<Object>();
++
+         } else if (type == Collection.class) {
+             return new LinkedList<Object>();
+         } else if (type == Set.class) {

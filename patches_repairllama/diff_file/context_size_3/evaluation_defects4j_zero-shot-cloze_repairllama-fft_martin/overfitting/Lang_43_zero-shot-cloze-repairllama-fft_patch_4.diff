@@ -1,0 +1,17 @@
+diff --git src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java
+index 404be49..da03d18 100644
+--- src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java
++++ src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java
+@@ -419,6 +419,12 @@ public class ExtendedMessageFormat extends MessageFormat {
+         int start = pos.getIndex();
+         char[] c = pattern.toCharArray();
+         if (escapingOn && c[start] == QUOTE) {
++// buggy code
++           next(pos);
++            if (pos.getIndex() == pattern.length()) {
++                return appendTo == null ? null : appendTo.append(QUOTE);
++            }
++
+             return appendTo == null ? null : appendTo.append(QUOTE);
+         }
+         int lastHold = start;

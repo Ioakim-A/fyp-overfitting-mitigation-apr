@@ -1,0 +1,51 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/391d9b63-2fc9-469f-80f1-5fb08516aba8_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1b91ee49-cb9b-4ef6-a7e5-f4655271c974_fixed.java
+index fa15a1c..cb4ba74 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/391d9b63-2fc9-469f-80f1-5fb08516aba8_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1b91ee49-cb9b-4ef6-a7e5-f4655271c974_fixed.java
+@@ -1,5 +1,43 @@
+     public void writeEmbeddedObject(Object object) throws IOException {
+-        // 01-Sep-2016, tatu: As per [core#318], handle small number of cases
+-        throw new JsonGenerationException("No native support for writing embedded objects",
+-                this);
++       if (object == null) {
++            writeNull();
++            return;
++        }
++        if (object instanceof String) {
++            writeString((String) object);
++            return;
++        }
++        if (object instanceof Boolean) {
++            writeBoolean((Boolean) object);
++            return;
++        }
++        if (object instanceof Integer) {
++            writeInt((Integer) object);
++            return;
++        }
++        if (object instanceof Long) {
++            writeLong((Long) object);
++            return;
++        }
++        if (object instanceof Float) {
++            writeFloat((Float) object);
++            return;
++        }
++        if (object instanceof Double) {
++            writeDouble((Double) object);
++            return;
++        }
++        if (object instanceof Date) {
++            writeDate((Date) object);
++            return;
++        }
++        if (object instanceof byte[]) {
++            writeBytes((byte[]) object);
++            return;
++        }
++        if (object instanceof Blob) {
++            writeBlob((Blob) object);
++            return;
++        }
++        if (object instanceof Clob                this);
+     }

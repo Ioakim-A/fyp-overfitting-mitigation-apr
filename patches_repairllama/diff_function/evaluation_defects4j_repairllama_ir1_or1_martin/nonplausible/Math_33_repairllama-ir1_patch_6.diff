@@ -1,0 +1,49 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/35f52911-d852-4b52-a1f4-ea9fb86d2a32_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/49d8d4e9-0d71-4b13-a810-a786c9c4748d_fixed.java
+index 125b071..087939d 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/35f52911-d852-4b52-a1f4-ea9fb86d2a32_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/49d8d4e9-0d71-4b13-a810-a786c9c4748d_fixed.java
+@@ -1,41 +1,20 @@
+    protected void dropPhase1Objective() {
+         if (getNumObjectiveFunctions() == 1) {
+             return;
+         }
+-
+         List<Integer> columnsToDrop = new ArrayList<Integer>();
+         columnsToDrop.add(0);
+-
+-        // positive cost non-artificial variables
+         for (int i = getNumObjectiveFunctions(); i < getArtificialVariableOffset(); i++) {
+             final double entry = tableau.getEntry(0, i);
+-            if (Precision.compareTo(entry, 0d, maxUlps) > 0) {
++            if (Precision.compareTo(entry, 0d, maxUlps) >= 0) {
+                 columnsToDrop.add(i);
+             }
+         }
+-
+-        // non-basic artificial variables
+         for (int i = 0; i < getNumArtificialVariables(); i++) {
+           int col = i + getArtificialVariableOffset();
+           if (getBasicRow(col) == null) {
+             columnsToDrop.add(col);
+           }
+         }
+-
+         double[][] matrix = new double[getHeight() - 1][getWidth() - columnsToDrop.size()];
+-        for (int i = 1; i < getHeight(); i++) {
+-          int col = 0;
+-          for (int j = 0; j < getWidth(); j++) {
+-            if (!columnsToDrop.contains(j)) {
+-              matrix[i - 1][col++] = tableau.getEntry(i, j);
+-            }
+-          }
+-        }
+-
+-        for (int i = columnsToDrop.size() - 1; i >= 0; i--) {
+-          columnLabels.remove((int) columnsToDrop.get(i));
+-        }
+-
+-        this.tableau = new Array2DRowRealMatrix(matrix);
+-        this.numArtificialVariables = 0;
+-    }
++        for (int i = 1; i < getHeight(); i++)
+\ No newline at end of file

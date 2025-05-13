@@ -1,0 +1,35 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ceeaace2-abcc-4cfa-be2c-c47996b023d3_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/52fd634d-2c9a-4f69-8202-37b98c98b021_fixed.java
+index b2db1d6..66b7aae 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ceeaace2-abcc-4cfa-be2c-c47996b023d3_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/52fd634d-2c9a-4f69-8202-37b98c98b021_fixed.java
+@@ -1,29 +1,17 @@
+     protected void _addMethodMixIns(Class<?> targetClass, AnnotatedMethodMap methods,
+             Class<?> mixInCls, AnnotatedMethodMap mixIns)
+     {
+-        List<Class<?>> parents = new ArrayList<Class<?>>();
+-        parents.add(mixInCls);
+-        ClassUtil.findSuperTypes(mixInCls, targetClass, parents);
+-        for (Class<?> mixin : parents) {
++        for (Class<?> mixin : ClassUtil.findSuperTypes(mixInCls, targetClass)) {
+             for (Method m : mixin.getDeclaredMethods()) {
+                 if (!_isIncludableMemberMethod(m)) {
+                     continue;
+                 }
+                 AnnotatedMethod am = methods.find(m);
+-                /* Do we already have a method to augment (from sub-class
+-                 * that will mask this mixIn)? If so, add if visible
+-                 * without masking (no such annotation)
+-                 */
+                 if (am != null) {
+                     _addMixUnders(m, am);
+-                    /* Otherwise will have precedence, but must wait
+-                     * until we find the real method (mixIn methods are
+-                     * just placeholder, can't be called)
+-                     */
+                 } else {
+-                    // Well, or, as per [Issue#515], multi-level merge within mixins...
+                         mixIns.add(_constructMethod(m));
+                 }
+             }
+         }
+     }

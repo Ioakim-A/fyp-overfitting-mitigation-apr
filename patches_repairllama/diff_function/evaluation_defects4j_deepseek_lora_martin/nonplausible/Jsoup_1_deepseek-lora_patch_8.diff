@@ -1,0 +1,27 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/28a57a03-d2b1-4040-8d35-1ce00ff54ea4_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3c046a68-d150-4a99-8725-04d3904280d5_fixed.java
+index 00914da..0f53833 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/28a57a03-d2b1-4040-8d35-1ce00ff54ea4_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3c046a68-d150-4a99-8725-04d3904280d5_fixed.java
+@@ -1,17 +1,20 @@
+     // does not recurse.
+     private void normalise(Element element) {
+         List<Node> toMove = new ArrayList<Node>();
+         for (Node node: element.childNodes) {
+             if (node instanceof TextNode) {
+                 TextNode tn = (TextNode) node;
+                 if (!tn.isBlank())
+                     toMove.add(tn);
+             }
+         }
+-
+         for (Node node: toMove) {
+             element.removeChild(node);
+-            body().appendChild(new TextNode(" ", ""));
++// buggy code
++//            body().appendChild(new TextNode(" ", ""));
++//            body().appendChild(node);
+             body().appendChild(node);
++            body().appendChild(new TextNode(" "));
++
+         }
+     }

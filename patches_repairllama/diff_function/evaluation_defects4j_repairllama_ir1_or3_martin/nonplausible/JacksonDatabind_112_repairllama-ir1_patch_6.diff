@@ -1,0 +1,42 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/768d2f78-f35a-4b41-8aeb-bc0b11fdc74d_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0d8b3b2a-b50e-4138-8457-4d23419cf5a7_fixed.java
+index 68a2cad..ed9e7ed 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/768d2f78-f35a-4b41-8aeb-bc0b11fdc74d_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0d8b3b2a-b50e-4138-8457-4d23419cf5a7_fixed.java
+@@ -1,35 +1,29 @@
+     public JsonDeserializer<?> createContextual(DeserializationContext ctxt,
+             BeanProperty property) throws JsonMappingException
+     {
+-        // May need to resolve types for delegate-based creators:
+-        JsonDeserializer<Object> delegate = null;
++        JsonDeserializer<?> delegate = null;
+         if (_valueInstantiator != null) {
+-            // [databind#2324]: check both array-delegating and delegating
+             AnnotatedWithParams delegateCreator = _valueInstantiator.getDelegateCreator();
+             if (delegateCreator != null) {
+                 JavaType delegateType = _valueInstantiator.getDelegateType(ctxt.getConfig());
+                 delegate = findDeserializer(ctxt, delegateType, property);
+             }
+         }
+         JsonDeserializer<?> valueDeser = _valueDeserializer;
+         final JavaType valueType = _containerType.getContentType();
+         if (valueDeser == null) {
+-            // [databind#125]: May have a content converter
+             valueDeser = findConvertingContentDeserializer(ctxt, property, valueDeser);
+             if (valueDeser == null) {
+-            // And we may also need to get deserializer for String
+                 valueDeser = ctxt.findContextualValueDeserializer(valueType, property);
+             }
+-        } else { // if directly assigned, probably not yet contextual, so:
++        } else { 
+             valueDeser = ctxt.handleSecondaryContextualization(valueDeser, property, valueType);
+         }
+-        // 11-Dec-2015, tatu: Should we pass basic `Collection.class`, or more refined? Mostly
+-        //   comes down to "List vs Collection" I suppose... for now, pass Collection
+         Boolean unwrapSingle = findFormatFeature(ctxt, property, Collection.class,
+                 JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
+         NullValueProvider nuller = findContentNullProvider(ctxt, property, valueDeser);
+         if (isDefaultDeserializer(valueDeser)) {
+             valueDeser = null;
+         }
+         return withResolved(delegate, valueDeser, nuller, unwrapSingle);
+     }

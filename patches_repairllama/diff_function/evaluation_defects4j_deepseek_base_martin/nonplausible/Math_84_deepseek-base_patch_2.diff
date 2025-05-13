@@ -1,0 +1,51 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/08a697ad-a297-406b-abf1-86ab25fd9500_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b90dcac0-eedb-41fd-8cd0-3598195d4c65_fixed.java
+index 5f1dcf2..8376193 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/08a697ad-a297-406b-abf1-86ab25fd9500_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b90dcac0-eedb-41fd-8cd0-3598195d4c65_fixed.java
+@@ -1,41 +1,14 @@
+     /** {@inheritDoc} */
+     @Override
+     protected void iterateSimplex(final Comparator<RealPointValuePair> comparator)
+         throws FunctionEvaluationException, OptimizationException, IllegalArgumentException {
+-
+-        while (true) {
+-
+-            incrementIterationsCounter();
+-
+-            // save the original vertex
+-            final RealPointValuePair[] original = simplex;
+-            final RealPointValuePair best = original[0];
+-
+-            // perform a reflection step
+-            final RealPointValuePair reflected = evaluateNewSimplex(original, 1.0, comparator);
+-            if (comparator.compare(reflected, best) < 0) {
+-
+-                // compute the expanded simplex
+-                final RealPointValuePair[] reflectedSimplex = simplex;
+-                final RealPointValuePair expanded = evaluateNewSimplex(original, khi, comparator);
+-                if (comparator.compare(reflected, expanded) <= 0) {
+-                    // accept the reflected simplex
+-                    simplex = reflectedSimplex;
++        if (comparator == null) {
++            throw new IllegalArgumentException("comparator must not be null");
+         }
+-
++        for (int i = 0; i < simplex.size(); i++) {
++            if (comparator.compare(simplex.get(i), simplex.get(bestIndex)) < 0) {
++                bestIndex = i;
+                 return;
+-
+             }
+-
+-            // compute the contracted simplex
+-            final RealPointValuePair contracted = evaluateNewSimplex(original, gamma, comparator);
+-            if (comparator.compare(contracted, best) < 0) {
+-                // accept the contracted simplex
+-
+-            // check convergence
+-                return;
+-            }
+-
+         }
+-
+     }

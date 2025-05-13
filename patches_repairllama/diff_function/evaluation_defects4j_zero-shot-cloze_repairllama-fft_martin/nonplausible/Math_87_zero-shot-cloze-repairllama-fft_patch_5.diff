@@ -1,0 +1,28 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/03b70c1a-9517-455f-b59b-35b0ffe9c058_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f11b18ae-0f5a-4d23-bcfa-b569085b8c60_fixed.java
+index 087b58c..0e81ce9 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/03b70c1a-9517-455f-b59b-35b0ffe9c058_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f11b18ae-0f5a-4d23-bcfa-b569085b8c60_fixed.java
+@@ -1,13 +1,22 @@
+     private Integer getBasicRow(final int col) {
+         Integer row = null;
+         for (int i = getNumObjectiveFunctions(); i < getHeight(); i++) {
+-            if (!MathUtils.equals(getEntry(i, col), 0.0, epsilon)) {
++// buggy code
++//            if (!MathUtils.equals(getEntry(i, col), 0.0, epsilon)) {
++//                if (row == null) {
++//                row = i;
++//                } else {
++//                return null;
++//                }
++//            }
++            if (MathUtils.notEquals(getEntry(i, col), 0.0, epsilon)) {
+                 if (row == null) {
+                     row = i;
+                 } else {
+                     return null;
+                 }
++
+             }
+         }
+         return row;
+     }

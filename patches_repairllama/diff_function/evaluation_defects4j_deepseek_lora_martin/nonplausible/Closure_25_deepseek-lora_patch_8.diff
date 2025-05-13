@@ -1,0 +1,62 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0504d00a-3ccd-4ba2-83f6-4759aa8c0c27_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c4e14076-71fd-49cb-87db-76cf992d3258_fixed.java
+index b98f0a7..61737de 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0504d00a-3ccd-4ba2-83f6-4759aa8c0c27_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c4e14076-71fd-49cb-87db-76cf992d3258_fixed.java
+@@ -1,29 +1,55 @@
+   private FlowScope traverseNew(Node n, FlowScope scope) {
+-
++// buggy code
++//    Node constructor = n.getFirstChild();
++//    scope = traverse(constructor, scope);
++//    JSType constructorType = constructor.getJSType();
++//    JSType type = null;
++//    if (constructorType != null) {
++//      constructorType = constructorType.restrictByNotNullOrUndefined();
++//      if (constructorType.isUnknownType()) {
++//        type = getNativeType(UNKNOWN_TYPE);
++//      } else {
++//        FunctionType ct = constructorType.toMaybeFunctionType();
++//        if (ct == null && constructorType instanceof FunctionType) {
++//          // If constructorType is a NoObjectType, then toMaybeFunctionType will
++//          // return null. But NoObjectType implements the FunctionType
++//          // interface, precisely because it can validly construct objects.
++//          ct = (FunctionType) constructorType;
++//        }
++//        if (ct != null && ct.isConstructor()) {
++//          type = ct.getInstanceType();
++//        }
++//      }
++//    }
++//    n.setJSType(type);
++//    for (Node arg = constructor.getNext(); arg != null; arg = arg.getNext()) {
++//      scope = traverse(arg, scope);
++//    }
++    JSType type = getNativeType(UNKNOWN_TYPE);
+     Node constructor = n.getFirstChild();
+     scope = traverse(constructor, scope);
+     JSType constructorType = constructor.getJSType();
+-    JSType type = null;
+     if (constructorType != null) {
+       constructorType = constructorType.restrictByNotNullOrUndefined();
+       if (constructorType.isUnknownType()) {
+         type = getNativeType(UNKNOWN_TYPE);
+       } else {
+         FunctionType ct = constructorType.toMaybeFunctionType();
+         if (ct == null && constructorType instanceof FunctionType) {
+           // If constructorType is a NoObjectType, then toMaybeFunctionType will
+           // return null. But NoObjectType implements the FunctionType
+           // interface, precisely because it can validly construct objects.
+           ct = (FunctionType) constructorType;
+         }
+         if (ct != null && ct.isConstructor()) {
+           type = ct.getInstanceType();
+         }
+       }
+     }
+     n.setJSType(type);
+     for (Node arg = constructor.getNext(); arg != null; arg = arg.getNext()) {
+       scope = traverse(arg, scope);
+     }
++
+     return scope;
+   }

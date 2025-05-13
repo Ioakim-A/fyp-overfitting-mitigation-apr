@@ -1,0 +1,42 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f1598444-de9b-4938-ac00-a13e4807d306_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/596c463c-1644-4730-8528-263d3befce80_fixed.java
+index 9e16ea1..531c4b3 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f1598444-de9b-4938-ac00-a13e4807d306_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/596c463c-1644-4730-8528-263d3befce80_fixed.java
+@@ -1,27 +1,31 @@
+         public boolean useForType(JavaType t)
+         {
+             switch (_appliesFor) {
+             case NON_CONCRETE_AND_ARRAYS:
+                 while (t.isArrayType()) {
+                     t = t.getContentType();
+                 }
+-                // fall through
+             case OBJECT_AND_NON_CONCRETE:
+-//                return t.isJavaLangObject() || 
+                 return (t.getRawClass() == Object.class)
+                         || (!t.isConcrete()
+-                                // [databind#88] Should not apply to JSON tree models:
++// buggy code
++//                        || TreeNode.class.isAssignableFrom(t.getRawClass()));
++                       || TreeNode.class.isAssignableFrom(t.getRawClass())
++                        || t.isArrayType();
++            case OBJECT_AND_NON_CONCRETE_AND_ARRAYS:
++                while (t.isArrayType()) {
++                    t = t.getContentType();
++                }
++                return (t.getRawClass() == Object.class)
++                        || (!t.isConcrete()
+                         || TreeNode.class.isAssignableFrom(t.getRawClass()));
+ 
+             case NON_FINAL:
+                 while (t.isArrayType()) {
+                     t = t.getContentType();
+                 }
+-                // [Issue#88] Should not apply to JSON tree models:
+                 return !t.isFinal() && !TreeNode.class.isAssignableFrom(t.getRawClass());
+             default:
+-            //case JAVA_LANG_OBJECT:
+-//                return t.isJavaLangObject();
+                 return (t.getRawClass() == Object.class);
+             }
+         }

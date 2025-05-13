@@ -1,0 +1,27 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/17ca01c0-99be-4218-a5cd-f6e2d23f7b5a_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d3c40b1f-1a33-4fd0-9dfc-0a3bad85672a_fixed.java
+index c40602a..41210d4 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/17ca01c0-99be-4218-a5cd-f6e2d23f7b5a_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d3c40b1f-1a33-4fd0-9dfc-0a3bad85672a_fixed.java
+@@ -1,9 +1,22 @@
+     <M extends Map<String, String>> M putIn(final M map) {
++// buggy code
++       final String[] values = getValues();
++        for (final Entry<String, Integer> entry : mapping.entrySet()) {
++            final int col = entry.getValue().intValue();
++            if (col < values.length) {
++                map.put(entry.getKey(), values[col]);
++            }
++        }
++        return map;
++    }
++
++    <M extends Map<String, String>> M putIn(final M map) {
++// fixed code
+         for (final Entry<String, Integer> entry : mapping.entrySet()) {
+             final int col = entry.getValue().intValue();
+             if (col < values.length) {
+                 map.put(entry.getKey(), values[col]);
+             }
+         }
+         return map;
+     }

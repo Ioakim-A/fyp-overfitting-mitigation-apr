@@ -1,0 +1,44 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d54c870d-7217-466a-a3be-e3b707136b6d_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/523fb079-c432-4352-9e33-5e0b07092b16_fixed.java
+index 7dc89ed..0174738 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d54c870d-7217-466a-a3be-e3b707136b6d_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/523fb079-c432-4352-9e33-5e0b07092b16_fixed.java
+@@ -1,20 +1,39 @@
++        boolean anyOtherEndTag(Token t, HtmlTreeBuilder tb) {
++            String name = t.asEndTag().normalName();
++            ArrayList<Element> stack = tb.getStack();
++            for (int pos = stack.size() -1; pos >= 0; pos--) {
++                Element node = stack.get(pos);
++                if (node.nodeName().equals(name)) {
++                    tb.generateImpliedEndTags(name);
++                    if (!name.equals(tb.currentElement().nodeName()))
++                        tb.error(this);
++                    tb.popStackToClose(name);
++                    break;
++                } else {
++                    if (tb.isSpecial(node)) {
++                        tb.error(this);
++                        return false;
++                    }
++                }
++            }
++            return true;
+         boolean anyOtherEndTag(Token t, HtmlTreeBuilder tb) {
+             String name = t.asEndTag().normalName();
+             ArrayList<Element> stack = tb.getStack();
+             for (int pos = stack.size() -1; pos >= 0; pos--) {
+                 Element node = stack.get(pos);
+                 if (node.nodeName().equals(name)) {
+                     tb.generateImpliedEndTags(name);
+                     if (!name.equals(tb.currentElement().nodeName()))
+                         tb.error(this);
+                     tb.popStackToClose(name);
+                     break;
+                 } else {
+                     if (tb.isSpecial(node)) {
+                         tb.error(this);
+                         return false;
+                     }
+                 }
+             }
+             return true;
+         }

@@ -1,0 +1,59 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a1b8cdc2-2717-432d-a082-3c621d9e2a8f_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d9f45023-358f-4202-8e36-f73405455396_fixed.java
+index d2dd743..b0d4727 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a1b8cdc2-2717-432d-a082-3c621d9e2a8f_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d9f45023-358f-4202-8e36-f73405455396_fixed.java
+@@ -1,51 +1,4 @@
+-  static boolean functionCallHasSideEffects(
+-      Node callNode, @Nullable AbstractCompiler compiler) {
+-    if (callNode.getType() != Token.CALL) {
+-      throw new IllegalStateException(
+-          "Expected CALL node, got " + Token.name(callNode.getType()));
+-    }
+-
+-    if (callNode.isNoSideEffectsCall()) {
+-      return false;
+-    }
+-
+-    Node nameNode = callNode.getFirstChild();
+-
+-    // Built-in functions with no side effects.
+-    if (nameNode.getType() == Token.NAME) {
+-      String name = nameNode.getString();
+-      if (BUILTIN_FUNCTIONS_WITHOUT_SIDEEFFECTS.contains(name)) {
+-        return false;
+-      }
+-    } else if (nameNode.getType() == Token.GETPROP) {
+-      if (callNode.hasOneChild()
+-          && OBJECT_METHODS_WITHOUT_SIDEEFFECTS.contains(
+-                nameNode.getLastChild().getString())) {
+-        return false;
+-      }
+-
+-      if (callNode.isOnlyModifiesThisCall()
+-          && evaluatesToLocalValue(nameNode.getFirstChild())) {
++    if (callNode.getParent().getType() == Token.EXPR_RESULT
++        && callNode.getNext() == null) {
+       return false;
+     }
+\ No newline at end of file
+-
+-      // Functions in the "Math" namespace have no side effects.
+-
+-      if (compiler != null && !compiler.hasRegExpGlobalReferences()) {
+-        if (nameNode.getFirstChild().getType() == Token.REGEXP
+-            && REGEXP_METHODS.contains(nameNode.getLastChild().getString())) {
+-          return false;
+-        } else if (nameNode.getFirstChild().getType() == Token.STRING
+-            && STRING_REGEXP_METHODS.contains(
+-                nameNode.getLastChild().getString())) {
+-          Node param = nameNode.getNext();
+-          if (param != null &&
+-              (param.getType() == Token.STRING
+-                  || param.getType() == Token.REGEXP))
+-          return false;
+-        }
+-      }
+-    }
+-
+-    return true;
+-  }

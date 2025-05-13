@@ -1,0 +1,19 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3169f17a-fe1f-489e-9cb2-8f8aa8d0c128_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b9bb6aea-03be-44b5-b7b9-a6852a3e5ec4_fixed.java
+index de06adb..de13f91 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3169f17a-fe1f-489e-9cb2-8f8aa8d0c128_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b9bb6aea-03be-44b5-b7b9-a6852a3e5ec4_fixed.java
+@@ -1,12 +1,12 @@
+         InputStream decode(final InputStream in, final Coder coder,
+                 byte[] password) throws IOException {
+             byte propsByte = coder.properties[0];
+             long dictSize = coder.properties[1];
+             for (int i = 1; i < 4; i++) {
+-                dictSize |= (coder.properties[i + 1] << (8 * i));
++                dictSize |= ((long) coder.properties[i + 1] << (8 * i));
+             }
+             if (dictSize > LZMAInputStream.DICT_SIZE_MAX) {
+                 throw new IOException("Dictionary larger than 4GiB maximum size");
+             }
+             return new LZMAInputStream(in, -1, propsByte, (int) dictSize);
+         }
+\ No newline at end of file

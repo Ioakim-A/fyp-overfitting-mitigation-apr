@@ -1,0 +1,45 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/608e58bb-77e9-4bce-9191-ad9483188142_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fab5928f-cb11-452a-89da-778eef4db9ea_fixed.java
+index 671037f..b8fe32d 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/608e58bb-77e9-4bce-9191-ad9483188142_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fab5928f-cb11-452a-89da-778eef4db9ea_fixed.java
+@@ -1,36 +1,23 @@
+    private Map<String, Integer> initializeHeader() throws IOException {
+         Map<String, Integer> hdrMap = null;
+         final String[] formatHeader = this.format.getHeader();
+         if (formatHeader != null) {
+             hdrMap = new LinkedHashMap<String, Integer>();
+-
+             String[] headerRecord = null;
+             if (formatHeader.length == 0) {
+-                // read the header from the first line of the file
+                 final CSVRecord nextRecord = this.nextRecord();
+                 if (nextRecord != null) {
+                     headerRecord = nextRecord.values();
+                 }
+             } else {
+                 if (this.format.getSkipHeaderRecord()) {
+                     this.nextRecord();
+                 }
+                 headerRecord = formatHeader;
+             }
+-
+-            // build the name to index mappings
+             if (headerRecord != null) {
+                 for (int i = 0; i < headerRecord.length; i++) {
+-                    final String header = headerRecord[i];
++                    final String header = headerRecord[i].trim();
+                     final boolean containsHeader = hdrMap.containsKey(header);
+-                    final boolean emptyHeader = header.trim().isEmpty();
+-                    if (containsHeader && (!emptyHeader || (emptyHeader && !this.format.getIgnoreEmptyHeaders()))) {
+-                        throw new IllegalArgumentException("The header contains a duplicate name: \"" + header +
+-                                "\" in " + Arrays.toString(headerRecord));
+-                    }
+-                    hdrMap.put(header, Integer.valueOf(i));
+-                }
+-            }
+-        }
+-        return hdrMap;
+-    }
++                    final boolean emptyHeader = header.isEmpty();
++                    if (containsHeader && (!emptyHeader || (emptyHeader
+\ No newline at end of file

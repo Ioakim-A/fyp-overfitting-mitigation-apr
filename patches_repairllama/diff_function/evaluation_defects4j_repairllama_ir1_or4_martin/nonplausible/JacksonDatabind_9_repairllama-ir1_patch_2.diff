@@ -1,0 +1,20 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f4be414d-1e4e-47a2-b55e-0075e72b042c_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cac41414-5efa-401f-aab1-d1fd123775f6_fixed.java
+index 38d720d..dc0169f 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f4be414d-1e4e-47a2-b55e-0075e72b042c_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cac41414-5efa-401f-aab1-d1fd123775f6_fixed.java
+@@ -1,11 +1,14 @@
+     public void serialize(Object value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
++        if (value == null) {
++            jgen.writeNull();
++            return;
++        }
+         String str;
+-        
+         if (value instanceof Date) {
+             provider.defaultSerializeDateKey((Date) value, jgen);
+             return;
+         } else {
+             str = value.toString();
+         }
+         jgen.writeFieldName(str);
+     }

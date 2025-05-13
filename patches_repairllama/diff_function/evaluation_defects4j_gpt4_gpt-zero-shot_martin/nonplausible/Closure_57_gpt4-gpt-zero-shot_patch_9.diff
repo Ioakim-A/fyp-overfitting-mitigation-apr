@@ -1,0 +1,26 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e637dd05-a1d9-4162-8c84-eface2a80343_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6b683ed8-064b-4d6e-a7ec-90c0af933439_fixed.java
+index 1ea204a..a03a685 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e637dd05-a1d9-4162-8c84-eface2a80343_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6b683ed8-064b-4d6e-a7ec-90c0af933439_fixed.java
+@@ -1,17 +1,17 @@
+-  private static String extractClassNameIfGoog(Node node, Node parent,
+-      String functionName){
++private static String extractClassNameIfGoog(Node node, Node parent, String functionName){
+     String className = null;
+     if (NodeUtil.isExprCall(parent)) {
+         Node callee = node.getFirstChild();
+         if (callee != null && callee.getType() == Token.GETPROP) {
+             String qualifiedName = callee.getQualifiedName();
+             if (functionName.equals(qualifiedName)) {
+                 Node target = callee.getNext();
+-          if (target != null) {
++                // corrected code
++                if (target != null && target.isString()) {
+                     className = target.getString();
+                 }
+             }
+         }
+     }
+     return className;
+ }
+\ No newline at end of file

@@ -1,0 +1,44 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a4307d83-7bb4-4631-874b-688ea94d119a_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/21bb09d7-9d19-4cb6-9735-3007a198da5f_fixed.java
+index d666a67..595c9b6 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a4307d83-7bb4-4631-874b-688ea94d119a_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/21bb09d7-9d19-4cb6-9735-3007a198da5f_fixed.java
+@@ -1,36 +1,37 @@
+     /**
+      * Caches short strings, as a flywheel pattern, to reduce GC load. Just for this doc, to prevent leaks.
+      * <p />
+      * Simplistic, and on hash collisions just falls back to creating a new string, vs a full HashMap with Entry list.
+      * That saves both having to create objects as hash keys, and running through the entry list, at the expense of
+      * some more duplicates.
+      */
+     private static String cacheString(final char[] charBuf, final String[] stringCache, final int start, final int count) {
+         // limit (no cache):
+         if (count > maxStringCacheLen)
+             return new String(charBuf, start, count);
++// buggy code
++        if (count <= 0)
++            return "";
+ 
+         // calculate hash:
+         int hash = 0;
+         int offset = start;
+         for (int i = 0; i < count; i++) {
+             hash = 31 * hash + charBuf[offset++];
+         }
+-
+         // get from cache
+         final int index = hash & stringCache.length - 1;
+         String cached = stringCache[index];
+-
+         if (cached == null) { // miss, add
+             cached = new String(charBuf, start, count);
+             stringCache[index] = cached;
+         } else { // hashcode hit, check equality
+             if (rangeEquals(charBuf, start, count, cached)) { // hit
+                 return cached;
+             } else { // hashcode conflict
+                 cached = new String(charBuf, start, count);
+                 stringCache[index] = cached; // update the cache, as recently used strings are more likely to show up again
+             }
+         }
+         return cached;
+     }

@@ -1,0 +1,31 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/90c38f55-d5fc-490b-844e-5caa39cf326f_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/49da570c-63c4-484e-afaf-b4ce07cecf8a_fixed.java
+index 4aff4e4..1ac3048 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/90c38f55-d5fc-490b-844e-5caa39cf326f_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/49da570c-63c4-484e-afaf-b4ce07cecf8a_fixed.java
+@@ -1,15 +1,16 @@
+-    private boolean testValidProtocol(Element el, Attribute attr, Set<Protocol> protocols) {
+-        // try to resolve relative urls to abs, and optionally update the attribute so output html has abs.
+-        // rels without a baseuri get removed
+-        String value = el.absUrl(attr.getKey());
+-        if (!preserveRelativeLinks)
++URI uri;
++try {
++    uri = new URI(value);
++} catch (URISyntaxException e) {
+     attr.setValue(value);
+-        
++    return false;
++}
++String scheme = uri.getScheme();
++if (scheme != null) {
+     for (Protocol protocol : protocols) {
+-            String prot = protocol.toString() + ":";
+-            if (value.toLowerCase().startsWith(prot)) {
++        if (scheme.equalsIgnoreCase(protocol.toString())) {
+             return true;
+         }
+     }
+-        return false;
+ }
++return false;
+\ No newline at end of file

@@ -1,0 +1,30 @@
+diff --git src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java
+index 7d6a7bf..b6c0682 100644
+--- src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java
++++ src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java
+@@ -1397,14 +1397,14 @@ public abstract class BasicDeserializerFactory
+                 }
+             }
+         }
+-        // the only non-standard thing is this:
+         if (deser == null) {
+             if (type.isEnumType()) {
+-                return _createEnumKeyDeserializer(ctxt, type);
++                deser = _createEnumKeyDeserializer(ctxt, type);
+             }
++            if (deser == null) {
+                 deser = StdKeyDeserializers.findStringBasedKeyDeserializer(config, type);
+             }
+-        // and then post-processing
++        }
+         if (deser != null) {
+             if (_factoryConfig.hasDeserializerModifiers()) {
+                 for (BeanDeserializerModifier mod : _factoryConfig.deserializerModifiers()) {
+@@ -1414,7 +1414,6 @@ public abstract class BasicDeserializerFactory
+         }
+         return deser;
+     }
+-
+     private KeyDeserializer _createEnumKeyDeserializer(DeserializationContext ctxt,
+             JavaType type)
+         throws JsonMappingException

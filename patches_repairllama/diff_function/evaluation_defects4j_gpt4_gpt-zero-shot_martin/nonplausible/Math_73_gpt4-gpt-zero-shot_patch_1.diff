@@ -1,0 +1,54 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/96f1c538-93c6-4448-a9cb-2ee0d1c6e3ee_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f6d2dfbe-804d-4690-b853-97a5e85ce61b_fixed.java
+index c4e5233..ef204c2 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/96f1c538-93c6-4448-a9cb-2ee0d1c6e3ee_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f6d2dfbe-804d-4690-b853-97a5e85ce61b_fixed.java
+@@ -1,43 +1,28 @@
+     public double solve(final UnivariateRealFunction f,
+                         final double min, final double max, final double initial)
+         throws MaxIterationsExceededException, FunctionEvaluationException {
+-
+         clearResult();
+         verifySequence(min, initial, max);
+-
+-        // return the initial guess if it is good enough
+         double yInitial = f.value(initial);
+         if (Math.abs(yInitial) <= functionValueAccuracy) {
+             setResult(initial, 0);
+             return result;
+         }
+-
+-        // return the first endpoint if it is good enough
+         double yMin = f.value(min);
+         if (Math.abs(yMin) <= functionValueAccuracy) {
+-            setResult(yMin, 0);
++            setResult(min, 0);
+             return result;
+         }
+-
+-        // reduce interval if min and initial bracket the root
+         if (yInitial * yMin < 0) {
+-            return solve(f, min, yMin, initial, yInitial, min, yMin);
++            return solve(f, min, initial, max);
+         }
+-
+-        // return the second endpoint if it is good enough
+         double yMax = f.value(max);
+         if (Math.abs(yMax) <= functionValueAccuracy) {
+-            setResult(yMax, 0);
++            setResult(max, 0);
+             return result;
+         }
+-
+-        // reduce interval if initial and max bracket the root
+         if (yInitial * yMax < 0) {
+-            return solve(f, initial, yInitial, max, yMax, initial, yInitial);
++            return solve(f, initial, max, max);
+         }
+-
+-
+-        // full Brent algorithm starting with provided initial guess
+-        return solve(f, min, yMin, max, yMax, initial, yInitial);
+-
++        return solve(f, min, initial, max);
+     }
+\ No newline at end of file

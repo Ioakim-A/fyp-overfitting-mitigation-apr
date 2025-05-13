@@ -1,0 +1,32 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f4ea7206-1388-47f8-b94f-26d6983c528b_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c3fd70a8-b132-4701-8a2d-c2723addcde4_fixed.java
+index 9dbd4e4..5b01c3b 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f4ea7206-1388-47f8-b94f-26d6983c528b_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c3fd70a8-b132-4701-8a2d-c2723addcde4_fixed.java
+@@ -1,18 +1,25 @@
+     public double chiSquare(double[] expected, long[] observed)
+         throws IllegalArgumentException {
+         if ((expected.length < 2) || (expected.length != observed.length)) {
+             throw new IllegalArgumentException(
+                     "observed, expected array lengths incorrect");
+         }
+         if (!isPositive(expected) || !isNonNegative(observed)) {
+             throw new IllegalArgumentException(
+                 "observed counts must be non-negative and expected counts must be postive");
+         }
++// buggy code
++//         double sumSq = 0.0d;
++//         double dev = 0.0d;
++//         for (int i = 0; i < observed.length; i++) {
++//                 dev = ((double) observed[i] - expected[i]);
++//                 sumSq += dev * dev / expected[i];
+        double sumSq = 0.0d;
+-        double dev = 0.0d;
+         for (int i = 0; i < observed.length; i++) {
+-                dev = ((double) observed[i] - expected[i]);
++            if (expected[i] > 0) {
++                double dev = ((double) observed[i] - expected[i]);
+                 sumSq += dev * dev / expected[i];
+             }
++        }
+         return sumSq;
+     }

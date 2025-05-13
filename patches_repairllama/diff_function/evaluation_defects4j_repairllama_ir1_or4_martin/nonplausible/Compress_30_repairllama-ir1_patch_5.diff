@@ -1,0 +1,33 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/616b09ff-2cb9-4e59-a38b-ddb3cdf179fc_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/18519362-bd4f-402f-ab16-f1fba03c1875_fixed.java
+index 20d45d1..b34ea4a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/616b09ff-2cb9-4e59-a38b-ddb3cdf179fc_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/18519362-bd4f-402f-ab16-f1fba03c1875_fixed.java
+@@ -1,27 +1,24 @@
+-    public int read(final byte[] dest, final int offs, final int len)
+-        throws IOException {
++    public synchronized int read(final byte[] dest, final int offs, final int len)
+         if (offs < 0) {
+             throw new IndexOutOfBoundsException("offs(" + offs + ") < 0.");
+         }
+         if (len < 0) {
+             throw new IndexOutOfBoundsException("len(" + len + ") < 0.");
+         }
+         if (offs + len > dest.length) {
+             throw new IndexOutOfBoundsException("offs(" + offs + ") + len("
+                                                 + len + ") > dest.length(" + dest.length + ").");
+         }
+         if (this.in == null) {
+             throw new IOException("stream closed");
+         }
+-
+         final int hi = offs + len;
+         int destOffs = offs;
+         int b;
+         while (destOffs < hi && ((b = read0()) >= 0)) {
+             dest[destOffs++] = (byte) b;
+             count(1);
+         }
+-
+         int c = (destOffs == offs) ? -1 : (destOffs - offs);
+         return c;
+     }

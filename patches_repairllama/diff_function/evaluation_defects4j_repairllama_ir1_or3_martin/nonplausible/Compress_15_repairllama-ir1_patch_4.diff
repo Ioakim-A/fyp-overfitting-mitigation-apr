@@ -1,0 +1,47 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e121cf66-dc0f-4a29-89a9-54202d250142_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/47a2c50f-f7be-444d-89d1-ceb83f8a6e1e_fixed.java
+index 2fc658f..629fd7a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e121cf66-dc0f-4a29-89a9-54202d250142_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/47a2c50f-f7be-444d-89d1-ceb83f8a6e1e_fixed.java
+@@ -1,40 +1,42 @@
+     public boolean equals(Object obj) {
+         if (this == obj) {
+             return true;
+         }
++        if (!(obj instanceof ZipArchiveEntry)) {
++        }
+         if (obj == null || getClass() != obj.getClass()) {
+             return false;
+         }
+         ZipArchiveEntry other = (ZipArchiveEntry) obj;
+         String myName = getName();
+         String otherName = other.getName();
+         if (myName == null) {
+             if (otherName != null) {
+                 return false;
+             }
+         } else if (!myName.equals(otherName)) {
+             return false;
+         }
+         String myComment = getComment();
+         String otherComment = other.getComment();
+         if (myComment == null) {
+             if (otherComment != null) {
+                 return false;
+             }
+         } else if (!myComment.equals(otherComment)) {
+             return false;
+         }
+         return getTime() == other.getTime()
+             && getInternalAttributes() == other.getInternalAttributes()
+             && getPlatform() == other.getPlatform()
+             && getExternalAttributes() == other.getExternalAttributes()
+             && getMethod() == other.getMethod()
+             && getSize() == other.getSize()
+             && getCrc() == other.getCrc()
+             && getCompressedSize() == other.getCompressedSize()
+             && Arrays.equals(getCentralDirectoryExtra(),
+                              other.getCentralDirectoryExtra())
+             && Arrays.equals(getLocalFileDataExtra(),
+                              other.getLocalFileDataExtra())
+             && gpb.equals(other.gpb);
+     }

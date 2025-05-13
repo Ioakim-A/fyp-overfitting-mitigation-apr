@@ -1,0 +1,41 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3af49124-d870-4ec2-b1a5-4d6b98c36b77_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/961ebae1-f800-42d6-beb0-c56706611c1c_fixed.java
+index 0d386d0..e79020d 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3af49124-d870-4ec2-b1a5-4d6b98c36b77_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/961ebae1-f800-42d6-beb0-c56706611c1c_fixed.java
+@@ -1,24 +1,33 @@
+     /**
+      * Add a value to the data
+      * @param value the value to add
+      */
+     public void addValue(double value) {
+         sumImpl.increment(value);
+         sumsqImpl.increment(value);
+         minImpl.increment(value);
+         maxImpl.increment(value);
+         sumLogImpl.increment(value);
+         secondMoment.increment(value);
+         // If mean, variance or geomean have been overridden,
+         // need to increment these
+-        if (!(meanImpl instanceof Mean)) {
++// buggy code
++//        if (!(meanImpl instanceof Mean)) {
++//            meanImpl.increment(value);
++//        }
++//        if (!(varianceImpl instanceof Variance)) {
++//            varianceImpl.increment(value);
++//        }
++//        if (!(geoMeanImpl instanceof GeometricMean)) {
++        if (meanImpl != null && !(meanImpl instanceof Mean)) {
+             meanImpl.increment(value);
+         }
+-        if (!(varianceImpl instanceof Variance)) {
++        if (varianceImpl != null && !(varianceImpl instanceof Variance)) {
+             varianceImpl.increment(value);
+         }
+-        if (!(geoMeanImpl instanceof GeometricMean)) {
++        if (geoMeanImpl != null && !(geoMeanImpl instanceof GeometricMean)){
++
+             geoMeanImpl.increment(value);
+         }
+         n++;
+     }

@@ -1,0 +1,51 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d77cd503-9a25-4839-9e27-93d7b32b6b5c_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c87913b4-0aae-40be-b352-7a250cdeb356_fixed.java
+index 4082f12..197437a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d77cd503-9a25-4839-9e27-93d7b32b6b5c_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c87913b4-0aae-40be-b352-7a250cdeb356_fixed.java
+@@ -1,42 +1,29 @@
+    protected int findWrapPos(String text, int width, int startPos)
+     {
+         int pos;
+-        
+-        // the line ends before the max wrap pos or a new line char found
+-        if (((pos = text.indexOf('\n', startPos)) != -1 && pos <= width)
+-                || ((pos = text.indexOf('\t', startPos)) != -1 && pos <= width))
++        if (((pos = text.indexOf('\n', startPos)) != -1 && pos < width)
++                || ((pos = text.indexOf('\t', startPos)) != -1 && pos < width))
+         {
+             return pos + 1;
+         }
+         else if (startPos + width >= text.length())
+         {
+             return -1;
+         }
+-
+-
+-        // look for the last whitespace character before startPos+width
+         pos = startPos + width;
+-
+         char c;
+-
+         while ((pos >= startPos) && ((c = text.charAt(pos)) != ' ')
+                 && (c != '\n') && (c != '\r'))
+         {
+             --pos;
+         }
+-
+-        // if we found it - just return
+         if (pos > startPos)
+         {
+             return pos;
+         }
+-        
+-        // if we didn't find one, simply chop at startPos+width
+         pos = startPos + width;
+         while ((pos <= text.length()) && ((c = text.charAt(pos)) != ' ')
+                && (c != '\n') && (c != '\r'))
+         {
+             ++pos;
+-        }
+-        return pos == text.length() ? -1 : pos;
+-    }
++       
+\ No newline at end of file

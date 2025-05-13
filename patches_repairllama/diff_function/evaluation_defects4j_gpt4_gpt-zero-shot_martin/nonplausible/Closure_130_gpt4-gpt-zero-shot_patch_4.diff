@@ -1,0 +1,44 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/eb5a0893-8265-4569-bddb-2ce1c5c3c55f_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/91fff0fe-3f46-4c4b-92b3-28051e8ea099_fixed.java
+index f3bca8d..5a0f9c9 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/eb5a0893-8265-4569-bddb-2ce1c5c3c55f_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/91fff0fe-3f46-4c4b-92b3-28051e8ea099_fixed.java
+@@ -1,37 +1,25 @@
+ private void inlineAliases(GlobalNamespace namespace) {
+-    // Invariant: All the names in the worklist meet condition (a).
+     Deque<Name> workList = new ArrayDeque<Name>(namespace.getNameForest());
+     while (!workList.isEmpty()) {
+         Name name = workList.pop();
+-
+-      // Don't attempt to inline a getter or setter property as a variable.
+         if (name.type == Name.Type.GET || name.type == Name.Type.SET) {
+             continue;
+         }
+-
+         if (name.globalSets == 1 && name.localSets == 0 &&
+-          name.aliasingGets > 0) {
+-        // {@code name} meets condition (b). Find all of its local aliases
+-        // and try to inline them.
++            name.aliasingSets == 0 && name.aliasingGets > 0) {
+             List<Ref> refs = Lists.newArrayList(name.getRefs());
+             for (Ref ref : refs) {
+                 if (ref.type == Type.ALIASING_GET && ref.scope.isLocal()) {
+-            // {@code name} meets condition (c). Try to inline it.
+                     if (inlineAliasIfPossible(ref, namespace)) {
+                         name.removeRef(ref);
+                     }
+                 }
+             }
+         }
+-
+-      // Check if {@code name} has any aliases left after the
+-      // local-alias-inlining above.
+         if ((name.type == Name.Type.OBJECTLIT ||
+             name.type == Name.Type.FUNCTION) &&
+             name.aliasingGets == 0 && name.props != null) {
+-        // All of {@code name}'s children meet condition (a), so they can be
+-        // added to the worklist.
+             workList.addAll(name.props);
+         }
+     }
+ }
+\ No newline at end of file

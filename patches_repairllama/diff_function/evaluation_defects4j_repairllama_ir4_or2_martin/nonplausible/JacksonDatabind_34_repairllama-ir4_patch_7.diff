@@ -1,0 +1,23 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7195ef7e-75bb-4264-9bfe-aa9a0797f550_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b647a20d-6d89-4d71-a0c8-a2a8ec2adae5_fixed.java
+index 2f8229f..ae33551 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7195ef7e-75bb-4264-9bfe-aa9a0797f550_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b647a20d-6d89-4d71-a0c8-a2a8ec2adae5_fixed.java
+@@ -1,14 +1,15 @@
+     public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint) throws JsonMappingException
+     {
+         if (_isInt) {
+             visitIntFormat(visitor, typeHint, JsonParser.NumberType.BIG_INTEGER);
+         } else {
+             Class<?> h = handledType();
+             if (h == BigDecimal.class) {
+-                visitFloatFormat(visitor, typeHint, JsonParser.NumberType.BIG_INTEGER);
++// buggy code
++//                 visitFloatFormat(visitor, typeHint, JsonParser.NumberType.BIG_INTEGER);
++               visitNumberFormat(visitor, typeHint, JsonParser.NumberType.BIG_DECIMAL);
+             } else {
+-                // otherwise bit unclear what to call... but let's try:
+-                /*JsonNumberFormatVisitor v2 =*/ visitor.expectNumberFormat(typeHint);
++                 visitor.expectNumberFormat(typeHint);
+             }
+         }
+     }

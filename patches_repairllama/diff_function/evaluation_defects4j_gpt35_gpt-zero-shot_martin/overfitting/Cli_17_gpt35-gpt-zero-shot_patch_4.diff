@@ -1,0 +1,38 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/79171338-2721-4c59-abb5-e904bb96e0db_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/abc62eed-5ae2-479e-8bb8-70f15eefd106_fixed.java
+index 32ebe90..eb81a65 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/79171338-2721-4c59-abb5-e904bb96e0db_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/abc62eed-5ae2-479e-8bb8-70f15eefd106_fixed.java
+@@ -1,29 +1,29 @@
+ protected void burstToken(String token, boolean stopAtNonOption)
+ {
+     for (int i = 1; i < token.length(); i++)
+     {
+         String ch = String.valueOf(token.charAt(i));
+-
+         if (options.hasOption(ch))
+         {
+             tokens.add("-" + ch);
+             currentOption = options.getOption(ch);
+-
+             if (currentOption.hasArg() && (token.length() != (i + 1)))
+             {
+                 tokens.add(token.substring(i + 1));
+-
+                 break;
+             }
+         }
+         else if (stopAtNonOption)
+         {
+             process(token.substring(i));
++            
++            // Fix: Add a return statement to exit the method when stopAtNonOption is true
++            return;
+         }
+         else
+         {
+             tokens.add(token);
+             break;
+         }
+     }
+ }
+\ No newline at end of file

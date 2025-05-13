@@ -1,0 +1,45 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8cad5c19-8df8-46b0-8c78-f37bb3609e78_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fed4987e-2dd9-47b3-b7e8-3c4a9e1f8232_fixed.java
+index 1bbc082..204f156 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8cad5c19-8df8-46b0-8c78-f37bb3609e78_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fed4987e-2dd9-47b3-b7e8-3c4a9e1f8232_fixed.java
+@@ -1,36 +1,37 @@
+     /**
+      * Write an long integer into a buffer as an octal string if this
+      * will fit, or as a binary number otherwise.
+      * 
+      * Uses {@link #formatUnsignedOctalString} to format
+      * the value as an octal string with leading zeros.
+      * The converted number is followed by a space.
+      * 
+      * @param value The value to write into the buffer.
+      * @param buf The destination buffer.
+      * @param offset The starting offset into the buffer.
+      * @param length The length of the buffer.
+      * @return The updated offset.
+      * @throws IllegalArgumentException if the value (and trailer)
+      * will not fit in the buffer.
+      * @since 1.4
+      */
+     public static int formatLongOctalOrBinaryBytes(
+         final long value, final byte[] buf, final int offset, final int length) {
+-
+         // Check whether we are dealing with UID/GID or SIZE field
+         final long maxAsOctalChar = length == TarConstants.UIDLEN ? TarConstants.MAXID : TarConstants.MAXSIZE;
+-
+         final boolean negative = value < 0;
+         if (!negative && value <= maxAsOctalChar) { // OK to store as octal chars
+             return formatLongOctalBytes(value, buf, offset, length);
+         }
+-
+         if (length < 9) {
+             formatLongBinary(value, buf, offset, length, negative);
++// buggy code
++//        }
++//        formatBigIntegerBinary(value, buf, offset, length, negative);
++            return offset + length;
+         }
+         formatBigIntegerBinary(value, buf, offset, length, negative);
+ 
+         buf[offset] = (byte) (negative ? 0xff : 0x80);
+         return offset + length;
+     }

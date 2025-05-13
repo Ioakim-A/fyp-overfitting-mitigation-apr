@@ -1,0 +1,20 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1f830695-7bef-4136-925a-c7bb1dafd047_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e84dc8c5-d253-4945-8177-dace5f4f7e13_fixed.java
+index 1ed78d0..eeb61c5 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1f830695-7bef-4136-925a-c7bb1dafd047_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e84dc8c5-d253-4945-8177-dace5f4f7e13_fixed.java
+@@ -1,9 +1,14 @@
+     /**
+      * @since 2.8.9
+      */
+     protected XmlSerializerProvider(XmlSerializerProvider src) {
+         super(src);
+         // 21-May-2018, tatu: As per [dataformat-xml#282], should NOT really copy
+         //    root name lookup as that may link back to diff version, configuration
+-        _rootNameLookup = src._rootNameLookup;
++        //    etc.
++    }
++
++    @Override
++    public XmlSerializerProvider copy() {
++        return new XmlSerializerProvider(this);
+     }

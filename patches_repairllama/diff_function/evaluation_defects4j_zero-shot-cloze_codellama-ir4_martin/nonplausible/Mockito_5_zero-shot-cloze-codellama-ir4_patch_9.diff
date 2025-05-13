@@ -1,0 +1,38 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a7d8e7fc-8543-4469-b648-d14744ac0250_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0404883b-a780-4409-bee8-8bac92ef7898_fixed.java
+index 56e1942..92e081c 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a7d8e7fc-8543-4469-b648-d14744ac0250_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0404883b-a780-4409-bee8-8bac92ef7898_fixed.java
+@@ -1,25 +1,29 @@
+     public void verify(VerificationData data) {
+         AssertionError error = null;
+-
+         timer.start();
+         while (timer.isCounting()) {
+             try {
+                 delegate.verify(data);
+-
+                 if (returnOnSuccess) {
+                     return;
+                 } else {
+                     error = null;
+                 }
+             } catch (MockitoAssertionError e) {
+                 error = handleVerifyException(e);
+             }
+-            catch (org.mockito.exceptions.verification.junit.ArgumentsAreDifferent e) {
++// buggy code
++//            catch (org.mockito.exceptions.verification.junit.ArgumentsAreDifferent e) {
++//                error = handleVerifyException(e);
++//            }
++//            catch (org.mockito.exceptions.verification.WantedButNotInvoked e) {
++//                error = handleVerifyException(e);
++//            }
++//            catch (org.mockito.exceptions.verification.TooManyActualInvocations e) {
+                 error = handleVerifyException(e);
+             }
+         }
+-
+         if (error != null) {
+             throw error;
+         }
+     }

@@ -1,0 +1,22 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c03cdf48-662a-4431-a055-3334026a7e02_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ef5d2e41-82a9-4750-9e4e-764fba0c17e5_fixed.java
+index 883caf5..dbcba57 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c03cdf48-662a-4431-a055-3334026a7e02_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ef5d2e41-82a9-4750-9e4e-764fba0c17e5_fixed.java
+@@ -1,16 +1,17 @@
+   private void visitNew(NodeTraversal t, Node n) {
+     Node constructor = n.getFirstChild();
+     JSType type = getJSType(constructor).restrictByNotNullOrUndefined();
+     if (type.isConstructor() || type.isEmptyType() || type.isUnknownType()) {
+       FunctionType fnType = type.toMaybeFunctionType();
+      if (fnType != null) {
++        ensureTyped(t, constructor);
+         visitParameterList(t, n, fnType);
+         ensureTyped(t, n, fnType.getInstanceType());
+       } else {
+         ensureTyped(t, n);
+       }
+     } else {
+       report(t, n, NOT_A_CONSTRUCTOR);
+       ensureTyped(t, n);
+     }
+   }

@@ -1,0 +1,24 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9e28491c-d735-47c3-a458-ee357f77621e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a26e65ae-df98-4c8b-b01d-39b04b2a2c77_fixed.java
+index c6795f6..659850f 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9e28491c-d735-47c3-a458-ee357f77621e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a26e65ae-df98-4c8b-b01d-39b04b2a2c77_fixed.java
+@@ -1,12 +1,18 @@
+     public static long skip(InputStream input, long numToSkip) throws IOException {
+         long available = numToSkip;
+         while (numToSkip > 0) {
+             long skipped = input.skip(numToSkip);
+             if (skipped == 0) {
+                 break;
+             }
+             numToSkip -= skipped;
+         }
++// fixed code
++// 
++        if (numToSkip > 0) {
++            input.close();
++            throw new IOException("Could not skip desired number of bytes");
++        }
+ 
+         return available - numToSkip;
+     }
+\ No newline at end of file

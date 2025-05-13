@@ -1,0 +1,58 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/18a8ed5d-5d3d-40da-87ad-69aed829a1dc_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fd7df77a-7110-4574-b52a-48ae8640d5ef_fixed.java
+index c9da1b7..08dee4a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/18a8ed5d-5d3d-40da-87ad-69aed829a1dc_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fd7df77a-7110-4574-b52a-48ae8640d5ef_fixed.java
+@@ -1,33 +1,42 @@
+     protected void verifyNonDup(AnnotatedWithParams newOne, int typeIndex, boolean explicit)
+     {
+         final int mask = (1 << typeIndex);
+         _hasNonDefaultCreator = true;
+         AnnotatedWithParams oldOne = _creators[typeIndex];
+         // already had an explicitly marked one?
+         if (oldOne != null) {
+-
+-            if ((_explicitCreators & mask) != 0) { // already had explicitly annotated, leave as-is
+-                // but skip, if new one not annotated
++// buggy code
++//            if ((_explicitCreators & mask) != 0) { // already had explicitly annotated, leave as-is
++//                // but skip, if new one not annotated
++//                if (!explicit) {
++//                    return;
++//                }
++//                // both explicit: verify
++//                // otherwise only verify if neither explicitly annotated.
++//            }
++//            // one more thing: ok to override in sub-class
++//            if (oldOne.getClass() == newOne.getClass()) {
++//                // [databind#667]: avoid one particular class of bogus problems
++//                    throw new IllegalArgumentException("Conflicting "+TYPE_DESCS[typeIndex]
++//                            +" creators: already had explicitly marked "+oldOne+", encountered "+newOne);
++//                // otherwise, which one to choose?
++//                    // new type more generic, use old
++            if ((_explicitCreators & mask) != 0) {
+                 if (!explicit) {
+                     return;
+                 }
+-                // both explicit: verify
+-                // otherwise only verify if neither explicitly annotated.
+             }
+-
+-            // one more thing: ok to override in sub-class
++        }
++        if (oldOne != null) {
+             if (oldOne.getClass() == newOne.getClass()) {
+-                // [databind#667]: avoid one particular class of bogus problems
+-
+                 throw new IllegalArgumentException("Conflicting "+TYPE_DESCS[typeIndex]
+                         +" creators: already had explicitly marked "+oldOne+", encountered "+newOne);
+-                // otherwise, which one to choose?
+-                    // new type more generic, use old
++
+                 // new type more specific, use it
+             }
+         }
+         if (explicit) {
+             _explicitCreators |= mask;
+         }
+         _creators[typeIndex] = _fixAccess(newOne);
+     }

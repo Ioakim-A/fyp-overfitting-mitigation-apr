@@ -1,0 +1,45 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/31b992e1-14da-4c63-8e38-ea9c6ca80608_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c17238bf-84b6-439e-9953-867cd26bc50d_fixed.java
+index 06b6704..2ea730f 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/31b992e1-14da-4c63-8e38-ea9c6ca80608_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c17238bf-84b6-439e-9953-867cd26bc50d_fixed.java
+@@ -1,20 +1,39 @@
+     private void declareArguments(Node functionNode) {
+       Node astParameters = functionNode.getFirstChild().getNext();
+       Node body = astParameters.getNext();
+       FunctionType functionType = (FunctionType) functionNode.getJSType();
+       if (functionType != null) {
+         Node jsDocParameters = functionType.getParametersNode();
+         if (jsDocParameters != null) {
+           Node jsDocParameter = jsDocParameters.getFirstChild();
+           for (Node astParameter : astParameters.children()) {
+             if (jsDocParameter != null) {
+               defineSlot(astParameter, functionNode,
+                   jsDocParameter.getJSType(), true);
+               jsDocParameter = jsDocParameter.getNext();
+             } else {
+               defineSlot(astParameter, functionNode, null, true);
+             }
+           }
+         }
+       }
+-    } // end declareArguments
++    private void declareArguments(Node functionNode) {
++      Node astParameters = functionNode.getFirstChild().getNext();
++      Node body = astParameters.getNext();
++      FunctionType functionType = (FunctionType) functionNode.getJSType();
++      if (functionType != null) {
++        Node jsDocParameters = functionType.getParametersNode();
++        if (jsDocParameters != null) {
++          Node jsDocParameter = jsDocParameters.getFirstChild();
++          for (Node astParameter : astParameters.children()) {
++            if (jsDocParameter != null) {
++              defineSlot(astParameter, functionNode,
++                  jsDocParameter.getJSType(), true);
++              jsDocParameter = jsDocParameter.getNext();
++            } else {
++              defineSlot(astParameter, functionNode, null, true);
++            }
++          }
++        }
++      }
++    } 

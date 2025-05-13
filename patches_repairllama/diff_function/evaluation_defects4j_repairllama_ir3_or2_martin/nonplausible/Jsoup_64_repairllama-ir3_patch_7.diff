@@ -1,0 +1,15 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/59602de4-d34a-457b-a656-bd32a4a0ffe6_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3d6b10b6-2a01-474d-8a5b-ade6a7d169a0_fixed.java
+index 5eedc11..488cc53 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/59602de4-d34a-457b-a656-bd32a4a0ffe6_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3d6b10b6-2a01-474d-8a5b-ade6a7d169a0_fixed.java
+@@ -1,6 +1,8 @@
+     private static void handleRawtext(Token.StartTag startTag, HtmlTreeBuilder tb) {
++       if (startTag.isSelfClosing()) {
++            tb.error(startTag);
++            return;
++        }
+         tb.insert(startTag);
+         tb.tokeniser.transition(TokeniserState.Rawtext);
+-        tb.markInsertionMode();
+-        tb.transition(Text);
+     }

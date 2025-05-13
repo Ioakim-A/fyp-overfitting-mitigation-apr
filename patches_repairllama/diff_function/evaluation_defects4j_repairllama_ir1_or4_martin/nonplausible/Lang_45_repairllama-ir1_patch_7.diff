@@ -1,0 +1,46 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0751f90a-a0e6-4928-8436-664606592475_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d113bdb5-a445-4590-aac6-f34ea7a7e8b8_fixed.java
+index 27c4e77..e0a7c70 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0751f90a-a0e6-4928-8436-664606592475_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d113bdb5-a445-4590-aac6-f34ea7a7e8b8_fixed.java
+@@ -1,38 +1,32 @@
+     public static String abbreviate(String str, int lower, int upper, String appendToEnd) {
+-        // initial parameter checks
++        if (appendToEnd == null) {
++            appendToEnd = "";
++        }
+         if (str == null) {
+             return null;
+         }
+         if (str.length() == 0) {
+             return StringUtils.EMPTY;
+         }
+-
+-        // if the lower value is greater than the length of the string,
+-        // set to the length of the string
+-        // if the upper value is -1 (i.e. no limit) or is greater
+-        // than the length of the string, set to the length of the string
+         if (upper == -1 || upper > str.length()) {
+             upper = str.length();
+         }
+-        // if upper is less than lower, raise it to lower
+         if (upper < lower) {
+             upper = lower;
+         }
+-
+         StringBuffer result = new StringBuffer();
+         int index = StringUtils.indexOf(str, " ", lower);
+         if (index == -1) {
+             result.append(str.substring(0, upper));
+-            // only if abbreviation has occured do we append the appendToEnd value
+             if (upper != str.length()) {
+                 result.append(StringUtils.defaultString(appendToEnd));
+             }
+         } else if (index > upper) {
+             result.append(str.substring(0, upper));
+             result.append(StringUtils.defaultString(appendToEnd));
+         } else {
+             result.append(str.substring(0, index));
+             result.append(StringUtils.defaultString(appendToEnd));
+         }
+         return result.toString();
+     }

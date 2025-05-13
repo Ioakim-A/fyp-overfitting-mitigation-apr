@@ -1,0 +1,32 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1e3a7b10-37f6-4aef-b7b4-d1293eb85a06_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f6af6b94-182f-4c87-8cb9-57b939913438_fixed.java
+index c50b3cc..9569092 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1e3a7b10-37f6-4aef-b7b4-d1293eb85a06_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f6af6b94-182f-4c87-8cb9-57b939913438_fixed.java
+@@ -1,23 +1,21 @@
+     public Period normalizedStandard(PeriodType type) {
+         type = DateTimeUtils.getPeriodType(type);
+-        long millis = getMillis();  // no overflow can happen, even with Integer.MAX_VALUEs
+-        millis += (((long) getSeconds()) * ((long) DateTimeConstants.MILLIS_PER_SECOND));
+-        millis += (((long) getMinutes()) * ((long) DateTimeConstants.MILLIS_PER_MINUTE));
+-        millis += (((long) getHours()) * ((long) DateTimeConstants.MILLIS_PER_HOUR));
+-        millis += (((long) getDays()) * ((long) DateTimeConstants.MILLIS_PER_DAY));
+-        millis += (((long) getWeeks()) * ((long) DateTimeConstants.MILLIS_PER_WEEK));
++        long millis = getMillis();  
++        millis += (((long) getSeconds()) * 1000L);
++        millis += (((long) getMinutes()) * 60000L);
++        millis += (((long) getHours()) * 3600000L);
+         Period result = new Period(millis, type, ISOChronology.getInstanceUTC());
+         int years = getYears();
+         int months = getMonths();
+         if (years != 0 || months != 0) {
+             years = FieldUtils.safeAdd(years, months / 12);
+             months = months % 12;
+             if (years != 0) {
+                 result = result.withYears(years);
+             }
+             if (months != 0) {
+                 result = result.withMonths(months);
+             }
+         }
+         return result;
+     }

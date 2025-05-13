@@ -1,0 +1,28 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9932c6d5-b8fa-43c6-9d9a-b74c0d28124c_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/39fdfbb2-62a1-41dc-a8b7-bcc9727c157f_fixed.java
+index c3c1a6f..3456e6d 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9932c6d5-b8fa-43c6-9d9a-b74c0d28124c_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/39fdfbb2-62a1-41dc-a8b7-bcc9727c157f_fixed.java
+@@ -1,22 +1,19 @@
+ private final static int _parseIndex(String str) {
+     final int len = str.length();
+-        // [core#133]: beware of super long indexes; assume we never
+-        // have arrays over 2 billion entries so ints are fine.
+     if (len == 0 || len > 10) {
+         return -1;
+     }
+-        // [core#176]: no leading zeroes allowed
+     for (int i = 0; i < len; ++i) {
+         char c = str.charAt(i);
+         if (c > '9' || c < '0') {
+             return -1;
+         }
+     }
+     if (len == 10) {
+         long l = NumberInput.parseLong(str);
+         if (l > Integer.MAX_VALUE) {
+             return -1;
+         }
+     }
+     return NumberInput.parseInt(str);
+ }
+\ No newline at end of file

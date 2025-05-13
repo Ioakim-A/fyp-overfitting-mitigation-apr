@@ -1,0 +1,23 @@
+diff --git src/java/org/apache/commons/lang/StringUtils.java src/java/org/apache/commons/lang/StringUtils.java
+index 72b4a49..060919f 100644
+--- src/java/org/apache/commons/lang/StringUtils.java
++++ src/java/org/apache/commons/lang/StringUtils.java
+@@ -1045,7 +1045,17 @@ public class StringUtils {
+         if (str == null || searchStr == null) {
+             return false;
+         }
+-        return contains(str.toUpperCase(), searchStr.toUpperCase());
++        int len = searchStr.length();
++        if (len == 0) {
++            return true;
++        }
++
++        for (int i = str.length() - len; i >= 0; i--) {
++            if (str.regionMatches(true, i, searchStr, 0, len)) {
++                return true;
++            }
++        }
++        return false;
+     }
+ 
+     // IndexOfAny chars

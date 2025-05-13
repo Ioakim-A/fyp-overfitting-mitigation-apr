@@ -1,0 +1,57 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4e5acb67-9891-4c7a-8266-5a76349077e5_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/83ee968e-b3c3-40aa-8908-7bd8c3bc418e_fixed.java
+index 71189c3..8895846 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4e5acb67-9891-4c7a-8266-5a76349077e5_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/83ee968e-b3c3-40aa-8908-7bd8c3bc418e_fixed.java
+@@ -1,46 +1,31 @@
+     public void validate(final WriteableCommandLine commandLine)
+         throws OptionException {
+-        // number of options found
+         int present = 0;
+-
+-        // reference to first unexpected option
+         Option unexpected = null;
+-
+         for (final Iterator i = options.iterator(); i.hasNext();) {
+             final Option option = (Option) i.next();
+-
+-            // needs validation?
+             boolean validate = option.isRequired() || option instanceof Group;
+-            if (validate) {
+-                option.validate(commandLine);
+-            }
+-
+-            // if the child option is present then validate it
+            if (commandLine.hasOption(option)) {
+-                if (++present > maximum) {
++                if (validate) {
++                    present++;
++                } else {
++                    if (unexpected == null) {
+                         unexpected = option;
+-
+-                    break;
+                     }
+-
++                }
++            } else if (validate) {
+                 option.validate(commandLine);
+             }
+         }
+-
+-        // too many options
+         if (unexpected != null) {
+             throw new OptionException(this, ResourceConstants.UNEXPECTED_TOKEN,
+                                       unexpected.getPreferredName());
+         }
+-
+-        // too few option
+         if (present < minimum) {
+             throw new OptionException(this, ResourceConstants.MISSING_OPTION);
+         }
+-
+-        // validate each anonymous argument
+         for (final Iterator i = anonymous.iterator(); i.hasNext();) {
+             final Option option = (Option) i.next();
+             option.validate(commandLine);
+         }
+     }

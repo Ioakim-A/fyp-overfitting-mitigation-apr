@@ -1,0 +1,21 @@
+diff --git src/main/java/org/jsoup/helper/DataUtil.java src/main/java/org/jsoup/helper/DataUtil.java
+index d43bfe4..cc8369e 100644
+--- src/main/java/org/jsoup/helper/DataUtil.java
++++ src/main/java/org/jsoup/helper/DataUtil.java
+@@ -97,7 +97,6 @@ public class DataUtil {
+                 } else {
+                     foundCharset = meta.attr("charset");
+                 }
+-
+                 if (foundCharset != null && foundCharset.length() != 0 && !foundCharset.equals(defaultCharset)) { // need to re-decode
+                     foundCharset = foundCharset.trim().replaceAll("[\"']", "");
+                     charsetName = foundCharset;
+@@ -116,6 +115,8 @@ public class DataUtil {
+             docData = Charset.forName(defaultCharset).decode(byteData).toString();
+             docData = docData.substring(1);
+             charsetName = defaultCharset;
++            byteData.rewind();
++            doc = null;
+         }
+         if (doc == null) {
+             doc = parser.parseInput(docData, baseUri);

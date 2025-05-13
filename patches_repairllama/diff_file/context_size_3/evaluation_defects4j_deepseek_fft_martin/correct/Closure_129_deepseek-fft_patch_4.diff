@@ -1,0 +1,26 @@
+diff --git src/com/google/javascript/jscomp/PrepareAst.java src/com/google/javascript/jscomp/PrepareAst.java
+index d993bee..47ae88d 100644
+--- src/com/google/javascript/jscomp/PrepareAst.java
++++ src/com/google/javascript/jscomp/PrepareAst.java
+@@ -157,17 +157,18 @@ class PrepareAst implements CompilerPass {
+      */
+     private void annotateCalls(Node n) {
+       Preconditions.checkState(n.isCall());
+-
+       // Keep track of of the "this" context of a call.  A call without an
+       // explicit "this" is a free call.
+       Node first = n.getFirstChild();
+-
+       // ignore cast nodes.
++// buggy code
++      while (first.isCast()) {
++        first = first.getFirstChild();
++      }
+ 
+       if (!NodeUtil.isGet(first)) {
+         n.putBooleanProp(Node.FREE_CALL, true);
+       }
+-
+       // Keep track of the context in which eval is called. It is important
+       // to distinguish between "(0, eval)()" and "eval()".
+       if (first.isName() &&

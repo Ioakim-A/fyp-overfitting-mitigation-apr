@@ -1,0 +1,31 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a025fd41-f7d6-4fd1-8df2-ef71c54aace2_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dfd09f58-bb59-491d-97ad-3137d9ace19d_fixed.java
+index 4e76e23..d7ab29d 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a025fd41-f7d6-4fd1-8df2-ef71c54aace2_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dfd09f58-bb59-491d-97ad-3137d9ace19d_fixed.java
+@@ -1,19 +1,14 @@
+     protected JavaType _narrow(Class<?> subclass)
+     {
+         if (_class == subclass) {
+             return this;
+         }
+-        // Should we check that there is a sub-class relationship?
+-        // 15-Jan-2016, tatu: Almost yes, but there are some complications with
+-        //    placeholder values (`Void`, `NoClass`), so can not quite do yet.
+-        // TODO: fix in 2.8
+-            /*
+-            throw new IllegalArgumentException("Class "+subclass.getName()+" not sub-type of "
+-                    +_class.getName());
+-                    */
+-            return new SimpleType(subclass, _bindings, this, _superInterfaces,
++// buggy code
++//            return new SimpleType(subclass, _bindings, this, _superInterfaces,
++//                    _valueHandler, _typeHandler, _asStatic);
++//
++        return new SimpleType(subclass, _bindings, null, _superInterfaces,
+                 _valueHandler, _typeHandler, _asStatic);
+-        // Otherwise, stitch together the hierarchy. First, super-class
+-        // if not found, try a super-interface
+-        // should not get here but...
++    }
++
+     }

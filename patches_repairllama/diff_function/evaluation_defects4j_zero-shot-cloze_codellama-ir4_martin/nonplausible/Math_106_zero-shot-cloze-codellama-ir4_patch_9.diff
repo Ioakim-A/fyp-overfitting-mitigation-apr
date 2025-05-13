@@ -1,0 +1,109 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/92da68a4-5c5c-4baa-8fdc-8b197b6c2a7d_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1aad4961-1cb2-4003-9fca-453fd7c3616e_fixed.java
+index cba47b8..fc098f2 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/92da68a4-5c5c-4baa-8fdc-8b197b6c2a7d_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1aad4961-1cb2-4003-9fca-453fd7c3616e_fixed.java
+@@ -1,77 +1,47 @@
+     public Fraction parse(String source, ParsePosition pos) {
+-        // try to parse improper fraction
+         Fraction ret = super.parse(source, pos);
+         if (ret != null) {
+             return ret;
+         }
+-        
+         int initialIndex = pos.getIndex();
+-
+-        // parse whitespace
+         parseAndIgnoreWhitespace(source, pos);
+-
+-        // parse whole
+         Number whole = getWholeFormat().parse(source, pos);
+         if (whole == null) {
+-            // invalid integer number
+-            // set index back to initial, error index should already be set
+-            // character examined.
+             pos.setIndex(initialIndex);
+             return null;
+         }
+-
+-        // parse whitespace
+         parseAndIgnoreWhitespace(source, pos);
+-        
+-        // parse numerator
+         Number num = getNumeratorFormat().parse(source, pos);
+         if (num == null) {
+-            // invalid integer number
+-            // set index back to initial, error index should already be set
+-            // character examined.
+-            pos.setIndex(initialIndex);
+-            return null;
+-        }
+-        
+-            // minus signs should be leading, invalid expression
+-
+-        // parse '/'
+-        int startIndex = pos.getIndex();
+-        char c = parseNextCharacter(source, pos);
+-        switch (c) {
+-        case 0 :
+-            // no '/'
+-            // return num as a fraction
+-            return new Fraction(num.intValue(), 1);
+-        case '/' :
+-            // found '/', continue parsing denominator
+-            break;
+-        default :
+-            // invalid '/'
+-            // set index back to initial, error index should be the last
+-            // character examined.
+-            pos.setIndex(initialIndex);
+-            pos.setErrorIndex(startIndex);
+-            return null;
+-        }
+-
+-        // parse whitespace
+-        parseAndIgnoreWhitespace(source, pos);
+-
+-        // parse denominator
+-        Number den = getDenominatorFormat().parse(source, pos);
+-        if (den == null) {
+-            // invalid integer number
+-            // set index back to initial, error index should already be set
+-            // character examined.
+-            pos.setIndex(initialIndex);
+-            return null;
+-        }
+-        
+-            // minus signs must be leading, invalid
+-
++// buggy code
++//            pos.setIndex(initialIndex);
++//            return null;
++//        }
++//        int startIndex = pos.getIndex();
++//        char c = parseNextCharacter(source, pos);
++//        switch (c) {
++//        case 0 :
++//            return new Fraction(num.intValue(), 1);
++//        case '/' :
++//            break;
++//        default :
++//            pos.setIndex(initialIndex);
++//            pos.setErrorIndex(startIndex);
++//            return null;
++//        }
++//        parseAndIgnoreWhitespace(source, pos);
++//        Number den = getDenominatorFormat().parse(source, pos);
++//        if (den == null) {
++//            pos.setIndex(initialIndex);
++//            return null;
++//        }
++//        if (den.intValue() == 0) {
++//            pos.setIndex(initialIndex);
++//            pos.setErrorIndex(pos.getIndex());
++//            return null;
++//        }
+         int w = whole.intValue();
+         int n = num.intValue();
+         int d = den.intValue();
+         return new Fraction(((Math.abs(w) * d) + n) * MathUtils.sign(w), d);
+     }

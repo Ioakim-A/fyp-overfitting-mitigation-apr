@@ -1,0 +1,21 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/03a54396-638c-436d-93f4-3b90bba150e5_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b2b6a1c0-37c2-4101-b176-3e0092be798a_fixed.java
+index fa15a1c..c6db2c0 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/03a54396-638c-436d-93f4-3b90bba150e5_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b2b6a1c0-37c2-4101-b176-3e0092be798a_fixed.java
+@@ -1,5 +1,14 @@
+     public void writeEmbeddedObject(Object object) throws IOException {
+-        // 01-Sep-2016, tatu: As per [core#318], handle small number of cases
+-        throw new JsonGenerationException("No native support for writing embedded objects",
++       ByteArrayOutputStream baos = new ByteArrayOutputStream();
++        ObjectOutputStream oos = null;
++        try {
++            oos = new ObjectOutputStream(baos);
++            oos.writeObject(object);
++        } finally {
++            if (oos != null) {
++                oos.close();
++            }
++        }
++        writeEmbeddedObject(baos.toByteArray(),
+                 this);
+     }

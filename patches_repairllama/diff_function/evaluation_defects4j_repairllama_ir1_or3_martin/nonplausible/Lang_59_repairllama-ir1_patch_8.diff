@@ -1,0 +1,26 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dedb549f-280a-47b7-823e-9ae552c57136_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/58bbdaaa-3b5b-407d-92b0-75ee88e5f00e_fixed.java
+index 27bf7ea..3351656 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dedb549f-280a-47b7-823e-9ae552c57136_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/58bbdaaa-3b5b-407d-92b0-75ee88e5f00e_fixed.java
+@@ -1,18 +1,14 @@
+     public StrBuilder appendFixedWidthPadRight(Object obj, int width, char padChar) {
+         if (width > 0) {
+             ensureCapacity(size + width);
+-            String str = (obj == null ? getNullText() : obj.toString());
++            if (obj == null) {
++                String str = getNullText();
+                 int strLen = str.length();
+                 if (strLen >= width) {
+                     str.getChars(0, strLen, buffer, size);
+                 } else {
+-                int padLen = width - strLen;
+-                str.getChars(0, strLen, buffer, size);
+-                for (int i = 0; i < padLen; i++) {
+-                    buffer[size + strLen + i] = padChar;
+-                }
+-            }
++                    int padLen = width - strLen            }
+             size += width;
+         }
+         return this;
+     }

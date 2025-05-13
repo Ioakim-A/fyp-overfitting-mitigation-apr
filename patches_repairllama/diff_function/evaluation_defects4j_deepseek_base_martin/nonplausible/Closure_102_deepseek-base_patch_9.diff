@@ -1,0 +1,18 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bb46efce-1eec-4aaa-a73d-87aa41562f40_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a4cef873-8695-4e82-bf01-b4a5107e5b20_fixed.java
+index f47d784..ea735b3 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bb46efce-1eec-4aaa-a73d-87aa41562f40_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a4cef873-8695-4e82-bf01-b4a5107e5b20_fixed.java
+@@ -1,12 +1,7 @@
+   @Override
+   public void process(Node externs, Node root) {
+     NodeTraversal.traverse(compiler, root, this);
+-    if (MAKE_LOCAL_NAMES_UNIQUE) {
+-      MakeDeclaredNamesUnique renamer = new MakeDeclaredNamesUnique();
+-      NodeTraversal t = new NodeTraversal(compiler, renamer);
+-      t.traverseRoots(externs, root);
+-    }
+-    removeDuplicateDeclarations(root);
++
+     new PropogateConstantAnnotations(compiler, assertOnChange)
+         .process(externs, root);
+   }

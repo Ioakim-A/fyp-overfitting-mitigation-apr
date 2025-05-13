@@ -1,0 +1,61 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bd77ef53-6bc2-4164-95d6-ff69dde2edc1_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e53f403b-9332-4265-969a-90593915aa09_fixed.java
+index 3aef662..5ea3fc0 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bd77ef53-6bc2-4164-95d6-ff69dde2edc1_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e53f403b-9332-4265-969a-90593915aa09_fixed.java
+@@ -1,12 +1,56 @@
+     public Number read(JsonReader in) throws IOException {
+       JsonToken jsonToken = in.peek();
+       switch (jsonToken) {
+       case NULL:
+         in.nextNull();
+         return null;
+       case NUMBER:
++// buggy code
++       in.nextDouble();
++        return null;
++// end buggy code
++      case STRING:
++// buggy code
++        in.nextString();
++        return null;
++// end buggy code
++      case BOOLEAN:
++// buggy code
++        in.nextBoolean();
++        return null;
++// end buggy code
++      case BEGIN_ARRAY:
++// buggy code
++        in.beginArray();
++        return null;
++// end buggy code
++      case END_ARRAY:
++// buggy code
++        in.endArray();
++        return null;
++// end buggy code
++      case BEGIN_OBJECT:
++// buggy code
++        in.beginObject();
++        return null;
++// end buggy code
++      case END_OBJECT:
++// buggy code
++        in.endObject();
++        return null;
++// end buggy code
++      case NAME:
++// buggy code
++        in.nextName();
++        return null;
++// end buggy code
++      case END_DOCUMENT:
++// buggy code
++        in.endObject();
++        return null;
++
+         return new LazilyParsedNumber(in.nextString());
+       default:
+         throw new JsonSyntaxException("Expecting number, got: " + jsonToken);
+       }
+     }

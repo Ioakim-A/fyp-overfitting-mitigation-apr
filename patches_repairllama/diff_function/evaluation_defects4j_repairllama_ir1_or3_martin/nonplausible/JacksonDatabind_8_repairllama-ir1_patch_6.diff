@@ -1,0 +1,40 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/56d3a445-589b-4b12-be5e-69fe8e058310_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/675023fb-dea0-4f74-917d-d20330f842a1_fixed.java
+index c9da1b7..98c1563 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/56d3a445-589b-4b12-be5e-69fe8e058310_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/675023fb-dea0-4f74-917d-d20330f842a1_fixed.java
+@@ -1,33 +1,21 @@
+     protected void verifyNonDup(AnnotatedWithParams newOne, int typeIndex, boolean explicit)
+     {
+         final int mask = (1 << typeIndex);
+-        _hasNonDefaultCreator = true;
+         AnnotatedWithParams oldOne = _creators[typeIndex];
+-        // already had an explicitly marked one?
+         if (oldOne != null) {
+-
+-            if ((_explicitCreators & mask) != 0) { // already had explicitly annotated, leave as-is
+-                // but skip, if new one not annotated
++            _hasNonDefaultCreator = true;
++            if ((_explicitCreators & mask) != 0) { 
+                 if (!explicit) {
+                     return;
+                 }
+-                // both explicit: verify
+-                // otherwise only verify if neither explicitly annotated.
+             }
+-
+-            // one more thing: ok to override in sub-class
+             if (oldOne.getClass() == newOne.getClass()) {
+-                // [databind#667]: avoid one particular class of bogus problems
+-
+                     throw new IllegalArgumentException("Conflicting "+TYPE_DESCS[typeIndex]
+                             +" creators: already had explicitly marked "+oldOne+", encountered "+newOne);
+-                // otherwise, which one to choose?
+-                    // new type more generic, use old
+-                // new type more specific, use it
+             }
+         }
+         if (explicit) {
+             _explicitCreators |= mask;
+         }
+         _creators[typeIndex] = _fixAccess(newOne);
+     }

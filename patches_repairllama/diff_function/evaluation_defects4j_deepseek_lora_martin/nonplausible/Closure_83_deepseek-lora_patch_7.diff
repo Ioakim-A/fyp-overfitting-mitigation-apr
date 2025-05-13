@@ -1,0 +1,28 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9ad24f06-8e79-47e2-806d-538bee27de8e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/77c40248-7b30-4c28-a6ba-2a052481ca37_fixed.java
+index 072c672..c3584a4 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9ad24f06-8e79-47e2-806d-538bee27de8e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/77c40248-7b30-4c28-a6ba-2a052481ca37_fixed.java
+@@ -1,20 +1,22 @@
+       @Override
+       public int parseArguments(Parameters params) throws CmdLineException {
+-        String param = params.getParameter(0);
++// buggy code
++//        String param = params.getParameter(0);
++        String param = params.hasMore() ? params.getParameter(0) : "";
+ 
+         if (param == null) {
+           setter.addValue(true);
+           return 0;
+         } else {
+           String lowerParam = param.toLowerCase();
+           if (TRUES.contains(lowerParam)) {
+             setter.addValue(true);
+           } else if (FALSES.contains(lowerParam)) {
+             setter.addValue(false);
+           } else {
+             setter.addValue(true);
+             return 0;
+           }
+           return 1;
+         }
+       }

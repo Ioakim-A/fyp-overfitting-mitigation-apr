@@ -1,0 +1,55 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/89f2e9bf-dfcb-4a65-94c4-ab7d52f2cbf6_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0aa2270d-9790-4af6-bda4-8c477b42d6c7_fixed.java
+index 2fc658f..95305e0 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/89f2e9bf-dfcb-4a65-94c4-ab7d52f2cbf6_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0aa2270d-9790-4af6-bda4-8c477b42d6c7_fixed.java
+@@ -1,40 +1,49 @@
+     public boolean equals(Object obj) {
+         if (this == obj) {
+             return true;
+         }
+         if (obj == null || getClass() != obj.getClass()) {
+             return false;
+         }
+         ZipArchiveEntry other = (ZipArchiveEntry) obj;
+         String myName = getName();
+         String otherName = other.getName();
+         if (myName == null) {
+             if (otherName != null) {
+                 return false;
+             }
+         } else if (!myName.equals(otherName)) {
+             return false;
+         }
+         String myComment = getComment();
+         String otherComment = other.getComment();
+         if (myComment == null) {
+-            if (otherComment != null) {
++// buggy code
++//             if (otherComment != null) {
++//                 return false;
++//             }
++//         } else if (!myComment.equals(otherComment)) {
++//             return false;
++//         }
++//         return getTime() == other.getTime()
++           if (otherComment != null && !otherComment.isEmpty()) {
+                 return false;
+             }
+         } else if (!myComment.equals(otherComment)) {
+             return false;
+         }
+         return getTime() == other.getTime()
++            && getMethod() == other.getMethod();
+             && getInternalAttributes() == other.getInternalAttributes()
+             && getPlatform() == other.getPlatform()
+             && getExternalAttributes() == other.getExternalAttributes()
+             && getMethod() == other.getMethod()
+             && getSize() == other.getSize()
+             && getCrc() == other.getCrc()
+             && getCompressedSize() == other.getCompressedSize()
+             && Arrays.equals(getCentralDirectoryExtra(),
+                              other.getCentralDirectoryExtra())
+             && Arrays.equals(getLocalFileDataExtra(),
+                              other.getLocalFileDataExtra())
+             && gpb.equals(other.gpb);
+     }

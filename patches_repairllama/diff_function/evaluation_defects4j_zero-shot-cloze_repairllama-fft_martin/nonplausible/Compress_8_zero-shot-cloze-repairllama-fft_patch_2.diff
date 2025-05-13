@@ -1,0 +1,65 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f71f6ac5-4eb4-48a2-a78a-b13dd098acf6_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2316552d-4b26-4744-aedc-e2e74849572a_fixed.java
+index 3534eda..9ef2111 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f71f6ac5-4eb4-48a2-a78a-b13dd098acf6_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2316552d-4b26-4744-aedc-e2e74849572a_fixed.java
+@@ -1,37 +1,48 @@
+     public static long parseOctal(final byte[] buffer, final int offset, final int length) {
+         long    result = 0;
+-        boolean stillPadding = true;
++// buggy code
++//        boolean stillPadding = true;
++//        int     end = offset + length;
++//        int     start = offset;
++//        for (int i = start; i < end; i++){
++//            final byte currentByte = buffer[i];
++//            if (currentByte == 0) {
++//                break;
++//            }
++//            if (currentByte == (byte) ' ' || currentByte == '0') {
++//                if (stillPadding) {
++//                   continue;
++//            }
++//                if (currentByte == (byte) ' ') {
++//                break;
++//                }
++//            }
++//            stillPadding = false;
++//            result = (result << 3) + (currentByte - '0'); 
++//        }
++        boolean stillPadding = false;
+         int     end = offset + length;
+         int     start = offset;
+-
+         for (int i = start; i < end; i++){
+             final byte currentByte = buffer[i];
+             if (currentByte == 0) {
+                 break;
+             }
+-
+-        // Skip leading spaces
+             if (currentByte == (byte) ' ' || currentByte == '0') {
+                 if (stillPadding) {
+                    continue;
+             }
+                 if (currentByte == (byte) ' ') {
+                 break;
+                 }
+             }
++            stillPadding = true;
+ 
+-        // Must have trailing NUL or space
+-        // May have additional NUL or space
+-
+-            stillPadding = false;
+-            // CheckStyle:MagicNumber OFF
+             if (currentByte < '0' || currentByte > '7'){
+                 throw new IllegalArgumentException(
+                         exceptionMessage(buffer, offset, length, start, currentByte));
+             }
+-            result = (result << 3) + (currentByte - '0'); // convert from ASCII
+-            // CheckStyle:MagicNumber ON
++            result = (result << 3) + (currentByte - '0'); 
+         }
+-
+         return result;
+     }

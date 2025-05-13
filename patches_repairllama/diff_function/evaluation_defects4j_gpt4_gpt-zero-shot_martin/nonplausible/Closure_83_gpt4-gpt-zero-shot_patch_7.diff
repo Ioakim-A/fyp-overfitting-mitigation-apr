@@ -1,0 +1,31 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/64e43c12-94bd-430c-89a4-6f883e1b33dc_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bc23d499-f755-4662-9fce-6a7f93ee3b22_fixed.java
+index 8a37ecc..1756269 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/64e43c12-94bd-430c-89a4-6f883e1b33dc_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bc23d499-f755-4662-9fce-6a7f93ee3b22_fixed.java
+@@ -1,19 +1,23 @@
+       public int parseArguments(Parameters params) throws CmdLineException {
+-        String param = params.getParameter(0);
+-
++        String param = null;
++        try {
++          param = params.getParameter(0);
++        } catch (ArrayIndexOutOfBoundsException e) {
++          // Handle exception or print error message.
++        }
+         if (param == null) {
+           setter.addValue(true);
+           return 0;
+         } else {
+           String lowerParam = param.toLowerCase();
+           if (TRUES.contains(lowerParam)) {
+             setter.addValue(true);
+           } else if (FALSES.contains(lowerParam)) {
+             setter.addValue(false);
+           } else {
+             setter.addValue(true);
+             return 0;
+           }
+           return 1;
+         }
+       }
+\ No newline at end of file

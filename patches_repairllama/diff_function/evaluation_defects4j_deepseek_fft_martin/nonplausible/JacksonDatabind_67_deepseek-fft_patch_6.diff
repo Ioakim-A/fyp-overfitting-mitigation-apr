@@ -1,0 +1,47 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d3810d7d-1418-4e22-b028-db458c82dbc7_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fd66b7b2-0d66-47ec-8ad2-eb11354b3651_fixed.java
+index bc80637..4ad0e1a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d3810d7d-1418-4e22-b028-db458c82dbc7_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fd66b7b2-0d66-47ec-8ad2-eb11354b3651_fixed.java
+@@ -1,33 +1,40 @@
+     @Override
+     public KeyDeserializer createKeyDeserializer(DeserializationContext ctxt,
+             JavaType type)
+         throws JsonMappingException
+     {
+         final DeserializationConfig config = ctxt.getConfig();
+         KeyDeserializer deser = null;
+         if (_factoryConfig.hasKeyDeserializers()) {
+             BeanDescription beanDesc = config.introspectClassAnnotations(type.getRawClass());
+             for (KeyDeserializers d  : _factoryConfig.keyDeserializers()) {
+                 deser = d.findKeyDeserializer(type, config, beanDesc);
+                 if (deser != null) {
+                     break;
+                 }
+             }
+         }
+         // the only non-standard thing is this:
+         if (deser == null) {
+             if (type.isEnumType()) {
+-                return _createEnumKeyDeserializer(ctxt, type);
+-            }
++// buggy code
++//                return _createEnumKeyDeserializer(ctxt, type);
++//            }
++//            deser = StdKeyDeserializers.findStringBasedKeyDeserializer(config, type);
+                 deser = StdKeyDeserializers.findStringBasedKeyDeserializer(config, type);
++                if (deser == null) {
++                    return _createEnumKeyDeserializer(ctxt, type);
++                }
++            }
++
+         }
+         // and then post-processing
+         if (deser != null) {
+             if (_factoryConfig.hasDeserializerModifiers()) {
+                 for (BeanDeserializerModifier mod : _factoryConfig.deserializerModifiers()) {
+                     deser = mod.modifyKeyDeserializer(config, type, deser);
+                 }
+             }
+         }
+         return deser;
+     }

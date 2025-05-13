@@ -1,0 +1,76 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1293b870-d590-4e78-8569-c0bf0294edff_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/16159e3f-44b8-4ddd-be88-c506fa0e3bbd_fixed.java
+index d7b8fbd..cbf1de0 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1293b870-d590-4e78-8569-c0bf0294edff_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/16159e3f-44b8-4ddd-be88-c506fa0e3bbd_fixed.java
+@@ -1,59 +1,56 @@
+     protected String[] flatten(Options options, String[] arguments, boolean stopAtNonOption)
+     {
+-        List tokens = new ArrayList();
+-
++        List<String> tokens = new ArrayList<>();
+         boolean eatTheRest = false;
+-
+         for (int i = 0; i < arguments.length; i++)
+         {
+             String arg = arguments[i];
+-
+             if ("--".equals(arg))
+             {
+                 eatTheRest = true;
+                 tokens.add("--");
+             }
+             else if ("-".equals(arg))
+             {
+                 tokens.add("-");
+             }
+             else if (arg.startsWith("-"))
+             {
+                 String opt = Util.stripLeadingHyphens(arg);
+-
+                 if (options.hasOption(opt))
+                 {
+-                    tokens.add(arg);
++                    tokens.add(opt);
+                 }
+                 else
+                 {
+-                    if (options.hasOption(arg.substring(0, 2)))
++                    int ind = 1;
++                    while (ind < arg.length() && options.hasOption(arg.substring(0, ind)))
+                     {
+-                        // the format is --foo=value or -foo=value
+-                        // the format is a special properties option (-Dproperty=value)
+-                        tokens.add(arg.substring(0, 2)); // -D
+-                        tokens.add(arg.substring(2)); // property=value
++                        ind++;
++                    }
++                    if (ind > 1)
++                    {
++                        tokens.add(arg.substring(0, ind)); 
++                        tokens.add(arg.substring(ind)); 
+                     }
+                     else
+                     {
+                         eatTheRest = stopAtNonOption;
+                         tokens.add(arg);
+                     }
+                 }
+             }
+             else
+             {
+                 tokens.add(arg);
+             }
+-
+             if (eatTheRest)
+             {
+                 for (i++; i < arguments.length; i++)
+                 {
+                     tokens.add(arguments[i]);
+                 }
+             }
+         }
+-
+-        return (String[]) tokens.toArray(new String[tokens.size()]);
++        return tokens.toArray(new String[0]);
+     }
+\ No newline at end of file

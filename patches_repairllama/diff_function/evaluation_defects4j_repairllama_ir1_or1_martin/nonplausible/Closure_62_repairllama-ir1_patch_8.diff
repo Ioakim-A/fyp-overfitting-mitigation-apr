@@ -1,0 +1,55 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7e793dea-33cd-4d98-9772-68a40d48440e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/12952330-e54f-4039-aaeb-ab862b4ea08e_fixed.java
+index 904dba7..5aa726f 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7e793dea-33cd-4d98-9772-68a40d48440e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/12952330-e54f-4039-aaeb-ab862b4ea08e_fixed.java
+@@ -1,46 +1,24 @@
+ private String format(JSError error, boolean warning) {
+-    // extract source excerpt
+     SourceExcerptProvider source = getSource();
+     String sourceExcerpt = source == null ? null :
+         excerpt.get(
+             source, error.sourceName, error.lineNumber, excerptFormatter);
+-
+-    // formatting the message
+     StringBuilder b = new StringBuilder();
+     if (error.sourceName != null) {
+       b.append(error.sourceName);
+       if (error.lineNumber > 0) {
+         b.append(':');
+         b.append(error.lineNumber);
+       }
+       b.append(": ");
+     }
+-
+     b.append(getLevelName(warning ? CheckLevel.WARNING : CheckLevel.ERROR));
+     b.append(" - ");
+-
+     b.append(error.description);
+-    b.append('\n');
++    b.append("\n");
+     if (sourceExcerpt != null) {
+       b.append(sourceExcerpt);
+-      b.append('\n');
++      b.append("\n");
+       int charno = error.getCharno();
+-
+-      // padding equal to the excerpt and arrow at the end
+-      // charno == sourceExpert.length() means something is missing
+-      // at the end of the line
+       if (excerpt.equals(LINE)
+-          && 0 <= charno && charno < sourceExcerpt.length()) {
+-        for (int i = 0; i < charno; i++) {
+-          char c = sourceExcerpt.charAt(i);
+-          if (Character.isWhitespace(c)) {
+-            b.append(c);
+-          } else {
+-            b.append(' ');
+-          }
+-        }
+-        b.append("^\n");
+-      }
+-    }
+-    return b.toString();
+-  }
++          && 0 <= charno && char
+\ No newline at end of file

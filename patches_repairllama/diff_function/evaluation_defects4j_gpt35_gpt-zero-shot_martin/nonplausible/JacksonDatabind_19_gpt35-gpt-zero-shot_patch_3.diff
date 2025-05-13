@@ -1,0 +1,23 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/abe64cb1-65bb-408c-9149-2019396aad43_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ded8a635-1d78-4b40-b395-84bf25ece425_fixed.java
+index 1bec4d6..8d28839 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/abe64cb1-65bb-408c-9149-2019396aad43_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ded8a635-1d78-4b40-b395-84bf25ece425_fixed.java
+@@ -1,14 +1,4 @@
+-    private JavaType _mapType(Class<?> rawClass)
+-    {
+-        // 28-May-2015, tatu: Properties are special, as per [databind#810]
+-        JavaType[] typeParams = findTypeParameters(rawClass, Map.class);
+-        // ok to have no types ("raw")
+-        if (typeParams == null) {
+-            return MapType.construct(rawClass, _unknownType(), _unknownType());
+-        }
+-        // but exactly 2 types if any found
+-        if (typeParams.length != 2) {
+-            throw new IllegalArgumentException("Strange Map type "+rawClass.getName()+": can not determine type parameters");
+-        }
+-        return MapType.construct(rawClass, typeParams[0], typeParams[1]);
++        TypeFactory tf = _typeFactory;
++        if (tf == null) {
++            tf = TypeFactory.defaultInstance();
+         }
+\ No newline at end of file

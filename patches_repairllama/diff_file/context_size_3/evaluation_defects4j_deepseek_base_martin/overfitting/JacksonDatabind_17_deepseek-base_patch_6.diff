@@ -1,0 +1,15 @@
+diff --git src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java
+index 7fd23f0..580b634 100644
+--- src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java
++++ src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java
+@@ -177,8 +177,8 @@ public class ObjectMapper
+                 return (t.getRawClass() == Object.class)
+                         || (!t.isConcrete()
+                                 // [databind#88] Should not apply to JSON tree models:
+-                        || TreeNode.class.isAssignableFrom(t.getRawClass()));
+-
++                                && !t.isFinal()
++                                && !TreeNode.class.isAssignableFrom(t.getRawClass()));
+             case NON_FINAL:
+                 while (t.isArrayType()) {
+                     t = t.getContentType();

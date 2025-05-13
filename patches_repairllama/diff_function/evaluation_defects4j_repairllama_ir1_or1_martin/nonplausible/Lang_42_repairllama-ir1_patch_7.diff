@@ -1,0 +1,26 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1c30feee-2de8-4d91-9ef7-e0e3d3b9b782_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b50377d7-65f7-490f-b05d-5b6a36037f0a_fixed.java
+index 3ec8614..40c2cb7 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1c30feee-2de8-4d91-9ef7-e0e3d3b9b782_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b50377d7-65f7-490f-b05d-5b6a36037f0a_fixed.java
+@@ -1,20 +1,20 @@
+    public void escape(Writer writer, String str) throws IOException {
+         int len = str.length();
+         for (int i = 0; i < len; i++) {
+             char c = str.charAt(i);
+             String entityName = this.entityName(c);
+             if (entityName == null) {
+-                if (c > 0x7F) {
++                if (c >= 0x7F) {
+                     writer.write("&#");
+                     writer.write(Integer.toString(c, 10));
+                     writer.write(';');
+                 } else {
+                     writer.write(c);
+                 }
+             } else {
+                 writer.write('&');
+                 writer.write(entityName);
+                 writer.write(';');
+             }
+         }
+     }

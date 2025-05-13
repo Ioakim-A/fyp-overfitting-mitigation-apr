@@ -1,0 +1,32 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a4ed39d4-1ee8-43b8-8083-d06f1cb8f880_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a683eebc-44b3-44e3-bb9c-3818894da57a_fixed.java
+index 1530b34..327b4ee 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a4ed39d4-1ee8-43b8-8083-d06f1cb8f880_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a683eebc-44b3-44e3-bb9c-3818894da57a_fixed.java
+@@ -1,23 +1,26 @@
+     /**
+      * Declares all of a function's arguments.
+      */
+     private void declareArguments(Node functionNode) {
+       Node astParameters = functionNode.getFirstChild().getNext();
+       Node body = astParameters.getNext();
+       FunctionType functionType = (FunctionType) functionNode.getJSType();
+       if (functionType != null) {
+         Node jsDocParameters = functionType.getParametersNode();
+         if (jsDocParameters != null) {
+           Node jsDocParameter = jsDocParameters.getFirstChild();
+           for (Node astParameter : astParameters.children()) {
+             if (jsDocParameter != null) {
+               defineSlot(astParameter, functionNode,
+-                  jsDocParameter.getJSType(), true);
++// buggy code
++//                  jsDocParameter.getJSType(), true);
++                  jsDocParameter.getJSType(), jsDocParameter.isOptional());
++
+               jsDocParameter = jsDocParameter.getNext();
+             } else {
+               defineSlot(astParameter, functionNode, null, true);
+             }
+           }
+         }
+       }
+     } // end declareArguments

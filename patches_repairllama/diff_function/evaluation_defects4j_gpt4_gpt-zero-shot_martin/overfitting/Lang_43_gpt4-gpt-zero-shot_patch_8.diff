@@ -1,0 +1,35 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/24ea03e0-bc51-4552-8f85-ad4a1e0622bf_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5b4fb92c-430e-4f42-a5dd-568771a68257_fixed.java
+index 7a3ebc1..3eb582f 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/24ea03e0-bc51-4552-8f85-ad4a1e0622bf_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5b4fb92c-430e-4f42-a5dd-568771a68257_fixed.java
+@@ -1,28 +1,29 @@
+     private StringBuffer appendQuotedString(String pattern, ParsePosition pos,
+         StringBuffer appendTo, boolean escapingOn) {
+         int start = pos.getIndex();
+         char[] c = pattern.toCharArray();
+         if (escapingOn && c[start] == QUOTE) {
++            pos.setIndex(start + 1);
+             return appendTo == null ? null : appendTo.append(QUOTE);
+         }
+         int lastHold = start;
+         for (int i = pos.getIndex(); i < pattern.length(); i++) {
+             if (escapingOn && pattern.substring(i).startsWith(ESCAPED_QUOTE)) {
+                 appendTo.append(c, lastHold, pos.getIndex() - lastHold).append(
+                     QUOTE);
+                 pos.setIndex(i + ESCAPED_QUOTE.length());
+                 lastHold = pos.getIndex();
+                 continue;
+             }
+             switch (c[pos.getIndex()]) {
+             case QUOTE:
+                 next(pos);
+                 return appendTo == null ? null : appendTo.append(c, lastHold,
+                     pos.getIndex() - lastHold);
+             default:
+                 next(pos);
+             }
+         }
+         throw new IllegalArgumentException(
+             "Unterminated quoted string at position " + start);
+     }
+\ No newline at end of file

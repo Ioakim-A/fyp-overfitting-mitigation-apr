@@ -1,0 +1,56 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/10b5b7c6-4e8b-4e5c-8e99-44dd6ed65b67_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7f555869-158c-472f-8150-e83b75b7e19f_fixed.java
+index 7f6e916..70849df 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/10b5b7c6-4e8b-4e5c-8e99-44dd6ed65b67_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7f555869-158c-472f-8150-e83b75b7e19f_fixed.java
+@@ -1,42 +1,36 @@
+     private final Object _deserialize(JsonParser p, DeserializationContext ctxt) throws IOException
+     {
+-        // 02-Aug-2013, tatu: May need to use native type ids
+         if (p.canReadTypeId()) {
+             Object typeId = p.getTypeId();
+             if (typeId != null) {
+                 return _deserializeWithNativeTypeId(p, ctxt, typeId);
+             }
+         }
+-        // first, sanity checks
+-        if (p.getCurrentToken() != JsonToken.START_OBJECT) {
+-            throw ctxt.wrongTokenException(p, JsonToken.START_OBJECT,
+-                    "need JSON Object to contain As.WRAPPER_OBJECT type information for class "+baseTypeName());
++       return _deserializeWithoutNativeTypeId(p, ctxt);
+     }
+-            // should always get field name, but just in case...
+-            if (p.nextToken() != JsonToken.FIELD_NAME) {
+-                throw ctxt.wrongTokenException(p, JsonToken.FIELD_NAME,
+-                        "need JSON String that contains type id (for subtype of "+baseTypeName()+")");
++    private final Object _deserializeWithNativeTypeId(JsonParser p, DeserializationContext ctxt, Object typeId) throws IOException
++    {
++        JsonDeserializer<Object> deser = _findDeserializer(ctxt, typeId);
++        Object value = deser.deserialize(p, ctxt);
++        return value;
+     }
++    private final Object _deserializeWithoutNativeTypeId(JsonParser p, DeserializationContext ctxt) throws IOException
++    {
+         final String typeId = p.getText();
+         JsonDeserializer<Object> deser = _findDeserializer(ctxt, typeId);
+         p.nextToken();
+-
+-        // Minor complication: we may need to merge type id in?
+         if (_typeIdVisible && p.getCurrentToken() == JsonToken.START_OBJECT) {
+-            // but what if there's nowhere to add it in? Error? Or skip? For now, skip.
+             TokenBuffer tb = new TokenBuffer(null, false);
+-            tb.writeStartObject(); // recreate START_OBJECT
++            tb.writeStartObject(); 
+             tb.writeFieldName(_typePropertyName);
+             tb.writeString(typeId);
+             p = JsonParserSequence.createFlattened(tb.asParser(p), p);
+             p.nextToken();
+         }
+-        
+         Object value = deser.deserialize(p, ctxt);
+-        // And then need the closing END_OBJECT
+         if (p.nextToken() != JsonToken.END_OBJECT) {
+             throw ctxt.wrongTokenException(p, JsonToken.END_OBJECT,
+                     "expected closing END_OBJECT after type information and deserialized value");
+         }
+         return value;
+     }

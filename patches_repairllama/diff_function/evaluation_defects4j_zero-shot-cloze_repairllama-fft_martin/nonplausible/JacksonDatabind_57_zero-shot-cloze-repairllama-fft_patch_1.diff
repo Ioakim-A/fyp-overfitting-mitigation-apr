@@ -1,0 +1,20 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/eb82a21c-96dc-4dd6-adbf-cc6c89838849_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/171991b7-20a1-4dca-be76-ea7760db6afe_fixed.java
+index 2e75e15..6110867 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/eb82a21c-96dc-4dd6-adbf-cc6c89838849_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/171991b7-20a1-4dca-be76-ea7760db6afe_fixed.java
+@@ -1,9 +1,14 @@
+     public <T> MappingIterator<T> readValues(byte[] src, int offset, int length)
+         throws IOException, JsonProcessingException
+     {
+         if (_dataFormatReaders != null) {
+             return _detectBindAndReadValues(_dataFormatReaders.findFormat(src, offset, length), false);
+         }
+-        return _bindAndReadValues(_considerFilter(_parserFactory.createParser(src),
++// buggy code
++//        return _bindAndReadValues(_considerFilter(_parserFactory.createParser(src),
++//                false), false);
++        return _bindAndReadValues(_considerFilter(_parserFactory.createParser(src, offset, length),
++                false), false);
++
+                 true));
+     }

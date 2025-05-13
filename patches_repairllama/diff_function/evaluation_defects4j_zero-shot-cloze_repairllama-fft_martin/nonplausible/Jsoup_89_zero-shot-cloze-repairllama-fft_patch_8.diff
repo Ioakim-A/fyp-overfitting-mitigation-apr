@@ -1,0 +1,26 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2308135d-7968-469e-8fa9-c13ccaf63d16_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e0b65b01-5f45-42f0-a4ec-434ee0286dde_fixed.java
+index 733e874..420ee01 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2308135d-7968-469e-8fa9-c13ccaf63d16_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e0b65b01-5f45-42f0-a4ec-434ee0286dde_fixed.java
+@@ -1,10 +1,20 @@
+     public String setValue(String val) {
+-        String oldVal = parent.get(this.key);
++// buggy code
++//        String oldVal = parent.get(this.key);
++//        if (parent != null) {
++//            parent.remove(this.key);
++//        }
++        String oldVal = null;
+         if (parent != null) {
++            oldVal = parent.get(this.key);
++            parent.remove(this.key);
++        }
++        if (parent != null) {
++
+             int i = parent.indexOfKey(this.key);
+             if (i != Attributes.NotFound)
+                 parent.vals[i] = val;
+         }
+         this.val = val;
+         return Attributes.checkNotNull(oldVal);
+     }

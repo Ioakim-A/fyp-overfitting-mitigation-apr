@@ -1,0 +1,24 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/af5cb813-2ccf-42d9-a725-e08aa7cd073e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d73ea5ea-b4db-4243-a3bc-23a0dee6cf22_fixed.java
+index 3ea5b43..bd2c2e5 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/af5cb813-2ccf-42d9-a725-e08aa7cd073e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d73ea5ea-b4db-4243-a3bc-23a0dee6cf22_fixed.java
+@@ -1,17 +1,15 @@
+    int nextIndexOf(CharSequence seq) {
+-        // doesn't handle scanning for surrogates
+         char startChar = seq.charAt(0);
+         for (int offset = pos; offset < length; offset++) {
+-            // scan to first instance of startchar:
+             if (startChar != input[offset])
+                 while(++offset < length && startChar != input[offset]);
+             int i = offset + 1;
+             int last = i + seq.length()-1;
+-            if (offset < length) {
++            if (i < length) {
+                 for (int j = 1; i < last && seq.charAt(j) == input[i]; i++, j++);
+-                if (i == last) // found full sequence
++                if (i == last) 
+                     return offset - pos;
+             }
+         }
+         return -1;
+     }

@@ -1,0 +1,48 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/54db49d6-9725-43da-b5b7-123955cc31e7_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c166f2bb-7c9f-44ce-8a54-dde197e3745e_fixed.java
+index 50cbfb2..cc651cb 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/54db49d6-9725-43da-b5b7-123955cc31e7_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c166f2bb-7c9f-44ce-8a54-dde197e3745e_fixed.java
+@@ -1,39 +1,21 @@
+-    protected void iterateSimplex(final Comparator<RealPointValuePair> comparator)
+-        throws FunctionEvaluationException, OptimizationException, IllegalArgumentException {
+-
+ while (true) {
+-
+     incrementIterationsCounter();
+-
+-            // save the original vertex
+     final RealPointValuePair[] original = simplex;
+     final RealPointValuePair best = original[0];
+-
+-            // perform a reflection step
+     final RealPointValuePair reflected = evaluateNewSimplex(original, 1.0, comparator);
+     if (comparator.compare(reflected, best) < 0) {
+-
+-                // compute the expanded simplex
+         final RealPointValuePair[] reflectedSimplex = simplex;
+         final RealPointValuePair expanded = evaluateNewSimplex(original, khi, comparator);
+         if (comparator.compare(reflected, expanded) <= 0) {
+-                    // accept the reflected simplex
+             simplex = reflectedSimplex;
++        } else {
++            simplex = constructNextSimplex(original, sigma, comparator);
+         }
+-
+         return;
+-
+     }
+-
+-            // compute the contracted simplex
+     final RealPointValuePair contracted = evaluateNewSimplex(original, gamma, comparator);
+     if (comparator.compare(contracted, best) < 0) {
+-                // accept the contracted simplex
+-
+-            // check convergence
+         return;
+     }
+-
+-        }
+-
++    simplex = constructNextSimplex(original, beta, comparator);
+ }
+\ No newline at end of file

@@ -1,0 +1,44 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/54010df0-49b7-44d8-94fc-9e1cb6943077_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/07cf885c-5437-49e5-bfb5-537fa525d257_fixed.java
+index c9da1b7..fd55ebb 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/54010df0-49b7-44d8-94fc-9e1cb6943077_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/07cf885c-5437-49e5-bfb5-537fa525d257_fixed.java
+@@ -1,33 +1,23 @@
+-    protected void verifyNonDup(AnnotatedWithParams newOne, int typeIndex, boolean explicit)
+-    {
++protected void verifyNonDup(AnnotatedWithParams newOne, int typeIndex, boolean explicit) {
+     final int mask = (1 << typeIndex);
+     _hasNonDefaultCreator = true;
+     AnnotatedWithParams oldOne = _creators[typeIndex];
+-        // already had an explicitly marked one?
+     if (oldOne != null) {
+-
+-            if ((_explicitCreators & mask) != 0) { // already had explicitly annotated, leave as-is
+-                // but skip, if new one not annotated
++        if ((_explicitCreators & mask) != 0) {
+             if (!explicit) {
+                 return;
+             }
+-                // both explicit: verify
+-                // otherwise only verify if neither explicitly annotated.
+         }
+-
+-            // one more thing: ok to override in sub-class
+         if (oldOne.getClass() == newOne.getClass()) {
+-                // [databind#667]: avoid one particular class of bogus problems
+-
+             throw new IllegalArgumentException("Conflicting " + TYPE_DESCS[typeIndex]
+                     + " creators: already had explicitly marked " + oldOne + ", encountered " + newOne);
+-                // otherwise, which one to choose?
+-                    // new type more generic, use old
+-                // new type more specific, use it
++        } else {
++            throw new IllegalArgumentException("Conflicting " + TYPE_DESCS[typeIndex]
++                    + " creators of different types: already had explicitly marked " + oldOne + ", encountered " + newOne);
+         }
+     }
+     if (explicit) {
+         _explicitCreators |= mask;
+     }
+     _creators[typeIndex] = _fixAccess(newOne);
+ }
+\ No newline at end of file

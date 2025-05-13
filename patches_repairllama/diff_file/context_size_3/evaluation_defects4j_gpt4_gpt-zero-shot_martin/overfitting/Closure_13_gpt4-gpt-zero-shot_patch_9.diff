@@ -1,0 +1,39 @@
+diff --git src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java
+index b51c088..6bd98d4 100644
+--- src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java
++++ src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java
+@@ -111,32 +111,23 @@ class PeepholeOptimizationsPass
+   }
+ 
+ private void traverse(Node node) {
+-    // The goal here is to avoid retraversing
+-    // the entire AST to catch newly created opportunities.
+-    // So we track whether a "unit of code" has changed,
+-    // and revisit immediately.
+   if (!shouldVisit(node)) {
+     return;
+   }
+-
+   int visits = 0;
+   do {
+     Node c = node.getFirstChild();
+     while(c != null) {
+-        traverse(c);
+       Node next = c.getNext();
++      traverse(c);
+       c = next;
+     }
+-
+     visit(node);
+     visits++;
+-
+-      Preconditions.checkState(visits < 10000, "too many interations");
++    Preconditions.checkState(visits < 10000, "too many iterations");
+   } while (shouldRetraverse(node));
+-
+   exitNode(node);
+ }
+-
+   private boolean shouldRetraverse(Node node) {
+     if (node.getParent() != null && node.isFunction() || node.isScript()) {
+       ScopeState state = traversalState.peek();

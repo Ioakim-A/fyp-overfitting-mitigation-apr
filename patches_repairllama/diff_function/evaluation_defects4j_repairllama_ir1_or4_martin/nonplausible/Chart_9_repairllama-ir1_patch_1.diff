@@ -1,0 +1,49 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9a6e4b3a-1b95-4c46-bbc2-a747c6750144_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/35b1f14e-d12f-4e41-8b94-a1f805bf23c0_fixed.java
+index f6c07b1..f0f7343 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9a6e4b3a-1b95-4c46-bbc2-a747c6750144_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/35b1f14e-d12f-4e41-8b94-a1f805bf23c0_fixed.java
+@@ -1,39 +1,36 @@
+-    public TimeSeries createCopy(RegularTimePeriod start, RegularTimePeriod end)
+-        throws CloneNotSupportedException {
+-
++    public TimeSeries createCopy(RegularTimePeriod start, RegularTimePeriod end) {
+         if (start == null) {
+             throw new IllegalArgumentException("Null 'start' argument.");
+         }
+         if (end == null) {
+             throw new IllegalArgumentException("Null 'end' argument.");
+         }
+         if (start.compareTo(end) > 0) {
+             throw new IllegalArgumentException(
+                     "Requires start on or before end.");
+         }
+         boolean emptyRange = false;
+         int startIndex = getIndex(start);
+         if (startIndex < 0) {
+             startIndex = -(startIndex + 1);
+             if (startIndex == this.data.size()) {
+-                emptyRange = true;  // start is after last data item
++                emptyRange = true;  
+             }
+         }
+         int endIndex = getIndex(end);
+-        if (endIndex < 0) {             // end period is not in original series
+-            endIndex = -(endIndex + 1); // this is first item AFTER end period
+-            endIndex = endIndex - 1;    // so this is last item BEFORE end
++        if (endIndex < 0) {             
++            endIndex = -(endIndex + 1); 
++            endIndex = endIndex - 1;    
+         }
+         if (endIndex < 0) {
+             emptyRange = true;
+         }
+         if (emptyRange) {
+             TimeSeries copy = (TimeSeries) super.clone();
+             copy.data = new java.util.ArrayList();
+             return copy;
+         }
+         else {
+             return createCopy(startIndex, endIndex);
+         }
+-
+     }

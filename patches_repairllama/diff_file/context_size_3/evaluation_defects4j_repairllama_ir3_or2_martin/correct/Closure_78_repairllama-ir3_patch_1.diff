@@ -1,0 +1,73 @@
+diff --git src/com/google/javascript/jscomp/PeepholeFoldConstants.java src/com/google/javascript/jscomp/PeepholeFoldConstants.java
+index c5ef4b0..3d40cc5 100644
+--- src/com/google/javascript/jscomp/PeepholeFoldConstants.java
++++ src/com/google/javascript/jscomp/PeepholeFoldConstants.java
+@@ -662,19 +662,12 @@ class PeepholeFoldConstants extends AbstractPeepholeOptimization {
+    * Try to fold arithmetic binary operators
+    */
+   private Node performArithmeticOp(int opType, Node left, Node right) {
+-    // Unlike other operations, ADD operands are not always converted
+-    // to Number.
+     if (opType == Token.ADD
+         && (NodeUtil.mayBeString(left, false)
+             || NodeUtil.mayBeString(right, false))) {
+       return null;
+     }
+-
+     double result;
+-
+-    // TODO(johnlenz): Handle NaN with unknown value. BIT ops convert NaN
+-    // to zero so this is a little akward here.
+-
+     Double lValObj = NodeUtil.getNumberValue(left);
+     if (lValObj == null) {
+       return null;
+@@ -683,10 +676,8 @@ class PeepholeFoldConstants extends AbstractPeepholeOptimization {
+     if (rValObj == null) {
+       return null;
+     }
+-
+     double lval = lValObj;
+     double rval = rValObj;
+-
+     switch (opType) {
+       case Token.BITAND:
+         result = ScriptRuntime.toInt32(lval) & ScriptRuntime.toInt32(rval);
+@@ -708,14 +699,12 @@ class PeepholeFoldConstants extends AbstractPeepholeOptimization {
+         break;
+       case Token.MOD:
+         if (rval == 0) {
+-          error(DiagnosticType.error("JSC_DIVIDE_BY_0_ERROR", "Divide by 0"), right);
+          return null;
+         }
+         result = lval % rval;
+         break;
+       case Token.DIV:
+         if (rval == 0) {
+-          error(DiagnosticType.error("JSC_DIVIDE_BY_0_ERROR", "Divide by 0"), right);
+           return null;
+         }
+         result = lval / rval;
+@@ -723,14 +712,8 @@ class PeepholeFoldConstants extends AbstractPeepholeOptimization {
+       default:
+         throw new Error("Unexpected arithmetic operator");
+     }
+-
+-    // TODO(johnlenz): consider removing the result length check.
+-    // length of the left and right value plus 1 byte for the operator.
+     if (String.valueOf(result).length() <=
+         String.valueOf(lval).length() + String.valueOf(rval).length() + 1 &&
+-
+-        // Do not try to fold arithmetic for numbers > 2^53. After that
+-        // point, fixed-point math starts to break down and become inaccurate.
+         Math.abs(result) <= MAX_FOLD_NUMBER) {
+       Node newNumber = Node.newNumber(result);
+       return newNumber;
+@@ -741,7 +724,6 @@ class PeepholeFoldConstants extends AbstractPeepholeOptimization {
+     } else if (result == Double.NEGATIVE_INFINITY) {
+       return new Node(Token.NEG, Node.newString(Token.NAME, "Infinity"));
+     }
+-
+     return null;
+   }
+ 

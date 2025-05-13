@@ -1,0 +1,35 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a7a0bd28-911f-42ef-b4d7-5ff6829662d1_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/46b3ad2b-7097-48f7-8265-2e56809165bc_fixed.java
+index ab7017e..8550f5e 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a7a0bd28-911f-42ef-b4d7-5ff6829662d1_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/46b3ad2b-7097-48f7-8265-2e56809165bc_fixed.java
+@@ -1,24 +1,19 @@
+    public static DateTimeZone forOffsetHoursMinutes(int hoursOffset, int minutesOffset) throws IllegalArgumentException {
+         if (hoursOffset == 0 && minutesOffset == 0) {
+             return DateTimeZone.UTC;
+         }
+         if (hoursOffset < -23 || hoursOffset > 23) {
+             throw new IllegalArgumentException("Hours out of range: " + hoursOffset);
+         }
+         if (minutesOffset < 0 || minutesOffset > 59) {
+             throw new IllegalArgumentException("Minutes out of range: " + minutesOffset);
+         }
+         int offset = 0;
+         try {
+-            int hoursInMinutes = hoursOffset * 60;
+-            if (hoursInMinutes < 0) {
+-                minutesOffset = hoursInMinutes - minutesOffset;
++            int hoursInMillis = FieldUtils.safeMultiply(hoursOffset, DateTimeConstants.MILLIS_PER_HOUR);
++            if (hoursInMillis < 0) {
++                minutesOffset = hoursInMillis - minutesOffset;
+             } else {
+-                minutesOffset = hoursInMinutes + minutesOffset;
+-            }
+-            offset = FieldUtils.safeMultiply(minutesOffset, DateTimeConstants.MILLIS_PER_MINUTE);
+-        } catch (ArithmeticException ex) {
+-            throw new IllegalArgumentException("Offset is too large");
+-        }
+-        return forOffsetMillis(offset);
++                minutesOffset = hoursInMillis + minutesOffset;
+             }
++            offset = FieldUtils.safeMultiply(minutesOffset, DateTimeConstants.MILLIS_PER
+\ No newline at end of file

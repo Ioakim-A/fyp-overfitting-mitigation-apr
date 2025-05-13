@@ -1,0 +1,29 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2c142f47-f7f6-425b-a715-43a7bda5544f_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/133d9fd9-25cb-4cb2-89be-99e55c736ad9_fixed.java
+index 7eae43b..a2acdab 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2c142f47-f7f6-425b-a715-43a7bda5544f_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/133d9fd9-25cb-4cb2-89be-99e55c736ad9_fixed.java
+@@ -1,23 +1,15 @@
+    public int getOffsetFromLocal(long instantLocal) {
+-        // get the offset at instantLocal (first estimate)
+         final int offsetLocal = getOffset(instantLocal);
+-        // adjust instantLocal using the estimate and recalc the offset
+         final long instantAdjusted = instantLocal - offsetLocal;
+         final int offsetAdjusted = getOffset(instantAdjusted);
+-        // if the offsets differ, we must be near a DST boundary
+         if (offsetLocal != offsetAdjusted) {
+-            // we need to ensure that time is always after the DST gap
+-            // this happens naturally for positive offsets, but not for negative
+-            if ((offsetLocal - offsetAdjusted) < 0) {
+-                // if we just return offsetAdjusted then the time is pushed
+-                // back before the transition, whereas it should be
+-                // on or after the transition
++            if ((offsetLocal - offsetAdjusted) <= 0) {
+                 long nextLocal = nextTransition(instantAdjusted);
+                 long nextAdjusted = nextTransition(instantLocal - offsetAdjusted);
+                 if (nextLocal != nextAdjusted) {
+                     return offsetLocal;
+                 }
+             }
+         }
+         return offsetAdjusted;
+     }

@@ -1,0 +1,23 @@
+diff --git src/main/java/com/fasterxml/jackson/databind/deser/std/StdKeyDeserializer.java src/main/java/com/fasterxml/jackson/databind/deser/std/StdKeyDeserializer.java
+index d95749a..a7feb8b 100644
+--- src/main/java/com/fasterxml/jackson/databind/deser/std/StdKeyDeserializer.java
++++ src/main/java/com/fasterxml/jackson/databind/deser/std/StdKeyDeserializer.java
+@@ -70,9 +70,7 @@ public class StdKeyDeserializer extends KeyDeserializer
+     public static StdKeyDeserializer forType(Class<?> raw)
+     {
+         int kind;
+-
+-        // first common types:
+-        if (raw == String.class || raw == Object.class) {
++        if (raw == String.class || raw == Object.class || raw == CharSequence.class) {
+             return StringKD.forType(raw);
+         } else if (raw == UUID.class) {
+             kind = TYPE_UUID;
+@@ -84,7 +82,6 @@ public class StdKeyDeserializer extends KeyDeserializer
+             kind = TYPE_DATE;
+         } else if (raw == Calendar.class) {
+             kind = TYPE_CALENDAR;
+-        // then less common ones...
+         } else if (raw == Boolean.class) {
+             kind = TYPE_BOOLEAN;
+         } else if (raw == Byte.class) {

@@ -1,0 +1,17 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/affc247d-a7f9-4361-bded-cea583d1166e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0cfd4e77-6143-4ad2-bc9e-39881f42f1fd_fixed.java
+index 91b7957..8d8d2a1 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/affc247d-a7f9-4361-bded-cea583d1166e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0cfd4e77-6143-4ad2-bc9e-39881f42f1fd_fixed.java
+@@ -1,6 +1,10 @@
+         private void readTypeVariables() {
+             for (Type type : typeVariable.getBounds()) {
+                 registerTypeVariablesOn(type);
+             }
+-            registerTypeVariablesOn(getActualTypeArgumentFor(typeVariable));
++
++            if (typeVariable instanceof ParameterizedType) {
++                Type actualTypeArgument = getActualTypeArgumentFor(typeVariable);
++                registerTypeVariablesOn(actualTypeArgument);
++            }
+         }
+\ No newline at end of file

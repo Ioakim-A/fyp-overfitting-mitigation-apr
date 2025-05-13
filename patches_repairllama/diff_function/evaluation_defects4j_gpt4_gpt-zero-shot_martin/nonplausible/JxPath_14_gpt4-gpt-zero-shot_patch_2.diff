@@ -1,0 +1,18 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2da5ca5a-c817-4858-bf5a-d2e7aa3a71f2_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/67bd278c-6d81-40ee-86bb-59dc8738f62e_fixed.java
+index bc40fbe..9fbbccc 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2da5ca5a-c817-4858-bf5a-d2e7aa3a71f2_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/67bd278c-6d81-40ee-86bb-59dc8738f62e_fixed.java
+@@ -1,5 +1,11 @@
+     protected Object functionFloor(EvalContext context) {
+         assertArgCount(1);
+-        double v = InfoSetUtil.doubleValue(getArg1().computeValue(context));
++        Double v;
++        try {
++            v = InfoSetUtil.doubleValue(getArg1().computeValue(context));
++        } catch (NumberFormatException e) {
++            context.addError("Invalid number format");
++            return null;
++        }
+         return new Double(Math.floor(v));
+     }
+\ No newline at end of file

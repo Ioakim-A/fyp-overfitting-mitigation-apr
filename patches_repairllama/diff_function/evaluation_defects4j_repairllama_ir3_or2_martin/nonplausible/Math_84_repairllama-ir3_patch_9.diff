@@ -1,0 +1,62 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2da07573-2512-4e92-89f6-73a8fbcb8f55_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/75ced814-ed1a-4248-b71a-ecfa917103c6_fixed.java
+index 50cbfb2..9e2a20c 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2da07573-2512-4e92-89f6-73a8fbcb8f55_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/75ced814-ed1a-4248-b71a-ecfa917103c6_fixed.java
+@@ -1,39 +1,25 @@
+     protected void iterateSimplex(final Comparator<RealPointValuePair> comparator)
+         throws FunctionEvaluationException, OptimizationException, IllegalArgumentException {
+-
+-        while (true) {
+-
+-            incrementIterationsCounter();
+-
+-            // save the original vertex
+-            final RealPointValuePair[] original = simplex;
+-            final RealPointValuePair best = original[0];
+-
+-            // perform a reflection step
+-            final RealPointValuePair reflected = evaluateNewSimplex(original, 1.0, comparator);
+-            if (comparator.compare(reflected, best) < 0) {
+-
+-                // compute the expanded simplex
+-                final RealPointValuePair[] reflectedSimplex = simplex;
+-                final RealPointValuePair expanded = evaluateNewSimplex(original, khi, comparator);
+-                if (comparator.compare(reflected, expanded) <= 0) {
+-                    // accept the reflected simplex
+-                    simplex = reflectedSimplex;
+-                }
+-
++       if (simplex.getDimension() == 0) {
+             return;
+-
+-            }
+-
+-            // compute the contracted simplex
+-            final RealPointValuePair contracted = evaluateNewSimplex(original, gamma, comparator);
+-            if (comparator.compare(contracted, best) < 0) {
+-                // accept the contracted simplex
+-
+-            // check convergence
++        }
++        if (simplex.getDimension() == 1) {
++            if (comparator.compare(simplex.getPoint(0), simplex.getPoint(1)) > 0) {
++                simplex.swap(0, 1);
++            }
+             return;
+         }
+-
++        if (simplex.getDimension() == 2) {
++            if (comparator.compare(simplex.getPoint(0), simplex.getPoint(1)) > 0) {
++                simplex.swap(0, 1);
++            }
++            if (comparator.compare(simplex.getPoint(0), simplex.getPoint(2)) > 0) {
++                simplex.swap(0, 2);
++            }
++            if (comparator.compare(simplex.getPoint(1), simplex.getPoint(2)) > 0) {
++                simplex.swap(1, 2);
++            }
++            return;
+         }
+-
++        for (int i = simple        }
+     }

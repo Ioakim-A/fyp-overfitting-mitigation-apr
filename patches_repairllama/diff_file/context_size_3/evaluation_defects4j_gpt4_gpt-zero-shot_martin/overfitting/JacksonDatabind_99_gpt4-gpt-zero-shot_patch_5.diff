@@ -1,0 +1,22 @@
+diff --git src/main/java/com/fasterxml/jackson/databind/type/ReferenceType.java src/main/java/com/fasterxml/jackson/databind/type/ReferenceType.java
+index 4add34e..07fd671 100644
+--- src/main/java/com/fasterxml/jackson/databind/type/ReferenceType.java
++++ src/main/java/com/fasterxml/jackson/databind/type/ReferenceType.java
+@@ -162,13 +162,16 @@ public class ReferenceType extends SimpleType
+     @Override
+     protected String buildCanonicalName()
+     {
++        if (_class == null || _referencedType == null) {
++            throw new IllegalArgumentException("Class or referenced type can not be null");
++        }
+         StringBuilder sb = new StringBuilder();
+         sb.append(_class.getName());
+         sb.append('<');
+         sb.append(_referencedType.toCanonical());
++        sb.append('>');
+         return sb.toString();
+     }
+-
+     /*
+     /**********************************************************
+     /* Narrow/widen

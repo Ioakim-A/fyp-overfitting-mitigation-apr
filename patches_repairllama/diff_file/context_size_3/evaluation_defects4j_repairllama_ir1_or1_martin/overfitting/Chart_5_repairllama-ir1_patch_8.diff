@@ -1,0 +1,32 @@
+diff --git source/org/jfree/data/xy/XYSeries.java source/org/jfree/data/xy/XYSeries.java
+index a9d2e51..1ccb901 100644
+--- source/org/jfree/data/xy/XYSeries.java
++++ source/org/jfree/data/xy/XYSeries.java
+@@ -541,8 +541,6 @@ public class XYSeries extends Series implements Cloneable, Serializable {
+         if (x == null) {
+             throw new IllegalArgumentException("Null 'x' argument.");
+         }
+-
+-        // if we get to here, we know that duplicate X values are not permitted
+         XYDataItem overwritten = null;
+         int index = indexOf(x);
+         if (index >= 0 && !this.allowDuplicateXValues) {
+@@ -555,18 +553,8 @@ public class XYSeries extends Series implements Cloneable, Serializable {
+             }
+             existing.setY(y);
+         }
+-        else {
+-            // if the series is sorted, the negative index is a result from
+-            // Collections.binarySearch() and tells us where to insert the
+-            // new item...otherwise it will be just -1 and we should just
+-            // append the value to the list...
+-            if (this.autoSort) {
+-                this.data.add(-index - 1, new XYDataItem(x, y));
+-            }
+         else {
+             this.data.add(new XYDataItem(x, y));
+-            }
+-            // check if this addition will exceed the maximum item count...
+             if (getItemCount() > this.maximumItemCount) {
+                 this.data.remove(0);
+             }

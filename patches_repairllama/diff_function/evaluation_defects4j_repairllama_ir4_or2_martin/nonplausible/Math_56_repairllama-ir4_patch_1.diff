@@ -1,0 +1,45 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a30ed948-492e-46c9-9b21-73f4aa34182a_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5716d1ff-f354-493b-a589-2088348fae30_fixed.java
+index 6aa74ce..3cc32bc 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a30ed948-492e-46c9-9b21-73f4aa34182a_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5716d1ff-f354-493b-a589-2088348fae30_fixed.java
+@@ -1,31 +1,29 @@
+     public int[] getCounts(int index) {
+         if (index < 0 ||
+             index >= totalSize) {
+             throw new OutOfRangeException(index, 0, totalSize);
+         }
+-
+         final int[] indices = new int[dimension];
+-
+         int count = 0;
+         for (int i = 0; i < last; i++) {
+             int idx = 0;
+             final int offset = uniCounterOffset[i];
+             while (count <= index) {
+                 count += offset;
+                 ++idx;
+             }
+             --idx;
+             count -= offset;
+             indices[i] = idx;
+         }
+-
+-        int idx = 1;
+-        while (count < index) {
+-            count += idx;
+-            ++idx;
+-        }
+-        --idx;
+-        indices[last] = idx;
+-
++// buggy code
++//         int idx = 1;
++//         while (count < index) {
++//             count += idx;
++//             ++idx;
++//         }
++//         --idx;
++//         indices[last] = idx;
++       indices[last] = index;
+         return indices;
+     }

@@ -1,0 +1,46 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8138de91-c99f-40d6-bb34-c49b447ced70_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cfd5bea1-973c-442c-842b-91ce259f6429_fixed.java
+index af634a5..0e9fd92 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8138de91-c99f-40d6-bb34-c49b447ced70_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cfd5bea1-973c-442c-842b-91ce259f6429_fixed.java
+@@ -1,39 +1,40 @@
+ public void reparseCentralDirectoryData(boolean hasUncompressedSize,
+                                         boolean hasCompressedSize,
+                                         boolean hasRelativeHeaderOffset,
+                                         boolean hasDiskStart)
+     throws ZipException {
+     if (rawCentralDirectoryData != null) {
+         int expectedLength = (hasUncompressedSize ? DWORD : 0)
+             + (hasCompressedSize ? DWORD : 0)
+             + (hasRelativeHeaderOffset ? DWORD : 0)
+             + (hasDiskStart ? WORD : 0);
++
+         if (rawCentralDirectoryData.length != expectedLength) {
+             throw new ZipException("central directory zip64 extended"
+                                    + " information extra field's length"
+                                    + " doesn't match central directory"
+                                    + " data.  Expected length "
+                                    + expectedLength + " but is "
+                                    + rawCentralDirectoryData.length);
+         }
+         int offset = 0;
+         if (hasUncompressedSize) {
+             size = new ZipEightByteInteger(rawCentralDirectoryData, offset);
+             offset += DWORD;
+         }
+         if (hasCompressedSize) {
+             compressedSize = new ZipEightByteInteger(rawCentralDirectoryData,
+                                                      offset);
+             offset += DWORD;
+         }
+         if (hasRelativeHeaderOffset) {
+             relativeHeaderOffset =
+                 new ZipEightByteInteger(rawCentralDirectoryData, offset);
+             offset += DWORD;
+         }
+         if (hasDiskStart) {
+             diskStart = new ZipLong(rawCentralDirectoryData, offset);
+             offset += WORD;
+         }
+     }
+ }
+\ No newline at end of file

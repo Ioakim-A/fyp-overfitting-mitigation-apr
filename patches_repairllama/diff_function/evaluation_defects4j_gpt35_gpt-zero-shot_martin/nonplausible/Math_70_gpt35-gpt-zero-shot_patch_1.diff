@@ -1,0 +1,40 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/04a2be7c-ac1c-4b8c-8790-d49cddd863cf_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3a1eec26-2192-4782-91dc-2b90266cd718_fixed.java
+index 5e71e41..bb911f3 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/04a2be7c-ac1c-4b8c-8790-d49cddd863cf_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3a1eec26-2192-4782-91dc-2b90266cd718_fixed.java
+@@ -1,4 +1,33 @@
+ public double solve(final UnivariateRealFunction f, double min, double max, double initial)
+         throws MaxIterationsExceededException, FunctionEvaluationException {
+-        return solve(min, max);
++    double x0 = initial;
++    double x1 = x0;
++    double f0 = f.value(x0);
++    double f1 = f0;
++
++    double tolerance = 1e-6;
++    int maxIterations = 1000;
++    int iterations = 0;
++
++    while (Math.abs(f1) > tolerance && Math.abs(x1 - x0) > tolerance && iterations < maxIterations) {
++        x0 = x1;
++        f0 = f1;
++
++        double nextX = x0 - f0 * (x1 - x0) / (f1 - f0);
++        if (nextX < min || nextX > max) {
++            // The next iteration will be out of bounds, so we need to use a different method
++            // or throw an exception.
++            <FILL_ME>
++        }
++
++        x1 = nextX;
++        f1 = f.value(x1);
++        iterations++;
++    }
++
++    if (iterations == maxIterations) {
++        throw new MaxIterationsExceededException("Maximum iterations exceeded");
++    }
++
++    return x1;
+ }
+\ No newline at end of file

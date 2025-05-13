@@ -1,0 +1,20 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/77411768-8e4d-4890-9488-0214fd65d2ab_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fbc1962d-d15d-44d9-8d35-faaec60d0297_fixed.java
+index 0468231..bd530b2 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/77411768-8e4d-4890-9488-0214fd65d2ab_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fbc1962d-d15d-44d9-8d35-faaec60d0297_fixed.java
+@@ -1,9 +1,12 @@
+     public char[] expandCurrentSegment()
+     {
+         final char[] curr = _currentSegment;
+-        // Let's grow by 50% by default
+         final int len = curr.length;
+-        // but above intended maximum, slow to increase by 25%
+-        int newLen = (len == MAX_SEGMENT_LEN) ? (MAX_SEGMENT_LEN+1) : Math.min(MAX_SEGMENT_LEN, len + (len >> 1));
++// buggy code
++//        int newLen = (len == MAX_SEGMENT_LEN) ? (MAX_SEGMENT_LEN+1) : Math.min(MAX_SEGMENT_LEN, len + (len >> 1));
++       int newLen = len + (len >> 1);
++        if (newLen > MAX_SEGMENT_LEN) {
++            newLen = MAX_SEGMENT_LEN;
++        }
+         return (_currentSegment = Arrays.copyOf(curr, newLen));
+     }

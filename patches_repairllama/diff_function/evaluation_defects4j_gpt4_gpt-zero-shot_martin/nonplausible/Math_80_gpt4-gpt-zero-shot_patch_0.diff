@@ -1,0 +1,25 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8e5f9358-7b39-4228-bfc8-b77866a64454_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/62dd1f8c-302a-42aa-8ed5-b1c72133edb3_fixed.java
+index 433b887..6592b1b 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8e5f9358-7b39-4228-bfc8-b77866a64454_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/62dd1f8c-302a-42aa-8ed5-b1c72133edb3_fixed.java
+@@ -1,16 +1,15 @@
+ private boolean flipIfWarranted(final int n, final int step) {
+     if (1.5 * work[pingPong] < work[4 * (n - 1) + pingPong]) {
+-            // flip array
+-            int j = 4 * n - 1;
++        int j = 4 * (n - 1);
+         for (int i = 0; i < j; i += 4) {
+             for (int k = 0; k < 4; k += step) {
+                 final double tmp = work[i + k];
+-                    work[i + k] = work[j - k];
+-                    work[j - k] = tmp;
++                work[i + k] = work[j - k + pingPong];
++                work[j - k + pingPong] = tmp;
+             }
+             j -= 4;
+         }
+         return true;
+     }
+     return false;
+ }
+\ No newline at end of file

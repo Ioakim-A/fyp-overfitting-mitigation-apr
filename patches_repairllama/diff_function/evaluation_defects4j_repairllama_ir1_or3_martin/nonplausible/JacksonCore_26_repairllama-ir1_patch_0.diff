@@ -1,0 +1,31 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/576a75a0-18b1-4bed-8041-99e01d11a868_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/482a6c96-42d5-4a69-b587-39099c8ecb70_fixed.java
+index 7af3068..91497bc 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/576a75a0-18b1-4bed-8041-99e01d11a868_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/482a6c96-42d5-4a69-b587-39099c8ecb70_fixed.java
+@@ -1,25 +1,18 @@
+     public void feedInput(byte[] buf, int start, int end) throws IOException
+     {
+-        // Must not have remaining input
+-        if (_inputPtr < _inputEnd) {
++        if (_inputPtr > _inputEnd) {
+             _reportError("Still have %d undecoded bytes, should not call 'feedInput'", _inputEnd - _inputPtr);
+         }
+         if (end < start) {
+             _reportError("Input end (%d) may not be before start (%d)", end, start);
+         }
+-        // and shouldn't have been marked as end-of-input
+         if (_endOfInput) {
+             _reportError("Already closed, can not feed more input");
+         }
+-        // Time to update pointers first
+         _currInputProcessed += _origBufferLen;
+-
+-        // Also need to adjust row start, to work as if it extended into the past wrt new buffer
+         _currInputRowStart = start - (_inputEnd - _currInputRowStart);
+-
+-        // And then update buffer settings
+         _inputBuffer = buf;
+         _inputPtr = start;
+         _inputEnd = end;
+         _origBufferLen = end - start;
+     }

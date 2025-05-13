@@ -1,0 +1,28 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f4c72b1f-7802-4842-87fe-8d7c603b3e29_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/758787f7-8546-4582-a14f-c3258f042bfd_fixed.java
+index 638669b..5c9ef16 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f4c72b1f-7802-4842-87fe-8d7c603b3e29_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/758787f7-8546-4582-a14f-c3258f042bfd_fixed.java
+@@ -1,11 +1,22 @@
+     public ZipArchiveInputStream(InputStream inputStream,
+                                  String encoding,
+                                  boolean useUnicodeExtraFields,
+                                  boolean allowStoredEntriesWithDataDescriptor) {
+         zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
+         this.useUnicodeExtraFields = useUnicodeExtraFields;
+         in = new PushbackInputStream(inputStream, buf.capacity());
+         this.allowStoredEntriesWithDataDescriptor =
+             allowStoredEntriesWithDataDescriptor;
+-        // haven't read anything so far
++// buggy code
++   }
++
++    public ZipArchiveInputStream(InputStream inputStream,
++                                 String encoding,
++                                 boolean useUnicodeExtraFields) {
++        this(inputStream, encoding, useUnicodeExtraFields, false);
++    }
++
++    public ZipArchiveInputStream(InputStream inputStream,
++                                 String encoding) {
++        this(inputStream, encoding, true);
+     }

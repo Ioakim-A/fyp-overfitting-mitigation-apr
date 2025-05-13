@@ -1,0 +1,40 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2143cd89-dae9-423a-a5eb-c9ae535d60c9_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cd54c824-07d8-41cc-b922-dc07ff4dafbb_fixed.java
+index 5f8ac1a..5bc17f4 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2143cd89-dae9-423a-a5eb-c9ae535d60c9_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cd54c824-07d8-41cc-b922-dc07ff4dafbb_fixed.java
+@@ -1,34 +1,29 @@
+     private int compareNodePointers(
+         NodePointer p1,
+         int depth1,
+         NodePointer p2,
+         int depth2) 
+     {
+         if (depth1 < depth2) {
+             int r = compareNodePointers(p1, depth1, p2.parent, depth2 - 1);
+             return r == 0 ? -1 : r;
+         }
+         if (depth1 > depth2) {
+             int r = compareNodePointers(p1.parent, depth1 - 1, p2, depth2);
+             return r == 0 ? 1 : r;
+         }
+         if (p1 == null && p2 == null) {
+             return 0;
+         }
+-
+         if (p1 != null && p1.equals(p2)) {
+             return 0;
+         }
+-
+         if (depth1 == 1) {
+-            throw new JXPathException(
+-                    "Cannot compare pointers that do not belong to the same tree: '"
+-                            + p1 + "' and '" + p2 + "'");
++           return p1 != null ? -1 : 1;
+         }
+         int r = compareNodePointers(p1.parent, depth1 - 1, p2.parent, depth2 - 1);
+         if (r != 0) {
+             return r;
+         }
+-
+         return p1.parent.compareChildNodePointers(p1, p2);
+     }

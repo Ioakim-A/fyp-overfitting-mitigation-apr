@@ -1,0 +1,41 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e4bdef1a-1bea-47df-a3b0-fa00d3ecd1b7_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7ff95b38-3cf9-424a-98da-b647cf0e1dd0_fixed.java
+index f955f47..21f8f8a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e4bdef1a-1bea-47df-a3b0-fa00d3ecd1b7_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7ff95b38-3cf9-424a-98da-b647cf0e1dd0_fixed.java
+@@ -1,34 +1,31 @@
+         public String getDescription() {
+             if (_desc == null) {
+                 StringBuilder sb = new StringBuilder();
+-
+                 if (_from == null) { // can this ever occur?
+                     sb.append("UNKNOWN");
+                 } else {
+                     Class<?> cls = (_from instanceof Class<?>) ? (Class<?>)_from : _from.getClass();
+                     // Hmmh. Although Class.getName() is mostly ok, it does look
+                     // butt-ugly for arrays.
+                     // 06-Oct-2016, tatu: as per [databind#1403], `getSimpleName()` not so good
+                     //   as it drops enclosing class. So let's try bit different approach
+-                    String pkgName = com.fasterxml.jackson.databind.util.ClassUtil.getPackageName(cls);
+-                    if (pkgName != null) {
+-                        sb.append(pkgName);
+-                        sb.append('.');
++                    if (cls.isArray()) {
++                        cls = cls.getComponentType();
+                     }
+                     sb.append(cls.getSimpleName());
+                 }
+                 sb.append('[');
+                 if (_fieldName != null) {
+                     sb.append('"');
+                     sb.append(_fieldName);
+                     sb.append('"');
+                 } else if (_index >= 0) {
+                     sb.append(_index);
+                 } else {
+                     sb.append('?');
+                 }
+                 sb.append(']');
+                 _desc = sb.toString();
+             }
+             return _desc;
+         }

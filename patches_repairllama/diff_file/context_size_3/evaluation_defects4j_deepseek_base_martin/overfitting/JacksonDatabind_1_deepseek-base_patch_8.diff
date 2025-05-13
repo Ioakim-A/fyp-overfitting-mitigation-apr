@@ -1,0 +1,16 @@
+diff --git src/main/java/com/fasterxml/jackson/databind/ser/BeanPropertyWriter.java src/main/java/com/fasterxml/jackson/databind/ser/BeanPropertyWriter.java
+index 45db172..5c18041 100644
+--- src/main/java/com/fasterxml/jackson/databind/ser/BeanPropertyWriter.java
++++ src/main/java/com/fasterxml/jackson/databind/ser/BeanPropertyWriter.java
+@@ -589,6 +589,11 @@ public class BeanPropertyWriter
+             } else { // can NOT suppress entries in tabular output
+                 jgen.writeNull();
+             }
++            return;
++        }
++        if (_typeSerializer == null) {
++            jgen.writeObject(value);
++            return;
+         }
+         // otherwise find serializer to use
+         JsonSerializer<Object> ser = _serializer;

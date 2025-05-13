@@ -1,0 +1,31 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e7ba7b9f-0a31-450d-bf72-cdf61845000b_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dd1c6cd6-e477-4dbb-baa1-e2e9d05cd0e3_fixed.java
+index 3ec8614..7f3a60e 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e7ba7b9f-0a31-450d-bf72-cdf61845000b_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dd1c6cd6-e477-4dbb-baa1-e2e9d05cd0e3_fixed.java
+@@ -1,20 +1,24 @@
+     public void escape(Writer writer, String str) throws IOException {
+         int len = str.length();
+         for (int i = 0; i < len; i++) {
++// buggy code
++//             char c = str.charAt(i);
++//             String entityName = this.entityName(c);
++//             if (entityName == null) {
++//                 if (c > 0x7F) {
+            char c = str.charAt(i);
+             String entityName = this.entityName(c);
+-            if (entityName == null) {
+-                if (c > 0x7F) {
++            if (entityName == null && c > 0x7F) {
+                     writer.write("&#");
+                     writer.write(Integer.toString(c, 10));
+                     writer.write(';');
+                 } else {
+                     writer.write(c);
+                 }
+             } else {
+                 writer.write('&');
+                 writer.write(entityName);
+                 writer.write(';');
+             }
+         }
+     }

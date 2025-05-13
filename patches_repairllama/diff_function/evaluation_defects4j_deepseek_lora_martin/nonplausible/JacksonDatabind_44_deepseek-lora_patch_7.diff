@@ -1,0 +1,37 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6565f401-a56d-4ba4-bb12-18104a7ff7c8_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c7cc381f-abf2-4872-98c0-4b1bd5aa0c49_fixed.java
+index 1a63a66..8a6ce57 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6565f401-a56d-4ba4-bb12-18104a7ff7c8_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c7cc381f-abf2-4872-98c0-4b1bd5aa0c49_fixed.java
+@@ -1,21 +1,28 @@
+     @Override
+     @Deprecated
+     protected JavaType _narrow(Class<?> subclass)
+     {
+         if (_class == subclass) {
+             return this;
+         }
+         // Should we check that there is a sub-class relationship?
+         // 15-Jan-2016, tatu: Almost yes, but there are some complications with
+         //    placeholder values (`Void`, `NoClass`), so can not quite do yet.
+         // TODO: fix in 2.8
+-            /*
++// buggy code
++//            /*
++//            throw new IllegalArgumentException("Class "+subclass.getName()+" not sub-type of "
++//                    +_class.getName());
++//                    */
++//            return new SimpleType(subclass, _bindings, this, _superInterfaces,
++//                    _valueHandler, _typeHandler, _asStatic);
++//        // Otherwise, stitch together the hierarchy. First, super-class
++//        // if not found, try a super-interface
++//        // should not get here but...
+         throw new IllegalArgumentException("Class "+subclass.getName()+" not sub-type of "
+                 +_class.getName());
+-                    */
+         return new SimpleType(subclass, _bindings, this, _superInterfaces,
+                 _valueHandler, _typeHandler, _asStatic);
+     // Otherwise, stitch together the hierarchy. First, super-class
+-        // if not found, try a super-interface
+-        // should not get here but...
++
+     }

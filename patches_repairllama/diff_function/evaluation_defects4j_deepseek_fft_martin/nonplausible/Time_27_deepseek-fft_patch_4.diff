@@ -1,0 +1,33 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/79c029a6-9562-4e60-bdb8-1e0e07d43da7_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b02564ec-5ab7-4b21-bffd-2f65f70d7ddb_fixed.java
+index ec6c9ee..dd30336 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/79c029a6-9562-4e60-bdb8-1e0e07d43da7_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b02564ec-5ab7-4b21-bffd-2f65f70d7ddb_fixed.java
+@@ -1,21 +1,25 @@
+     //-----------------------------------------------------------------------
+     private static PeriodFormatter toFormatter(List<Object> elementPairs, boolean notPrinter, boolean notParser) {
+         if (notPrinter && notParser) {
+             throw new IllegalStateException("Builder has created neither a printer nor a parser");
+         }
+         int size = elementPairs.size();
+         if (size >= 2 && elementPairs.get(0) instanceof Separator) {
+             Separator sep = (Separator) elementPairs.get(0);
+-                PeriodFormatter f = toFormatter(elementPairs.subList(2, size), notPrinter, notParser);
+-                sep = sep.finish(f.getPrinter(), f.getParser());
+-                return new PeriodFormatter(sep, sep);
++// buggy code
++//                PeriodFormatter f = toFormatter(elementPairs.subList(2, size), notPrinter, notParser);
++//                sep = sep.finish(f.getPrinter(), f.getParser());
++//                return new PeriodFormatter(sep, sep);
++            PeriodFormatter f = toFormatter(elementPairs.subList(1, size), notPrinter, notParser);
++            return new PeriodFormatter(sep.finish(f.getPrinter(), f.getParser()), sep);
++
+         }
+         Object[] comp = createComposite(elementPairs);
+         if (notPrinter) {
+             return new PeriodFormatter(null, (PeriodParser) comp[1]);
+         } else if (notParser) {
+             return new PeriodFormatter((PeriodPrinter) comp[0], null);
+         } else {
+             return new PeriodFormatter((PeriodPrinter) comp[0], (PeriodParser) comp[1]);
+         }
+     }

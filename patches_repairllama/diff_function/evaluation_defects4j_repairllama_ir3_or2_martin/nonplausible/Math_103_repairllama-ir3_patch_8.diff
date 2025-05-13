@@ -1,0 +1,16 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6d80647c-182b-45b5-ba68-3fcbeba8e45c_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6631edc8-ebb5-42e4-bfcd-bc6ca5f4bd4a_fixed.java
+index 7f04ad4..64873f4 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6d80647c-182b-45b5-ba68-3fcbeba8e45c_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6631edc8-ebb5-42e4-bfcd-bc6ca5f4bd4a_fixed.java
+@@ -1,4 +1,9 @@
+     public double cumulativeProbability(double x) throws MathException {
+-            return 0.5 * (1.0 + Erf.erf((x - mean) /
+-                    (standardDeviation * Math.sqrt(2.0))));
++       if (x < getSupportLowerBound()) {
++            return 0.0;
++        }
++        if (x > getSupportUpperBound()) {
++            return 1.0;
++        }
++        return 0.5 + 0.5 * FastMath.sin(FastMath.PI * x);
+     }

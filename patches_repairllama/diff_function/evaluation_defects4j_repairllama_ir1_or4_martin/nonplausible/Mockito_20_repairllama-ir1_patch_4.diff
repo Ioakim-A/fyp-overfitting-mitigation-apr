@@ -1,0 +1,36 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0a863711-5bdb-44a9-a7f0-4eff27c7435b_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cc359385-481b-47c7-beb4-acf7dfecb140_fixed.java
+index f9a9b5b..972ccd0 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0a863711-5bdb-44a9-a7f0-4eff27c7435b_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cc359385-481b-47c7-beb4-acf7dfecb140_fixed.java
+@@ -1,30 +1,29 @@
+-    public <T> T createMock(MockCreationSettings<T> settings, MockHandler handler) {
++    public <T> T createMock(MockCreationSettings<T> settings, final MockHandler handler) {
+         if (settings.getSerializableMode() == SerializableMode.ACROSS_CLASSLOADERS) {
+             throw new MockitoException("Serialization across classloaders not yet supported with ByteBuddyMockMaker");
+         }
+         Class<? extends T> mockedProxyType = cachingMockBytecodeGenerator.get(
+                 settings.getTypeToMock(),
+                 settings.getExtraInterfaces()
+         );
+         T mockInstance = null;
+         try {
+             mockInstance = classInstantiator.instantiate(mockedProxyType);
+             MockMethodInterceptor.MockAccess mockAccess = (MockMethodInterceptor.MockAccess) mockInstance;
+             mockAccess.setMockitoInterceptor(new MockMethodInterceptor(asInternalMockHandler(handler), settings));
+-
+             return ensureMockIsAssignableToMockedType(settings, mockInstance);
+         } catch (ClassCastException cce) {
+             throw new MockitoException(join(
+                     "ClassCastException occurred while creating the mockito mock :",
+                     "  class to mock : " + describeClass(mockedProxyType),
+                     "  created class : " + describeClass(settings.getTypeToMock()),
+                     "  proxy instance class : " + describeClass(mockInstance),
+                     "  instance creation by : " + classInstantiator.getClass().getSimpleName(),
+                     "",
+                     "You might experience classloading issues, please ask the mockito mailing-list.",
+                     ""
+             ),cce);
+         } catch (org.mockito.internal.creation.instance.InstantiationException e) {
+             throw new MockitoException("Unable to create mock instance of type '" + mockedProxyType.getSuperclass().getSimpleName() + "'", e);
+         }
+     }

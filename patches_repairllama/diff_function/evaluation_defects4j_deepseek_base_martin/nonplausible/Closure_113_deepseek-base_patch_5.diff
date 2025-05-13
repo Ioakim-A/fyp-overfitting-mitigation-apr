@@ -1,0 +1,49 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ba3f7988-12be-4f04-9981-63275da91c61_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/51b51a01-91e5-47d1-9496-ef810d0aedfe_fixed.java
+index 29a9d2f..ad982bb 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ba3f7988-12be-4f04-9981-63275da91c61_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/51b51a01-91e5-47d1-9496-ef810d0aedfe_fixed.java
+@@ -1,43 +1,39 @@
+   /**
+    * Handles a goog.require call.
+    */
+   private void processRequireCall(NodeTraversal t, Node n, Node parent) {
+     Node left = n.getFirstChild();
+     Node arg = left.getNext();
+     if (verifyLastArgumentIsString(t, left, arg)) {
+       String ns = arg.getString();
+       ProvidedName provided = providedNames.get(ns);
+       if (provided == null || !provided.isExplicitlyProvided()) {
+         unrecognizedRequires.add(
+             new UnrecognizedRequire(n, ns, t.getSourceName()));
+       } else {
+         JSModule providedModule = provided.explicitModule;
+-
+         // This must be non-null, because there was an explicit provide.
+         Preconditions.checkNotNull(providedModule);
+-
+         JSModule module = t.getModule();
+         if (moduleGraph != null &&
+             module != providedModule &&
+             !moduleGraph.dependsOn(module, providedModule)) {
+           compiler.report(
+               t.makeError(n, XMODULE_REQUIRE_ERROR, ns,
+                   providedModule.getName(),
+                   module.getName()));
+         }
+       }
+-
+       maybeAddToSymbolTable(left);
+       maybeAddStringNodeToSymbolTable(arg);
+-
+       // Requires should be removed before further processing.
+       // Some clients run closure pass multiple times, first with
+       // the checks for broken requires turned off. In these cases, we
+       // allow broken requires to be preserved by the first run to
+       // let them be caught in the subsequent run.
+-      if (provided != null) {
++      if (removeRequires) {
+         parent.detachFromParent();
+         compiler.reportCodeChange();
+       }
+     }
+   }

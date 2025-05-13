@@ -1,0 +1,74 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/112dca8a-0d2d-4d47-a8fb-3ab50a1a9d43_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/95be0c8d-2199-431e-aca4-aca91f84b38c_fixed.java
+index 442a001..5c6dbda 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/112dca8a-0d2d-4d47-a8fb-3ab50a1a9d43_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/95be0c8d-2199-431e-aca4-aca91f84b38c_fixed.java
+@@ -1,39 +1,63 @@
+     /**
+      * Get the data that this form submits. The returned list is a copy of the data, and changes to the contents of the
+      * list will not be reflected in the DOM.
+      * @return a list of key vals
+      */
+     public List<Connection.KeyVal> formData() {
+         ArrayList<Connection.KeyVal> data = new ArrayList<Connection.KeyVal>();
+-
+         // iterate the form control elements and accumulate their values
+         for (Element el: elements) {
+             if (!el.tag().isFormSubmittable()) continue; // contents are form listable, superset of submitable
+-            String name = el.attr("name");
++// buggy code
++//            String name = el.attr("name");
++//            if (name.length() == 0) continue;
++//            String type = el.attr("type");
++//            if ("select".equals(el.tagName())) {
++//                Elements options = el.select("option[selected]");
++//                boolean set = false;
++//                for (Element option: options) {
++//                    data.add(HttpConnection.KeyVal.create(name, option.val()));
++//                    set = true;
++//                }
++//                if (!set) {
++//                    Element option = el.select("option").first();
++//                    if (option != null)
++//                        data.add(HttpConnection.KeyVal.create(name, option.val()));
++//                }
++//            } else if ("checkbox".equalsIgnoreCase(type) || "radio".equalsIgnoreCase(type)) {
++//                // only add checkbox or radio if they have the checked attribute
++//                if (el.hasAttr("checked")) {
++//                    final String val = el.val();
++//                    data.add(HttpConnection.KeyVal.create(name, val));
++//                }
++//            } else {
++//                data.add(HttpConnection.KeyVal.create(name, el.val()));
++//            }
++            final String name = el.attr("name");
+             if (name.length() == 0) continue;
+-            String type = el.attr("type");
+-
++            final String type = el.attr("type");
+             if ("select".equals(el.tagName())) {
+-                Elements options = el.select("option[selected]");
++                final Elements options = el.select("option[selected]");
+                 boolean set = false;
+                 for (Element option: options) {
+                     data.add(HttpConnection.KeyVal.create(name, option.val()));
+                     set = true;
+                 }
+                 if (!set) {
+-                    Element option = el.select("option").first();
++                    final Element option = el.select("option").first();
+                     if (option != null)
+                         data.add(HttpConnection.KeyVal.create(name, option.val()));
+                 }
+             } else if ("checkbox".equalsIgnoreCase(type) || "radio".equalsIgnoreCase(type)) {
+                 // only add checkbox or radio if they have the checked attribute
+                 if (el.hasAttr("checked")) {
+                     final String val = el.val();
++
+                     data.add(HttpConnection.KeyVal.create(name, val));
+                 }
+             } else {
+                 data.add(HttpConnection.KeyVal.create(name, el.val()));
+             }
+         }
+         return data;
+     }

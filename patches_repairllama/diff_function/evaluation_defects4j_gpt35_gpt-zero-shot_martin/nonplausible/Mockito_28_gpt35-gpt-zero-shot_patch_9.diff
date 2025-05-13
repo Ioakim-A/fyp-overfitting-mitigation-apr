@@ -1,0 +1,18 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9930fe26-3b7c-4750-abe3-b375026782aa_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5175b469-a599-481b-a5ce-4a3c173bbf5d_fixed.java
+index fa6828a..5344d1c 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9930fe26-3b7c-4750-abe3-b375026782aa_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5175b469-a599-481b-a5ce-4a3c173bbf5d_fixed.java
+@@ -1,5 +1,8 @@
+-    private void injectMockCandidate(Class<?> awaitingInjectionClazz, Set<Object> mocks, Object fieldInstance) {
+-        for(Field field : orderedInstanceFieldsFrom(awaitingInjectionClazz)) {
+-            mockCandidateFilter.filterCandidate(mocks, field, fieldInstance).thenInject();
+-        }
++mockCandidateFilter.filterCandidate(mocks, field, fieldInstance).thenAccept(candidate -> {
++    try {
++        field.setAccessible(true);
++        field.set(fieldInstance, candidate);
++    } catch (IllegalAccessException e) {
++        e.printStackTrace();
+     }
++});
+\ No newline at end of file

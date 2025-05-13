@@ -1,0 +1,30 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8324debf-126b-4a82-b80b-6113d0bd58f2_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1df52176-142a-4f5c-9b97-9635000a37ca_fixed.java
+index 9529ba6..80391ea 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8324debf-126b-4a82-b80b-6113d0bd58f2_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1df52176-142a-4f5c-9b97-9635000a37ca_fixed.java
+@@ -1,20 +1,18 @@
+     public int writeValue() {
+-        // Most likely, object:
+         if (_type == TYPE_OBJECT) {
++            if (!_gotName) {
++                _gotName = true;
++                return STATUS_OK;
++            }
+             _gotName = false;
+             ++_index;
+             return STATUS_OK_AFTER_COLON;
+         }
+-
+-        // Ok, array?
+         if (_type == TYPE_ARRAY) {
+             int ix = _index;
+             ++_index;
+             return (ix < 0) ? STATUS_OK_AS_IS : STATUS_OK_AFTER_COMMA;
+         }
+-        
+-        // Nope, root context
+-        // No commas within root context, but need space
+         ++_index;
+         return (_index == 0) ? STATUS_OK_AS_IS : STATUS_OK_AFTER_SPACE;
+     }
+\ No newline at end of file

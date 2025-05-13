@@ -1,0 +1,40 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c18b635a-faf0-4003-8b1a-095f14b2ae49_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8e0d68a1-ab82-4705-9abb-2ef93b07ce27_fixed.java
+index b450ee6..d017d68 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c18b635a-faf0-4003-8b1a-095f14b2ae49_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8e0d68a1-ab82-4705-9abb-2ef93b07ce27_fixed.java
+@@ -1,32 +1,31 @@
+     public JsonSerializer<?> createContextual(SerializerProvider serializers,
+             BeanProperty property) throws JsonMappingException
+     {
+         if (property != null) {
+             JsonFormat.Value format = serializers.getAnnotationIntrospector().findFormat((Annotated)property.getMember());
+             if (format != null) {
+-
+-            	// Simple case first: serialize as numeric timestamp?
+                 JsonFormat.Shape shape = format.getShape();
+                 if (shape.isNumeric()) {
+                     return withFormat(Boolean.TRUE, null);
+                 }
+-
+-                if (format.getShape() == JsonFormat.Shape.STRING) {
++// buggy code
++//                 if (format.getShape() == JsonFormat.Shape.STRING) {
++               if (JsonFormat.Shape.STRING.equals(format.getShape())) {
+                     TimeZone tz = format.getTimeZone();
+                     final String pattern = format.hasPattern()
+                                     ? format.getPattern()
+                                     : StdDateFormat.DATE_FORMAT_STR_ISO8601;
+                     final Locale loc = format.hasLocale()
+                                     ? format.getLocale()
+                                     : serializers.getLocale();
+                     SimpleDateFormat df = new SimpleDateFormat(pattern, loc);
+                     if (tz == null) {
+                         tz = serializers.getTimeZone();
+                     }
+                     df.setTimeZone(tz);
+                     return withFormat(Boolean.FALSE, df);
+                 }
+             }
+         }
+         return this;
+     }

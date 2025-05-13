@@ -1,0 +1,19 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/34ab3738-7e0c-4a9c-8f3f-e74e6bc87274_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1cbc5b4f-adcb-4441-a21c-eb387f95e409_fixed.java
+index b964ff6..74b7d4d 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/34ab3738-7e0c-4a9c-8f3f-e74e6bc87274_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1cbc5b4f-adcb-4441-a21c-eb387f95e409_fixed.java
+@@ -1,6 +1,13 @@
+     public static boolean containsIgnoreCase(String str, String searchStr) {
+         if (str == null || searchStr == null) {
+             return false;
+         }
+-        return contains(str.toUpperCase(), searchStr.toUpperCase());
++       int len = searchStr.length();
++        int max = str.length() - len;
++        for (int i = 0; i < max; i++) {
++            if (str.regionMatches(true, i, searchStr, 0, len)) {
++                return true;
++            }
++        }
++        return false;
+     }

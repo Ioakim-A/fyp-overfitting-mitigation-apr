@@ -1,0 +1,18 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/af957bfa-07cf-414b-b639-bd9a9a46b4d0_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d80f8689-482a-4cf0-9ff5-138dd73d6c35_fixed.java
+index 0a68230..5db87b7 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/af957bfa-07cf-414b-b639-bd9a9a46b4d0_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d80f8689-482a-4cf0-9ff5-138dd73d6c35_fixed.java
+@@ -1,6 +1,7 @@
+-  static Type getSupertype(Type context, Class<?> contextRawType, Class<?> supertype) {
+-      // wildcards are useless for resolving supertypes. As the upper bound has the same raw type, use it instead
+-    checkArgument(supertype.isAssignableFrom(contextRawType));
+-    return resolve(context, contextRawType,
+-        $Gson$Types.getGenericSupertype(context, contextRawType, supertype));
++if (context instanceof ParameterizedType) {
++    Type rawType = ((ParameterizedType) context).getRawType();
++    if (supertype.isAssignableFrom((Class<?>) rawType)) {
++        return $Gson$Types.resolve(context, rawType,
++                $Gson$Types.getSupertype(context, rawType, supertype));
++    }
+ }
+\ No newline at end of file

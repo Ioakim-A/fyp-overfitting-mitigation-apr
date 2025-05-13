@@ -1,0 +1,53 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1efd85d4-f8f7-466e-9800-acda64dc89b3_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/06eb7068-1fa9-490f-8c14-1c62e906b87d_fixed.java
+index cdfd827..525cb76 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1efd85d4-f8f7-466e-9800-acda64dc89b3_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/06eb7068-1fa9-490f-8c14-1c62e906b87d_fixed.java
+@@ -1,38 +1,12 @@
+-  private void removeUnreferencedFunctionArgs(Scope fnScope) {
+-    // Notice that removing unreferenced function args breaks
+-    // Function.prototype.length. In advanced mode, we don't really care
+-    // about this: we consider "length" the equivalent of reflecting on
+-    // the function's lexical source.
+-    //
+-    // Rather than create a new option for this, we assume that if the user
+-    // is removing globals, then it's OK to remove unused function args.
+-    //
+-    // See http://code.google.com/p/closure-compiler/issues/detail?id=253
+-
+-    Node function = fnScope.getRootNode();
+-
+-    Preconditions.checkState(function.isFunction());
+-    if (NodeUtil.isGetOrSetKey(function.getParent())) {
+-      // The parameters object literal setters can not be removed.
+-      return;
++    Set<Var> referenced = new HashSet<>();
++    NodeTraversal.traverse(compiler, fnScope, new NodeTraversal.AbstractPostOrderCallback() {
++      @Override
++      public void visit(NodeTraversal t, Node n, Node parent) {
++        if (n.isName()) {
++          Var var = t.getScope().getVar(n.getString());
++          if (var != null) {
++            referenced.add(var);
+           }
+-
+-    Node argList = getFunctionArgList(function);
+-    boolean modifyCallers = modifyCallSites
+-        && callSiteOptimizer.canModifyCallers(function);
+-    if (!modifyCallers) {
+-      // Strip unreferenced args off the end of the function declaration.
+-      Node lastArg;
+-      while ((lastArg = argList.getLastChild()) != null) {
+-        Var var = fnScope.getVar(lastArg.getString());
+-        if (!referenced.contains(var)) {
+-          argList.removeChild(lastArg);
+-          compiler.reportCodeChange();
+-        } else {
+-          break;
+-        }
+-      }
+-    } else {
+-      callSiteOptimizer.optimize(fnScope, referenced);
+         }
+       }
++    });
+\ No newline at end of file

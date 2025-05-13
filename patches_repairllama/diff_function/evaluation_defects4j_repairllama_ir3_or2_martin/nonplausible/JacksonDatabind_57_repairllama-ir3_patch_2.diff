@@ -1,0 +1,39 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/79cb026d-23a6-4292-9692-a3dbc7aceb1a_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2fa8f556-a54a-42eb-bf04-dc1c08198b1c_fixed.java
+index 2e75e15..508e159 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/79cb026d-23a6-4292-9692-a3dbc7aceb1a_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2fa8f556-a54a-42eb-bf04-dc1c08198b1c_fixed.java
+@@ -1,9 +1,32 @@
+     public <T> MappingIterator<T> readValues(byte[] src, int offset, int length)
+         throws IOException, JsonProcessingException
+     {
+         if (_dataFormatReaders != null) {
+             return _detectBindAndReadValues(_dataFormatReaders.findFormat(src, offset, length), false);
+         }
+-        return _bindAndReadValues(_considerFilter(_parserFactory.createParser(src),
+-                true));
++       return _detectBindAndReadValues(null, false);
++    }
++        return _detectBindAndReadValues(null, true);
++    }
++    public <T> MappingIterator<T> readValues(InputStream src)
++        throws IOException, JsonProcessingException
++    {
++        if (_dataFormatReaders != null) {
++            return _detectBindAndReadValues(_dataFormatReaders.findFormat(src), false);
++        }
++        return _detectBindAndReadValues(null, false);
++    }
++    public <T> MappingIterator<T> readValues(Reader src)
++        throws IOException, JsonProcessingException
++    {
++        if (_dataFormatReaders != null) {
++            return _detectBindAndReadValues(_dataFormatReaders.findFormat(src), false);
++        }
++        return _detectBindAndReadValues(null, false);
++    }
++    public <T> MappingIterator<T> readValues(File src)
++        throws IOException, JsonProcessingException
++    {
++        if (_dataFormatReaders != null) {
++            return _detectBind                true));
+     }

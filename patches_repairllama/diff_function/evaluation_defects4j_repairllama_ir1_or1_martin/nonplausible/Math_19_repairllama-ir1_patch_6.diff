@@ -1,0 +1,67 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/101d8369-f6dd-4ff5-beaa-174c8400c1a0_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e9df91ca-b4da-49c7-98ad-e0fd4108faff_fixed.java
+index 248f3ee..45e760e 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/101d8369-f6dd-4ff5-beaa-174c8400c1a0_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e9df91ca-b4da-49c7-98ad-e0fd4108faff_fixed.java
+@@ -1,58 +1,25 @@
+    private void checkParameters() {
+         final double[] init = getStartPoint();
+         final double[] lB = getLowerBound();
+         final double[] uB = getUpperBound();
+-
+-        // Checks whether there is at least one finite bound value.
+         boolean hasFiniteBounds = false;
++        if (lB != null && uB != null) {
+             for (int i = 0; i < lB.length; i++) {
+                 if (!Double.isInfinite(lB[i]) ||
+                     !Double.isInfinite(uB[i])) {
+                     hasFiniteBounds = true;
+                     break;
+                 }
+             }
+-        // Checks whether there is at least one infinite bound value.
++        }
+         boolean hasInfiniteBounds = false;
+         if (hasFiniteBounds) {
+             for (int i = 0; i < lB.length; i++) {
+                 if (Double.isInfinite(lB[i]) ||
+                     Double.isInfinite(uB[i])) {
+                     hasInfiniteBounds = true;
+                     break;
+                 }
+             }
+-
+             if (hasInfiniteBounds) {
+-                // If there is at least one finite bound, none can be infinite,
+-                // because mixed cases are not supported by the current code.
+-                throw new MathUnsupportedOperationException();
+-            } else {
+-                // Convert API to internal handling of boundaries.
+-                boundaries = new double[2][];
+-                boundaries[0] = lB;
+-                boundaries[1] = uB;
+-
+-                // Abort early if the normalization will overflow (cf. "encode" method).
+-            }
+-        } else {
+-            // Convert API to internal handling of boundaries.
+-            boundaries = null;
+-        }
+-
+-        if (inputSigma != null) {
+-            if (inputSigma.length != init.length) {
+-                throw new DimensionMismatchException(inputSigma.length, init.length);
+-            }
+-            for (int i = 0; i < init.length; i++) {
+-                if (inputSigma[i] < 0) {
+-                    throw new NotPositiveException(inputSigma[i]);
+-                }
+-                if (boundaries != null) {
+-                    if (inputSigma[i] > boundaries[1][i] - boundaries[0][i]) {
+-                        throw new OutOfRangeException(inputSigma[i], 0, boundaries[1][i] - boundaries[0][i]);
+-                    }
+-                }
+-            }
+-        }
+-    }
++                throw new MathUnsupportedOperationException
+\ No newline at end of file

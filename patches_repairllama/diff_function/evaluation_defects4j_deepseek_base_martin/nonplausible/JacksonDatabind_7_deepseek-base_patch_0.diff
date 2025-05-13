@@ -1,0 +1,53 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/82e509b9-6de2-423d-9a28-b70d7ec645e4_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ea0ab143-0389-4744-a34e-863ce4af23af_fixed.java
+index 4f21a3a..f4c1876 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/82e509b9-6de2-423d-9a28-b70d7ec645e4_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ea0ab143-0389-4744-a34e-863ce4af23af_fixed.java
+@@ -1,14 +1,44 @@
+     /**
+      * Helper method used by standard deserializer.
+      * 
+      * @since 2.3
+      */
+     public TokenBuffer deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException
+     {
+-            copyCurrentStructure(jp);
+-        /* 28-Oct-2014, tatu: As per #592, need to support a special case of starting from
+-         *    FIELD_NAME, which is taken to mean that we are missing START_OBJECT, but need
+-         *    to assume one did exist.
++        JsonToken t = jp.getCurrentToken();
++        if (t == JsonToken.VALUE_NULL) {
++            return null;
++        }
++        if (t != JsonToken.START_ARRAY) {
++            throw ctxt.wrongTokenException(jp, JsonToken.START_ARRAY, "Expected array or null");
++        }
++        TokenBuffer result = new TokenBuffer();
++        while (jp.nextToken() != JsonToken.END_ARRAY) {
++            result.add(jp.getCurrentToken());
++        }
++        return result;
++    }
++
++    /**
++     * Helper method used by standard serializer.
++     * 
++     * @since 2.3
+      */
++    public void serialize(TokenBuffer value, JsonGenerator jgen, SerializerProvider provider) throws IOException
++    {
++        if (value == null) {
++            jgen.writeNull();
++            return;
++        }
++        jgen.writeStartArray();
++        for (JsonToken t : value) {
++            jgen.writeToken(t);
++        }
++        jgen.writeEndArray();
++    }
++
++    @Override
++    public TokenBuffer createContextual(SerializerProvider ctxt, BeanProperty property)
++    {
+         return this;
+     }

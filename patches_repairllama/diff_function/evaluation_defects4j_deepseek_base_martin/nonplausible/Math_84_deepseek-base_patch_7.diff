@@ -1,0 +1,51 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8d1c943b-f159-48d3-a66e-4b3f3880b5f1_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/edcf1582-5fb4-410d-973f-de58495a037c_fixed.java
+index 5f1dcf2..9f39ace 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8d1c943b-f159-48d3-a66e-4b3f3880b5f1_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/edcf1582-5fb4-410d-973f-de58495a037c_fixed.java
+@@ -1,41 +1,15 @@
+     /** {@inheritDoc} */
+     @Override
+     protected void iterateSimplex(final Comparator<RealPointValuePair> comparator)
+         throws FunctionEvaluationException, OptimizationException, IllegalArgumentException {
+-
+-        while (true) {
+-
+-            incrementIterationsCounter();
+-
+-            // save the original vertex
+-            final RealPointValuePair[] original = simplex;
+-            final RealPointValuePair best = original[0];
+-
+-            // perform a reflection step
+-            final RealPointValuePair reflected = evaluateNewSimplex(original, 1.0, comparator);
+-            if (comparator.compare(reflected, best) < 0) {
+-
+-                // compute the expanded simplex
+-                final RealPointValuePair[] reflectedSimplex = simplex;
+-                final RealPointValuePair expanded = evaluateNewSimplex(original, khi, comparator);
+-                if (comparator.compare(reflected, expanded) <= 0) {
+-                    // accept the reflected simplex
+-                    simplex = reflectedSimplex;
+-                }
+-
+-                return;
+-
++        if (comparator == null) {
++            throw new IllegalArgumentException("comparator is null");
+         }
+ 
+-            // compute the contracted simplex
+-            final RealPointValuePair contracted = evaluateNewSimplex(original, gamma, comparator);
+-            if (comparator.compare(contracted, best) < 0) {
+-                // accept the contracted simplex
+-
+-            // check convergence
++        for (int i = 0; i < simplex.length; i++) {
++            if (comparator.compare(simplex[i], simplex[bestIndex]) < 0) {
++                bestIndex = i;
+                 return;
+             }
+-
+         }
+-
+     }

@@ -1,0 +1,68 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7615be7f-ab8d-4a48-812c-9215b8718b4c_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/689e1b79-310b-4752-8614-f9a1995bf629_fixed.java
+index 17814ec..b92439a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7615be7f-ab8d-4a48-812c-9215b8718b4c_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/689e1b79-310b-4752-8614-f9a1995bf629_fixed.java
+@@ -1,51 +1,41 @@
+-    Map<String, String> parsePaxHeaders(final InputStream i)
+-        throws IOException {
++Map<String, String> parsePaxHeaders(final InputStream i) throws IOException {
+     final Map<String, String> headers = new HashMap<String, String>(globalPaxHeaders);
+-        // Format is "length keyword=value\n";
+-        while(true){ // get length
++    while (true) {
+         int ch;
+         int len = 0;
+         int read = 0;
+         while ((ch = i.read()) != -1) {
+             read++;
+             if (ch == ' ') {
+-                    // Get keyword
+-                    final ByteArrayOutputStream coll = new ByteArrayOutputStream();
++                StringBuilder coll = new StringBuilder();
+                 while ((ch = i.read()) != -1) {
+                     read++;
+-                        if (ch == '='){ // end of keyword
+-                            final String keyword = coll.toString(CharsetNames.UTF_8);
+-                            // Get rest of entry
++                    if (ch == '=') {
++                        final String keyword = coll.toString();
+                         final int restLen = len - read;
+-                            if (restLen == 1) { // only NL
++                        if (restLen == 1) {
+                             headers.remove(keyword);
+                         } else {
+                             final byte[] rest = new byte[restLen];
+                             final int got = IOUtils.readFully(i, rest);
+                             if (got != restLen) {
+-                                    throw new IOException("Failed to read "
+-                                                          + "Paxheader. Expected "
+-                                                          + restLen
+-                                                          + " bytes, read "
+-                                                          + got);
++                                throw new IOException("Failed to read " + "Paxheader. Expected " + restLen + " bytes, read " + got);
+                             }
+-                                // Drop trailing NL
+-                                final String value = new String(rest, 0,
+-                                                          restLen - 1, CharsetNames.UTF_8);
++                            final String value = new String(rest, 0, restLen - 1);
+                             headers.put(keyword, value);
+                         }
+                         break;
+                     }
+-                        coll.write((byte) ch);
++                    coll.append((char) ch);
+                 }
+-                    break; // Processed single header
++                break;
+             }
+             len *= 10;
+             len += ch - '0';
+         }
+-            if (ch == -1){ // EOF
++        if (ch == -1) {
+             break;
+         }
+     }
+     return headers;
+ }
+\ No newline at end of file

@@ -1,0 +1,19 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d2e60c24-c247-4575-9d3a-035c25d1e7c4_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/284a7df9-08f4-4809-87f9-21e2b8ae55ad_fixed.java
+index ae6c2b1..252a39d 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d2e60c24-c247-4575-9d3a-035c25d1e7c4_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/284a7df9-08f4-4809-87f9-21e2b8ae55ad_fixed.java
+@@ -1,10 +1,9 @@
+         public int parseInto(DateTimeParserBucket bucket, String text, int position) {
+             String str = text.substring(position);
+-            for (String id : ALL_IDS) {
+-                if (str.startsWith(id)) {
+-                    bucket.setZone(DateTimeZone.forID(id));
+-                    return position + id.length();
+-                }
++            try {
++                bucket.setValue(Integer.parseInt(str));
++                return position + str.length();
++            } catch (NumberFormatException e) {
+             }
+             return ~position;
+         }

@@ -1,0 +1,39 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/046ac1e8-49c7-4145-b3f5-5524b5d7f16f_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4d20921e-fd27-4ec4-b2b3-2ad43a0a33aa_fixed.java
+index 9a8827e..074784f 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/046ac1e8-49c7-4145-b3f5-5524b5d7f16f_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/4d20921e-fd27-4ec4-b2b3-2ad43a0a33aa_fixed.java
+@@ -1,27 +1,32 @@
++  private void checkInterfaceConflictProperties(NodeTraversal t, Node n,
++      String functionName, HashMap<String, ObjectType> properties,
++      HashMap<String, ObjectType> currentProperties,
++      ObjectType interfaceType) {
++    if (interfaceType == null) {
++      return;
++    }
+   private void checkInterfaceConflictProperties(NodeTraversal t, Node n,
+       String functionName, HashMap<String, ObjectType> properties,
+       HashMap<String, ObjectType> currentProperties,
+       ObjectType interfaceType) {
+     ObjectType implicitProto = interfaceType.getImplicitPrototype();
+     Set<String> currentPropertyNames;
+-      // This can be the case if interfaceType is proxy to a non-existent
+-      // object (which is a bad type annotation, but shouldn't crash).
+       currentPropertyNames = implicitProto.getOwnPropertyNames();
+     for (String name : currentPropertyNames) {
+       ObjectType oType = properties.get(name);
+       if (oType != null) {
+         if (!interfaceType.getPropertyType(name).isEquivalentTo(
+             oType.getPropertyType(name))) {
+           compiler.report(
+               t.makeError(n, INCOMPATIBLE_EXTENDED_PROPERTY_TYPE,
+                   functionName, name, oType.toString(),
+                   interfaceType.toString()));
+         }
+       }
+       currentProperties.put(name, interfaceType);
+     }
+     for (ObjectType iType : interfaceType.getCtorExtendedInterfaces()) {
+       checkInterfaceConflictProperties(t, n, functionName, properties,
+           currentProperties, iType);
+     }
+   }

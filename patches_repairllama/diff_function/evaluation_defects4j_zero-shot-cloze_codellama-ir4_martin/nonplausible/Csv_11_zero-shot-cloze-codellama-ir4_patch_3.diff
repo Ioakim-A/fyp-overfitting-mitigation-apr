@@ -1,0 +1,47 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7c2678a5-1c4a-4cd5-b9e2-293c865e8787_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0499f277-a3bd-48da-9783-0afc88b67247_fixed.java
+index 671037f..0352abf 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7c2678a5-1c4a-4cd5-b9e2-293c865e8787_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0499f277-a3bd-48da-9783-0afc88b67247_fixed.java
+@@ -1,36 +1,37 @@
+     private Map<String, Integer> initializeHeader() throws IOException {
+         Map<String, Integer> hdrMap = null;
+         final String[] formatHeader = this.format.getHeader();
+         if (formatHeader != null) {
+             hdrMap = new LinkedHashMap<String, Integer>();
+-
+             String[] headerRecord = null;
+             if (formatHeader.length == 0) {
+-                // read the header from the first line of the file
+                 final CSVRecord nextRecord = this.nextRecord();
+                 if (nextRecord != null) {
+                     headerRecord = nextRecord.values();
+                 }
+             } else {
+                 if (this.format.getSkipHeaderRecord()) {
+                     this.nextRecord();
+                 }
+                 headerRecord = formatHeader;
+             }
+-
+-            // build the name to index mappings
+             if (headerRecord != null) {
+                 for (int i = 0; i < headerRecord.length; i++) {
+                     final String header = headerRecord[i];
+                     final boolean containsHeader = hdrMap.containsKey(header);
+-                    final boolean emptyHeader = header.trim().isEmpty();
++// buggy code
++//                    final boolean emptyHeader = header.trim().isEmpty();
++//                    if (containsHeader && !emptyHeader) {
++//                        throw new IllegalArgumentException("The header contains a duplicate name: \"" + header +
++//                                "\" in " + Arrays.toString(headerRecord));
++//                    }
+                     if (containsHeader && (!emptyHeader || (emptyHeader && !this.format.getIgnoreEmptyHeaders()))) {
+                         throw new IllegalArgumentException("The header contains a duplicate name: \"" + header +
+                                 "\" in " + Arrays.toString(headerRecord));
+                     }
+                     hdrMap.put(header, Integer.valueOf(i));
+                 }
+             }
+         }
+         return hdrMap;
+     }

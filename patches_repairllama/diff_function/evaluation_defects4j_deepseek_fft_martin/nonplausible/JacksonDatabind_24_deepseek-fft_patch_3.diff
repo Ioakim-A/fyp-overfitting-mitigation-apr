@@ -1,0 +1,21 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5b4c80ad-129c-49a5-a7c3-b70d626ff346_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cc1c4f51-6b60-4abf-9742-0bc2080df467_fixed.java
+index 0502fea..75c2b00 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5b4c80ad-129c-49a5-a7c3-b70d626ff346_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cc1c4f51-6b60-4abf-9742-0bc2080df467_fixed.java
+@@ -1,9 +1,15 @@
+     public BaseSettings withDateFormat(DateFormat df) {
+         if (_dateFormat == df) {
+             return this;
+         }
+-        TimeZone tz = (df == null) ? _timeZone : df.getTimeZone();
++// buggy code
++//        TimeZone tz = (df == null) ? _timeZone : df.getTimeZone();
++//        return new BaseSettings(_classIntrospector, _annotationIntrospector, _visibilityChecker, _propertyNamingStrategy, _typeFactory,
++//                _typeResolverBuilder, df, _handlerInstantiator, _locale,
++//                tz, _defaultBase64);
++        TimeZone tz = (df == null) ? TimeZone.getDefault() : df.getTimeZone();
+         return new BaseSettings(_classIntrospector, _annotationIntrospector, _visibilityChecker, _propertyNamingStrategy, _typeFactory,
+                 _typeResolverBuilder, df, _handlerInstantiator, _locale,
+                 tz, _defaultBase64);
++
+     }

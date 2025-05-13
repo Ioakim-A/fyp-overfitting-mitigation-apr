@@ -1,0 +1,27 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7612a24d-373c-47c0-a83e-39f099935620_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9a07aafa-ac28-47ef-b751-21e7fbdf6229_fixed.java
+index 9a147f0..ce93c55 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7612a24d-373c-47c0-a83e-39f099935620_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9a07aafa-ac28-47ef-b751-21e7fbdf6229_fixed.java
+@@ -1,20 +1,18 @@
+    private static PeriodFormatter toFormatter(List<Object> elementPairs, boolean notPrinter, boolean notParser) {
+         if (notPrinter && notParser) {
+             throw new IllegalStateException("Builder has created neither a printer nor a parser");
+         }
+         int size = elementPairs.size();
+         if (size >= 2 && elementPairs.get(0) instanceof Separator) {
+             Separator sep = (Separator) elementPairs.get(0);
+                 PeriodFormatter f = toFormatter(elementPairs.subList(2, size), notPrinter, notParser);
+                 sep = sep.finish(f.getPrinter(), f.getParser());
+                 return new PeriodFormatter(sep, sep);
+         }
+         Object[] comp = createComposite(elementPairs);
+         if (notPrinter) {
+             return new PeriodFormatter(null, (PeriodParser) comp[1]);
+         } else if (notParser) {
+             return new PeriodFormatter((PeriodPrinter) comp[0], null);
+         } else {
+-            return new PeriodFormatter((PeriodPrinter) comp[0], (PeriodParser) comp[1]);
+-        }
+-    }
++            return new PeriodFormatter((PeriodPrinter)
+\ No newline at end of file

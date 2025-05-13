@@ -1,0 +1,39 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/590ff8ea-fd57-4589-b633-07db95c26452_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fecd780d-2ce4-4de9-b98a-395dd3a3e45a_fixed.java
+index c51c8b1..a0b8ec1 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/590ff8ea-fd57-4589-b633-07db95c26452_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fecd780d-2ce4-4de9-b98a-395dd3a3e45a_fixed.java
+@@ -1,31 +1,19 @@
+     private void recordAssignment(NodeTraversal t, Node n, Node recordNode) {
+       Node nameNode = n.getFirstChild();
+       Node parent = n.getParent();
+       NameInformation ns = createNameInformation(t, nameNode);
+       if (ns != null) {
+         if (parent.isFor() && !NodeUtil.isForIn(parent)) {
+-          // Patch for assignments that appear in the init,
+-          // condition or iteration part of a FOR loop.  Without
+-          // this change, all 3 of those parts try to claim the for
+-          // loop as their dependency scope.  The last assignment in
+-          // those three fields wins, which can result in incorrect
+-          // reference edges between referenced and assigned variables.
+-          //
+-          // TODO(user) revisit the dependency scope calculation
+-          // logic.
+           if (parent.getFirstChild().getNext() != n) {
+             recordDepScope(recordNode, ns);
+           } else {
+             recordDepScope(nameNode, ns);
+           }
++// buggy code
++//         } else {
+      } else {
+-          // The rhs of the assignment is the caller, so it's used by the
+-          // context. Don't associate it w/ the lhs.
+-          // FYI: this fixes only the specific case where the assignment is the
+-          // caller expression, but it could be nested deeper in the caller and
+-          // we would still get a bug.
+-          // See testAssignWithCall2 for an example of this.
++        if (!parent.isFor()) {
+           recordDepScope(recordNode, ns);
+         }
+       }
+     }

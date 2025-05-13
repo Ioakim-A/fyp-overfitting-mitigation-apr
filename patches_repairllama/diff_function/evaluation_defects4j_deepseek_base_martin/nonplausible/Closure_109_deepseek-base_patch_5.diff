@@ -1,0 +1,20 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ddace00c-80f5-4811-a161-f96209052add_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a15c90d4-cfe7-4e80-af00-8efb56e47272_fixed.java
+index ba2718f..52fed17 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ddace00c-80f5-4811-a161-f96209052add_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a15c90d4-cfe7-4e80-af00-8efb56e47272_fixed.java
+@@ -1,7 +1,14 @@
+   /**
+    * ContextTypeExpression := BasicTypeExpression | '?'
+    * For expressions on the right hand side of a this: or new:
+    */
+   private Node parseContextTypeExpression(JsDocToken token) {
+-          return parseTypeName(token);
++    Node node = parseBasicTypeExpression(token);
++    if (node != null) {
++      return node;
++    }
++    if (token.getType() != JsDocTokenType.QUESTION_MARK) {
++      return null;
++    }
++    return new NullNode(token);
+   }

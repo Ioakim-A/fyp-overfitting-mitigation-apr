@@ -1,0 +1,15 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d8209e06-9cca-4119-8aa1-04a22d0c8655_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/31cb7279-c908-4f20-893f-b0cd176a2732_fixed.java
+index 1fff491..a8a4831 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d8209e06-9cca-4119-8aa1-04a22d0c8655_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/31cb7279-c908-4f20-893f-b0cd176a2732_fixed.java
+@@ -1,8 +1,9 @@
+   private void handleBlockComment(Comment comment) {
+-    if (comment.getValue().indexOf("/* @") != -1 || comment.getValue().indexOf("\n * @") != -1) {
++   if (comment.getType() == Token.COMMENT_BLOCK &&
++        !comment.getText().trim().startsWith("/**")) {
+       errorReporter.warning(
+           SUSPICIOUS_COMMENT_WARNING,
+           sourceName,
+           comment.getLineno(), "", 0);
+     }
+   }

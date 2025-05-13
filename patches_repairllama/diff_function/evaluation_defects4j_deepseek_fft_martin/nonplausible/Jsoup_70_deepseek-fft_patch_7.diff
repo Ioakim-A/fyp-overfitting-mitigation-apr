@@ -1,0 +1,25 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/20f7a1ca-e5db-444e-9d37-0fd8eb43831c_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bf673ee3-d7df-46ee-94a6-0a652b4e5e72_fixed.java
+index 6c87721..98b9167 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/20f7a1ca-e5db-444e-9d37-0fd8eb43831c_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bf673ee3-d7df-46ee-94a6-0a652b4e5e72_fixed.java
+@@ -1,11 +1,19 @@
+     static boolean preserveWhitespace(Node node) {
+         // looks only at this element and five levels up, to prevent recursion & needless stack searches
+         if (node != null && node instanceof Element) {
+             Element el = (Element) node;
++// buggy code
++//                if (el.tag.preserveWhitespace())
++//                    return true;
++//                else
++//                    return el.parent() != null && el.parent().tag.preserveWhitespace();
+             if (el.tag.preserveWhitespace())
+                 return true;
++            else if (el.parent() != null)
++                return el.parent().tag.preserveWhitespace();
+             else
+-                    return el.parent() != null && el.parent().tag.preserveWhitespace();
++                return false;
++
+         }
+         return false;
+     }

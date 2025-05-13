@@ -1,0 +1,45 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/76bb62be-954f-446f-9e8d-928cdf8646d6_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/05a1e3e8-2959-4b82-a732-67bb465dd7ed_fixed.java
+index 602226b..ead0e26 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/76bb62be-954f-446f-9e8d-928cdf8646d6_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/05a1e3e8-2959-4b82-a732-67bb465dd7ed_fixed.java
+@@ -1,26 +1,31 @@
+     private void findAliases(NodeTraversal t) {
+       Scope scope = t.getScope();
+       for (Var v : scope.getVarIterable()) {
+         Node n = v.getNode();
+         int type = n.getType();
+         Node parent = n.getParent();
+-        if (parent.isVar()) {
++// buggy code
++//        if (parent.isVar()) {
++//          if (n.hasChildren() && n.getFirstChild().isQualifiedName()) {
++//          String name = n.getString();
++//          Var aliasVar = scope.getVar(name);
++//          aliases.put(name, aliasVar);
++//          String qualifiedName =
++//              aliasVar.getInitialValue().getQualifiedName();
++//          transformation.addAlias(name, qualifiedName);
++//        } else {
++//          report(t, n, GOOG_SCOPE_NON_ALIAS_LOCAL, n.getString());
++//        }
++//        }
++       if (type == Token.VAR) {
+           if (n.hasChildren() && n.getFirstChild().isQualifiedName()) {
+             String name = n.getString();
+             Var aliasVar = scope.getVar(name);
+             aliases.put(name, aliasVar);
+-
+             String qualifiedName =
+                 aliasVar.getInitialValue().getQualifiedName();
+             transformation.addAlias(name, qualifiedName);
+-          // Bleeding functions already get a BAD_PARAMETERS error, so just
+-          // do nothing.
+-          // Parameters of the scope function also get a BAD_PARAMETERS
+-          // error.
+-        } else {
+-          // TODO(robbyw): Support using locals for private variables.
+-          report(t, n, GOOG_SCOPE_NON_ALIAS_LOCAL, n.getString());
+           }
+         }
+       }
+     }

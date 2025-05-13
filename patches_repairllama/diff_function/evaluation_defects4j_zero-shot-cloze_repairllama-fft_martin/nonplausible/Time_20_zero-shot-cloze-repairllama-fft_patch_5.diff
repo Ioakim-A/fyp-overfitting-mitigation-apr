@@ -1,0 +1,24 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/436bd9ac-c78c-4e69-9e85-f74b550f8b27_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/be2bc9e8-8adc-41c0-a6a2-6740a603eeb8_fixed.java
+index ae6c2b1..f07624a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/436bd9ac-c78c-4e69-9e85-f74b550f8b27_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/be2bc9e8-8adc-41c0-a6a2-6740a603eeb8_fixed.java
+@@ -1,10 +1,18 @@
+         public int parseInto(DateTimeParserBucket bucket, String text, int position) {
+             String str = text.substring(position);
++// buggy code
++//            for (String id : ALL_IDS) {
++//                if (str.startsWith(id)) {
++//                    bucket.setZone(DateTimeZone.forID(id));
++//                    return position + id.length();
++//                }
++//            }
+             for (String id : ALL_IDS) {
+-                if (str.startsWith(id)) {
++                if (str.toLowerCase().startsWith(id)) {
+                     bucket.setZone(DateTimeZone.forID(id));
+                     return position + id.length();
+                 }
++
+             }
+             return ~position;
+         }

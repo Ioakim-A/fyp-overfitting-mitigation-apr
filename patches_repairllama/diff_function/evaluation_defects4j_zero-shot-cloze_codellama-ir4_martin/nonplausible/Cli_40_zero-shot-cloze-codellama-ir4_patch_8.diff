@@ -1,0 +1,58 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0a9cc4ad-53be-46d5-8e8f-75b6c4c35557_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ac3bae91-8059-438d-aea9-b6097b6a711d_fixed.java
+index cf3a96a..4a5e456 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0a9cc4ad-53be-46d5-8e8f-75b6c4c35557_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ac3bae91-8059-438d-aea9-b6097b6a711d_fixed.java
+@@ -1,43 +1,52 @@
+     public static <T> T createValue(final String str, final Class<T> clazz) throws ParseException
+     {
+         if (PatternOptionBuilder.STRING_VALUE == clazz)
+         {
+             return (T) str;
+         }
+         else if (PatternOptionBuilder.OBJECT_VALUE == clazz)
+         {
+             return (T) createObject(str);
+         }
+         else if (PatternOptionBuilder.NUMBER_VALUE == clazz)
+         {
+             return (T) createNumber(str);
+         }
+         else if (PatternOptionBuilder.DATE_VALUE == clazz)
+         {
+             return (T) createDate(str);
+         }
+         else if (PatternOptionBuilder.CLASS_VALUE == clazz)
+         {
+             return (T) createClass(str);
+         }
+         else if (PatternOptionBuilder.FILE_VALUE == clazz)
+         {
+             return (T) createFile(str);
+         }
+         else if (PatternOptionBuilder.EXISTING_FILE_VALUE == clazz)
+         {
+             return (T) openFile(str);
+         }
+         else if (PatternOptionBuilder.FILES_VALUE == clazz)
+         {
+             return (T) createFiles(str);
+         }
+         else if (PatternOptionBuilder.URL_VALUE == clazz)
+         {
+             return (T) createURL(str);
+         }
+         else
+         {
+-            return null;
++// buggy code
++//            return null;
++           try
++            {
++                return (T) clazz.getConstructor(new Class[] { String.class }).newInstance(new Object[] { str });
++            }
++            catch (Exception e)
++            {
++                throw new RuntimeException(e);
++            }
+         }
+     }

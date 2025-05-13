@@ -1,0 +1,18 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c4733397-eae0-4a16-969c-bf47acad3362_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dd311995-974a-461e-94d2-5e25b180010c_fixed.java
+index 6fecc90..179895d 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c4733397-eae0-4a16-969c-bf47acad3362_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dd311995-974a-461e-94d2-5e25b180010c_fixed.java
+@@ -1,7 +1,12 @@
+   static boolean mayBeString(Node n, boolean recurse) {
+     if (recurse) {
+-      return allResultsMatch(n, MAY_BE_STRING_PREDICATE);
++     for (Node child = n.getFirstChild(); child != null; child = child.getNext()) {
++        if (!mayBeString(child, true)) {
++          return false;
++        }
++      }
++      return true;
+     } else {
+       return mayBeStringHelper(n);
+     }
+   }

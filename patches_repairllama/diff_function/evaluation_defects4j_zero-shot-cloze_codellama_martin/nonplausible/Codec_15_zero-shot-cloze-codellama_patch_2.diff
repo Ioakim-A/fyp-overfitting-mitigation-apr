@@ -1,0 +1,24 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a5182323-6df0-45ac-85bb-32264c68d41c_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5df2936f-4f83-43ae-a88a-01e2028eb024_fixed.java
+index 470e90e..06c7107 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a5182323-6df0-45ac-85bb-32264c68d41c_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5df2936f-4f83-43ae-a88a-01e2028eb024_fixed.java
+@@ -1,16 +1,11 @@
+     private char getMappingCode(final String str, final int index) {
+-        // map() throws IllegalArgumentException
+         final char mappedChar = this.map(str.charAt(index));
+-        // HW rule check
+         if (index > 1 && mappedChar != '0') {
+-            final char hwChar = str.charAt(index - 1);
+-            if ('H' == hwChar || 'W' == hwChar) {
+-                final char preHWChar = str.charAt(index - 2);
+-                final char firstCode = this.map(preHWChar);
+-                if (firstCode == mappedChar || 'H' == preHWChar || 'W' == preHWChar) {
+-                    return 0;
++           for (int i = index - 1; i >= 0; i--) {
++                if (this.map(str.charAt(i)) == '0') {
++                    return '0';
+                 }
+             }
+         }
+         return mappedChar;
+     }

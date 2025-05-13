@@ -1,0 +1,70 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cd46f7f6-0f80-41ba-abeb-15129b0c53ad_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/85286917-e6e1-4f10-9fc8-d9737317e4d0_fixed.java
+index 1449592..a3afdf8 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cd46f7f6-0f80-41ba-abeb-15129b0c53ad_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/85286917-e6e1-4f10-9fc8-d9737317e4d0_fixed.java
+@@ -1,62 +1,50 @@
+ public ArchiveInputStream createArchiveInputStream(final InputStream in)
+             throws ArchiveException {
+         if (in == null) {
+             throw new IllegalArgumentException("Stream must not be null.");
+         }
+-
+         if (!in.markSupported()) {
+             throw new IllegalArgumentException("Mark is not supported.");
+         }
+-
+         final byte[] signature = new byte[12];
+         in.mark(signature.length);
+         try {
+             int signatureLength = in.read(signature);
+             in.reset();
+             if (ZipArchiveInputStream.matches(signature, signatureLength)) {
+                 return new ZipArchiveInputStream(in);
+             } else if (JarArchiveInputStream.matches(signature, signatureLength)) {
+                 return new JarArchiveInputStream(in);
+             } else if (ArArchiveInputStream.matches(signature, signatureLength)) {
+                 return new ArArchiveInputStream(in);
+             } else if (CpioArchiveInputStream.matches(signature, signatureLength)) {
+                 return new CpioArchiveInputStream(in);
+             }
+-
+-            // Dump needs a bigger buffer to check the signature;
+             final byte[] dumpsig = new byte[32];
+             in.mark(dumpsig.length);
+             signatureLength = in.read(dumpsig);
+             in.reset();
+             if (DumpArchiveInputStream.matches(dumpsig, signatureLength)) {
+                 return new DumpArchiveInputStream(in);
+             }
+-
+-            // Tar needs an even bigger buffer to check the signature; read the first block
+             final byte[] tarheader = new byte[512];
+             in.mark(tarheader.length);
+             signatureLength = in.read(tarheader);
+             in.reset();
+             if (TarArchiveInputStream.matches(tarheader, signatureLength)) {
+                 return new TarArchiveInputStream(in);
+             }
+-            // COMPRESS-117 - improve auto-recognition
+             if (signatureLength >= 512) {
+                 try {
+                     TarArchiveInputStream tais = new TarArchiveInputStream(new ByteArrayInputStream(tarheader));
+-                    // COMPRESS-191 - verify the header checksum
+                     tais.getNextEntry();
+                     return new TarArchiveInputStream(in);
+-                } catch (Exception e) { // NOPMD
+-                    // can generate IllegalArgumentException as well
+-                    // as IOException
+-                    // autodetection, simply not a TAR
+-                    // ignored
++                } catch (Exception e) { 
++                    throw new ArchiveException("Error while creating TarArchiveInputStream", e);
+                 }
+             }
+         } catch (IOException e) {
+             throw new ArchiveException("Could not use reset and mark operations.", e);
+         }
+-
+         throw new ArchiveException("No Archiver found for the stream signature");
+     }
+\ No newline at end of file

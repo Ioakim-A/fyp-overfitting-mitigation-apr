@@ -1,0 +1,51 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2fd5e8e7-f828-4016-8504-557890d2007b_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/38adce0f-93f4-4592-80b7-656a5a672b63_fixed.java
+index cdfd827..0c5aa23 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2fd5e8e7-f828-4016-8504-557890d2007b_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/38adce0f-93f4-4592-80b7-656a5a672b63_fixed.java
+@@ -1,38 +1,33 @@
+   private void removeUnreferencedFunctionArgs(Scope fnScope) {
+-    // Notice that removing unreferenced function args breaks
+-    // Function.prototype.length. In advanced mode, we don't really care
+-    // about this: we consider "length" the equivalent of reflecting on
+-    // the function's lexical source.
++    // fixed code
+     // 
+-    // Rather than create a new option for this, we assume that if the user
+-    // is removing globals, then it's OK to remove unused function args.
+-    //
+-    // See http://code.google.com/p/closure-compiler/issues/detail?id=253
++    HashSet<Var> referenced = new HashSet<>();
++    for (Var var : fnScope.getVarIterable()) {
++      if (var.isReferenced()) {
++        referenced.add(var);
++      }
++    }
+ 
+     Node function = fnScope.getRootNode();
+-
+     Preconditions.checkState(function.isFunction());
+     if (NodeUtil.isGetOrSetKey(function.getParent())) {
+-      // The parameters object literal setters can not be removed.
+       return;
+     }
+-
+     Node argList = getFunctionArgList(function);
+     boolean modifyCallers = modifyCallSites
+         && callSiteOptimizer.canModifyCallers(function);
+     if (!modifyCallers) {
+-      // Strip unreferenced args off the end of the function declaration.
+       Node lastArg;
+       while ((lastArg = argList.getLastChild()) != null) {
+         Var var = fnScope.getVar(lastArg.getString());
+         if (!referenced.contains(var)) {
+           argList.removeChild(lastArg);
+           compiler.reportCodeChange();
+         } else {
+           break;
+         }
+       }
+     } else {
+       callSiteOptimizer.optimize(fnScope, referenced);
+     }
+   }
+\ No newline at end of file

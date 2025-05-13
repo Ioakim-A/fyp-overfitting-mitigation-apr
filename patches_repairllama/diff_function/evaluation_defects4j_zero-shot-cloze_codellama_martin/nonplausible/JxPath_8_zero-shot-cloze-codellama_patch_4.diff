@@ -1,0 +1,31 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/da7d9e79-1bbc-4c9a-86b2-85abb5a2f5b1_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3b0ed65d-b555-4157-b293-0fdf4513ff46_fixed.java
+index 98d89dc..59a7be4 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/da7d9e79-1bbc-4c9a-86b2-85abb5a2f5b1_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3b0ed65d-b555-4157-b293-0fdf4513ff46_fixed.java
+@@ -1,23 +1,25 @@
+     private boolean compute(Object left, Object right) {
+         left = reduce(left);
+         right = reduce(right);
+-
+         if (left instanceof InitialContext) {
+             ((InitialContext) left).reset();
+         }
+         if (right instanceof InitialContext) {
+             ((InitialContext) right).reset();
+         }
+         if (left instanceof Iterator && right instanceof Iterator) {
+             return findMatch((Iterator) left, (Iterator) right);
+         }
+         if (left instanceof Iterator) {
+             return containsMatch((Iterator) left, right);
+         }
+         if (right instanceof Iterator) {
+             return containsMatch((Iterator) right, left);
+         }
+         double ld = InfoSetUtil.doubleValue(left);
+        double rd = InfoSetUtil.doubleValue(right);
++        if (ld == Double.NaN || rd == Double.NaN) {
++            return false;
++        }
+         return evaluateCompare(ld == rd ? 0 : ld < rd ? -1 : 1);
+     }

@@ -1,0 +1,24 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/336c00fe-6c5a-4fe7-a308-5d42b34ca877_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/46050928-1fe3-4e82-8b6d-c17e74421b1d_fixed.java
+index 98b456f..3fb0a54 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/336c00fe-6c5a-4fe7-a308-5d42b34ca877_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/46050928-1fe3-4e82-8b6d-c17e74421b1d_fixed.java
+@@ -1,17 +1,15 @@
+     final void html(final Appendable accum, final Document.OutputSettings out) throws IOException {
+         final int sz = size;
+         for (int i = 0; i < sz; i++) {
+-            // inlined from Attribute.html()
+             final String key = keys[i];
+             final String val = vals[i];
+             accum.append(' ').append(key);
+ 
+-            // collapse checked=null, checked="", checked=checked; write out others
+             if (!(out.syntax() == Document.OutputSettings.Syntax.html
+-                && (val == null || val.equals(key) && Attribute.isBooleanAttribute(key)))) {
++                && (val == null || val.equals(key) || Attribute.isBooleanAttribute(key)))) {
+                 accum.append("=\"");
+                 Entities.escape(accum, val == null ? EmptyString : val, out, true, false, false);
+                 accum.append('"');
+             }
+         }
+     }
+\ No newline at end of file

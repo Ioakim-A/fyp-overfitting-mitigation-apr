@@ -1,0 +1,45 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cb0c98ab-2fcb-43e2-9906-c81e15e61edf_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7e08b125-444c-4004-ba5a-4d189209b6bc_fixed.java
+index 99141e0..76d64ef 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/cb0c98ab-2fcb-43e2-9906-c81e15e61edf_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7e08b125-444c-4004-ba5a-4d189209b6bc_fixed.java
+@@ -1,33 +1,35 @@
+     static String unescape(String string) {
+         if (!string.contains("&"))
+             return string;
+-
+         Matcher m = unescapePattern.matcher(string); // &(#(x|X)?([0-9a-fA-F]+)|[a-zA-Z]+);?
+         StringBuffer accum = new StringBuffer(string.length()); // pity matcher can't use stringbuilder, avoid syncs
+         // todo: replace m.appendReplacement with own impl, so StringBuilder and quoteReplacement not required
+-
+         while (m.find()) {
+             int charval = -1;
+             String num = m.group(3);
+             if (num != null) {
+                 try {
+                     int base = m.group(2) != null ? 16 : 10; // 2 is hex indicator
+                     charval = Integer.valueOf(num, base);
+                 } catch (NumberFormatException e) {
+                 } // skip
+             } else {
+                 String name = m.group(1);
+                 if (full.containsKey(name))
+                     charval = full.get(name);
+             }
+-
+             if (charval != -1 || charval > 0xFFFF) { // out of range
+                 String c = Character.toString((char) charval);
+-                m.appendReplacement(accum, c);
++// buggy code
++//                m.appendReplacement(accum, c);
++//            } else {
++//                m.appendReplacement(accum, m.group(0));
++                accum.append(c);
+             } else {
+-                m.appendReplacement(accum, m.group(0));
++                accum.append(m.group());
++
+             }
+         }
+         m.appendTail(accum);
+         return accum.toString();
+     }

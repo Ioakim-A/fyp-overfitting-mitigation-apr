@@ -1,0 +1,41 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/22cf6940-e469-4090-bf48-2f4c839db087_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/44011b8b-a2ec-4042-974e-225bcb102b4e_fixed.java
+index 32ebe90..93f8775 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/22cf6940-e469-4090-bf48-2f4c839db087_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/44011b8b-a2ec-4042-974e-225bcb102b4e_fixed.java
+@@ -1,29 +1,31 @@
+     protected void burstToken(String token, boolean stopAtNonOption)
+     {
+         for (int i = 1; i < token.length(); i++)
+         {
+             String ch = String.valueOf(token.charAt(i));
+-
+             if (options.hasOption(ch))
+             {
+                 tokens.add("-" + ch);
+                 currentOption = options.getOption(ch);
+-
+                 if (currentOption.hasArg() && (token.length() != (i + 1)))
+                 {
+                     tokens.add(token.substring(i + 1));
+-
+                     break;
+                 }
+             }
+             else if (stopAtNonOption)
+             {
+                 process(token.substring(i));
+             }
+-            else
++            else if (!options.hasOption(ch)) 
+             {
+                 tokens.add(token);
+                 break;
+             }
++            else 
++            {
++                // Handle the remaining cases
++                System.out.println("Unhandled case: " + ch);
++            }
+         }
+     }
+\ No newline at end of file

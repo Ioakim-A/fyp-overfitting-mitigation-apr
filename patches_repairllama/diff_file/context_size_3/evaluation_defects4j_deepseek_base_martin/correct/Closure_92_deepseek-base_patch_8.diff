@@ -1,0 +1,27 @@
+diff --git src/com/google/javascript/jscomp/ProcessClosurePrimitives.java src/com/google/javascript/jscomp/ProcessClosurePrimitives.java
+index c929a36..b831367 100644
+--- src/com/google/javascript/jscomp/ProcessClosurePrimitives.java
++++ src/com/google/javascript/jscomp/ProcessClosurePrimitives.java
+@@ -750,13 +750,11 @@ class ProcessClosurePrimitives extends AbstractPostOrderCallback
+         replacementNode = candidateDefinition;
+         return;
+       }
+-
+       // Handle the case where there is a duplicate definition for an explicitly
+       // provided symbol.
+       if (candidateDefinition != null && explicitNode != null) {
+         explicitNode.detachFromParent();
+         compiler.reportCodeChange();
+-
+         // Does this need a VAR keyword?
+         replacementNode = candidateDefinition;
+         if (NodeUtil.isExpressionNode(candidateDefinition)) {
+@@ -786,7 +784,7 @@ class ProcessClosurePrimitives extends AbstractPostOrderCallback
+         } else {
+           // In this case, the name was implicitly provided by two independent
+           // modules. We need to move this code up to a common module.
+-          int indexOfDot = namespace.indexOf('.');
++          int indexOfDot = namespace.lastIndexOf('.');
+           if (indexOfDot == -1) {
+             // Any old place is fine.
+             compiler.getNodeForCodeInsertion(minimumModule)

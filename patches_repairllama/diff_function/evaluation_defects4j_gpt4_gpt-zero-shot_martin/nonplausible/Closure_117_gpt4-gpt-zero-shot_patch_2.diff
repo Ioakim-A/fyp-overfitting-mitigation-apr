@@ -1,0 +1,66 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0e03873f-998b-40f4-bb94-e81e829fb834_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a1ce60c2-ff2c-4cd5-b73c-e87268405516_fixed.java
+index dfceb86..b5ced80 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0e03873f-998b-40f4-bb94-e81e829fb834_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a1ce60c2-ff2c-4cd5-b73c-e87268405516_fixed.java
+@@ -1,54 +1,44 @@
+   String getReadableJSTypeName(Node n, boolean dereference) {
+-
+-    // The best type name is the actual type name.
+-
+-    // If we're analyzing a GETPROP, the property may be inherited by the
+-    // prototype chain. So climb the prototype chain and find out where
+-    // the property was originally defined.
++    JSType type = null;
+     if (n.isGetProp()) {
+       ObjectType objectType = getJSType(n.getFirstChild()).dereference();
+       if (objectType != null) {
+         String propName = n.getLastChild().getString();
+         if (objectType.getConstructor() != null &&
+             objectType.getConstructor().isInterface()) {
+           objectType = FunctionType.getTopDefiningInterface(
+               objectType, propName);
+         } else {
+-          // classes
+           while (objectType != null && !objectType.hasOwnProperty(propName)) {
+             objectType = objectType.getImplicitPrototype();
+           }
+         }
+-
+-        // Don't show complex function names or anonymous types.
+-        // Instead, try to get a human-readable type name.
+         if (objectType != null &&
+             (objectType.getConstructor() != null ||
+              objectType.isFunctionPrototypeType())) {
+           return objectType.toString() + "." + propName;
+         }
+       }
+-    }
+-
+-    JSType type = getJSType(n);
++    } else {
++      type = getJSType(n);
+       if (dereference) {
+         ObjectType dereferenced = type.dereference();
+         if (dereferenced != null) {
+           type = dereferenced;
+         }
+       }
+       if (type.isFunctionPrototypeType() ||
+           (type.toObjectType() != null &&
+            type.toObjectType().getConstructor() != null)) {
+         return type.toString();
+       }
++    }
+     String qualifiedName = n.getQualifiedName();
+     if (qualifiedName != null) {
+       return qualifiedName;
+-    } else if (type.isFunctionType()) {
+-      // Don't show complex function names.
++    } else if (type != null && type.isFunctionType()) {
+       return "function";
+     } else {
+-      return type.toString();
++      return type != null ? type.toString() : "undefined";
+     }
+   }
+\ No newline at end of file

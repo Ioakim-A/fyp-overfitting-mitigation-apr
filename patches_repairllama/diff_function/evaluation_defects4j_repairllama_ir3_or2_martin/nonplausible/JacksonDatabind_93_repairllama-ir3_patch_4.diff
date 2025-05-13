@@ -1,0 +1,53 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3adce46f-5aa8-4b6f-864f-2e479d88f8ec_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9634fa71-3789-4667-8b91-1609975ffe95_fixed.java
+index 2d9cf24..d386699 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3adce46f-5aa8-4b6f-864f-2e479d88f8ec_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9634fa71-3789-4667-8b91-1609975ffe95_fixed.java
+@@ -1,33 +1,36 @@
+     public void validateSubType(DeserializationContext ctxt, JavaType type) throws JsonMappingException
+     {
+-        // There are certain nasty classes that could cause problems, mostly
+-        // via default typing -- catch them here.
+         final Class<?> raw = type.getRawClass();
+         String full = raw.getName();
+-
+         main_check:
+         do {
+             if (_cfgIllegalClassNames.contains(full)) {
+                 break;
+             }
+-
+-            // 18-Dec-2017, tatu: As per [databind#1855], need bit more sophisticated handling
+-            //    for some Spring framework types
+-            // 05-Jan-2017, tatu: ... also, only applies to classes, not interfaces
+-            if (full.startsWith(PREFIX_STRING)) {
+-                for (Class<?> cls = raw; cls != Object.class; cls = cls.getSuperclass()) {
++           Class<?>[] intfs = raw.getInterfaces();
++            for (Class<?> intf : intfs) {
++                if (_cfgIllegalClassNames.contains(intf.getName())) {
++                    break main_check;
++                }
++            }
++            for (Class<?> cls = raw; cls != null; cls = cls.getSuperclass()) {
++                if (_cfgIllegalClassNames.contains(cls.getName())) {
++                    break main_check;
++                }
++                Class<?>[] intfs = cls.getInterfaces();
++                for (Class<?> intf : intfs) {
++                    if (_cfgIllegalClassNames.contains(intf.getName())) {
++                        break main_check;
++                    }
+                     String name = cls.getSimpleName();
+-                    // looking for "AbstractBeanFactoryPointcutAdvisor" but no point to allow any is there?
+                     if ("AbstractPointcutAdvisor".equals(name)
+-                            // ditto  for "FileSystemXmlApplicationContext": block all ApplicationContexts
+                             || "AbstractApplicationContext".equals(name)) {
+                         break main_check;
+                     }
+                 }
+             }
+             return;
+         } while (false);
+-
+         throw JsonMappingException.from(ctxt,
+                 String.format("Illegal type (%s) to deserialize: prevented for security reasons", full));
+     }

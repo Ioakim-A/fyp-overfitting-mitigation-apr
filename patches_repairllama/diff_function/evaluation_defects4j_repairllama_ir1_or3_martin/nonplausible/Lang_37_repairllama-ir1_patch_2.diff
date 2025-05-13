@@ -1,0 +1,19 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/36f18c20-068d-4bf4-adb8-6f0c8af2ac3d_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f70c4f3e-9f1c-40ca-9c67-7bae7320fe9a_fixed.java
+index e2c848f..97d8eeb 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/36f18c20-068d-4bf4-adb8-6f0c8af2ac3d_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f70c4f3e-9f1c-40ca-9c67-7bae7320fe9a_fixed.java
+@@ -1,13 +1,12 @@
+     public static <T> T[] addAll(T[] array1, T... array2) {
+         if (array1 == null) {
+             return clone(array2);
+-        } else if (array2 == null) {
++        } else if (array2 == null || array2.length == 0) {
+             return clone(array1);
+         }
+         final Class<?> type1 = array1.getClass().getComponentType();
+         T[] joinedArray = (T[]) Array.newInstance(type1, array1.length + array2.length);
+         System.arraycopy(array1, 0, joinedArray, 0, array1.length);
+             System.arraycopy(array2, 0, joinedArray, array1.length, array2.length);
+-            // Check if problem is incompatible types
+         return joinedArray;
+     }

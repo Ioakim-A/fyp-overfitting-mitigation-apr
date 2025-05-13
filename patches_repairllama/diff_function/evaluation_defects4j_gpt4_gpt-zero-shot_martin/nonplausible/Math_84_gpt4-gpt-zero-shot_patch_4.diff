@@ -1,0 +1,55 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/233fa8a4-f92d-4ae8-8842-529bbd343568_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ffc58eb0-f82e-46d6-857a-57a69180f0c1_fixed.java
+index 50cbfb2..26b8269 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/233fa8a4-f92d-4ae8-8842-529bbd343568_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ffc58eb0-f82e-46d6-857a-57a69180f0c1_fixed.java
+@@ -1,39 +1,31 @@
+ protected void iterateSimplex(final Comparator<RealPointValuePair> comparator)
+         throws FunctionEvaluationException, OptimizationException, IllegalArgumentException {
+-
+     while (true) {
+-
+         incrementIterationsCounter();
+-
+-            // save the original vertex
+         final RealPointValuePair[] original = simplex;
+         final RealPointValuePair best = original[0];
+-
+-            // perform a reflection step
+         final RealPointValuePair reflected = evaluateNewSimplex(original, 1.0, comparator);
+         if (comparator.compare(reflected, best) < 0) {
+-
+-                // compute the expanded simplex
+             final RealPointValuePair[] reflectedSimplex = simplex;
+             final RealPointValuePair expanded = evaluateNewSimplex(original, khi, comparator);
+             if (comparator.compare(reflected, expanded) <= 0) {
+-                    // accept the reflected simplex
+                 simplex = reflectedSimplex;
+             }
+-
+             return;
+-
+         }
+-
+-            // compute the contracted simplex
+         final RealPointValuePair contracted = evaluateNewSimplex(original, gamma, comparator);
+         if (comparator.compare(contracted, best) < 0) {
+-                // accept the contracted simplex
+-
+-            // check convergence
+             return;
+         }
+-
++        // Replacement for <FILL_ME>
++        for (int i = 1; i < simplex.length; i++) {
++            if (comparator.compare(simplex[i], best) <= 0) {
++                final double[] x = simplex[i].getPoint();
++                for (int j = 0; j < x.length; j++) {
++                    x[j] = best.getPoint()[j] + sigma * (x[j] - best.getPoint()[j]);
++                }
++                simplex[i] = new RealPointValuePair(x, Double.NaN);
++            }
++        }
+     }
+-
+ }
+\ No newline at end of file

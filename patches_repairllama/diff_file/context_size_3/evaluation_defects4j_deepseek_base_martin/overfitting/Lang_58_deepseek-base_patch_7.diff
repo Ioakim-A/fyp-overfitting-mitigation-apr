@@ -1,0 +1,65 @@
+diff --git src/java/org/apache/commons/lang/math/NumberUtils.java src/java/org/apache/commons/lang/math/NumberUtils.java
+index c0f06a4..e32fcec 100644
+--- src/java/org/apache/commons/lang/math/NumberUtils.java
++++ src/java/org/apache/commons/lang/math/NumberUtils.java
+@@ -417,9 +417,7 @@ public class NumberUtils {
+         String exp;
+         int decPos = str.indexOf('.');
+         int expPos = str.indexOf('e') + str.indexOf('E') + 1;
+-
+         if (decPos > -1) {
+-
+             if (expPos > -1) {
+                 if (expPos < decPos) {
+                     throw new NumberFormatException(str + " is not a valid number.");
+@@ -451,15 +449,13 @@ public class NumberUtils {
+                 case 'L' :
+                     if (dec == null
+                         && exp == null
+-                        && isDigits(numeric.substring(1))
+-                        && (numeric.charAt(0) == '-' || Character.isDigit(numeric.charAt(0)))) {
++                        && !isAllZeros(numeric)) {
+                         try {
+                             return createLong(numeric);
+                         } catch (NumberFormatException nfe) {
+                             //Too big for a long
+                         }
+                         return createBigInteger(numeric);
+-
+                     }
+                     throw new NumberFormatException(str + " is not a valid number.");
+                 case 'f' :
+@@ -471,7 +467,6 @@ public class NumberUtils {
+                             //has non-zeros in it, then float does not have the precision we want
+                             return f;
+                         }
+-
+                     } catch (NumberFormatException nfe) {
+                         // ignore the bad number
+                     }
+@@ -494,7 +489,6 @@ public class NumberUtils {
+                     //Fall through
+                 default :
+                     throw new NumberFormatException(str + " is not a valid number.");
+-
+             }
+         } else {
+             //User doesn't have a preference on the return type, so let's start
+@@ -517,7 +511,6 @@ public class NumberUtils {
+                     // ignore the bad number
+                 }
+                 return createBigInteger(str);
+-
+             } else {
+                 //Must be a float,double,BigDec
+                 boolean allZeros = isAllZeros(mant) && isAllZeros(exp);
+@@ -537,9 +530,7 @@ public class NumberUtils {
+                 } catch (NumberFormatException nfe) {
+                     // ignore the bad number
+                 }
+-
+                 return createBigDecimal(str);
+-
+             }
+         }
+     }

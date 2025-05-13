@@ -1,0 +1,37 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/15c84b51-8c7f-4dd4-b2e4-b25860c0c1bb_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a56a2c82-a64f-46ca-a544-b2591b00742c_fixed.java
+index 7eae43b..6be5c6e 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/15c84b51-8c7f-4dd4-b2e4-b25860c0c1bb_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/a56a2c82-a64f-46ca-a544-b2591b00742c_fixed.java
+@@ -1,23 +1,24 @@
+     public int getOffsetFromLocal(long instantLocal) {
+-        // get the offset at instantLocal (first estimate)
+         final int offsetLocal = getOffset(instantLocal);
+-        // adjust instantLocal using the estimate and recalc the offset
+         final long instantAdjusted = instantLocal - offsetLocal;
+         final int offsetAdjusted = getOffset(instantAdjusted);
+-        // if the offsets differ, we must be near a DST boundary
+         if (offsetLocal != offsetAdjusted) {
+-            // we need to ensure that time is always after the DST gap
+-            // this happens naturally for positive offsets, but not for negative
+             if ((offsetLocal - offsetAdjusted) < 0) {
+-                // if we just return offsetAdjusted then the time is pushed
+-                // back before the transition, whereas it should be
+-                // on or after the transition
+                 long nextLocal = nextTransition(instantAdjusted);
+                 long nextAdjusted = nextTransition(instantLocal - offsetAdjusted);
+                 if (nextLocal != nextAdjusted) {
+                     return offsetLocal;
+                 }
+             }
++// buggy code
++           else {
++                long previousLocal = previousTransition(instantAdjusted);
++                long previousAdjusted = previousTransition(instantLocal - offsetAdjusted);
++                if (previousLocal != previousAdjusted) {
++                    return offsetLocal;
++                }
++            }
++
+         }
+         return offsetAdjusted;
+     }

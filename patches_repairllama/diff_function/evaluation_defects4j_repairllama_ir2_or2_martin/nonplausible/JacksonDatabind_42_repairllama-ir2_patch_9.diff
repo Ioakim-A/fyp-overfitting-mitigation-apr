@@ -1,0 +1,16 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c03a6fc0-0f14-4dba-8710-43e2209e90c0_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ec94fe40-1a9a-4c36-b4bd-b1a7406d2491_fixed.java
+index 0ed3381..5834123 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c03a6fc0-0f14-4dba-8710-43e2209e90c0_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ec94fe40-1a9a-4c36-b4bd-b1a7406d2491_fixed.java
+@@ -1,8 +1,9 @@
+         protected Object _deserializeFromEmptyString() throws IOException {
+-            // As per [databind#398], URI requires special handling
+             if (_kind == STD_URI) {
+                 return URI.create("");
+             }
+-            // As per [databind#1123], Locale too
++           else if (_kind == STD_INET_ADDR) {
++                return InetAddress.getByName(null);
++            }
+             return super._deserializeFromEmptyString();
+         }

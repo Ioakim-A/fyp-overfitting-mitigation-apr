@@ -1,0 +1,32 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5387be97-2500-4aab-8926-485106ec6ffd_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dfa98c9d-80bc-4ccd-ab49-36b737eb4859_fixed.java
+index 661ff51..2565107 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5387be97-2500-4aab-8926-485106ec6ffd_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/dfa98c9d-80bc-4ccd-ab49-36b737eb4859_fixed.java
+@@ -1,24 +1,19 @@
+     public int read(byte[] buf, int offset, int numToRead) throws IOException {
+     	int totalRead = 0;
+-
+         if (hasHitEOF || entryOffset >= entrySize) {
+             return -1;
+         }
+-
+         if (currEntry == null) {
+             throw new IllegalStateException("No current tar entry");
+         }
+-
+         numToRead = Math.min(numToRead, available());
+-        
+         totalRead = is.read(buf, offset, numToRead);
++       if (totalRead >= 0) {
+             count(totalRead);
+-        
+-        if (totalRead == -1) {
+-            hasHitEOF = true;
+         } else {
++            hasHitEOF = true;
++        }
+             entryOffset += totalRead;
+         }
+-
+         return totalRead;
+     }

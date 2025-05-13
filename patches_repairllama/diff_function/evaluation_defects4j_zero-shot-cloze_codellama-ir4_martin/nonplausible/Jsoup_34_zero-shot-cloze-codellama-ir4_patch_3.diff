@@ -1,0 +1,30 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7c279f84-9f48-4b3e-9731-fc9dd9c931cc_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6ce62fb4-9f7f-4e7d-8f5a-8d2097bb71ad_fixed.java
+index 3ea5b43..9b9ccf4 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7c279f84-9f48-4b3e-9731-fc9dd9c931cc_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6ce62fb4-9f7f-4e7d-8f5a-8d2097bb71ad_fixed.java
+@@ -1,17 +1,21 @@
+     int nextIndexOf(CharSequence seq) {
+-        // doesn't handle scanning for surrogates
+         char startChar = seq.charAt(0);
+         for (int offset = pos; offset < length; offset++) {
+-            // scan to first instance of startchar:
+             if (startChar != input[offset])
+                 while(++offset < length && startChar != input[offset]);
+             int i = offset + 1;
+             int last = i + seq.length()-1;
+-            if (offset < length) {
++// buggy code
++//            if (offset < length) {
++//                for (int j = 1; i < last && seq.charAt(j) == input[i]; i++, j++);
++//                if (i == last) 
++//                    return offset - pos;
++//            }
++            if (i < last) {
+                 for (int j = 1; i < last && seq.charAt(j) == input[i]; i++, j++);
+-                if (i == last) // found full sequence
++                if (i == last) 
+                     return offset - pos;
+             }
+         }
+         return -1;
+     }

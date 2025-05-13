@@ -1,0 +1,79 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f1b33d8a-7508-44bd-8080-f5b78c24ff1b_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8492294a-f315-4536-8d38-17da89b459c2_fixed.java
+index 72c1636..88d089b 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f1b33d8a-7508-44bd-8080-f5b78c24ff1b_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8492294a-f315-4536-8d38-17da89b459c2_fixed.java
+@@ -1,72 +1,71 @@
+-    private static void escapeJavaStyleString(Writer out, String str, boolean escapeSingleQuote) throws IOException {
++    private static void escapeJavaStyleString(Writer out, String str, boolean escapeSingleQuote)
++            throws IOException {
+         if (out == null) {
+             throw new IllegalArgumentException("The Writer must not be null");
+         }
+         if (str == null) {
+             return;
+         }
+         int sz;
+         sz = str.length();
+         for (int i = 0; i < sz; i++) {
+             char ch = str.charAt(i);
+-
+-            // handle unicode
+             if (ch > 0xfff) {
+                 out.write("\\u" + hex(ch));
+             } else if (ch > 0xff) {
+                 out.write("\\u0" + hex(ch));
+             } else if (ch > 0x7f) {
+                 out.write("\\u00" + hex(ch));
+             } else if (ch < 32) {
+                 switch (ch) {
+                     case '\b':
+                         out.write('\\');
+                         out.write('b');
+                         break;
+                     case '\n':
+                         out.write('\\');
+                         out.write('n');
+                         break;
+                     case '\t':
+                         out.write('\\');
+                         out.write('t');
+                         break;
+                     case '\f':
+                         out.write('\\');
+                         out.write('f');
+                         break;
+                     case '\r':
+                         out.write('\\');
+                         out.write('r');
+                         break;
+                     default :
+                         if (ch > 0xf) {
+                             out.write("\\u00" + hex(ch));
+                         } else {
+                             out.write("\\u000" + hex(ch));
+                         }
+                         break;
+                 }
+             } else {
+                 switch (ch) {
+                     case '\'':
+                         if (escapeSingleQuote) {
+                           out.write('\\');
+                         }
+                         out.write('\'');
+                         break;
+                     case '"':
+                         out.write('\\');
+                         out.write('"');
+                         break;
+                     case '\\':
+                         out.write('\\');
+                         out.write('\\');
+                         break;
+                     default :
+                         out.write(ch);
+                         break;
+                 }
+             }
+         }
+     }

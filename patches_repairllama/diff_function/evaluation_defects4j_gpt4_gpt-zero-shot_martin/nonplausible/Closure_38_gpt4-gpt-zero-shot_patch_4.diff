@@ -1,0 +1,35 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/66b183bc-0427-497d-960c-b57d92859229_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c15bba4e-a068-4a4e-8335-acb19fc225df_fixed.java
+index a7d4ff8..1f36465 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/66b183bc-0427-497d-960c-b57d92859229_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c15bba4e-a068-4a4e-8335-acb19fc225df_fixed.java
+@@ -1,28 +1,26 @@
+   void addNumber(double x) {
+-    // This is not pretty printing. This is to prevent misparsing of x- -4 as
+-    // x--4 (which is a syntax error).
+     char prev = getLastChar();
+     boolean negativeZero = isNegativeZero(x);
++// fixed code
+      if (x < 0 && prev == '-') {
+       add(" ");
+     }
+-
+     if ((long) x == x && !negativeZero) {
+       long value = (long) x;
+       long mantissa = value;
+       int exp = 0;
+       if (Math.abs(x) >= 100) {
+         while (mantissa / 10 * Math.pow(10, exp + 1) == value) {
+           mantissa /= 10;
+           exp++;
+         }
+       }
+       if (exp > 2) {
+         add(Long.toString(mantissa) + "E" + Integer.toString(exp));
+       } else {
+         add(Long.toString(value));
+       }
+     } else {
+       add(String.valueOf(x));
+     }
+   }
+\ No newline at end of file

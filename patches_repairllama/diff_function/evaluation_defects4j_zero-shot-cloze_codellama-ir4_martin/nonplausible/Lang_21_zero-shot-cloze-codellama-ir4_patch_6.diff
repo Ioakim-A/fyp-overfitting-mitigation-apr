@@ -1,0 +1,21 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fc4cff3b-0a49-4b45-968f-4b37500a54e4_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5444c621-efea-4580-8612-bcf9af053b44_fixed.java
+index 6f229ee..4f3721e 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/fc4cff3b-0a49-4b45-968f-4b37500a54e4_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/5444c621-efea-4580-8612-bcf9af053b44_fixed.java
+@@ -1,13 +1,15 @@
+     public static boolean isSameLocalTime(Calendar cal1, Calendar cal2) {
+         if (cal1 == null || cal2 == null) {
+             throw new IllegalArgumentException("The date must not be null");
+         }
+         return (cal1.get(Calendar.MILLISECOND) == cal2.get(Calendar.MILLISECOND) &&
+                 cal1.get(Calendar.SECOND) == cal2.get(Calendar.SECOND) &&
+                 cal1.get(Calendar.MINUTE) == cal2.get(Calendar.MINUTE) &&
+-                cal1.get(Calendar.HOUR) == cal2.get(Calendar.HOUR) &&
++// buggy code
++//                cal1.get(Calendar.HOUR) == cal2.get(Calendar.HOUR) &&
++               cal1.getTimeZone().getRawOffset() == cal2.getTimeZone().getRawOffset() &&
+                 cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) &&
+                 cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                 cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA) &&
+                 cal1.getClass() == cal2.getClass());
+     }

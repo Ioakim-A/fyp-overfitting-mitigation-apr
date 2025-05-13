@@ -1,0 +1,50 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1344f86b-b48a-45c4-b479-8e0c04c24da1_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7e54ec59-59ad-42a0-bd7a-f4979c56b668_fixed.java
+index 25b1dac..c9b044a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1344f86b-b48a-45c4-b479-8e0c04c24da1_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7e54ec59-59ad-42a0-bd7a-f4979c56b668_fixed.java
+@@ -1,44 +1,35 @@
+   String toStringHelper(boolean forAnnotations) {
+-    if (hasReferenceName()) {
++    if (hasReferenceName() && !forAnnotations) {
+       return getReferenceName();
+     } else if (prettyPrint) {
+-      // Don't pretty print recursively.
+       prettyPrint = false;
+-
+-      // Use a tree set so that the properties are sorted.
+       Set<String> propertyNames = Sets.newTreeSet();
+       for (ObjectType current = this;
+            current != null && !current.isNativeObjectType() &&
+                propertyNames.size() <= MAX_PRETTY_PRINTED_PROPERTIES;
+            current = current.getImplicitPrototype()) {
+         propertyNames.addAll(current.getOwnPropertyNames());
+       }
+-
+       StringBuilder sb = new StringBuilder();
+       sb.append("{");
+-
+       int i = 0;
+       for (String property : propertyNames) {
+         if (i > 0) {
+           sb.append(", ");
+         }
+-
+         sb.append(property);
+         sb.append(": ");
+         sb.append(getPropertyType(property).toString());
+-
+         ++i;
+         if (i == MAX_PRETTY_PRINTED_PROPERTIES) {
+           sb.append(", ...");
+           break;
+         }
+       }
+-
+       sb.append("}");
+-
+       prettyPrint = true;
+       return sb.toString();
+     } else {
+       return "{...}";
+     }
+   }

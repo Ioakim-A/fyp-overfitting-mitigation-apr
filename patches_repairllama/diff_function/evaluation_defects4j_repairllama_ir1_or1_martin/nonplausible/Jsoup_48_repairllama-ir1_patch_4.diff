@@ -1,0 +1,33 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f1bc9429-4770-4367-bb28-0c2e9148028e_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1cafcdd8-76cc-410e-ae70-725524792b2d_fixed.java
+index bcd80aa..58db9be 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f1bc9429-4770-4367-bb28-0c2e9148028e_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/1cafcdd8-76cc-410e-ae70-725524792b2d_fixed.java
+@@ -1,25 +1,22 @@
+        void processResponseHeaders(Map<String, List<String>> resHeaders) {
+             for (Map.Entry<String, List<String>> entry : resHeaders.entrySet()) {
+                 String name = entry.getKey();
+-                if (name == null)
+-                    continue; // http/1.1 line
+-
+                 List<String> values = entry.getValue();
++                if (name == null)
++                    continue; 
+                 if (name.equalsIgnoreCase("Set-Cookie")) {
+                     for (String value : values) {
+                         if (value == null)
+                             continue;
+                         TokenQueue cd = new TokenQueue(value);
+                         String cookieName = cd.chompTo("=").trim();
+                         String cookieVal = cd.consumeTo(";").trim();
+-                        // ignores path, date, domain, validateTLSCertificates et al. req'd?
+-                        // name not blank, value not null
+                         if (cookieName.length() > 0)
+                             cookie(cookieName, cookieVal);
+                     }
+-                } else { // combine same header names with comma: http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
++                } else { 
+                     if (!values.isEmpty())
+                         header(name, values.get(0));
+                 }
+             }
+         }

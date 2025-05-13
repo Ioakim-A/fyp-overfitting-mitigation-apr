@@ -1,0 +1,20 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8c0f964a-de03-4e99-a418-b2b0732ef3c6_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9107c944-7b85-45a8-a331-c9f6d5d2dfa3_fixed.java
+index 7559ebf..3799186 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8c0f964a-de03-4e99-a418-b2b0732ef3c6_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9107c944-7b85-45a8-a331-c9f6d5d2dfa3_fixed.java
+@@ -1,4 +1,12 @@
++    import org.apache.commons.math3.linear.*;
++    
+     private RealMatrix squareRoot(RealMatrix m) {
+-            final EigenDecomposition dec = new EigenDecomposition(m);
+-            return dec.getSquareRoot();
++        EigenDecomposition dec = new EigenDecomposition(m);
++        RealMatrix D = dec.getD();
++        RealMatrix V = dec.getV();
++        RealMatrix Dsqrt = MatrixUtils.createRealDiagonalMatrix(
++            Arrays.stream(D.getData())
++                .map(x -> Math.sqrt(x[0]))
++                .toArray());
++        return V.multiply(Dsqrt).multiply(MatrixUtils.inverse(V));
+     }
+\ No newline at end of file

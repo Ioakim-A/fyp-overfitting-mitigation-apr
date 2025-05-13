@@ -1,0 +1,27 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/05b112b4-f614-453d-8956-903eb1b64bf6_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/201b0bc7-c041-4f01-a65e-ea800d5bdabb_fixed.java
+index 6dd46bd..ad8fcf5 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/05b112b4-f614-453d-8956-903eb1b64bf6_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/201b0bc7-c041-4f01-a65e-ea800d5bdabb_fixed.java
+@@ -1,19 +1,15 @@
+     public static int formatLongOctalOrBinaryBytes(
+         final long value, final byte[] buf, final int offset, final int length) {
+-
+-        // Check whether we are dealing with UID/GID or SIZE field
+         final long maxAsOctalChar = length == TarConstants.UIDLEN ? TarConstants.MAXID : TarConstants.MAXSIZE;
+-
+         final boolean negative = value < 0;
+-        if (!negative && value <= maxAsOctalChar) { // OK to store as octal chars
++        if (!negative && value <= maxAsOctalChar) { 
+             return formatLongOctalBytes(value, buf, offset, length);
+         }
+-
+         if (length < 9) {
+             formatLongBinary(value, buf, offset, length, negative);
++           return offset + length;
+         }
+-        formatBigIntegerBinary(value, buf, offset, length, negative);
+-
++        return formatBigIntegerBinary(value, buf, offset, length, negative);
+         buf[offset] = (byte) (negative ? 0xff : 0x80);
+         return offset + length;
+     }

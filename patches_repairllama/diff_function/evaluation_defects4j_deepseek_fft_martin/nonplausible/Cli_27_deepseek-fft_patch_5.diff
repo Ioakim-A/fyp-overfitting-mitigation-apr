@@ -1,0 +1,40 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6f245d7c-0915-4983-a038-fbf4db51dbfc_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d5dc6e1e-8106-4f4b-a497-7bf4d3679d68_fixed.java
+index b23cbb1..4e0c62b 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6f245d7c-0915-4983-a038-fbf4db51dbfc_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/d5dc6e1e-8106-4f4b-a497-7bf4d3679d68_fixed.java
+@@ -1,28 +1,32 @@
+     /**
+      * Set the selected option of this group to <code>name</code>.
+      *
+      * @param option the option that is selected
+      * @throws AlreadySelectedException if an option from this group has 
+      * already been selected.
+      */
+     public void setSelected(Option option) throws AlreadySelectedException
+     {
+         if (option == null)
+         {
+             // reset the option previously selected
+             selected = null;
+             return;
+         }
+-        
+         // if no option has already been selected or the 
+         // same option is being reselected then set the
+         // selected member variable
+-        if (selected == null || selected.equals(option.getOpt()))
++// buggy code
++//        if (selected == null || selected.equals(option.getOpt()))
++//        {
++//            selected = option.getOpt();
++        if (selected == null || selected == option)
+         {
+-            selected = option.getOpt();
++            selected = option;
++
+         }
+         else
+         {
+             throw new AlreadySelectedException(this, option);
+         }
+     }

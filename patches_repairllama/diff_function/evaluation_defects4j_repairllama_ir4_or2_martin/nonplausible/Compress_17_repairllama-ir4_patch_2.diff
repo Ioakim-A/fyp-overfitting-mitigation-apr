@@ -1,0 +1,60 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/39751f91-8b0f-43c0-9fe1-b156449bb164_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/72915089-f749-4553-b498-e622f3abf81e_fixed.java
+index d2fcb52..0d63cd1 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/39751f91-8b0f-43c0-9fe1-b156449bb164_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/72915089-f749-4553-b498-e622f3abf81e_fixed.java
+@@ -1,50 +1,42 @@
+     public static long parseOctal(final byte[] buffer, final int offset, final int length) {
+         long    result = 0;
+         int     end = offset + length;
+         int     start = offset;
+-
+         if (length < 2){
+             throw new IllegalArgumentException("Length "+length+" must be at least 2");
+         }
+-
+         if (buffer[start] == 0) {
+             return 0L;
+         }
+-
+-        // Skip leading spaces
+         while (start < end){
+             if (buffer[start] == ' '){
+                 start++;
+             } else {
+                 break;
+             }
+         }
+-
+-        // Must have trailing NUL or space
+         byte trailer;
+         trailer = buffer[end-1];
+         if (trailer == 0 || trailer == ' '){
+             end--;
+         } else {
+             throw new IllegalArgumentException(
+                     exceptionMessage(buffer, offset, length, end-1, trailer));
+         }
+-        // May have additional NULs or spaces
+         trailer = buffer[end - 1];
+-        if (trailer == 0 || trailer == ' '){
++// buggy code
++//         if (trailer == 0 || trailer == ' '){
++//             end--;
++       if (trailer == ' '){
+             end--;
+         }
+-
+         for ( ;start < end; start++) {
+             final byte currentByte = buffer[start];
+-            // CheckStyle:MagicNumber OFF
+             if (currentByte < '0' || currentByte > '7'){
+                 throw new IllegalArgumentException(
+                         exceptionMessage(buffer, offset, length, start, currentByte));
+             }
+-            result = (result << 3) + (currentByte - '0'); // convert from ASCII
+-            // CheckStyle:MagicNumber ON
++            result = (result << 3) + (currentByte - '0'); 
+         }
+-
+         return result;
+     }

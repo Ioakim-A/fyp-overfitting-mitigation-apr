@@ -1,0 +1,46 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6ee2b942-e9f2-4fde-b864-813b21d703b5_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/350aaa25-363a-4e91-b628-39763f43e4f0_fixed.java
+index b529d33..481d879 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6ee2b942-e9f2-4fde-b864-813b21d703b5_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/350aaa25-363a-4e91-b628-39763f43e4f0_fixed.java
+@@ -1,29 +1,36 @@
+     /**
+      * Used internally by the Soundex algorithm.
+      *
+      * Consonants from the same code group separated by W or H are treated as one.
+      *
+      * @param str
+      *                  the cleaned working string to encode (in upper case).
+      * @param index
+      *                  the character position to encode
+      * @return Mapping code for a particular character
+      * @throws IllegalArgumentException
+      *                  if the character is not mapped
+      */
+     private char getMappingCode(final String str, final int index) {
+         // map() throws IllegalArgumentException
+         final char mappedChar = this.map(str.charAt(index));
+         // HW rule check
+         if (index > 1 && mappedChar != '0') {
+-            final char hwChar = str.charAt(index - 1);
+-            if ('H' == hwChar || 'W' == hwChar) {
+-                final char preHWChar = str.charAt(index - 2);
+-                final char firstCode = this.map(preHWChar);
+-                if (firstCode == mappedChar || 'H' == preHWChar || 'W' == preHWChar) {
++// buggy code
++//            final char hwChar = str.charAt(index - 1);
++//            if ('H' == hwChar || 'W' == hwChar) {
++//                final char preHWChar = str.charAt(index - 2);
++//                final char firstCode = this.map(preHWChar);
++//                if (firstCode == mappedChar || 'H' == preHWChar || 'W' == preHWChar) {
++//                    return 0;
++//                }
++            if ('H' == str.charAt(index - 1) || 'W' == str.charAt(index - 1)) {
++                final char firstCode = this.map(str.charAt(index - 2));
++                if (firstCode == mappedChar || 'H' == str.charAt(index - 2) || 'W' == str.charAt(index - 2)) {
+                     return 0;
++
+                 }
+             }
+         }
+         return mappedChar;
+     }

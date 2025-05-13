@@ -1,0 +1,71 @@
+diff --git gson/src/main/java/com/google/gson/internal/$Gson$Types.java gson/src/main/java/com/google/gson/internal/$Gson$Types.java
+index 17ed0ff..b2c15c0 100644
+--- gson/src/main/java/com/google/gson/internal/$Gson$Types.java
++++ gson/src/main/java/com/google/gson/internal/$Gson$Types.java
+@@ -335,16 +335,21 @@ public final class $Gson$Types {
+ 
+ private static Type resolve(Type context, Class<?> contextRawType, Type toResolve,
+                             Collection<TypeVariable> visitedTypeVariables) {
+-    // this implementation is made a little more complicated in an attempt to avoid object-creation
+   while (true) {
+     if (toResolve instanceof TypeVariable) {
+       TypeVariable<?> typeVariable = (TypeVariable<?>) toResolve;
+-          // cannot reduce due to infinite recursion
++      
++      // check if this typeVariable is already visited
++      if (visitedTypeVariables.contains(typeVariable)) {
++        return typeVariable;
++      } else {
++        visitedTypeVariables.add(typeVariable);
++      }
++      
+       toResolve = resolveTypeVariable(context, contextRawType, typeVariable);
+       if (toResolve == typeVariable) {
+         return toResolve;
+       }
+-
+     } else if (toResolve instanceof Class && ((Class<?>) toResolve).isArray()) {
+       Class<?> original = (Class<?>) toResolve;
+       Type componentType = original.getComponentType();
+@@ -352,7 +357,6 @@ public final class $Gson$Types {
+       return componentType == newComponentType
+           ? original
+           : arrayOf(newComponentType);
+-
+     } else if (toResolve instanceof GenericArrayType) {
+       GenericArrayType original = (GenericArrayType) toResolve;
+       Type componentType = original.getGenericComponentType();
+@@ -360,7 +364,6 @@ public final class $Gson$Types {
+       return componentType == newComponentType
+           ? original
+           : arrayOf(newComponentType);
+-
+     } else if (toResolve instanceof ParameterizedType) {
+       ParameterizedType original = (ParameterizedType) toResolve;
+       Type ownerType = original.getOwnerType();
+@@ -378,11 +381,9 @@ public final class $Gson$Types {
+           args[t] = resolvedTypeArgument;
+         }
+       }
+-
+       return changed
+           ? newParameterizedTypeWithOwner(newOwnerType, original.getRawType(), args)
+           : original;
+-
+     } else if (toResolve instanceof WildcardType) {
+       WildcardType original = (WildcardType) toResolve;
+       Type[] originalLowerBound = original.getLowerBounds();
+@@ -400,13 +401,11 @@ public final class $Gson$Types {
+         }
+       }
+       return original;
+-
+     } else {
+       return toResolve;
+     }
+   }
+ }
+-
+   static Type resolveTypeVariable(Type context, Class<?> contextRawType, TypeVariable<?> unknown) {
+     Class<?> declaredByRaw = declaringClassOf(unknown);
+ 

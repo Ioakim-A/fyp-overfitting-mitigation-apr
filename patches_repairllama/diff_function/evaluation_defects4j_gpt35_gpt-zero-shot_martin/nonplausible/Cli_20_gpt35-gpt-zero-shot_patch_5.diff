@@ -1,0 +1,70 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6324a35e-b6ce-4194-a76e-0115030a5259_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f60ab629-a545-42af-936b-aee2dfbfa3cf_fixed.java
+index 7e6373a..1bab1e5 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6324a35e-b6ce-4194-a76e-0115030a5259_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f60ab629-a545-42af-936b-aee2dfbfa3cf_fixed.java
+@@ -1,63 +1,51 @@
+ protected String[] flatten(Options options, String[] arguments, boolean stopAtNonOption)
+ {
+     init();
+     this.options = options;
+-
+-        // an iterator for the command line tokens
+     Iterator iter = Arrays.asList(arguments).iterator();
+-
+-        // process each command line token
+     while (iter.hasNext())
+     {
+-            // get the next command line token
+         String token = (String) iter.next();
+-
+-            // handle long option --foo or --foo=bar
+         if (token.startsWith("--"))
+         {
+             if (token.indexOf('=') != -1)
+             {
+                 tokens.add(token.substring(0, token.indexOf('=')));
+                 tokens.add(token.substring(token.indexOf('=') + 1, token.length()));
+             }
+             else
+             {
+                 tokens.add(token);
+             }
+         }
+-
+-            // single hyphen
+         else if ("-".equals(token))
+         {
+             tokens.add(token);
+         }
+         else if (token.startsWith("-"))
+         {
+             if (token.length() == 2)
+             {
+                 processOptionToken(token, stopAtNonOption);
+             }
+             else if (options.hasOption(token))
+             {
+                 tokens.add(token);
+             }
+-                // requires bursting
+             else
+             {
+                 burstToken(token, stopAtNonOption);
+             }
+         }
+         else if (stopAtNonOption)
+         {
+             process(token);
+         }
+         else
+         {
+             tokens.add(token);
+         }
+-
+         gobble(iter);
+     }
+-
+-        return (String[]) tokens.toArray(new String[tokens.size()]);
++    return tokens.toArray(new String[tokens.size()]);
+ }
+\ No newline at end of file

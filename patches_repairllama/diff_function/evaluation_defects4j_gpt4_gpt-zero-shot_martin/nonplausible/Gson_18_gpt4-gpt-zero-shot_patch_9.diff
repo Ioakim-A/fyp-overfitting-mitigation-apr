@@ -1,0 +1,17 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9a7e61b0-4a85-46e7-aa88-6e460888590b_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ee555f4e-ffa9-406d-bf5a-902ed5ab020d_fixed.java
+index 0a68230..b952307 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9a7e61b0-4a85-46e7-aa88-6e460888590b_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/ee555f4e-ffa9-406d-bf5a-902ed5ab020d_fixed.java
+@@ -1,6 +1,10 @@
+ static Type getSupertype(Type context, Class<?> contextRawType, Class<?> supertype) {
+-      // wildcards are useless for resolving supertypes. As the upper bound has the same raw type, use it instead
++  // fixed code
++  // Check if any of the input parameters is null
++  if(context == null || contextRawType == null || supertype == null) {
++    throw new IllegalArgumentException("None of the parameters can be null");
++  }
+   checkArgument(supertype.isAssignableFrom(contextRawType));
+   return resolve(context, contextRawType,
+       $Gson$Types.getGenericSupertype(context, contextRawType, supertype));
+ }
+\ No newline at end of file

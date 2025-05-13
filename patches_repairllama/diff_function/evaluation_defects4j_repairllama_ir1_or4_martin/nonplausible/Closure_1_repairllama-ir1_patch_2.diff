@@ -1,0 +1,66 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2b45c6f7-94cb-4160-be15-3e38c10e6359_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b7a75708-5a9c-499a-b382-bfd03bb87e9a_fixed.java
+index cdfd827..7d33ea6 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/2b45c6f7-94cb-4160-be15-3e38c10e6359_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/b7a75708-5a9c-499a-b382-bfd03bb87e9a_fixed.java
+@@ -1,38 +1,47 @@
+   private void removeUnreferencedFunctionArgs(Scope fnScope) {
+-    // Notice that removing unreferenced function args breaks
+-    // Function.prototype.length. In advanced mode, we don't really care
+-    // about this: we consider "length" the equivalent of reflecting on
+-    // the function's lexical source.
+-    //
+-    // Rather than create a new option for this, we assume that if the user
+-    // is removing globals, then it's OK to remove unused function args.
+-    //
+-    // See http://code.google.com/p/closure-compiler/issues/detail?id=253
+-
+     Node function = fnScope.getRootNode();
+-
+     Preconditions.checkState(function.isFunction());
+     if (NodeUtil.isGetOrSetKey(function.getParent())) {
+-      // The parameters object literal setters can not be removed.
+       return;
+     }
+-
+     Node argList = getFunctionArgList(function);
+     boolean modifyCallers = modifyCallSites
+         && callSiteOptimizer.canModifyCallers(function);
+     if (!modifyCallers) {
+-      // Strip unreferenced args off the end of the function declaration.
++      Node lastArg;
++      while ((lastArg = argList.getLastChild()) != null) {
++        Var var = fnScope.getVar(lastArg.getString());
++        if (!referenced.contains(var)) {
++          argList.removeChild(lastArg);
++          compiler.reportCodeChange();
++        } else {
++          break;
++        }
++      }
++    } else {
++      callSiteOptimizer.optimize(fnScope, referenced);
++    }
++  private void removeUnreferencedFunctionArgs(Scope fnScope) {
++    Node function = fnScope.getRootNode();
++    Preconditions.checkState(function.isFunction());
++    if (NodeUtil.isGetOrSetKey(function.getParent())) {
++      return;
++    }
++    Node argList = getFunctionArgList(function);
++    boolean modifyCallers = modifyCallSites
++        && callSiteOptimizer.canModifyCallers(function);
++    if (!modifyCallers) {
+       Node lastArg;
+       while ((lastArg = argList.getLastChild()) != null) {
+         Var var = fnScope.getVar(lastArg.getString());
+         if (!referenced.contains(var)) {
+           argList.removeChild(lastArg);
+           compiler.reportCodeChange();
+         } else {
+           break;
+         }
+       }
+     } else {
+       callSiteOptimizer.optimize(fnScope, referenced);
+     }
+   }

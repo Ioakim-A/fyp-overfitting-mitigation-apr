@@ -1,0 +1,56 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7623907a-c8ee-43d4-9a32-55b622f419e3_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f283aedb-8e23-4832-9ce0-9c9bffc29712_fixed.java
+index 6a2c422..077950a 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/7623907a-c8ee-43d4-9a32-55b622f419e3_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/f283aedb-8e23-4832-9ce0-9c9bffc29712_fixed.java
+@@ -1,37 +1,37 @@
+     protected StringBuffer renderWrappedText(StringBuffer sb, int width, 
+                                              int nextLineTabStop, String text)
+     {
+         int pos = findWrapPos(text, width, 0);
+-
+         if (pos == -1)
+         {
+             sb.append(rtrim(text));
+-
+             return sb;
+         }
+         sb.append(rtrim(text.substring(0, pos))).append(defaultNewLine);
+-
+-        // all following lines must be padded with nextLineTabStop space 
+-        // characters
+         final String padding = createPadding(nextLineTabStop);
+-
+         while (true)
+         {
+-            int lastPos = pos;
++// buggy code
++//            int lastPos = pos;
++//            text = padding + text.substring(pos).trim();
++//            pos = findWrapPos(text, width, 0);
++//            if (pos == -1)
++//            {
++//                sb.append(text);
++//                return sb;
++//            } else
++//            if (pos == lastPos)
++//            {
++//                throw new RuntimeException("Text too long for line - throwing exception to avoid infinite loop [CLI-162]: " + text);
++//            }
++//            sb.append(rtrim(text.substring(0, pos))).append(defaultNewLine);
+             text = padding + text.substring(pos).trim();
+             pos = findWrapPos(text, width, 0);
+-
+             if (pos == -1)
+             {
+                 sb.append(text);
+-
+                 return sb;
+-            } else
+-            if (pos == lastPos)
+-            {
+-                throw new RuntimeException("Text too long for line - throwing exception to avoid infinite loop [CLI-162]: " + text);
+             }
+-
+             sb.append(rtrim(text.substring(0, pos))).append(defaultNewLine);
+         }
+     }

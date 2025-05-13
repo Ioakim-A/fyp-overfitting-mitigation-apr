@@ -1,0 +1,41 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c78382c7-1649-4bd8-baa5-4f6d9bb4fffc_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bba69f54-c839-45d0-9ef4-7c3098100000_fixed.java
+index 2d9cf24..d022637 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/c78382c7-1649-4bd8-baa5-4f6d9bb4fffc_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/bba69f54-c839-45d0-9ef4-7c3098100000_fixed.java
+@@ -1,33 +1,24 @@
+     public void validateSubType(DeserializationContext ctxt, JavaType type) throws JsonMappingException
+     {
+-        // There are certain nasty classes that could cause problems, mostly
+-        // via default typing -- catch them here.
+         final Class<?> raw = type.getRawClass();
+         String full = raw.getName();
+-
+         main_check:
+         do {
+             if (_cfgIllegalClassNames.contains(full)) {
+                 break;
+             }
+-
+-            // 18-Dec-2017, tatu: As per [databind#1855], need bit more sophisticated handling
+-            //    for some Spring framework types
+-            // 05-Jan-2017, tatu: ... also, only applies to classes, not interfaces
+-            if (full.startsWith(PREFIX_STRING)) {
+-                for (Class<?> cls = raw; cls != Object.class; cls = cls.getSuperclass()) {
++           Class<?>[] intfs = raw.getInterfaces();
++            if (intfs.length > 0) {
++                for (Class<?> cls : intfs) {
+                     String name = cls.getSimpleName();
+-                    // looking for "AbstractBeanFactoryPointcutAdvisor" but no point to allow any is there?
+                     if ("AbstractPointcutAdvisor".equals(name)
+-                            // ditto  for "FileSystemXmlApplicationContext": block all ApplicationContexts
+                             || "AbstractApplicationContext".equals(name)) {
+                         break main_check;
+                     }
+                 }
+             }
+             return;
+         } while (false);
+-
+         throw JsonMappingException.from(ctxt,
+                 String.format("Illegal type (%s) to deserialize: prevented for security reasons", full));
+     }

@@ -1,0 +1,34 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/616a7c2a-2519-4d71-85f5-47f3170aa099_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/db9c7e55-75f7-4664-9563-b56af34a4b1d_fixed.java
+index 810d6e1..0a73060 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/616a7c2a-2519-4d71-85f5-47f3170aa099_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/db9c7e55-75f7-4664-9563-b56af34a4b1d_fixed.java
+@@ -1,18 +1,18 @@
+     public long adjustOffset(long instant, boolean earlierOrLater) {
+-        // a bit messy, but will work in all non-pathological cases
+-        
+-        // evaluate 3 hours before and after to work out if anything is happening
+-        long instantBefore = convertUTCToLocal(instant - 3 * DateTimeConstants.MILLIS_PER_HOUR);
+-        long instantAfter = convertUTCToLocal(instant + 3 * DateTimeConstants.MILLIS_PER_HOUR);
++// buggy code
++//        long instantBefore = convertUTCToLocal(instant - 3 * DateTimeConstants.MILLIS_PER_HOUR);
++//        long instantAfter = convertUTCToLocal(instant + 3 * DateTimeConstants.MILLIS_PER_HOUR);
++//        if (instantBefore == instantAfter) {
++//            return instant;  
++//        }
++//        long local = convertUTCToLocal(instant);
++//        return convertLocalToUTC(local, false, earlierOrLater ? instantAfter : instantBefore);
++       long instantBefore = convertUTCToLocal(instant - DateTimeConstants.MILLIS_PER_HOUR);
++        long instantAfter = convertUTCToLocal(instant + DateTimeConstants.MILLIS_PER_HOUR);
+         if (instantBefore == instantAfter) {
+-            return instant;  // not an overlap (less than is a gap, equal is normal case)
++            return instant;  
+         }
+-        
+-        // work out range of instants that have duplicate local times
+         long local = convertUTCToLocal(instant);
+         return convertLocalToUTC(local, false, earlierOrLater ? instantAfter : instantBefore);
+ 
+-        // calculate result
+-          // currently in later offset
+-          // currently in earlier offset
+     }

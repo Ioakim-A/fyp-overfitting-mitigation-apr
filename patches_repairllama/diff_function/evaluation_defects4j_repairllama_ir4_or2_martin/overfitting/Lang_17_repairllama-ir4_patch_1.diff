@@ -1,0 +1,56 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8b5d96b1-8497-4540-9f0c-6dc16f7722d3_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3e2e8921-32cb-41b4-8604-a01bcafb1d93_fixed.java
+index 8cbef3b..d0c56ed 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/8b5d96b1-8497-4540-9f0c-6dc16f7722d3_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/3e2e8921-32cb-41b4-8604-a01bcafb1d93_fixed.java
+@@ -1,30 +1,47 @@
+     public final void translate(CharSequence input, Writer out) throws IOException {
+         if (out == null) {
+             throw new IllegalArgumentException("The Writer must not be null");
+         }
+         if (input == null) {
+             return;
+         }
+         int pos = 0;
+-        int len = Character.codePointCount(input, 0, input.length());
++// buggy code
++//         int len = Character.codePointCount(input, 0, input.length());
++//         while (pos < len) {
++//             int consumed = translate(input, pos, out);
++//             if (consumed == 0) {
++//                 char[] c = Character.toChars(Character.codePointAt(input, pos));
++//                 out.write(c);
++//             }
++//             else {
++//             for (int pt = 0; pt < consumed; pt++) {
++//                     if (pos < len - 2) {
++//                 pos += Character.charCount(Character.codePointAt(input, pos));
++//                     } else {
++//                         pos++;
++//                     }
++//                 }
++//                 pos--;
++//             }
++//             pos++;
++       int len = input.length();
+         while (pos < len) {
+             int consumed = translate(input, pos, out);
+             if (consumed == 0) {
+                 char[] c = Character.toChars(Character.codePointAt(input, pos));
+                 out.write(c);
+             }
+             else {
+-//          // contract with translators is that they have to understand codepoints 
+-//          // and they just took care of a surrogate pair
+             for (int pt = 0; pt < consumed; pt++) {
+                     if (pos < len - 2) {
+                 pos += Character.charCount(Character.codePointAt(input, pos));
+                     } else {
+                         pos++;
+                     }
+                 }
+                 pos--;
+             }
+-            pos++;
++            pos += Character.charCount(Character.codePointAt(input, pos));
+         }
+     }

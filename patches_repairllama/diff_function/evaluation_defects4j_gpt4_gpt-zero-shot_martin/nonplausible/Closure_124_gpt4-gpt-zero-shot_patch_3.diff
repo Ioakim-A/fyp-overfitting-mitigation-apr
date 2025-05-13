@@ -1,0 +1,23 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9e232cb1-7885-4768-956a-86010349ed4b_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/43e2076a-2a62-4b6c-84ec-fc6cdc60e371_fixed.java
+index 272596f..252b453 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9e232cb1-7885-4768-956a-86010349ed4b_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/43e2076a-2a62-4b6c-84ec-fc6cdc60e371_fixed.java
+@@ -1,15 +1,14 @@
+   private boolean isSafeReplacement(Node node, Node replacement) {
+-    // No checks are needed for simple names.
+     if (node.isName()) {
+       return true;
+     }
+     Preconditions.checkArgument(node.isGetProp());
+-
++    if (node.getFirstChild() != null) {
+         node = node.getFirstChild();
++    }
+     if (node.isName()
+         && isNameAssignedTo(node.getString(), replacement)) {
+       return false;
+     }
+-
+     return true;
+   }
+\ No newline at end of file

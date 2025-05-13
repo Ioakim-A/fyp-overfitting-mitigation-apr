@@ -1,0 +1,46 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9a703b86-67b2-4c9e-bca9-0103e8ba5e62_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6ffcd24a-f718-4a59-9e2f-69cdc07d9ea4_fixed.java
+index d475968..6853e28 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/9a703b86-67b2-4c9e-bca9-0103e8ba5e62_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/6ffcd24a-f718-4a59-9e2f-69cdc07d9ea4_fixed.java
+@@ -1,36 +1,34 @@
+     public List<Connection.KeyVal> formData() {
+         ArrayList<Connection.KeyVal> data = new ArrayList<>();
+-
+-        // iterate the form control elements and accumulate their values
+         for (Element el: elements) {
+-            if (!el.tag().isFormSubmittable()) continue; // contents are form listable, superset of submitable
+-            if (el.hasAttr("disabled")) continue; // skip disabled form inputs
++            if (!el.tag().isFormSubmittable()) continue; 
++            if (el.hasAttr("disabled")) continue; 
+             String name = el.attr("name");
+             if (name.length() == 0) continue;
+             String type = el.attr("type");
+-
+-
++           if (type == null) {
++                type = "text";
++            }
+             if ("select".equals(el.normalName())) {
+                 Elements options = el.select("option[selected]");
+                 boolean set = false;
+                 for (Element option: options) {
+                     data.add(HttpConnection.KeyVal.create(name, option.val()));
+                     set = true;
+                 }
+                 if (!set) {
+                     Element option = el.select("option").first();
+                     if (option != null)
+                         data.add(HttpConnection.KeyVal.create(name, option.val()));
+                 }
+             } else if ("checkbox".equalsIgnoreCase(type) || "radio".equalsIgnoreCase(type)) {
+-                // only add checkbox or radio if they have the checked attribute
+                 if (el.hasAttr("checked")) {
+                     final String val = el.val().length() >  0 ? el.val() : "on";
+                     data.add(HttpConnection.KeyVal.create(name, val));
+                 }
+             } else {
+                 data.add(HttpConnection.KeyVal.create(name, el.val()));
+             }
+         }
+         return data;
+     }

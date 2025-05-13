@@ -1,0 +1,46 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/14194e79-6d23-4bea-9c20-559afcfa72a0_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0bdeeb70-6a78-48ba-b082-187dea58890e_fixed.java
+index 8d4d7a7..46426b6 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/14194e79-6d23-4bea-9c20-559afcfa72a0_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/0bdeeb70-6a78-48ba-b082-187dea58890e_fixed.java
+@@ -1,28 +1,40 @@
+     public int indexOf(String str, int startIndex) {
+         startIndex = (startIndex < 0 ? 0 : startIndex);
+         if (str == null || startIndex >= size) {
+             return -1;
+         }
+         int strLen = str.length();
+         if (strLen == 1) {
+             return indexOf(str.charAt(0), startIndex);
+         }
+         if (strLen == 0) {
+             return startIndex;
+         }
+         if (strLen > size) {
+             return -1;
+         }
+         char[] thisBuf = buffer;
+-        int len = thisBuf.length - strLen;
++// buggy code
++//        int len = thisBuf.length - strLen;
++//        for (int i = startIndex; i < len; i++) {
++//            if (thisBuf[i] != str.charAt(0)) {
++//                continue;
++//            }
++//            for (int j = 1; j < strLen; j++) {
++//                if (thisBuf[i + j] != str.charAt(j)) {
++//                    continue outer;
++//                }
++//            }
++//            return i;
++//        }
+         outer:
+         for (int i = startIndex; i < len; i++) {
+             for (int j = 0; j < strLen; j++) {
+                 if (str.charAt(j) != thisBuf[i + j]) {
+                     continue outer;
+                 }
+             }
+             return i;
+         }
+         return -1;
+     }

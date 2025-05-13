@@ -1,0 +1,33 @@
+diff --git a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e4c03565-0eb1-4502-885a-22a8730fe9ce_buggy.java b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e6a81dda-d3e2-4590-96ef-3fd3c767d8ec_fixed.java
+index 9e16ea1..f77adaf 100644
+--- a/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e4c03565-0eb1-4502-885a-22a8730fe9ce_buggy.java
++++ b/var/folders/0t/lbz9bxg17r10xznln_x5mpj00000gn/T/e6a81dda-d3e2-4590-96ef-3fd3c767d8ec_fixed.java
+@@ -1,27 +1,20 @@
+         public boolean useForType(JavaType t)
+         {
+             switch (_appliesFor) {
+-            case NON_CONCRETE_AND_ARRAYS:
++            case OBJECT_AND_NON_CONCRETE:
+                 while (t.isArrayType()) {
+                     t = t.getContentType();
+                 }
+-                // fall through
+             case OBJECT_AND_NON_CONCRETE:
+-//                return t.isJavaLangObject() || 
+                 return (t.getRawClass() == Object.class)
+                         || (!t.isConcrete()
+-                                // [databind#88] Should not apply to JSON tree models:
+                         || TreeNode.class.isAssignableFrom(t.getRawClass()));
+-
+             case NON_FINAL:
+                 while (t.isArrayType()) {
+                     t = t.getContentType();
+                 }
+-                // [Issue#88] Should not apply to JSON tree models:
+                 return !t.isFinal() && !TreeNode.class.isAssignableFrom(t.getRawClass());
+             default:
+-            //case JAVA_LANG_OBJECT:
+-//                return t.isJavaLangObject();
+                 return (t.getRawClass() == Object.class);
+             }
+         }
