@@ -1,6 +1,7 @@
 import os
 import shutil
 
+context_size = "max"  # context size of the patch, options "3" or "max"
 
 # filter by which patches can be handled by current project
 project_versions = {
@@ -16,12 +17,12 @@ project_versions = {
 current_directory = os.getcwd()
 print(f"Current directory: {current_directory}")
 repairllama_patches_dir = os.path.join(current_directory, "patches_repairllama", "diff_file",
-                                       "context_size_max", "evaluation_defects4j_repairllama_ir4_or2_martin",)
+                                       f"context_size_{context_size}", "evaluation_defects4j_repairllama_ir4_or2_martin",)
 print(f"RepairLlama patches directory: {repairllama_patches_dir}")
 
 # get directory of filtered patches
 output_base_dir = os.path.join(
-    current_directory, "patches_repairllama", "filtered_patches",)
+    current_directory, "patches_repairllama", "filtered", f"context_size_{context_size}_filtered",)
 
 # Remove the output_base_dir if it exists
 if os.path.exists(output_base_dir):
