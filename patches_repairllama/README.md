@@ -33,5 +33,5 @@ I suggest to start with diffs from trial `evaluation_defects4j_repairllama_ir4_o
 
 ## Patch Filtering
 
-To remain in line with the previously conducted experiments, the patches from `evaluation_defects4j_repairllama_ir4_or2_martin` with max context are filtered to suit the bugs covered in prior experiments (using `filtering.py`).
-This subset of patches is found in `filtered_patches/`.
+To remain in line with the previously conducted experiments, the patches from `evaluation_defects4j_repairllama_ir4_or2_martin` with max context and context size 3 are filtered to suit the bugs covered in prior experiments (using `filtering.py`).
+This subset of patches is found in `filtered/`.
