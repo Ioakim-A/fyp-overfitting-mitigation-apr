@@ -1,17 +1,11 @@
 import os
 import shutil
 
-context_size = "max"  # context size of the patch, options "3" or "max"
+context_size = "3"  # context size of the patch, options "3" or "max"
 
-# filter by which patches can be handled by current project
-project_versions = {
-    "Chart": ["12", "25", "5", "17", "8", "20", "24", "4", "15", "7", "11", "13", "18", "1", "9", "26",],
-    "Lang": ["6", "44", "57", "59", "33", "46", "58", "43", "51", "10", "63", "55", "45",],
-    "Closure": ["129", "22", "14", "57", "46", "86", "21", "115", "73", "2", "126", "13", "19", "62", "10", "48",],
-    "Math": ["84", "70", "95", "6", "5", "8", "41", "88", "20", "69", "57", "50", "65", "32", "28", "15", "59", "33", "82", "42", "7", "58", "11", "73", "105", "2", "81", "49", "89", "71", "62", "79", "101", "85", "64", "96", "63", "30", "53", "80", "75", "97", "34",],  # "33_backup removed"
-    "Mockito": ["29", "38",],
-    "Time": ["7", "11"],
-}
+# list of valid patches that can be handled by current project
+valid_patches = ['Chart_1', 'Chart_11', 'Chart_12', 'Chart_13', 'Chart_15', 'Chart_17', 'Chart_18', 'Chart_20', 'Chart_24', 'Chart_25', 'Chart_26', 'Chart_4', 'Chart_5', 'Chart_7', 'Chart_8', 'Chart_9', 'Closure_10', 'Closure_115', 'Closure_126', 'Closure_129', 'Closure_13', 'Closure_14', 'Closure_19', 'Closure_2', 'Closure_21', 'Closure_22', 'Closure_46', 'Closure_48', 'Closure_57', 'Closure_62', 'Closure_73', 'Closure_86', 'Lang_10', 'Lang_33', 'Lang_43', 'Lang_44', 'Lang_45', 'Lang_46', 'Lang_51', 'Lang_55', 'Lang_57', 'Lang_58', 'Lang_59',
+                 'Lang_6', 'Lang_63', 'Math_101', 'Math_105', 'Math_11', 'Math_15', 'Math_2', 'Math_20', 'Math_28', 'Math_30', 'Math_32', 'Math_33', 'Math_34', 'Math_41', 'Math_42', 'Math_49', 'Math_5', 'Math_50', 'Math_53', 'Math_57', 'Math_58', 'Math_59', 'Math_6', 'Math_62', 'Math_63', 'Math_64', 'Math_65', 'Math_69', 'Math_7', 'Math_70', 'Math_71', 'Math_73', 'Math_75', 'Math_79', 'Math_8', 'Math_80', 'Math_81', 'Math_82', 'Math_84', 'Math_85', 'Math_88', 'Math_89', 'Math_95', 'Math_96', 'Math_97', 'Mockito_29', 'Mockito_38', 'Time_11', 'Time_7']
 
 # get directory of repairllama patches
 current_directory = os.getcwd()
@@ -44,15 +38,13 @@ for patch_type in ["correct", "overfitting"]:
     print(f"Files in {patch_type} directory: {files}")
     print(f"Number of files in {patch_type} directory: {len(files)}\n\n\n")
 
-    # filter files by project and version
+    # filter files by valid_patches list
     for file in files:
-        for project, versions in project_versions.items():
-            if any(f"{project}_{version}" in file for version in versions):
-                if patch_type == "correct":
-                    valid_correct_patches.append(file)
-                else:
-                    valid_overfitting_patches.append(file)
-                break
+        if any(valid_patch in file for valid_patch in valid_patches):
+            if patch_type == "correct":
+                valid_correct_patches.append(file)
+            else:
+                valid_overfitting_patches.append(file)
 
 print("Valid Correct Patches:")
 print(valid_correct_patches)
@@ -71,10 +63,3 @@ for patch_type, valid_patches in zip(["correct", "overfitting"], [valid_correct_
         dst_file = os.path.join(output_dir, file)
         print(f"Copying {src_file} to {dst_file}")
         shutil.copy(src_file, dst_file)
-
-
-# # filter patches
-# for patch_type in ["correct", "overfitting"]:
-#     output_dir = os.path.join(output_base_dir, patch_type)
-#     os.makedirs(output_dir, exist_ok=True)
-#     print(f"Output directory for {patch_type}: {output_dir}")
