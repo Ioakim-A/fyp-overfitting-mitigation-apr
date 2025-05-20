@@ -1,7 +1,7 @@
 import os
 import shutil
 
-context_size = "3"  # context size of the patch, options "3" or "max"
+context_size = "max"  # context size of the patch, options "3" or "max"
 
 # list of valid patches that can be handled by current project
 valid_patches = ['Chart_1', 'Chart_11', 'Chart_12', 'Chart_13', 'Chart_15', 'Chart_17', 'Chart_18', 'Chart_20', 'Chart_24', 'Chart_25', 'Chart_26', 'Chart_4', 'Chart_5', 'Chart_7', 'Chart_8', 'Chart_9', 'Closure_10', 'Closure_115', 'Closure_126', 'Closure_129', 'Closure_13', 'Closure_14', 'Closure_19', 'Closure_2', 'Closure_21', 'Closure_22', 'Closure_46', 'Closure_48', 'Closure_57', 'Closure_62', 'Closure_73', 'Closure_86', 'Lang_10', 'Lang_33', 'Lang_43', 'Lang_44', 'Lang_45', 'Lang_46', 'Lang_51', 'Lang_55', 'Lang_57', 'Lang_58', 'Lang_59',
@@ -38,9 +38,12 @@ for patch_type in ["correct", "overfitting"]:
     print(f"Files in {patch_type} directory: {files}")
     print(f"Number of files in {patch_type} directory: {len(files)}\n\n\n")
 
+    print("TEST")
+    print(f"{valid_patches[0]}_")
+
     # filter files by valid_patches list
     for file in files:
-        if any(valid_patch in file for valid_patch in valid_patches):
+        if any(f"{valid_patch}_" in file for valid_patch in valid_patches):
             if patch_type == "correct":
                 valid_correct_patches.append(file)
             else:
