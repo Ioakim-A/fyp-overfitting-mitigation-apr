@@ -3,6 +3,7 @@ import re
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 name_conversion = {
     'entropy_delta':        'Yang et al.',
@@ -238,6 +239,8 @@ def main():
     fig.subplots_adjust(bottom=0.15, top=0.95, hspace=0.3, wspace=0.25)
 
     out = args.out
+    output_path = Path(args.out)
+    output_path.parent.mkdir(exist_ok=True, parents=True)
     fig.savefig(out, bbox_inches='tight')
     print(f"\nSaved figure as {out}")
 
