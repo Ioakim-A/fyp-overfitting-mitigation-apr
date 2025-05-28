@@ -57,13 +57,15 @@ def create_bar_chart(csv_file, output_dir='.', use_ci=False):
     # Plot styling
     plt.rcParams.update({
         'font.family': 'serif',
-        'font.size': 12,
-        'axes.titlesize': 14,
-        'axes.labelsize': 13
+        'font.size': 14,
+        'axes.titlesize': 16,
+        'axes.labelsize': 19,
+        'xtick.labelsize': 18,
+        'ytick.labelsize': 18
     })
 
-    fig, ax = plt.subplots(figsize=(14, 8))
-    bar_width = 0.8 / len(tools)
+    fig, ax = plt.subplots(figsize=(18, 10))
+    bar_width = 0.8 / len(tools) 
     positions = np.arange(len(metrics))
     colors = plt.cm.viridis(np.linspace(0, 1, len(tools)))
 
@@ -116,7 +118,6 @@ def create_bar_chart(csv_file, output_dir='.', use_ci=False):
 
     # Labels, title, grid
     ax.set_ylabel('Score', fontweight='bold')
-    ax.set_title('Performance Metrics Comparison Across Tools', fontweight='bold')
     ax.set_xticks(positions)
     ax.set_xticklabels(metrics, fontweight='bold')
     ax.set_ylim(0, 1.0)
@@ -128,7 +129,8 @@ def create_bar_chart(csv_file, output_dir='.', use_ci=False):
         bbox_to_anchor=(0.5, -0.05),
         ncol=len(tools),
         fancybox=True,
-        shadow=True
+        shadow=True,
+        fontsize=18
     )
 
     plt.tight_layout()
