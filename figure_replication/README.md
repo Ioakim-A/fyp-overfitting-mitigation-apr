@@ -20,18 +20,18 @@ Before running any scripts, make sure the following are installed:
 
 ### 0. Filter Patch Predictions (Already Done)
 
-Tools FIXCHECK and Invalidator produced predictions for 798 patches whilst entropy_delta, DL4PatchCorrectness, LLM4PatchCorrectness were able to predict the correctness of an additional 21 non-compilable patches. To ensure comparisons are made for the same 798 patches across all tools, we filter using either FIXCHECK or Invalidator's prediction csv as a reference to filter out patches from other csvs:
+Some PCA tools were unable to generate predictions for the full set of patches. To allow for fairer comparisons, we find the common set of successfully classified patches across all tools and filter out patches that did not meet this criteria:
 
 ```bash
-python filter_patches.py <path to reference csv e.g. Invalidator> <path to csv to filter e.g. LLM4PatchCorrectness>
+python filter_patches.py <path to results folder> <name of common file to filter e.g. 8h-deduplicated.csv>
 ```
 
 For example:
 ```bash
-python filter_patches.py ../../results/Invalidator/8h_deduplicated.csv ../../results/LLM4PatchCorrectness/8h_deduplicated.csv
+python filter_patches.py ../../results/ 8h_deduplicated.csv
 ```
 
-Results will be saved in the target directory and the csv will take the naming convention of the target file, appending '_filtered' e.g. 8h_deduplicated_filtered.csv
+Results will be saved in the respective tool results directory and the csv will take the naming convention of the target file, appending '_filtered' e.g. 8h_deduplicated_filtered.csv
 
 **Note that this step has already been completed.**
 
