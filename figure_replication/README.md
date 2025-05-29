@@ -48,12 +48,12 @@ python replicate_all.py {dataset} {--figures}
 
 ### 1. Generate CSV Files
 
-These scripts will generate intermediate CSV files needed for plotting.
+These scripts will generate intermediate CSV files needed for plotting. The following examples are for the Petke et al. 8-hour dataset.
 
 #### RQ3 Data
 
 ```bash
-# Generate overall performance data across 798 bugs with Random Selection metric and bootstrapping.
+# Generate overall performance data with Random Selection metric and bootstrapping.
 # Note that bootstrapping can take several minutes so if you are not interested in error bars you can exclude --bootstrap
 python produce_csvs_or_latex_tables.py 8h_deduplicated_filtered --overall --bootstrap --include-wbc --wbc-p-overfit 0.50 --format csv --output ../figures/raw_data/overall.csv 
 ```
@@ -86,7 +86,7 @@ python produce_csvs_or_latex_tables.py 8h_deduplicated_filtered --aggregate bug 
 
 ### 2. Generate Figures
 
-These scripts use the CSVs created in the previous step to generate the final figures.
+These scripts use the CSVs created in the previous step to generate the final figures. The following examples are for the Petke et al. 8-hour dataset.
 
 #### RQ3 Figures
 
