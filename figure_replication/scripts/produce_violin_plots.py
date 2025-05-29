@@ -42,9 +42,9 @@ def create_violin_plot(csv_file, output_dir='.', color_by_project=False):
     sns.set_style("whitegrid")
     plt.rcParams.update({
         'font.family': 'serif',
-        'font.size': 15,
+        'font.size': 19,
         # 'axes.titlesize': 14,
-        'axes.labelsize': 20
+        'axes.labelsize': 24
     })
 
     plt.figure(figsize=(12, 7))
@@ -119,9 +119,9 @@ def create_project_boxplot(csv_file, output_dir='.'):
     sns.set_style("whitegrid")
     plt.rcParams.update({
         'font.family': 'serif',
-        'font.size': 12,
-        'axes.titlesize': 14,
-        'axes.labelsize': 13
+        'font.size': 16,
+        'axes.titlesize': 18,
+        'axes.labelsize': 17
     })
 
     plt.figure(figsize=(12, 7))
