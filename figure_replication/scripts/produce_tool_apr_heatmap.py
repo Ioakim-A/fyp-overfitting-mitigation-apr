@@ -86,7 +86,11 @@ def produce_tool_apr_heatmap(csv_file, output_file='apr_tool_heatmap.pdf', figsi
         center=center,
         cbar_kws={'label': 'MCC', 'shrink': 0.8}
     )
-    
+
+    # Shrink x-axis tick label font size and rotate labels
+    ax.set_xticklabels(ax.get_xticklabels(), fontsize=16)
+    ax.set_yticklabels(ax.get_yticklabels(), fontsize=16)
+
     # Set axis labels
     ax.set_xlabel('Overfitting Detection Tool', fontweight='bold')
     ax.set_ylabel('APR Tool', fontweight='bold')
@@ -119,11 +123,11 @@ if __name__ == "__main__":
                         help="Output file name (supports .pdf, .png, .svg, etc.)")
     parser.add_argument("--cmap", default="RdBu_r", 
                         help="Colormap for the heatmap (default: RdBu_r)")
-    parser.add_argument("--width", type=float, default=10.0, help="Figure width in inches")
+    parser.add_argument("--width", type=float, default=10.5, help="Figure width in inches")
     parser.add_argument("--height", type=float, default=8.0, help="Figure height in inches")
     parser.add_argument("--center", type=float, default=0, 
                         help="Center value for the colormap (default: 0)")
-    parser.add_argument("--font-scale", type=float, default=1.5, 
+    parser.add_argument("--font-scale", type=float, default=2.0, 
                         help="Font scale factor (default: 1.2)")
     
     args = parser.parse_args()
