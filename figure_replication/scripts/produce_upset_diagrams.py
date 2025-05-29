@@ -149,7 +149,7 @@ def plot_upset(sets_dict, title, output_dir='.'):
                 text.set_fontsize(14)    # Set smaller font size for percentages
     
     # Enhance title and overall appearance
-    plt.title(title, x=0.5, y=0.98, horizontalalignment='center', verticalalignment='top', transform=ax.transAxes, fontweight='bold')
+    plt.title(title, x=0.5, y=0.98, horizontalalignment='center', verticalalignment='top', transform=ax.transAxes, fontweight='bold', fontsize = 22)
     plt.tight_layout()
     
     # Save figure in high quality
