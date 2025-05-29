@@ -47,7 +47,13 @@ def produce_tool_apr_heatmap(csv_file, output_file='apr_tool_heatmap.pdf', figsi
     'DL4PatchCorrectness': 'Tian et al.'
     }
     df.rename(columns=name_conversion, inplace=True)
+
+    print("MCC prediction distribution per tool:")
+    print(df)
     
+    # Replace "-ir4" in the row index "repairllama-ir4" with just "repairllama" if present
+    df.index = df.index.map(lambda x: str(x).replace("-ir4", "") if "repairllama-ir4" in str(x) else x)
+
     # Set seaborn style for scientific plots
     sns.set_context("paper", font_scale=font_scale)
     sns.set_style("whitegrid")
@@ -117,7 +123,7 @@ if __name__ == "__main__":
     parser.add_argument("--height", type=float, default=8.0, help="Figure height in inches")
     parser.add_argument("--center", type=float, default=0, 
                         help="Center value for the colormap (default: 0)")
-    parser.add_argument("--font-scale", type=float, default=1.2, 
+    parser.add_argument("--font-scale", type=float, default=1.5, 
                         help="Font scale factor (default: 1.2)")
     
     args = parser.parse_args()
