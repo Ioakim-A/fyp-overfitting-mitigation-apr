@@ -8,7 +8,7 @@ def main():
     parser = argparse.ArgumentParser(description="Replication script runner")
     parser.add_argument(
         "dataset_name",
-        choices=["petke-8h", "petke-1h", "repairllama"],
+        choices=["petke-8h", "petke-1h", "repairllama", "combined"],
         help="Dataset to use: 'petke-8h', 'petke-1h' or 'repairllama'"
     )
     parser.add_argument(
@@ -35,6 +35,11 @@ def main():
         results_csv_name = "repairllama_filtered"
         num_correct_patches = "63"
         num_overfitting_patches = "106"
+    elif args.dataset_name == "combined":
+        output_dir = "../combined_figures/"
+        results_csv_name = "combined_filtered"
+        num_correct_patches = "190"
+        num_overfitting_patches = "777"
     else:
         raise ValueError("Invalid dataset name provided.")
 
