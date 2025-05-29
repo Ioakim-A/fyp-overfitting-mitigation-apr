@@ -137,7 +137,8 @@ def plot_upset(sets_dict, title, output_dir='.'):
                  element_size=40,
                  show_percentages=True,
                  sort_by='cardinality',
-                 min_subset_size=1)
+                 min_subset_size=1
+                 )
     
     # Apply plot with custom percentage formatting
     plot = upset.plot(fig=plt.gcf())
@@ -147,9 +148,19 @@ def plot_upset(sets_dict, title, output_dir='.'):
         for text in ax.texts:
             if '%' in text.get_text():  # Identify percentage labels
                 text.set_fontsize(14)    # Set smaller font size for percentages
+                new_text = text.get_text().replace('%', '')
+                text.set_text(new_text)
     
     # Enhance title and overall appearance
     plt.title(title, x=0.5, y=0.98, horizontalalignment='center', verticalalignment='top', transform=ax.transAxes, fontweight='bold', fontsize = 22)
+
+    # Find the side plot axis and set the title
+    side_ax = plt.gcf().get_axes()[0]  # Access the side plot axes
+    side_ax.set_title('Recall (%)', x=0, fontsize=18)
+    side_ax = plt.gcf().get_axes()[3]  
+    side_ax.set_ylabel('Intersection size (%)', fontsize=18)
+     
+
     plt.tight_layout()
     
     # Save figure in high quality
