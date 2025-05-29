@@ -57,11 +57,11 @@ def create_bar_chart(csv_file, output_dir='.', use_ci=False):
     # Plot styling
     plt.rcParams.update({
         'font.family': 'serif',
-        'font.size': 14,
-        'axes.titlesize': 16,
-        'axes.labelsize': 19,
-        'xtick.labelsize': 18,
-        'ytick.labelsize': 18
+        'font.size': 18,
+        'axes.titlesize': 20,
+        'axes.labelsize': 23,
+        'xtick.labelsize': 22,
+        'ytick.labelsize': 22
     })
 
     fig, ax = plt.subplots(figsize=(18, 10))
@@ -119,6 +119,9 @@ def create_bar_chart(csv_file, output_dir='.', use_ci=False):
     # Labels, title, grid
     ax.set_ylabel('Score', fontweight='bold')
     ax.set_xticks(positions)
+    metrics[1] = 'Balanced\nAccuracy'
+    metrics[3] = 'Positive\nRecall'
+    metrics[4] = 'Negative\nRecall'
     ax.set_xticklabels(metrics, fontweight='bold')
     ax.set_ylim(0, 1.0)
     ax.yaxis.grid(True, linestyle='--', alpha=0.7)
@@ -126,12 +129,16 @@ def create_bar_chart(csv_file, output_dir='.', use_ci=False):
     # Legend
     ax.legend(
         loc='upper center',
-        bbox_to_anchor=(0.5, -0.05),
+        bbox_to_anchor=(0.5, -0.1),
         ncol=len(tools),
         fancybox=True,
         shadow=True,
-        fontsize=18
+        fontsize=20
     )
+
+    dname = 'classical'
+    if 'repairllama' in output_dir: dname = 'repairllama'
+    plt.text(0.98, 0.98, dname+' dataset', horizontalalignment='right', verticalalignment='top', transform=ax.transAxes, fontweight='bold', fontsize=24)
 
     plt.tight_layout()
     output_path = os.path.join(output_dir, 'metrics_bar_chart.png')
