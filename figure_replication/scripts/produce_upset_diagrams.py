@@ -11,14 +11,14 @@ from upsetplot import from_contents, UpSet
 # global style tweaks for publication‐quality
 plt.rcParams.update({
     'figure.dpi': 600,
-    'font.size': 16,
+    'font.size': 20,
     'font.family': 'serif',
     'font.serif': ['Times New Roman', 'DejaVu Serif'],
-    'axes.titlesize': 18,
-    'axes.labelsize': 16,
-    'xtick.labelsize': 14,
-    'ytick.labelsize': 14,
-    'legend.fontsize': 14,
+    'axes.titlesize': 22,
+    'axes.labelsize': 20,
+    'xtick.labelsize': 18,
+    'ytick.labelsize': 18,
+    'legend.fontsize': 18,
     'grid.linestyle': '--',
     'grid.alpha': 0.7,
     'lines.linewidth': 2,
@@ -146,10 +146,10 @@ def plot_upset(sets_dict, title, output_dir='.'):
     for ax in plt.gcf().get_axes():
         for text in ax.texts:
             if '%' in text.get_text():  # Identify percentage labels
-                text.set_fontsize(10)    # Set smaller font size for percentages
+                text.set_fontsize(14)    # Set smaller font size for percentages
     
     # Enhance title and overall appearance
-    plt.title(title, fontweight='bold', pad=20)
+    plt.title(title, x=0.5, y=0.98, horizontalalignment='center', verticalalignment='top', transform=ax.transAxes, fontweight='bold')
     plt.tight_layout()
     
     # Save figure in high quality
