@@ -128,7 +128,7 @@ if __name__ == "__main__":
     parser.add_argument("--center", type=float, default=0, 
                         help="Center value for the colormap (default: 0)")
     parser.add_argument("--font-scale", type=float, default=2.0, 
-                        help="Font scale factor (default: 1.2)")
+                        help="Font scale factor (default: 2.0)")
     
     args = parser.parse_args()
     

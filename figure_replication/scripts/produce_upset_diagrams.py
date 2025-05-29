@@ -165,7 +165,7 @@ def plot_upset(sets_dict, title, output_dir='.'):
     
     # Save figure in high quality
     # sanitize filename
-    fn = title.lower().replace(' ', '_')
+    fn = title.lower().replace(' ', '_').replace(':', '')
     
     # Ensure output directory exists
     os.makedirs(output_dir, exist_ok=True)
