@@ -127,14 +127,15 @@ def create_bar_chart(csv_file, output_dir='.', use_ci=False):
     ax.yaxis.grid(True, linestyle='--', alpha=0.7)
 
     # Legend
-    ax.legend(
-        loc='upper center',
-        bbox_to_anchor=(0.5, -0.1),
-        ncol=len(tools),
-        fancybox=True,
-        shadow=True,
-        fontsize=20
-    )
+    if not 'repairllama' in output_dir:
+      ax.legend(
+          loc='upper center',
+          bbox_to_anchor=(0.5, -0.1),
+          ncol=len(tools),
+          fancybox=True,
+          shadow=True,
+          fontsize=20
+      )
 
     dname = 'classical'
     if 'repairllama' in output_dir: dname = 'repairllama'
