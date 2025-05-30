@@ -158,7 +158,7 @@ def plot_upset(sets_dict, title, output_dir='.'):
     side_ax = plt.gcf().get_axes()[0]  # Access the side plot axes
     side_ax.set_title('Recall (%)', x=0, fontsize=18)
     side_ax = plt.gcf().get_axes()[3]  
-    side_ax.set_ylabel('Intersection size (%)', fontsize=18)
+    #side_ax.set_ylabel('Intersection size (%)', fontsize=18)
      
 
     plt.tight_layout()
