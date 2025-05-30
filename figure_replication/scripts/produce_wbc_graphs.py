@@ -29,7 +29,7 @@ def parse_ci(s):
         raise ValueError(f"Could not parse CI from '{s}'")
     return map(float, m.groups())
 
-def calculate_wbc_metrics(p, num_overfitting, num_correct):
+def calculate_wpc_metrics(p, num_overfitting, num_correct):
     TP = num_correct*(1-p)
     FP = num_overfitting*p
     TN = num_overfitting*p
@@ -55,7 +55,7 @@ def calculate_wbc_metrics(p, num_overfitting, num_correct):
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Plot and summarize 6 metrics for tools vs. WBC with shaded WBC area'
+        description='Plot and summarize 6 metrics for tools vs. WPC with shaded WPC area'
     )
     parser.add_argument('csv_file',
                         help='CSV: Tool + 7 metric columns as "mean (lo-hi)"')
@@ -71,12 +71,12 @@ def main():
         if m not in df.columns:
             raise ValueError(f"Missing '{m}' column in CSV")
 
-    # Precompute WBC curves
+    # Precompute WPC curves
     prob  = np.linspace(0.5, 1.0, 500)
-    x_wbc = prob * 100
-    wbc   = {
+    x_wpc = prob * 100
+    wpc   = {
         m: np.array([
-            calculate_wbc_metrics(p, args.num_overfitting, args.num_correct)[m]
+            calculate_wpc_metrics(p, args.num_overfitting, args.num_correct)[m]
             for p in prob
         ])
         for m in metrics
@@ -88,7 +88,7 @@ def main():
 
     for idx, metric in enumerate(metrics):
         ax  = axes.flat[idx]
-        y_w = wbc[metric]
+        y_w = wpc[metric]
 
         # --- compute y-axis clamp first ---
         ci_vals = []
@@ -105,27 +105,27 @@ def main():
             y_low = max( 0, dmin - pad)
             y_high = min( 1, dmax + pad)
 
-        # Shade under the WBC curve down to y_low
+        # Shade under the WPC curve down to y_low
         ax.fill_between(
-            x_wbc,
+            x_wpc,
             y_w,
             y_low,
             color='grey',
             alpha=0.2,
             zorder=1
         )
-        # Plot the WBC curve on top
+        # Plot the WPC curve on top
         ax.plot(
-            x_wbc, y_w,
+            x_wpc, y_w,
             'k-', lw=2,
             zorder=2,
-            label='WBC' if idx==0 else None
+            label='WPC' if idx==0 else None
         )
 
         # sort for interpolation
         si       = np.argsort(y_w)
         y_sorted = y_w[si]
-        x_sorted = x_wbc[si]
+        x_sorted = x_wpc[si]
         ymin, ymax = y_w.min(), y_w.max()
 
         # bucket tools
@@ -150,25 +150,25 @@ def main():
 
         # --- PRINT SUMMARY FOR THIS METRIC ---
         print(f"\n=== {metric} ===")
-        print(f"WBC range: {ymin:.3f} – {ymax:.3f}")
+        print(f"WPC range: {ymin:.3f} – {ymax:.3f}")
         if above:
-            print("Tools always above WBC (lower CI > max WBC):")
+            print("Tools always above WPC (lower CI > max WPC):")
             for d in sorted(above, key=lambda d:(d['lo'], d['mean'])):
                 print(f"  {d['tool']}: mean={d['mean']:.3f}, CI=[{d['lo']:.3f}, {d['hi']:.3f}]")
         else:
-            print("No tool always above WBC.")
+            print("No tool always above WPC.")
         if intersect:
-            print("Tools intersecting WBC:")
+            print("Tools intersecting WPC:")
             for d in sorted(intersect, key=lambda d:(d['x'], d['lo'])):
                 print(f"  {d['tool']}: x_int={d['x']:.1f}%, mean={d['mean']:.3f}, CI=[{d['lo']:.3f}, {d['hi']:.3f}]")
         else:
-            print("No tool intersects WBC.")
+            print("No tool intersects WPC.")
         if below:
-            print("Tools always below WBC (lower CI < min WBC):")
+            print("Tools always below WPC (lower CI < min WPC):")
             for d in sorted(below, key=lambda d:(d['lo'], d['mean'])):
                 print(f"  {d['tool']}: mean={d['mean']:.3f}, CI=[{d['lo']:.3f}, {d['hi']:.3f}]")
         else:
-            print("No tool always below WBC.")
+            print("No tool always below WPC.")
         # --------------------------------------
 
         # plotting points / errorbars
@@ -219,10 +219,10 @@ def main():
                     )
 
         # formatting subplot
-        ax.set_title(metric, fontsize=14, weight='bold')
+        ax.set_title(metric, fontsize=20, weight='bold')
         ax.set_xlim(50, 100)
-        ax.set_xlabel('WBC Guess “Overfitting” (%)', fontsize=12)
-        ax.tick_params(labelsize=10)
+        ax.set_xlabel('WPC Guess “Overfitting” (%)', fontsize=18)
+        ax.tick_params(labelsize=16)
         ax.set_ylim(y_low, y_high)
 
     # single legend below
@@ -230,10 +230,10 @@ def main():
     fig.legend(handles, labels,
                loc='lower center',
                ncol=len(labels),
-               fontsize=11,
+               fontsize=18,
                frameon=True,
                edgecolor='gray',
-               bbox_to_anchor=(0.5, 0.035))
+               bbox_to_anchor=(0.5, 0.025))
 
     fig.tight_layout()
     fig.subplots_adjust(bottom=0.15, top=0.95, hspace=0.3, wspace=0.25)
