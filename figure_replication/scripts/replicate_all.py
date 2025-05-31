@@ -8,8 +8,8 @@ def main():
     parser = argparse.ArgumentParser(description="Replication script runner")
     parser.add_argument(
         "dataset_name",
-        choices=["petke-8h", "petke-1h", "repairllama", "combined"],
-        help="Dataset to use: 'petke-8h', 'petke-1h' or 'repairllama'"
+        choices=["petke_8h", "petke_1h", "repairllama", "combined"],
+        help="Dataset to use: 'petke_8h', 'petke_1h' or 'repairllama'"
     )
     parser.add_argument(
         "--figures",
@@ -20,13 +20,13 @@ def main():
 
     print(f"Selected dataset: {args.dataset_name}")
 
-    if args.dataset_name == "petke-8h":
-        output_dir = "../petke-8h_figures/"
+    if args.dataset_name == "petke_8h":
+        output_dir = "../petke_8h_figures/"
         results_csv_name = "8h_deduplicated_filtered"
         num_correct_patches = "127"
         num_overfitting_patches = "671"
-    elif args.dataset_name == "petke-1h":
-        output_dir = "../petke-1h_figures/"
+    elif args.dataset_name == "petke_1h":
+        output_dir = "../petke_1h_figures/"
         results_csv_name = "1h_deduplicated_filtered"
         num_correct_patches = "127"
         num_overfitting_patches = "671"
@@ -173,6 +173,23 @@ def main():
         if result.stderr:
             print(result.stderr, file=sys.stderr)
 
+        # Combine RS -85 and -95 columns into a single CSV
+        print("Combining RS -85 and -95 columns into a single CSV...")
+        result = subprocess.run(
+            [
+                sys.executable,
+                "combine_rs_columns.py",
+                f"{output_dir}/tables/rq4/rs85.csv",
+                f"{output_dir}/tables/rq4/rs95.csv",
+                f"{output_dir}/tables/rq4/rs-combined.csv"
+            ],
+            capture_output=True,
+            text=True
+        )
+        print(result.stdout)
+        if result.stderr:
+            print(result.stderr, file=sys.stderr)
+
         print("### RQ4 Data Processing Completed ###")
 
     print("\n\n### RQ3 Figure Generation ###")
@@ -295,6 +312,22 @@ def main():
             "--confidence", "95",
             "--format", "latex",
             "--output", f"{output_dir}/tables/rq4/rs95-latex.txt"
+        ],
+        capture_output=True,
+        text=True
+    )
+    print(result.stdout)
+    if result.stderr:
+        print(result.stderr, file=sys.stderr)
+
+    # Generate combined RS -85 and -95 inspection table (latex)
+    print("Generating combined RS -85 and -95 inspection table (latex)...")
+    result = subprocess.run(
+        [
+            sys.executable,
+            "create_bug_level_latex_table.py",
+            f"{output_dir}/tables/rq4/rs-combined.csv",
+            f"--output={output_dir}/tables/rq4/rs-combined.tex"
         ],
         capture_output=True,
         text=True
