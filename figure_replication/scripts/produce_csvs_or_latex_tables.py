@@ -302,21 +302,22 @@ def generate_csv_output(experiment_type, aggregate_by='approach', metric=None, i
 
     # First, gather all groups and calculate proportion of correct patches for each
     all_group_data = {}
-    for tool_name, df in tool_dfs.items():
-        # Use the same group_key as above
-        group_key = 'approach' if aggregate_by == 'approach' else ('bug' if aggregate_by == 'bug' else 'project')
-        grouped = df.groupby(group_key)
+    tool_name = list(tool_dfs.keys())[0]
+    df = tool_dfs[tool_name]
+    # Use the same group_key as above
+    group_key = 'approach' if aggregate_by == 'approach' else ('bug' if aggregate_by == 'bug' else 'project')
+    grouped = df.groupby(group_key)
+    
+    for group_name, group_df in grouped:
+        if group_name not in all_group_data:
+            all_group_data[group_name] = {'correct': 0, 'total': 0}
         
-        for group_name, group_df in grouped:
-            if group_name not in all_group_data:
-                all_group_data[group_name] = {'correct': 0, 'total': 0}
-            
-            # Count correct and total patches
-            correct_count = sum(group_df['correctness'] == 'correct')
-            total_count = len(group_df)
-            
-            all_group_data[group_name]['correct'] += correct_count
-            all_group_data[group_name]['total'] += total_count
+        # Count correct and total patches
+        correct_count = sum(group_df['correctness'] == 'correct')
+        total_count = len(group_df)
+        
+        all_group_data[group_name]['correct'] += correct_count
+        all_group_data[group_name]['total'] += total_count
     
     # If WBC is enabled, add it to results
     if include_wbc:
@@ -342,7 +343,6 @@ def generate_csv_output(experiment_type, aggregate_by='approach', metric=None, i
         
         # Add RSB as a separate column in results
         results['RSB'] = rsb_results
-    
     # Get all unique group names across all tools
     if aggregate_by == 'bug':
         # Custom sorting for bugs: sort by project name alphabetically first, then by bug number numerically
