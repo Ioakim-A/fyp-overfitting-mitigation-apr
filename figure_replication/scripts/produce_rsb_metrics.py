@@ -56,11 +56,13 @@ def main():
 
     pairwise_result, all_tools_win_count, stats = compare_rsb_to_tools(args.csv_path)
 
-    print("\nPairwise RSB <= tool count:")
+    confidence_level = args.csv_path.split('/')[-1].replace(".csv", "").replace("rs", "")
+
+    print(f"\nPairwise RSB-{confidence_level} <= tool count:")
     for tool, count in pairwise_result.items():
         print(f"{tool}: {count}")
 
-    print(f"\nRSB wins against all tools simultaneously in {all_tools_win_count} cases.")
+    print(f"\nRSB-{confidence_level} wins against all tools simultaneously in {all_tools_win_count} cases.")
 
     print("\nMedian and Mean values (filling NAs with total patches per bug):")
     for tool, s in stats.items():

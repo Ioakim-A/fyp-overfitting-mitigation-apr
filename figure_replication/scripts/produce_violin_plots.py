@@ -42,9 +42,9 @@ def create_violin_plot(csv_file, output_dir='.', color_by_project=False):
     sns.set_style("whitegrid")
     plt.rcParams.update({
         'font.family': 'serif',
-        'font.size': 12,
-        'axes.titlesize': 14,
-        'axes.labelsize': 13
+        'font.size': 19,
+        # 'axes.titlesize': 14,
+        'axes.labelsize': 24
     })
 
     plt.figure(figsize=(12, 7))
@@ -66,7 +66,7 @@ def create_violin_plot(csv_file, output_dir='.', color_by_project=False):
         sns.stripplot(x='Metric', y='Value', data=plot_df, size=5,
                       color='black', alpha=0.6)
 
-    plt.title('Distribution of MCC Scores per Tool on Bug-Level Predictions', fontweight='bold')
+    # plt.title('Distribution of MCC Scores per Tool on Bug-Level Predictions', fontweight='bold')
     plt.xlabel('Tool', fontweight='bold')
     plt.ylabel('MCC', fontweight='bold')
     plt.xticks(rotation=0)
@@ -119,9 +119,9 @@ def create_project_boxplot(csv_file, output_dir='.'):
     sns.set_style("whitegrid")
     plt.rcParams.update({
         'font.family': 'serif',
-        'font.size': 12,
-        'axes.titlesize': 14,
-        'axes.labelsize': 13
+        'font.size': 16,
+        'axes.titlesize': 18,
+        'axes.labelsize': 17
     })
 
     plt.figure(figsize=(12, 7))

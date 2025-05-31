@@ -57,13 +57,15 @@ def create_bar_chart(csv_file, output_dir='.', use_ci=False):
     # Plot styling
     plt.rcParams.update({
         'font.family': 'serif',
-        'font.size': 12,
-        'axes.titlesize': 14,
-        'axes.labelsize': 13
+        'font.size': 18,
+        'axes.titlesize': 20,
+        'axes.labelsize': 23,
+        'xtick.labelsize': 22,
+        'ytick.labelsize': 22
     })
 
-    fig, ax = plt.subplots(figsize=(14, 8))
-    bar_width = 0.8 / len(tools)
+    fig, ax = plt.subplots(figsize=(18, 10))
+    bar_width = 0.8 / len(tools) 
     positions = np.arange(len(metrics))
     colors = plt.cm.viridis(np.linspace(0, 1, len(tools)))
 
@@ -116,20 +118,28 @@ def create_bar_chart(csv_file, output_dir='.', use_ci=False):
 
     # Labels, title, grid
     ax.set_ylabel('Score', fontweight='bold')
-    ax.set_title('Performance Metrics Comparison Across Tools', fontweight='bold')
     ax.set_xticks(positions)
+    metrics[1] = 'Balanced\nAccuracy'
+    metrics[3] = 'Positive\nRecall'
+    metrics[4] = 'Negative\nRecall'
     ax.set_xticklabels(metrics, fontweight='bold')
     ax.set_ylim(0, 1.0)
     ax.yaxis.grid(True, linestyle='--', alpha=0.7)
 
     # Legend
-    ax.legend(
-        loc='upper center',
-        bbox_to_anchor=(0.5, -0.05),
-        ncol=len(tools),
-        fancybox=True,
-        shadow=True
-    )
+    if not 'repairllama' in output_dir:
+      ax.legend(
+          loc='upper center',
+          bbox_to_anchor=(0.5, -0.1),
+          ncol=len(tools),
+          fancybox=True,
+          shadow=True,
+          fontsize=20
+      )
+
+    dname = 'classical'
+    if 'repairllama' in output_dir: dname = 'repairllama'
+    plt.text(0.98, 0.98, dname+' dataset', horizontalalignment='right', verticalalignment='top', transform=ax.transAxes, fontweight='bold', fontsize=24)
 
     plt.tight_layout()
     output_path = os.path.join(output_dir, 'metrics_bar_chart.png')
